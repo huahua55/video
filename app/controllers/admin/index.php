@@ -4,10 +4,10 @@ class IndexController extends Controller
 {
 	function init($ctx){
 		parent::init($ctx);
-		$ctx->user = AdminCenter::auth();
-		if(!$ctx->user){
-			_redirect('admin/sso/login');
-		}
+//		$ctx->user = AdminCenter::auth();
+//		if(!$ctx->user){
+//			_redirect('admin/sso/login');
+//		}
 	}
 
 	function index($ctx) {
