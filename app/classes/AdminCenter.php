@@ -8,7 +8,6 @@ class AdminCenter
 	// 测试环境
 	static $api_url_base = '';
 	static $web_url_base = '';
-	static $front_url_base = '';
 	private static $domain = '';
 	private static $secret = '';
 	
@@ -23,14 +22,12 @@ class AdminCenter
 			// api 不需要 HTTPS
 			self::$api_url_base = 'http://auc.svc.charminginsurance.cn/svc';
 			self::$web_url_base = 'https://auc.charminginsurance.cn';
-			self::$front_url_base = 'https://www.charminginsurance.cn';
 			self::$domain = 'admin.charminginsurance.cn';
 			self::$secret = 'NLqEGXJm4BGD7a4kj';
 		}else{
-			self::$api_url_base = 'http://dev.auc.svc.charminginsurance.cn/svc';
-			self::$web_url_base = 'https://dev.auc.charminginsurance.cn';
-			self::$front_url_base = 'https://dev.charminginsurance.cn';
-			self::$domain = 'dev.admin.charminginsurance.cn';
+			self::$api_url_base = 'http://auc.svc.mzuis.cn/svc';
+			self::$web_url_base = 'http://auc.mzuis.cn';
+			self::$domain = 'admin.mzuis.com';
 			self::$secret = '123456';
 		}
 
