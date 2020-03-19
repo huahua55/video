@@ -13,4 +13,4 @@ assets.json
 runtime
 upload
 *.env
-application/extra
+application/extra/
