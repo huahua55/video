@@ -13,3 +13,4 @@ assets.json
 runtime
 upload
 *.env
+application/extra/*.php
