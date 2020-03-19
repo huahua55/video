@@ -10,4 +10,6 @@ uploads
 /npm-shrinkwrap.json
 /.idea
 assets.json
-.env
+runtime
+upload
+*.env
