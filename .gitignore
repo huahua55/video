@@ -10,5 +10,4 @@ uploads
 /npm-shrinkwrap.json
 /.idea
 assets.json
-app/vendor/
-app/config/config.php
+.env
