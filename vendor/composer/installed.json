@@ -1,35 +1,43 @@
 [
     {
-        "name": "topthink/think-installer",
-        "version": "v1.0.12",
-        "version_normalized": "1.0.12.0",
+        "name": "karsonzhang/fastadmin-addons",
+        "version": "1.1.10",
+        "version_normalized": "1.1.10.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/top-think/think-installer.git",
-            "reference": "1be326e68f63de4e95977ed50f46ae75f017556d"
+            "url": "https://github.com/karsonzhang/fastadmin-addons.git",
+            "reference": "69dedfc101bdf219c66dac05cbe1f393fa99be84"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-installer/1be326e68f63de4e95977ed50f46ae75f017556d.zip",
-            "reference": "1be326e68f63de4e95977ed50f46ae75f017556d",
-            "shasum": ""
+            "url": "https://api.github.com/repos/karsonzhang/fastadmin-addons/zipball/69dedfc101bdf219c66dac05cbe1f393fa99be84",
+            "reference": "69dedfc101bdf219c66dac05cbe1f393fa99be84",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
         "require": {
-            "composer-plugin-api": "^1.0"
+            "php": ">=5.6.0"
         },
-        "require-dev": {
-            "composer/composer": "1.0.*@dev"
-        },
-        "time": "2017-05-27T06:58:09+00:00",
-        "type": "composer-plugin",
+        "time": "2019-08-27T12:10:18+00:00",
+        "type": "library",
         "extra": {
-            "class": "think\\composer\\Plugin"
+            "think-config": {
+                "addons": "src/config.php"
+            }
         },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "think\\composer\\": "src"
-            }
+                "think\\": "src/"
+            },
+            "files": [
+                "src/common.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -37,46 +45,54 @@
         ],
         "authors": [
             {
-                "name": "yunwuxin",
-                "email": "448901948@qq.com"
+                "name": "karsonzhang",
+                "email": "karsonzhang@163.com"
+            },
+            {
+                "name": "xiaobo.sun",
+                "email": "xiaobo.sun@qq.com"
             }
-        ]
+        ],
+        "description": "addons package for fastadmin",
+        "homepage": "https://github.com/karsonzhang/fastadmin-addons"
     },
     {
         "name": "topthink/framework",
-        "version": "v5.0.14",
-        "version_normalized": "5.0.14.0",
+        "version": "v5.1.39",
+        "version_normalized": "5.1.39.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/framework.git",
-            "reference": "3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706"
+            "reference": "5762858f3d58faafb3a39427f8788884b2927007"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/framework/3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706.zip",
-            "reference": "3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706",
-            "shasum": ""
+            "url": "https://api.github.com/repos/top-think/framework/zipball/5762858f3d58faafb3a39427f8788884b2927007",
+            "reference": "5762858f3d58faafb3a39427f8788884b2927007",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
         "require": {
-            "php": ">=5.4.0",
-            "topthink/think-installer": "~1.0"
+            "php": ">=5.6.0",
+            "topthink/think-installer": "2.*"
         },
         "require-dev": {
             "johnkary/phpunit-speedtrap": "^1.0",
             "mikey179/vfsstream": "~1.6",
             "phpdocumentor/reflection-docblock": "^2.0",
             "phploc/phploc": "2.*",
-            "phpunit/phpunit": "4.8.*",
-            "sebastian/phpcpd": "2.*"
+            "phpunit/phpunit": "^5.0|^6.0",
+            "sebastian/phpcpd": "2.*",
+            "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2018-01-01T12:44:11+00:00",
+        "time": "2019-11-17T23:22:02+00:00",
         "type": "think-framework",
         "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "think\\": "library/think"
-            }
-        },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "Apache-2.0"
@@ -85,6 +101,10 @@
             {
                 "name": "liu21st",
                 "email": "liu21st@gmail.com"
+            },
+            {
+                "name": "yunwuxin",
+                "email": "448901948@qq.com"
             }
         ],
         "description": "the new thinkphp framework",
@@ -106,9 +126,15 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-captcha/0c55455df26a1626a60d0dc35d2d89002b741d44.zip",
+            "url": "https://api.github.com/repos/top-think/think-captcha/zipball/0c55455df26a1626a60d0dc35d2d89002b741d44",
             "reference": "0c55455df26a1626a60d0dc35d2d89002b741d44",
-            "shasum": ""
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
         "time": "2016-07-06T01:47:11+00:00",
         "type": "library",
@@ -134,6 +160,53 @@
         "description": "captcha package for thinkphp5"
     },
     {
+        "name": "topthink/think-helper",
+        "version": "v3.1.3",
+        "version_normalized": "3.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/top-think/think-helper.git",
+            "reference": "4d85dfd3778623bbb1de3648f1dcd0c82f4439f4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/top-think/think-helper/zipball/4d85dfd3778623bbb1de3648f1dcd0c82f4439f4",
+            "reference": "4d85dfd3778623bbb1de3648f1dcd0c82f4439f4",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
+        },
+        "require": {
+            "php": ">=7.1.0"
+        },
+        "time": "2019-09-30T02:36:48+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "think\\": "src"
+            },
+            "files": [
+                "src/helper.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "yunwuxin",
+                "email": "448901948@qq.com"
+            }
+        ],
+        "description": "The ThinkPHP6 Helper Package"
+    },
+    {
         "name": "topthink/think-image",
         "version": "v1.0.7",
         "version_normalized": "1.0.7.0",
@@ -144,9 +217,15 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-image/8586cf47f117481c6d415b20f7dedf62e79d5512.zip",
+            "url": "https://api.github.com/repos/top-think/think-image/zipball/8586cf47f117481c6d415b20f7dedf62e79d5512",
             "reference": "8586cf47f117481c6d415b20f7dedf62e79d5512",
-            "shasum": ""
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
         "require": {
             "ext-gd": "*"
@@ -176,30 +255,42 @@
         "description": "The ThinkPHP5 Image Package"
     },
     {
-        "name": "topthink/think-helper",
-        "version": "v1.0.6",
-        "version_normalized": "1.0.6.0",
+        "name": "topthink/think-installer",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/top-think/think-helper.git",
-            "reference": "0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f"
+            "url": "https://github.com/top-think/think-installer.git",
+            "reference": "f5400a12c60e513911aef41fe443fa6920952675"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-helper/0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f.zip",
-            "reference": "0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f",
-            "shasum": ""
+            "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
+            "reference": "f5400a12c60e513911aef41fe443fa6920952675",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
-        "time": "2017-04-05T07:15:37+00:00",
-        "type": "library",
+        "require": {
+            "composer-plugin-api": "^1.0"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev"
+        },
+        "time": "2018-05-11T06:45:42+00:00",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "think\\composer\\Plugin"
+        },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "think\\helper\\": "src"
-            },
-            "files": [
-                "src/helper.php"
-            ]
+                "think\\composer\\": "src"
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -210,29 +301,37 @@
                 "name": "yunwuxin",
                 "email": "448901948@qq.com"
             }
-        ],
-        "description": "The ThinkPHP5 Helper Package"
+        ]
     },
     {
         "name": "topthink/think-queue",
-        "version": "v1.1.4",
-        "version_normalized": "1.1.4.0",
+        "version": "v1.1.6",
+        "version_normalized": "1.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/think-queue.git",
-            "reference": "ad709611d516e13d6760234bc98e91faa901cae8"
+            "reference": "250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-queue/ad709611d516e13d6760234bc98e91faa901cae8.zip",
-            "reference": "ad709611d516e13d6760234bc98e91faa901cae8",
-            "shasum": ""
+            "url": "https://api.github.com/repos/top-think/think-queue/zipball/250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245",
+            "reference": "250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
         },
         "require": {
             "topthink/think-helper": ">=1.0.4",
             "topthink/think-installer": ">=1.0.10"
         },
-        "time": "2017-06-25T00:49:56+00:00",
+        "require-dev": {
+            "topthink/framework": "~5.0.0"
+        },
+        "time": "2018-10-15T10:16:55+00:00",
         "type": "think-extend",
         "extra": {
             "think-config": {
@@ -259,58 +358,5 @@
             }
         ],
         "description": "The ThinkPHP5 Queue Package"
-    },
-    {
-    "name": "karsonzhang/fastadmin-addons",
-    "version": "1.1.3",
-    "version_normalized": "1.1.3.0",
-    "source": {
-        "type": "git",
-        "url": "https://github.com/karsonzhang/fastadmin-addons.git",
-        "reference": "83ae4011e4c726ca2aa69b360bdbcd37be0dc32a"
-    },
-    "dist": {
-        "type": "zip",
-        "url": "https://files.phpcomposer.com/files/karsonzhang/fastadmin-addons/83ae4011e4c726ca2aa69b360bdbcd37be0dc32a.zip",
-        "reference": "83ae4011e4c726ca2aa69b360bdbcd37be0dc32a",
-        "shasum": ""
-    },
-    "require": {
-        "php": ">=5.4.0",
-        "topthink/think-helper": ">=1.0.4",
-        "topthink/think-installer": ">=1.0.10"
-    },
-    "time": "2018-03-28 01:12:58",
-    "type": "library",
-    "extra": {
-        "think-config": {
-            "addons": "src/config.php"
-        }
-    },
-    "installation-source": "dist",
-    "autoload": {
-        "psr-4": {
-            "think\\": "src/"
-        },
-        "files": [
-            "src/common.php"
-        ]
-    },
-    "notification-url": "https://packagist.org/downloads/",
-    "license": [
-        "Apache-2.0"
-    ],
-    "authors": [
-        {
-            "name": "xiaobo.sun",
-            "email": "xiaobo.sun@qq.com"
-        },
-        {
-            "name": "karsonzhang",
-            "email": "karsonzhang@163.com"
-        }
-    ],
-    "description": "addons package for fastadmin",
-    "homepage": "https://github.com/karsonzhang/fastadmin-addons"
-}
+    }
 ]

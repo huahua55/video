@@ -1,0 +1,16 @@
+{
+    "require": {
+        "php": ">=7.2.0",
+        "topthink/framework": "~5.0",
+        "karsonzhang/fastadmin-addons": "~1.1",
+        "topthink/think-captcha": "~1.0",
+        "topthink/think-queue": "~1.0",
+        "topthink/think-image": "~1.0"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
+}
