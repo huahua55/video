@@ -14,3 +14,6 @@ runtime
 upload
 *.env
 application/extra
+index.html
+map.html
+application/route.php
