@@ -4,63 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5040efd10ee9f56ea4c4ecb141278ef4",
+    "content-hash": "e1c4883407644e0568fd6835053412fa",
     "packages": [
-        {
-            "name": "karsonzhang/fastadmin-addons",
-            "version": "1.1.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/karsonzhang/fastadmin-addons.git",
-                "reference": "69dedfc101bdf219c66dac05cbe1f393fa99be84"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/karsonzhang/fastadmin-addons/zipball/69dedfc101bdf219c66dac05cbe1f393fa99be84",
-                "reference": "69dedfc101bdf219c66dac05cbe1f393fa99be84",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=5.6.0"
-            },
-            "type": "library",
-            "extra": {
-                "think-config": {
-                    "addons": "src/config.php"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "think\\": "src/"
-                },
-                "files": [
-                    "src/common.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "karsonzhang",
-                    "email": "karsonzhang@163.com"
-                },
-                {
-                    "name": "xiaobo.sun",
-                    "email": "xiaobo.sun@qq.com"
-                }
-            ],
-            "description": "addons package for fastadmin",
-            "homepage": "https://github.com/karsonzhang/fastadmin-addons",
-            "time": "2019-08-27T12:10:18+00:00"
-        },
         {
             "name": "topthink/framework",
             "version": "v5.1.39",

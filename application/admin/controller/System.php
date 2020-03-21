@@ -42,9 +42,12 @@ class System extends Base
         ];
 
         Cache::connect($options);
-        Cache::set('test', 'test');
+        $bool = Cache::set('test', 'test');
+        if ($bool) {
+            return json(['code' => 1, 'msg' => '测试成功']);
+        }
+        return json(['code' => 1001, 'msg' => '测试失败']);
 
-        return json(['code' => 1, 'msg' => '测试成功']);
     }
 
     public function config()

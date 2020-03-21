@@ -1,0 +1,105 @@
+<html>
+<head>
+    <title>dplayer播放器p2p加速+记忆播放</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="content-language" content="zh-CN"/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <meta name="referrer" content="never"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="x5-page-mode" content="app"/>
+    <meta name="Viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer@latest/dist/DPlayer.min.css">
+    <style type="text/css">
+        body,html{width:100%;height:100%;background:#000;padding:0;margin:0;overflow-x:hidden;overflow-y:hidden}
+        *{margin:0;border:0;padding:0;text-decoration:none}
+        #stats{position:fixed;top:5px;left:8px;font-size:12px;color:#fdfdfd;text-shadow:1px 1px 1px #000, 1px 1px 1px #000}
+        #dplayer{position:inherit}
+    </style>
+</head>
+<body style="background:#000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" oncontextmenu=window.event.returnValue=false>
+<div id="dplayer"></div>
+<div id="stats"></div>
+<script language="Javascript">
+    document.oncontextmenu=new Function("event.returnValue=false");
+    document.onselectstart=new Function("event.returnValue=false");
+</script>
+<script src="https://cdn.jsdelivr.net/npm/cdnbye@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/dplayer@latest"></script>
+<script>
+    var webdata = {
+        set:function(key,val){
+            window.sessionStorage.setItem(key,val);
+        },
+        get:function(key){
+            return window.sessionStorage.getItem(key);
+        },
+        del:function(key){
+            window.sessionStorage.removeItem(key);
+        },
+        clear:function(key){
+            window.sessionStorage.clear();
+        }
+    };
+    var _peerId = '', _peerNum = 0, _totalP2PDownloaded = 0, _totalP2PUploaded = 0;
+    var dp = new DPlayer({
+        autoplay: true,
+        container: document.getElementById('dplayer'),
+        volume: 1.0,
+        preload: 'auto',
+        screenshot: true,
+        theme: '#28FF28',
+        video: {
+            url: parent.MacPlayer.PlayUrl,
+            type: 'customHls',
+            // pic: './loading.jpg',           // 视频封面
+            customType: {
+                'customHls': function (video, player) {
+                    const hls = new Hls({
+                        debug: false,
+                        // Other hlsjsConfig options provided by hls.js
+                        p2pConfig: {
+                            logLevel: false,
+                            live: false,        // 如果是直播设为true
+                            // Other p2pConfig options provided by CDNBye
+                            getStats: function (totalP2PDownloaded, totalP2PUploaded, totalHTTPDownloaded) {
+                                console.warn(`totalP2PDownloaded ${totalP2PDownloaded} totalHTTPDownloaded ${totalHTTPDownloaded}`);
+                                _totalP2PDownloaded = totalP2PDownloaded;
+                                _totalP2PUploaded = totalP2PUploaded;
+                                updateStats();
+                            },
+                            getPeerId: function (peerId) {
+                                _peerId = peerId;
+                            },
+                            getPeersInfo: function (peers) {
+                                _peerNum = peers.length;
+                                updateStats();
+                            },
+                        }
+                    });
+                    hls.loadSource(video.src);
+                    hls.attachMedia(video);
+                }
+            }
+        },
+    });
+    dp.seek(webdata.get('pay'+parent.MacPlayer.PlayUrl));
+    setInterval(function(){
+        webdata.set('pay'+parent.MacPlayer.PlayUrl,dp.video.currentTime);
+    },1000);
+    dp.on('ended', function (){
+        if(parent.MacPlayer.PlayLinkNext!=''){
+            top.location.href = parent.MacPlayer.PlayLinkNext;
+        }
+    });
+    function updateStats() {
+        var text = 'P2P已开启 共享' + (_totalP2PUploaded/1024).toFixed(2) + 'MB' + ' 已加速' + (_totalP2PDownloaded/1024).toFixed(2)
+            + 'MB' + ' 此片有 ' + _peerNum + ' 位影迷正在观看';
+        document.getElementById('stats').innerText = text
+    }
+</script>
+</body>
+</html>

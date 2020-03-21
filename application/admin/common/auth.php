@@ -252,7 +252,7 @@ return array(
         '103' => array("show"=>1,'name' => '数据批量替换', 'controller' => 'database',		'action' => 'rep'),
     )),
     '11' => array('name' => '应用', 'icon' => 'xe621', 'sub' => array(
-        '111' => array("show"=>1,'name' => '应用市场', 'controller' => 'addon',		'action' => 'index', 'param'=>''),
+        //'111' => array("show"=>1,'name' => '应用市场', 'controller' => 'addon',		'action' => 'index', 'param'=>''),
 
         '112' => array("show"=>1,'name' => 'URL推送', 'controller' => 'urlsend',		'action' => 'index', 'param'=>''),
         '11200' => array("show"=>0,'name' => '--推送入口', 'controller' => 'urlsend',		'action' => 'push'),
