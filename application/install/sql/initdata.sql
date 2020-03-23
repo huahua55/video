@@ -20,4 +20,9 @@ INSERT INTO `type` VALUES ('16', '欧美剧', 'oumeiju', '4', '1', '2', '1', 'ty
 INSERT INTO `type` VALUES ('17', '公告', 'gonggao', '1', '2', '5', '1', 'type.html', 'show.html', 'detail.html', '', '', '最新公告-最新公告推荐', '2018最新公告，公布本站最新发展动态', '最新公告-最新公告推荐', '', '{\"class\":\"\",\"area\":\"\",\"lang\":\"\",\"year\":\"\",\"star\":\"\",\"director\":\"\",\"state\":\"\",\"version\":\"\"}','','','');
 INSERT INTO `type` VALUES ('18', '头条', 'toutiao', '2', '2', '5', '1', 'type.html', 'show.html', 'detail.html', '', '', '', '', '', '', '','','','');
 
+INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_pwd`, `admin_random`, `admin_status`, `admin_auth`, `admin_login_time`, `admin_login_ip`, `admin_login_num`, `admin_last_login_time`, `admin_last_login_ip`)
+VALUES
+	(1, 'admin', '4441e5d70b3657900fa57e66db407e0b', '78efedbcc2db08161531c245159c8d12', 1, '', 1584696862, 0, 4, 1584685780, 0);
+
+
 
