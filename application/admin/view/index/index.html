@@ -33,7 +33,7 @@
                     <dd><a href="{:url('index/logout')}">退出登陆</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="__ROOT__/" target="_blank">网站首页</a></li>
+            <li class="layui-nav-item"><a href="{$GLOBALS['http_type']}{$GLOBALS['config']['site']['site_url']}" target="_blank">网站首页</a></li>
             <li class="layui-nav-item"><a href="{:url('index/clear')}" class="j-ajax" refresh="yes">清理缓存</a></li>
 
         </ul>
