@@ -29,10 +29,10 @@ if(substr($in_file,strlen($in_file)-4)!=='.php'){
 }
 define('IN_FILE',$in_file);
 
-if(!is_file('./application/data/install/install.lock')) {
-    //header("Location: ./install.php");
-    exit;
-}
+//if(!is_file('./application/data/install/install.lock')) {
+//    header("Location: ./install.php");
+//    exit;
+//}
 if(strpos($_SERVER["SCRIPT_NAME"],'/admin.php')!==false){
     //echo '请将后台入口文件admin.php改名,避免被黑客入侵攻击';
     //exit;
