@@ -30,7 +30,7 @@ if(substr($in_file,strlen($in_file)-4)!=='.php'){
 define('IN_FILE',$in_file);
 
 if(!is_file('./application/data/install/install.lock')) {
-    header("Location: ./install.php");
+    // header("Location: ./install.php");
     exit;
 }
 if (!@mb_check_encoding($_SERVER['PATH_INFO'], 'utf-8')){
