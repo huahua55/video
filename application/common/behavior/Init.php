@@ -15,19 +15,6 @@ class Init
             $isMobile = 1;
         }
 
-        $isDomain=0;
-        if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
-            $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
-            $isDomain=1;
-            if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
-                $config['site']['mob_template_dir'] = $config['site']['template_dir'];
-            }
-            $config['site']['site_wapurl'] = $config['site']['site_url'];
-            $config['site']['mob_html_dir'] = $config['site']['html_dir'];
-            $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
-        }
-
-
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
         $TMP_HTMLDIR = $config['site']['html_dir'];
@@ -35,7 +22,7 @@ class Init
 
 
         if($isMobile){
-            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
+            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl'])) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
                 $TMP_HTMLDIR = $config['site']['mob_html_dir'];
@@ -43,9 +30,7 @@ class Init
             }
         }
 
-        define('MAC_URL','http://www.maccms.com/');
-        define('MAC_NAME','苹果CMS');
-        define('MAC_PATH', $config['site']['install_dir'] .'');
+        define('MAC_PATH', '/');
         define('MAC_MOB', $TMP_ISWAP);
         define('MAC_ROOT_TEMPLATE', ROOT_PATH .'template/'.$TMP_TEMPLATEDIR.'/'. $TMP_HTMLDIR .'/');
         define('MAC_PATH_TEMPLATE', MAC_PATH.'template/'.$TMP_TEMPLATEDIR.'/');

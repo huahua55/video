@@ -112,12 +112,9 @@ class Admin extends Base {
             return ['code'=>1001,'msg'=>'参数错误'];
         }
 
-        if($GLOBALS['config']['app']['admin_login_verify'] !='0'){
-            if(!captcha_check($data['verify'])){
-                return ['code'=>1002,'msg'=>'验证码错误'];
-            }
+        if(!captcha_check($data['verify'])){
+            return ['code'=>1002,'msg'=>'验证码错误'];
         }
-
 
         $where=[];
         $where['admin_name'] = ['eq',$data['admin_name']];

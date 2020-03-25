@@ -54,22 +54,9 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">QQ号码：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="site[site_qq]" placeholder="站长客服qq号码" value="{$config['site']['site_qq']}" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
                     <label class="layui-form-label">Email邮箱：</label>
                     <div class="layui-input-block">
                         <input type="text" name="site[site_email]" placeholder="站长客服邮箱" value="{$config['site']['site_email']}" class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">安装目录：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="site[install_dir]" placeholder="根目录 ＂/＂，二级目录 ＂/maccms/＂以此类推" value="{$config['site']['install_dir']}" class="layui-input">
                     </div>
                 </div>
 
@@ -345,14 +332,6 @@
                             <input type="text" name="app[makesize]" placeholder="批量生成每次生成都少页、一般设置为20左右" value="{$config['app']['makesize']}" class="layui-input w150">
                         </div>
                     </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">后台登录验证码：</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="app[admin_login_verify]" value="0" title="关闭" {if condition="$config['app']['admin_login_verify'] eq '0'"}checked {/if}>
-                        <input type="radio" name="app[admin_login_verify]" value="1" title="开启" {if condition="$config['app']['admin_login_verify'] neq '0'"}checked {/if}>
-                    </div>
-                </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">富文本编辑器：</label>

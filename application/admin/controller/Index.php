@@ -60,31 +60,6 @@ class Index extends Base
                 unset($menus[$k1]);
             }
         }
-
-        $quickmenu = mac_read_file( APP_PATH.'data/config/quickmenu.txt');
-        if(!empty($quickmenu)){
-            $menus[1]['sub'][13] = ['name'=>'↓↓↓自定义菜单区域↓↓↓', 'url'=>'javascript:void(0);return false;','controller'=>'', 'action'=>'' ];
-            $arr = explode(chr(13),$quickmenu);
-            foreach($arr as $k=>$v){
-                if(empty($v)){
-                    continue;
-                }
-                $one = explode(',',trim($v));
-                if(substr($one[1],0,4)=='http' || substr($one[1],0,2)=='//'){
-
-                }
-                elseif(substr($one[1],0,1) =='/'){
-
-                }
-                elseif(strpos($one[1],'###')!==false || strpos($one[1],'javascript:')!==false){
-
-                }
-                else{
-                    $one[1] = url($one[1]);
-                }
-                $menus[1]['sub'][14 + $k] = ['name'=>$one[0], 'url'=>$one[1],'controller'=>'', 'action'=>'' ];
-            }
-        }
         $this->assign('menus',$menus);
 
         $this->assign('title','后台管理中心');
@@ -93,17 +68,9 @@ class Index extends Base
 
     public function welcome()
     {
-        $version = config('version');
-        $update_sql = file_exists('./application/data/update/database.php');
-
-        $this->assign('version',$version);
-        $this->assign('update_sql',$update_sql);
-
-
         $this->assign('info',$this->_admin);
         $this->assign('title','欢迎页面');
-        $html = $this->fetch('admin@index/welcome');
-        echo $html.'<span style="display:none">'. '<script src="//update.maccms.com/v10/?c=check&v='.$version['code'].'&p='.PHP_VERSION.'&tp='. THINK_VERSION .'&t='.time().'"></script></span>';
+        return $this->fetch('admin@index/welcome');
     }
 
     public function quickmenu()

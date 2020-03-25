@@ -98,7 +98,7 @@ class Base extends All
         @fwrite(fopen('./static/js/playerconfig.js','wb'),$fc);
 
         Dir::delDir(RUNTIME_PATH.'cache/');
-        Dir::delDir(RUNTIME_PATH.'log/');
+        //Dir::delDir(RUNTIME_PATH.'log/');
         Dir::delDir(RUNTIME_PATH.'temp/');
 
         return true;
