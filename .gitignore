@@ -15,8 +15,8 @@ upload
 *.env
 application/extra
 application/data
-index.html
-map.html
+/index.html
+/map.html
 application/route.php
 rss
 label
