@@ -35,6 +35,24 @@ class Vod extends Base
     public function type()
     {
         $this->label_type();
+        $param = $this->context->param;
+        // banner
+        $lp = [
+            'type_id' => $param['id'],
+            'order' => 'asc',
+            'by' => 'sort',
+        ];
+        $nav = model("Banner")->listCacheData($lp)['list'];
+        $this->assign('banner', $nav);
+
+        // 热门推荐
+        $lp = [
+            'type_id' => $param['id'],
+            'order' => 'asc',
+            'by' => 'sort',
+        ];
+        $recommend = model("VodRecommend")->listCacheData($lp)['list'];
+        $this->assign('vod_recommend', $recommend);
         return $this->context->as_array();
     }
 
