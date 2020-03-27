@@ -916,7 +916,31 @@ CREATE TABLE `website` (
   KEY `website_referer_month` (`website_referer_month`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网址列表';
 
+CREATE TABLE `vod_recommend` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `style` tinyint(1) NOT NULL DEFAULT '0' COMMENT '样式',
+  `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类ID',
+  `rel_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '关联数据ID列表 ‘,’分隔',
+  `sort` tinyint(2) NOT NULL DEFAULT '0' COMMENT '排序',
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_type_id` (`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频推荐';
 
+CREATE TABLE `banner_recommend` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类ID',
+  `img` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
+  `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
+  `sort` tinyint(2) NOT NULL DEFAULT '0' COMMENT '排序',
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_type_id` (`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='轮播推荐';
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

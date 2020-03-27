@@ -28,8 +28,8 @@
                 <th width="100">状态</th>
                 <th width="100">排序</th>
                 <th width="150">所属分类</th>
-                <th>样式</th>
-                <th>关联列表ID</th>
+                <th>图片</th>
+                <th>链接地址</th>
                 <th width="130">操作</th>
             </tr>
             </thead>
@@ -46,9 +46,10 @@
                     {$vo.type.type_name}
                 </td>
                 <td>
-                    {$vo.style}
+                    <a target="_blank" class="layui-badge-rim " href="{:mac_url_img($vo.img)}">点击查看</a>
+                    <input type="hidden"  name="img[]" value="{$vo.img}">
                 </td>
-                <td><input type="input" name="rids[]" value="{$vo.ids}" class="layui-input"></td>
+                <td><input type="input" name="link[]" value="{$vo.link}" class="layui-input"></td>
                 <td>
                     <a class="layui-badge-rim j-iframe" data-href="{:url('info?id='.$vo['id'])}" href="javascript:;" title="编辑">编辑</a>
                     <a class="layui-badge-rim j-tr-del" data-href="{:url('del?ids='.$vo['id'])}" href="javascript:;" title="删除">删除</a>
@@ -65,7 +66,7 @@
 
 
 <script type="text/javascript">
-    var curUrl="{:url('recommend/index',$param)}";
+    var curUrl="{:url('banner/index',$param)}";
     layui.use(['laypage', 'layer'], function() {
         var laypage = layui.laypage
             , layer = layui.layer;

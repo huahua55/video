@@ -56,7 +56,6 @@ class Init
             }
         }
 
-
         config('url_route_on',$config['rewrite']['route_status']);
         if(empty($config['app']['pathinfo_depr'])){
             $config['app']['pathinfo_depr'] = '/';
@@ -83,6 +82,10 @@ class Init
             config('cache.password',$config['app']['cache_password']);
         }
 
+        if(ENTRANCE == 'fapi') {
+            config('exception_handle', '\\app\\common\\exception\\Http');
+            config('default_return_type', 'json');
+        }
 
     }
 }

@@ -2,7 +2,7 @@
 namespace app\common\validate;
 use think\Validate;
 
-class Recommend extends Validate
+class VodRecommend extends Validate
 {
     protected $rule =   [
         'name'  => 'require|max:20',

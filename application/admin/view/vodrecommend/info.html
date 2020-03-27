@@ -43,7 +43,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">相关视频ID：</label>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" value="{$info.ids}" placeholder="请输入相关视频ID 英文逗号分隔" id="ids" name="ids">
+                <input type="text" class="layui-input" value="{$info.rel_ids}" placeholder="请输入相关视频ID 英文逗号分隔" id="rel_ids" name="rel_ids">
             </div>
         </div>
         <div class="layui-form-item">
@@ -82,7 +82,7 @@
                     return "请输入推荐标题";
                 }
             },
-            ids: function (value) {
+            rel_ids: function (value) {
                 if (value == "") {
                     return "请输入相关ID列表";
                 }

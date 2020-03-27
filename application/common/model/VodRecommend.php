@@ -2,10 +2,11 @@
 namespace app\common\model;
 use think\Db;
 use think\Cache;
+use think\helper\Arr;
 
-class Recommend extends Base {
+class VodRecommend extends Base {
     // 设置数据表（不含前缀）
-    protected $name = 'recommend';
+    protected $name = 'vod_recommend';
 
     // 定义时间戳字段名
     protected $createTime = '';
@@ -23,7 +24,7 @@ class Recommend extends Base {
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
         $total = $this->where($where)->count();
-        $list = Db::name('Recommend')->where($where)->order($order)->limit($limit_str)->select();
+        $list = Db::name('VodRecommend')->where($where)->order($order)->limit($limit_str)->select();
 
         //分类
         $type_list = model('Type')->getCache('type_list');
@@ -46,7 +47,7 @@ class Recommend extends Base {
 
         $order = $lp['order'];
         $by = $lp['by'];
-        $type = intval($lp['type']);
+        $type_id = intval($lp['type_id']);
         $start = intval(abs($lp['start']));
         $num = intval(abs($lp['num']));
         $cachetime = $lp['cachetime'];
@@ -66,11 +67,11 @@ class Recommend extends Base {
         if (!in_array($by, ['id', 'sort'])) {
             $by = 'id';
         }
-        $where['type'] = $type;
+        $where['type_id'] = $type_id;
 
         $order = $by . ' ' . $order;
 
-        $cach_name = $GLOBALS['config']['app']['cache_flag']. '_' . md5('link_listcache_'.join('&',$where).'_'.$order.'_'.$page.'_'.$num.'_'.$start);
+        $cach_name = $GLOBALS['config']['app']['cache_flag']. '_' . md5('vod_recommend_listcache_'.join('&',$where).'_'.$order.'_'.$page.'_'.$num.'_'.$start);
         $res = Cache::get($cach_name);
         if($GLOBALS['config']['app']['cache_core']==0 || empty($res)) {
             $res = $this->listData($where, $order, $page, $num, $start);
@@ -81,6 +82,22 @@ class Recommend extends Base {
             if($GLOBALS['config']['app']['cache_core']==1) {
                 Cache::set($cach_name, $res, $cache_time);
             }
+        }
+        if ($res['list']) {
+            foreach ($res['list'] as &$v) {
+                if ($v['rel_ids']) {
+                    $arr_vod_ids = explode(',', $v['rel_ids']);
+                    $lp = [
+                        'ids' => $v['rel_ids']
+                    ];
+                    $vods = array_column(model("Vod")->listCacheData($lp)['list'], null, 'vod_id');
+                    foreach ($arr_vod_ids as $vod_id) {
+                        $v['rel_vod'][] = Arr::only($vods[$vod_id], ['vod_id', 'vod_name', 'vod_pic']);
+                    }
+                }
+
+            }
+            unset($v);
         }
         return $res;
     }
@@ -102,7 +119,7 @@ class Recommend extends Base {
 
     public function saveData($data)
     {
-        $validate = \think\Loader::validate('Recommend');
+        $validate = \think\Loader::validate('VodRecommend');
         if(!$validate->check($data)){
             return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
         }

@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-class Recommend extends Base
+class VodRecommend extends Base
 {
     public function __construct()
     {
@@ -21,7 +21,7 @@ class Recommend extends Base
         }
 
         $order='id desc';
-        $res = model('Recommend')->listData($where,$order,$param['page'],$param['limit']);
+        $res = model('VodRecommend')->listData($where,$order,$param['page'],$param['limit']);
 
         $this->assign('list',$res['list']);
         $this->assign('total',$res['total']);
@@ -33,14 +33,14 @@ class Recommend extends Base
         $param['limit'] = '{limit}';
         $this->assign('param',$param);
         $this->assign('title','推荐配置管理');
-        return $this->fetch('admin@recommend/index');
+        return $this->fetch('admin@vodrecommend/index');
     }
 
     public function info()
     {
         if (Request()->isPost()) {
             $param = input();
-            $res = model('Recommend')->saveData($param);
+            $res = model('VodRecommend')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }
@@ -50,7 +50,7 @@ class Recommend extends Base
         $id = input('id');
         $where=[];
         $where['id'] = ['eq',$id];
-        $res = model('Recommend')->infoData($where);
+        $res = model('VodRecommend')->infoData($where);
 
         $this->assign('info',$res['info']);
 
@@ -59,7 +59,7 @@ class Recommend extends Base
         $this->assign('type_tree',$type_tree);
 
         $this->assign('title','推荐内容信息');
-        return $this->fetch('admin@recommend/info');
+        return $this->fetch('admin@vodrecommend/info');
     }
 
     public function del()
@@ -70,7 +70,7 @@ class Recommend extends Base
         if(!empty($ids)){
             $where=[];
             $where['id'] = ['in',$ids];
-            $res = model('Recommend')->delData($where);
+            $res = model('VodRecommend')->delData($where);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }
@@ -88,12 +88,12 @@ class Recommend extends Base
             $data['id'] = intval($id);
             $data['name'] = $param['name'][$k];
             $data['sort'] = $param['sort'][$k];
-            $data['ids'] = $param['rids'][$k];
+            $data['rel_ids'] = $param['rel_ids'][$k];
 
             if (empty($data['name'])) {
                 $data['name'] = '未知';
             }
-            $res = model('Recommend')->saveData($data);
+            $res = model('VodRecommend')->saveData($data);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }
@@ -112,7 +112,7 @@ class Recommend extends Base
             $where=[];
             $where['id'] = ['in',$ids];
 
-            $res = model('Recommend')->fieldData($where,$col,$val);
+            $res = model('VodRecommend')->fieldData($where,$col,$val);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }
