@@ -923,7 +923,7 @@ CREATE TABLE `vod_recommend` (
   `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类ID',
   `rel_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '关联数据ID列表 ‘,’分隔',
   `sort` tinyint(2) NOT NULL DEFAULT '0' COMMENT '排序',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time` int(10) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_type_id` (`type_id`)
@@ -936,7 +936,7 @@ CREATE TABLE `banner_recommend` (
   `img` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
   `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
   `sort` tinyint(2) NOT NULL DEFAULT '0' COMMENT '排序',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time` int(10) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_type_id` (`type_id`)
