@@ -9,6 +9,7 @@ class Vod extends Base
         parent::__construct();
     }
 
+    // 首页
     public function index()
     {
         // banner
@@ -19,6 +20,14 @@ class Vod extends Base
         ];
         $nav = model("Banner")->listCacheData($lp)['list'];
         $this->assign('banner', $nav);
+        // 公告
+        $lp = [
+            'type' => 17,
+            'order' => 'asc',
+            'by' => 'level',
+        ];
+        $art = model("Art")->listCacheData($lp)['list'];
+        $this->assign('art', $art);
 
         // 热门推荐
         $lp = [
@@ -32,6 +41,7 @@ class Vod extends Base
         return $this->context->as_array();
     }
 
+    // 视频分类首页
     public function type()
     {
         $this->label_type();
@@ -56,10 +66,23 @@ class Vod extends Base
         return $this->context->as_array();
     }
 
+    // 视频分类筛选页
     public function show()
     {
-        $info = $this->label_type();
-        return $this->label_fetch( mac_tpl_fetch('vod',$info['type_tpl_list'],'show') );
+        $this->label_type();
+        $param = $this->context->param;
+        $lp = [
+            'num' => 20,
+            'paging' => 'yes',
+            'type' => 'current',
+            'order' => 'desc',
+            'by' => 'time'
+
+        ];
+        $list = model("Vod")->listCacheData($lp);
+        $this->assign('list', $list);
+
+        return $this->context->as_array();
     }
 
     public function ajax_show()

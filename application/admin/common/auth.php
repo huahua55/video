@@ -6,6 +6,7 @@ return array(
         //'12' => array("show"=>1,"name" => '自定义菜单配置', 'controller' => 'index', 'action' => 'quickmenu'),
         '13' => array("show"=>1,"name" => '推荐配置', 'controller' => 'vod_recommend', 'action' => 'index'),
         '14' => array("show"=>1,"name" => '轮播配置', 'controller' => 'banner', 'action' => 'index'),
+        //'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
         '1001' => array("show"=>0,"name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
         '1002' => array("show"=>0,"name" => '--清理缓存', 'controller' => 'index', 'action' => 'clear'),

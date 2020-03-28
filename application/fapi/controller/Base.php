@@ -26,7 +26,7 @@ class Base extends Controller
         $this->_tsp = date('Ymd');
         $this->context = new Context();
         $this->check_site_status();
-        $this->label_maccms();
+        $this->label_system();
         $this->label_user();
         $this->label_nav();
 
@@ -210,7 +210,7 @@ class Base extends Controller
         return $html;
     }
 
-    protected function label_maccms()
+    protected function label_system()
     {
         $maccms = $GLOBALS['config']['site'];
         $maccms['user_status'] = $GLOBALS['config']['user']['status'];
@@ -244,7 +244,7 @@ class Base extends Controller
         else{
             $maccms['aid'] = mac_get_aid($this->_cl,$this->_ac);
         }
-        $this->assign('maccms', $maccms);
+        $this->assign('system', $maccms);
     }
 
     protected function label_user()
