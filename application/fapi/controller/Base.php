@@ -411,16 +411,6 @@ class Base extends Controller
     {
         $param = mac_param_url();
         $this->assign('param',$param);
-
-        if($total=='') {
-            $where = [];
-            $where['topic_status'] = ['eq', 1];
-            $total = model('Topic')->countData($where);
-        }
-
-        $url = mac_url_topic_index(['page'=>'PAGELINK']);
-        $__PAGING__ = mac_page_param($total,1,$param['page'],$url);
-        $this->assign('__PAGING__',$__PAGING__);
     }
 
     protected function label_topic_detail($info=[])
@@ -544,114 +534,24 @@ class Base extends Controller
         $this->assign('obj',$info);
     }
 
-    protected function label_vod_play($flag='play',$info=[],$view=0,$pe=0)
+    protected function label_vod_play()
     {
         $param = mac_param_url();
         $this->assign('param',$param);
 
-        if(empty($info)) {
-            $res = mac_label_vod_detail($param);
-            if ($res['code'] > 1) {
-                return $this->error($res['msg']);
-            }
-            $info = $res['info'];
+        $res = mac_label_vod_detail($param);
+        if ($res['code'] > 1) {
+            return $this->error($res['msg']);
         }
-        if(empty($info['vod_tpl'])){
-            $info['vod_tpl'] = $info['type']['type_tpl_detail'];
-        }
-        if(empty($info['vod_tpl_play'])){
-            $info['vod_tpl_play'] = $info['type']['type_tpl_play'];
-        }
-        if(empty($info['vod_tpl_down'])){
-            $info['vod_tpl_down'] = $info['type']['type_tpl_down'];
-        }
-
-
-        $trysee = 0;
-        $urlfun='mac_url_vod_'.$flag;
-        $listfun = 'vod_'.$flag.'_list';
-        if($view <2) {
-            if ($flag == 'play') {
-                $trysee = $GLOBALS['config']['user']['trysee'];
-                if($info['vod_trysee'] >0){
-                    $trysee = $info['vod_trysee'];
-                }
-                $popedom = $this->check_user_popedom($info['type_id'], ($pe==0 ? 3 : 5),$param,$flag,$info,$trysee);
-            }
-            else {
-                $popedom =  $this->check_user_popedom($info['type_id'], 4,$param,$flag,$info);
-            }
-            $this->assign('popedom',$popedom);
-
-
-            if($pe==0 && $popedom['code']>1 && empty($popedom["trysee"])){
-                $info['player_info']['flag'] = $flag;
-                $this->assign('obj',$info);
-
-                if($popedom['confirm']==1){
-                    $this->assign('flag',$flag);
-                    echo $this->fetch('vod/confirm');
-                    exit;
-                }
-                echo $this->error($popedom['msg'], mac_url('user/index') );
-                exit;
-            }
-        }
+        $info = $res['info'];
 
         $player_info=[];
-        $player_info['flag'] = $flag;
         $player_info['encrypt'] = intval($GLOBALS['config']['app']['encrypt']);
-        $player_info['trysee'] = intval($trysee);
-        $player_info['points'] = intval($info['vod_points_'.$flag]);
-        $player_info['link'] = $urlfun($info,['sid'=>'{sid}','nid'=>'{nid}']);
-        $player_info['link_next'] = '';
-        $player_info['link_pre'] = '';
-        if($param['nid']>1){
-            $player_info['link_pre'] = $urlfun($info,['sid'=>$param['sid'],'nid'=>$param['nid']-1]);
-        }
-        if($param['nid'] < $info['vod_'.$flag.'_list'][$param['sid']]['url_count']){
-            $player_info['link_next'] = $urlfun($info,['sid'=>$param['sid'],'nid'=>$param['nid']+1]);
-        }
-        $player_info['url'] = (string)$info[$listfun][$param['sid']]['urls'][$param['nid']]['url'];
-        $player_info['url_next'] = (string)$info[$listfun][$param['sid']]['urls'][$param['nid']+1]['url'];
-
-        if(substr($player_info['url'],0,6) == 'upload'){
-            $player_info['url'] = MAC_PATH . $player_info['url'];
-        }
-        if(substr($player_info['url_next'],0,6) == 'upload'){
-            $player_info['url_next'] = MAC_PATH . $player_info['url_next'];
-        }
-
-        $player_info['from'] = (string)$info[$listfun][$param['sid']]['from'];
-        if((string)$info[$listfun][$param['sid']]['urls'][$param['nid']]['from'] != $player_info['from']){
-            $player_info['from'] = (string)$info[$listfun][$param['sid']]['urls'][$param['nid']]['from'];
-        }
-        $player_info['server'] = (string)$info[$listfun][$param['sid']]['server'];
-        $player_info['note'] = (string)$info[$listfun][$param['sid']]['note'];
-
-        if($GLOBALS['config']['app']['encrypt']=='1'){
-            $player_info['url'] = mac_escape($player_info['url']);
-            $player_info['url_next'] = mac_escape($player_info['url_next']);
-        }
-        elseif($GLOBALS['config']['app']['encrypt']=='2'){
-            $player_info['url'] = base64_encode(mac_escape($player_info['url']));
-            $player_info['url_next'] = base64_encode(mac_escape($player_info['url_next']));
-        }
 
         $info['player_info'] = $player_info;
         $this->assign('obj',$info);
+        $this->assign('player_data', '<script type="text/javascript">var player_data=' . json_encode($player_info) . '</script>');
 
-        $pwd_key = '1-'.($flag=='play' ?'4':'5').'-'.$info['vod_id'];
-
-        if( $pe==0 && $flag=='play' && ($popedom['trysee']>0 ) || ($info['vod_pwd_'.$flag]!='' && session($pwd_key)!='1') || ($info['vod_copyright']==1 && !empty($info['vod_jumpurl']) && $GLOBALS['config']['app']['copyright_status']==4) ) {
-            $dy_play = mac_url('index/vod/'.$flag.'er',['id'=>$info['vod_id'],'sid'=>$param['sid'],'nid'=>$param['nid']]);
-            $this->assign('player_data','');
-            $this->assign('player_js','<div class="MacPlayer" style="z-index:99999;width:100%;height:100%;margin:0px;padding:0px;"><iframe id="player_if" name="player_if" src="'.$dy_play.'" style="z-index:9;width:100%;height:100%;" border="0" marginWidth="0" frameSpacing="0" marginHeight="0" frameBorder="0" scrolling="no" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen" ></iframe></div>');
-        }
-        else {
-            $this->assign('player_data', '<script type="text/javascript">var player_data=' . json_encode($player_info) . '</script>');
-            $this->assign('player_js', '<script type="text/javascript" src="' . MAC_PATH . 'static/js/playerconfig.js?t='.$this->_tsp.'"></script><script type="text/javascript" src="' . MAC_PATH . 'static/js/player.js?t='.$this->_tsp.'"></script>');
-        }
         $this->label_comment();
         return $info;
     }

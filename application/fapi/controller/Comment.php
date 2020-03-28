@@ -10,28 +10,24 @@ class Comment extends Base
         parent::__construct();
         //关闭中
         if($GLOBALS['config']['comment']['status'] == 0){
-            echo 'comment is close';
-            exit;
+            //echo 'comment is close';
+            //exit;
         }
-    }
-
-    public function index()
-    {
-        if (Request()->isPost()) {
-            return $this->saveData();
-        }
-        $param = mac_param_url();
-        $this->assign('param',$param);
-        $this->assign('comment',$GLOBALS['config']['comment']);
-
-        return $this->label_fetch('comment/index');
     }
 	
 	public function ajax() {
 		$param = mac_param_url();
         $this->assign('param',$param);
-        $this->assign('comment',$GLOBALS['config']['comment']);
-        return $this->label_fetch('comment/ajax',0,'json');
+        $this->assign('comment', $GLOBALS['config']['comment']);
+        $lp = [
+            'num' => 5,
+            'paging' => 'yes',
+            'order' => 'desc',
+            'by' => 'id'
+        ];
+        $list = model("Comment")->listCacheData($lp);
+        $this->assign('list', $list);
+        return $this->context->as_array();
 	}
 
 	public function saveData() {
