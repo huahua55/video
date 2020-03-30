@@ -46,7 +46,7 @@ class Banner extends Base {
 
         $order = $lp['order'];
         $by = $lp['by'];
-        $type_id = intval($lp['type_id']);
+        $type_id = intval($lp['type']);
         $start = intval(abs($lp['start']));
         $num = intval(abs($lp['num']));
         $cachetime = $lp['cachetime'];

@@ -1195,3 +1195,66 @@ tid:分类id
 {maccms:foreach name=":explode(',',$maccms.vod_extend_class)"}
      {$vo|mac_url_create='class','vod','search'}<br>
 {/maccms:foreach}
+
+
+=======自定义标签========
+
+=======banner列表标签=======
+order排列顺序desc倒序，asc正序
+by排序依据  id, time, sort
+start从第几条开始
+num获取条数
+type指定获取分类数据 0首页 1电影 2电视剧 3综艺 4动漫
+cachetime自定义缓存时间单位秒
+
+{macdiy:banner num="10" type="0" order="asc" by="sort"}
+   内部同下方，{$obj.改为{$vo.开头即可
+{/macdiy:banner}
+=======banner标签=======
+{$obj.id} id
+{$obj.type_id} 分类id
+{$obj.name} 名称
+{$obj.img} 图片
+{$obj.link} 跳转链接
+{$obj.sort} 排序
+{$obj.time} 更新时间
+{$obj.status} 状态
+
+=======公告列表标签=======
+order排列顺序desc倒序，asc正序
+by排序依据  id, time, level
+start从第几条开始
+num获取条数
+cachetime自定义缓存时间单位秒
+
+{macdiy:notice num="10" order="asc" by="level"}
+   内部同下方，{$obj.改为{$vo.开头即可
+{/macdiy:notice}
+=======banner标签=======
+{$obj.art_id} id
+{$obj.type_id} 分类id
+{$obj.art_name} 名称
+{:mac_url_art_detail($obj)}  公告详情页链接
+
+
+=======影视推荐列表标签=======
+order排列顺序desc倒序，asc正序
+by排序依据  id, time, sort
+start从第几条开始
+num获取条数
+type指定获取分类数据 0首页 1电影 2电视剧 3综艺 4动漫
+cachetime自定义缓存时间单位秒
+
+{macdiy:vodrecommend num="10" type="0" order="asc" by="sort"}
+   内部同下方，{$obj.改为{$vo.开头即可
+{/macdiy:vodrecommend}
+=======banner标签=======
+{$obj.id} id
+{$obj.type_id} 分类id
+{$obj.name} 名称
+{$obj.sort} 排序
+{$obj.time} 更新时间
+{$obj.status} 状态
+{$obj.rel_vod.vod_id} 视频ID
+{$obj.rel_vod.vod_name} 视频ID
+{$obj.rel_vod.vod_pic} 视频图片
