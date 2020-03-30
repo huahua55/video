@@ -139,7 +139,7 @@ return [
         // 标签库标签结束标记
         'taglib_end'   => '}',
         // 预先加载的标签库
-        'taglib_pre_load'     =>    'app\common\taglib\Maccms, app\common\taglib\Macdiy',
+        'taglib_pre_load'     =>    'app\common\taglib\Maccms,app\common\taglib\Macdiy',
     ],
 
     // 视图输出字符串内容替换
