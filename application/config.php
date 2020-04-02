@@ -247,4 +247,5 @@ return [
         'list_rows' => 20,
     ],
 
+    'utcc_host' => \think\Env::get('utcc_host', ''),
 ];

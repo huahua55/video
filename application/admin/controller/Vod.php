@@ -1,5 +1,6 @@
 <?php
 namespace app\admin\controller;
+use think\Config;
 use think\Db;
 
 class Vod extends Base
@@ -516,6 +517,32 @@ class Vod extends Base
         $flag = $param['flag'];
         $res = model('Vod')->updateToday($flag);
         return json($res);
+    }
+
+    function upload()
+    {
+        $param = input();
+        $vod_id = $param['rid'];
+        $where=[];
+        $where['vod_id'] = $vod_id;
+        $res = model('Vod')->infoData($where);
+
+        $info = $res['info'];
+        $this->assign('info',$info);
+
+        $source_video = [];
+        $url = config('utcc_host')."/data?vod_id=$vod_id";
+        $response = mac_curl_get($url);
+        if ($response) {
+            $response = json_decode($response, true);
+            if ($response['code'] == 1) {
+                $source_video = $response['data'];
+            }
+        }
+        $this->assign('source_video', $source_video);
+        $this->assign('title','视频上传');
+        $this->assign('utcc_upload', config('utcc.host').config('utcc.upload'));
+        return $this->fetch('admin@vod/upload');
     }
 
 }
