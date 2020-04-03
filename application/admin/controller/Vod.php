@@ -541,7 +541,7 @@ class Vod extends Base
         }
         $this->assign('source_video', $source_video);
         $this->assign('title','视频上传');
-        $this->assign('utcc_upload', config('utcc.host').config('utcc.upload'));
+        $this->assign('utcc_upload', config('utcc_host')."/upload");
         return $this->fetch('admin@vod/upload');
     }
 

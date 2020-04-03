@@ -94,7 +94,6 @@
     $(function () {
         $list = $('#fileList');
         var file_count = 0;
-        var plotNo = 0;
         var uploader = WebUploader.create({
             //设置选完文件后是否自动上传
             auto: false,
@@ -120,11 +119,10 @@
         });
         // 当有文件被添加进队列的时候
         uploader.on('fileQueued', function (file) {
-            plotNo++;
             $list.append('<div id="' + file.id + '" class="item">' +
                 '<h4 class="info">' + file.name + '<button type="button" fileId="' + file.id + '" class="btn btn-danger btn-delete"><span class="glyphicon glyphicon-trash"></span></button></h4>' +
                 '<p class="state">正在计算文件MD5...请等待计算完毕后再点击上传！</p>' +
-                '<label>剧集序号: <input type="text" id="plotNo'+file_count+'" value="'+plotNo+'"/></label>' +
+                '<label>剧集序号: <input type="text" id="plotNo'+file.id+'" /></label>' +
                 '</div>');
             console.info("id=file_"+file_count);
             file_count++;
@@ -187,8 +185,8 @@
             data.md5 = fileMd5;//md5
             // data.fileName_ = $("#s_"+file.id).val();
             data.vod_id = $("#vod_id").val();
-            data.plotNo = plotNo;
-            console.log("fileName_: "+data.fileName_);
+            data.plotNo = $("#plotNo"+file.id).val();
+            //console.log("fileName_: "+data.fileName_);
             // 删除其他数据
             // delete data.key;
             if(block.chunks>1){ //文件大于chunksize 分片上传
@@ -200,7 +198,6 @@
             }
 
         });
-
 
         uploader.on('uploadSuccess', function (file) {
             $('#' + file.id).find('p.state').text('已上传');
@@ -261,6 +258,7 @@
         });
         uploader.on('uploadAccept', function (file, response) {
             if (response.code != 1) {
+                alert(response.message);
                 return false;
             }
         });
