@@ -942,6 +942,44 @@ CREATE TABLE `banner_recommend` (
   KEY `idx_type_id` (`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='轮播推荐';
 
+CREATE TABLE `utcc_source_video_info` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `vod_id` int(11) NOT NULL COMMENT '视频或剧集ID',
+  `plotNo` smallint(6) NOT NULL DEFAULT '1' COMMENT '剧集序号',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `duration` int(11) NOT NULL COMMENT '时长',
+  `src_path` varchar(255) NOT NULL DEFAULT '' COMMENT '源文件',
+  `format` varchar(16) NOT NULL DEFAULT '' COMMENT '视频格式',
+  `bitrate` int(6) NOT NULL COMMENT '视频码率',
+  `width` smallint(6) NOT NULL,
+  `height` smallint(6) NOT NULL,
+  `fps` smallint(6) NOT NULL DEFAULT '0' COMMENT '帧速',
+  `md5` varchar(34) NOT NULL DEFAULT '',
+  `size` bigint(20) NOT NULL COMMENT '视频文件大小',
+  `add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` smallint(6) NOT NULL COMMENT '视频所处状态，定义如下：100上传中 102上传完成 104 上传失败 105 上传重复视频 200 转码中 202 全部码流转码结束，均成功 203 全部码流转码结束，部分成功 204 全部码流转码结束，均失败',
+  `remark` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `idx_vod_id` (`vod_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `utcc_task` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `vid` int(11) NOT NULL COMMENT 'source_video_info id',
+  `video_path` varchar(255) NOT NULL DEFAULT '' COMMENT '文件地址',
+  `video_bitrate` smallint(6) NOT NULL DEFAULT '0' COMMENT '转码目标视频码率',
+  `video_width` smallint(6) NOT NULL COMMENT '转码目标宽度',
+  `video_fps` smallint(11) NOT NULL DEFAULT '0' COMMENT '转码目标帧率',
+  `transcode_server` varchar(64) NOT NULL DEFAULT '',
+  `transcode_start_time` datetime DEFAULT NULL,
+  `transcode_finish_time` datetime DEFAULT NULL,
+  `transcode_status` smallint(6) NOT NULL DEFAULT '0' COMMENT '转码状态 0 未开始 1 已启动 2 成功 3 失败',
+  `transcode_status_desc` text COMMENT '转码状态的描述，主要是失败情况下的描述',
+  PRIMARY KEY (`id`),
+  KEY `idx_vid` (`vid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
