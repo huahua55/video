@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>{$maccms.site_name}</title>
+  <meta name="keywords" content="{$maccms.site_keywords}" />
+  <meta name="description" content="{$maccms.site_description}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/index.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+    <!-- 首页header -->
+    <div class="nav-wrapper">
+      <ul class="nav-content">
+
+        <li {if condition="$param['tid'] eq ''"} class="active" {/if} >
+          <a href="{$maccms.path}">首页</a>
+        </li>
+        {maccms:type ids="parent"  order="asc" by="sort"}
+        <li {if condition="$param['tid'] eq $vo.type_id"} class="active" {/if}>
+          <a href="{$maccms.path}?tid={$vo.type_id}">
+            {$vo.type_name}
+          </a>
+        </li>
+        
+        {/maccms:type}
+
+        <!-- <li>电影</li>
+        <li>电视剧</li>
+        <li>综艺</li>
+        <li>动漫</li> -->
+      </ul>
+    </div>
+    <div class="nav-wrapper-space"></div>
+    <!-- 首页header  -->
+    <!-- 首页banner-swiper   -->
+    <div id="banner-container" class="swiper-container banner-container">
+      <div class="swiper-wrapper banner-wrapper">
+        {macdiy:banner num="10" type="'.$param['tid'].'" order="asc" by="sort"}
+        <div class="swiper-slide banner-slide">
+          <!-- 具体内容 -->
+          <a href="{$vo.link}">
+            <img src="{$vo.img}" />
+          </a>
+        </div>
+        {/macdiy:banner}
+      </div>
+    </div>
+    <!-- 首页banner-swiper   -->
+    <!-- 首页notice公告 -->
+    <div class="notice-swiper">
+      <!-- Swiper -->
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          {macdiy:notice num="10" type="'.$param['tid'].'" order="asc" by="level"}
+          <div class="swiper-slide">
+            <a href="{:mac_url_art_detail($obj)} ">
+              {$vo.art_name}
+            </a>
+          </div>
+          {/macdiy:notice}
+        </div>
+      </div>
+    </div>
+    <!-- 首页notice公告 -->
+    <!-- 当前的tid为{$param['tid']} -->
+    {macdiy:vodrecommend num="10" type="'.$param['tid'].'" order="asc" by="sort"}
+    <!-- module模块 -->
+
+    <div class="module-wrapper">
+      <div class="module-title">
+        {$vo.name}
+      </div>
+      <div class="module-list">
+      {volist name="$vo.rel_vod" id="vo2"}
+
+        <a class="module-item" href="{:mac_url_vod_detail($vo2)}"  title="{$vo.vod_name}">
+          <div class="module-item-cover">
+            <img src="{$vo2.vod_pic}" alt="">
+            <div class="tips">
+              <!-- <span>7.9</span> -->
+              <span>{if condition="$vo2.vod_serial gt 0"}第{$vo2.vod_serial}集/共{$vo2.vod_total}集{else/}{$vo2.vod_remarks}{/if}</span>
+            </div>
+          </div>
+          <div class="module-item-text">
+            {$vo2.vod_name}
+          </div>
+        </a>
+      {/volist}
+        
+      </div>
+    </div>
+
+    <!-- module模块 -->
+    {/macdiy:vodrecommend}
+  
+    <!-- 公共底部footer  -->
+    {include file="public/footer"}
+    <!-- 公共底部footer  -->
+
+
+    
+
+  </div>
+
+
+  {include file="public/footer-include"}
+  <!-- <script src="https://cdn.jsdelivr.net/npm/better-scroll"></script> -->
+  <script src="{$maccms.path_tpl}static/lib/betterScroll/bscroll.min.js"></script>
+  <script>
+    var wrapper = document.querySelector('.nav-wrapper');
+    var scroll = new BScroll(wrapper, {
+      scrollX: true,
+      scrollY: false,
+      click: true
+    });
+    var mySwiper = new Swiper('#banner-container', {
+      direction: 'horizontal',
+      loop: true,
+      autoplay: 3000,
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      spaceBetween: 5,
+      observer: true,
+      observeParents: true
+    });
+
+    var noticeSwiper = new Swiper('.notice-swiper .swiper-container', {
+      direction: 'vertical',
+      slidesPerView: 1, // 每页显示几个slide
+      spaceBetween: 0, // slide的间距px
+      followFinger: false, // 
+      speed: 3000, // 速度
+      loop: true, // 循环
+      autoplay: {
+        delay: 1000,
+        stopOnLastSlide: false,
+        disableOnInteraction: true,
+      }
+    });
+
+    $(function () {
+      scroll.refresh();
+    });
+
+
+  </script>
+</body>
+
+</html>

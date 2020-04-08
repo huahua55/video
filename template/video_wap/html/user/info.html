@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>用户资料 - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$maccms.site_keywords}" />
+  <meta name="description" content="{$maccms.site_description}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/user-account.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 账户信息 主体content -->
+    <div class="account">
+      <div class="account-header go-back">
+        <div class="account-header-back"></div>
+        <div class="account-header-title">
+          账户信息
+        </div>
+        <div class="account-header-tool"></div>
+      </div>
+      <div class="account-header-space"></div>
+      <div class="account-top">
+        <div class="jsUpdateAvatar account-top-avatar">
+          <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" alt="头像">
+          <div class="account-top-avatar-icon">
+            <img src="{$maccms.path_tpl}static/image/icon_camera.png" alt="选择图片">
+          </div>
+        </div>
+        <div class="account-top-nickname">
+          {$obj.user_name}
+        </div>
+        <div class="account-top-uid">
+          ID：{$obj.user_id}
+        </div>
+      </div>
+
+      <div class="account-renew">
+        <div class="account-renew-title">
+          <img src="{$maccms.path_tpl}static/image/icon_vip.png" alt="VIP特权">
+          <span>尊享VIP特权</span>
+        </div>
+        <div class="account-renew-btn">
+          <a href="{:url('user/buy')}">{if condition="$obj.group_id lt 3"}立即续费{else}立即开通{/if}</a>
+
+        </div>
+
+      </div>
+
+      <div class="account-vip">
+        <div class="account-vip-show">
+          <div class="account-vip-show-item">
+            <!-- <div class="num">{$obj.user_end_time}</div> -->
+            <div class="num">
+              {if condition="$obj.group_id gt 2"}
+              {$obj['user_end_time'] /86400 - ($data.time|default=time()) / 86400 | round=0}天
+              {else}0{/if}
+            </div>
+            <div class="title">VIP剩余天数</div>
+          </div>
+          <div class="account-vip-show-item">
+            <div class="num">{if condition="$obj.group_id gt 2"}{$obj.user_end_time|date='Y-m-d',###}{else}未开通{/if}</div>
+            <div class="title">到期日期</div>
+          </div>
+        </div>
+        <div class="account-rights-wrap">
+          <div class="account-rights-title">——  会员尊享权益  ——</div>
+          <div class="account-rights">
+            <div class="account-rights-item">
+              <img src="{$maccms.path_tpl}static/image/vip_rights_hd.png">
+              <p>超高清画质</p>
+            </div>
+            <div class="account-rights-item">
+              <img src="{$maccms.path_tpl}static/image/vip_rights_ad.png">
+              <p>去广告</p>
+            </div>
+            <div class="account-rights-item">
+              <img src="{$maccms.path_tpl}static/image/vip_rights_show.png">
+              <p>尊享身份特权</p>
+            </div>
+            <div class="account-rights-item">
+              <img src="{$maccms.path_tpl}static/image/vip_rights_down.png">
+              <p>下载视频</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    
+    <!-- 账户信息 主体content -->
+    
+
+
+  </div>
+
+  {include file="public/footer-include"}
+  <script>
+    $(".go-back").click(function () {
+      var ref = document.referrer;
+      console.log('ref', ref);
+      if(ref !== location.href){
+        location.href = ref;
+      }else{
+        location.href = './index.html';
+      }
+    });
+
+    $('body').on('click', '.jsUpdateAvatar', function(){
+      alert('修改头像')
+    });
+
+  </script>
+</body>
+
+</html>

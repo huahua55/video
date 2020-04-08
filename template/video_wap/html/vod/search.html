@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果 - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+  <meta name="description" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/search.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+
+    <!-- 搜索页面 主体content -->
+    <!-- 搜索结果为空时展示以下内容 -->
+    <div class="search-no" style="display: none;">
+      <div class="search-history">
+        <div class="search-history-title">
+          搜索历史
+          <div class="img">
+            <img src="{$maccms.path_tpl}static/image/search_delete.png" alt="清空历史">
+          </div>
+        </div>
+        <div class="search-history-list">
+          <a class="search-history-item" href="javascript:;">辩护人</a>
+          <a class="search-history-item" href="javascript:;">屏息</a>
+          <a class="search-history-item" href="javascript:;">我在故宫修文物</a>
+        </div>
+      </div>
+
+      <div class="search-hot">
+        <div class="search-hot-title">
+          全网热搜
+        </div>
+        <div class="search-hot-list">
+          <a class="search-hot-item item1" href="javascript:;">
+            <i>1</i>
+            <span>辩护人</span>
+          </a>
+          <a class="search-hot-item item2" href="javascript:;">
+            <i>2</i>
+            <span>辩护人</span>
+          </a>
+          <a class="search-hot-item item3" href="javascript:;">
+            <i>3</i>
+            <span>新世界</span>
+          </a>
+          <a class="search-hot-item" href="javascript:;">
+            <i>4</i>
+            <span>柏林档案</span>
+          </a>
+          <a class="search-hot-item" href="javascript:;">
+            <i>5</i>
+            <span>毒液：致命守护者</span>
+          </a>
+          <a class="search-hot-item" href="javascript:;">
+            <i>6</i>
+            <span>毒液：致命守护者</span>
+          </a>
+          <a class="search-hot-item" href="javascript:;">
+            <i>7</i>
+            <span>毒液：致命守护者毒液：致命守护者</span>
+          </a>
+          <a class="search-hot-item" href="javascript:;">
+            <i>8</i>
+            <span>毒液：致命守护者</span>
+          </a>
+        
+        </div>
+      </div>
+    </div>
+
+    <!-- 搜索结果存在时展示以下内容 -->
+    <div class="search-result">
+      <div class="search-show">
+        {maccms:vod num="10" paging="yes" pageurl="vod/search" order="desc" by="time"}
+        <a class="search-show-item" href="{:mac_url_vod_detail($vo)}">
+          <div class="play-img">
+            <img src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
+            <div class="tips">
+              <span>{if condition="$vo.vod_serial gt 0"}第{$vo.vod_serial}集/共{$vo.vod_total}集{else/}{$vo.vod_remarks}{/if}</span>
+            </div>
+          </div>
+          <div class="play-text">
+            <div class="title">{$vo.vod_name}</div>
+            <div class="role">主演：{$vo.vod_actor}</div>
+            <div class="director">导演：{$vo.vod_director}</div>
+            <div class="type">类型：{$vo.type_name} / {$vo.vod_area} / {$vo.vod_year}</div>
+            <div class="time">时间：{$vo.vod_time|date='Y-m-d',###}</div>
+          </div>
+        </a>
+        {/maccms:vod}
+      </div>
+    </div>
+
+    
+
+    <!-- 搜索页面 主体content -->
+
+    
+
+  </div>
+
+  {include file="public/footer-include"}
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>{$obj.type_title} - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$obj.type_key}" />
+  <meta name="description" content="{$obj.type_des}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/sort.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+    <!-- 分类 主体内容content  -->
+    <!-- 筛选条件 -->
+    <div class="sort-wrapper movies">
+      <ul class="sort-content">
+        <li {if condition="$obj.type_id eq ''"} class="active" {/if}>
+          <a href="{:mac_url_type($obj.type,['id'=>'','area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">
+            全部影视
+          </a>
+        </li>
+        {maccms:type ids="parent" id="vo2"  order="asc" by="sort"}
+        <li {if condition="$obj.type_id eq $vo2.type_id"} class="active" {/if}>
+          <a href="{:mac_url_type($obj.type,['id'=>$vo2.type_id,'area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2.type_name}</a>
+        </li>
+        {/maccms:type}
+
+      </ul>
+    </div>
+    <div class="sort-wrapper types">
+      <ul class="sort-content">
+        <li {if condition="$param['class'] eq ''"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">
+            全部类型
+          </a>
+        </li>
+        {maccms:foreach name=":explode(',',$obj.type_extend.class)" id="vo2" key="key2"}
+        <li {if condition="$param['class'] eq $vo2"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
+        </li>
+        {/maccms:foreach}
+      </ul>
+    </div>
+    <div class="sort-wrapper areas">
+      <ul class="sort-content">
+        <li {if condition="$param['area'] eq ''"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部地区</a>
+        </li>
+        {maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
+        <li {if condition="$param['area'] eq $vo2"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
+        </li>
+        {/maccms:foreach}
+      </ul>
+    </div>
+    <div class="sort-wrapper times">
+      <ul class="sort-content">
+        <li {if condition="$param['year'] eq ''"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部时间</a>
+        </li>
+        {maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
+        <li {if condition="$param['year'] eq $vo2"} class="active" {/if}>
+          <a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo2,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
+        </li>
+        {/maccms:foreach}
+      </ul>
+    </div>
+
+    <!-- 筛选条件 -->
+    <!-- 视频列表 -->
+    <div class="module-wrapper">
+      <div class="module-list">
+        {maccms:vod num="30" paging="yes" type="current" order="desc" by="time"}
+        <a class="module-item" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+          <div class="module-item-cover">
+            <img src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}"/>
+
+            <div class="serial">
+              <span>{$vo.vod_version}</span>
+            </div>
+          </div>
+          <div class="module-item-text">
+            {$vo.vod_name}
+          </div>
+        </a>
+        {/maccms:vod}
+      </div>
+    </div>
+    <!-- 视频列表 -->
+
+    <!-- 分类 主体内容content  -->
+  
+    <!-- 公共底部footer  -->
+    {include file="public/footer"}
+    <!-- 公共底部footer  -->
+
+
+  </div>
+
+
+  {include file="public/footer-include"}
+  <!-- <script src="https://cdn.jsdelivr.net/npm/better-scroll"></script> -->
+  <script src="{$maccms.path_tpl}static/lib/betterScroll/bscroll.min.js"></script>
+
+  <script>
+    var scrollMovies = new BScroll(document.querySelector('.movies'), {
+      scrollX: true,
+      click: true
+    });
+    var scrollTypes = new BScroll(document.querySelector('.types'), {
+      scrollX: true,
+      click: true
+    });
+    var scrollAreas = new BScroll(document.querySelector('.areas'), {
+      scrollX: true,
+      click: true
+    });
+    var scrollTimes = new BScroll(document.querySelector('.times'), {
+      scrollX: true,
+      click: true
+    });
+
+
+  </script>
+</body>
+
+</html>

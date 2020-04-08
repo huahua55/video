@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>专题首页 - 精品专题 - 推荐专题 - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$maccms.site_keywords}" />
+  <meta name="description" content="{$maccms.site_description}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/topic.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+
+    <!-- 专题列表 -->
+    
+    <div class="topic-wrapper">
+      <div class="topic-list">
+        {maccms:topic num="10" paging="yes" order="desc" by="time"}
+        <a class="topic-item" href="{:mac_url_topic_detail($vo)}">
+          <div class="topic-item-cover">
+            <img src="{$vo.topic_pic|mac_url_img}" alt="{$vo.topic_name}" />
+          </div>
+          <div class="topic-item-text">
+            <h3 class="title">{$vo.topic_name}</h3>
+            <p class="brief">
+              {$vo.topic_blurb}
+            </p>
+          </div>
+        </a>
+        {/maccms:topic}
+        
+      </div>
+    </div>
+
+    <!-- 专题列表 -->
+    <!-- 公共底部footer  -->
+    {include file="public/footer"}
+    <!-- 公共底部footer  -->
+
+  </div>
+
+  {include file="public/footer-include"}
+</body>
+
+</html>

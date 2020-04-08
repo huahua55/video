@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>重设密码 - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$maccms.site_keywords}" />
+  <meta name="description" content="{$maccms.site_description}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/register.css">
+</head>
+
+<body>
+  <div class="container">
+    
+    <!-- 注册 主体content -->
+    <div class="register">
+      <div class="register-header go-back">
+        <div class="register-header-back"></div>
+        <div class="register-header-title">
+          重设密码
+        </div>
+        <div class="register-header-tool"></div>
+      </div>
+      <div class="register-header-space"></div>
+
+      <div class="register-wrap">
+        <form method="post" id="fm" action="">
+          <div class="register-form-group">
+            <div class="form-group clearfix">
+              <img src="{$maccms.path_tpl}static/image/icon_code.png" alt="密码">
+              <input type="password" id="pass0" name="user_pwd" placeholder="请输入旧密码">
+            </div>
+            <div class="form-group clearfix">
+              <img src="{$maccms.path_tpl}static/image/icon_password.png" alt="密码">
+              <input type="password" id="pass1" name="user_pwd1" placeholder="请输入新密码">
+            </div>
+            <div class="form-group clearfix">
+              <img src="{$maccms.path_tpl}static/image/icon_password.png" alt="确认密码">
+              <input type="password" id="pass2" name="user_pwd2" placeholder="请输入新密码">
+            </div>
+          </div>
+          <input type="button" id="btn_submit" class="btn-brand" value="完成">
+        </form>
+      </div>
+
+
+    </div>
+
+    <!-- 注册 主体content -->
+
+
+  </div>
+
+  {include file="public/footer-include"}
+  <script>
+    $(".go-back").click(function () {
+      var ref = document.referrer;
+      console.log('ref', ref);
+      if(ref !== location.href){
+        location.href = ref;
+      }else{
+        location.href = './index.html';
+      }
+    });
+
+    $("input[name='user_pwd']").focus();
+    // 账号登录
+    $("#btn_submit").click(function () {
+      var data = $('#fm').serialize();
+      var input = $("#fm").serializeArray();
+      var pass = $("#pass0").val();
+      var pass1 = $("#pass1").val();
+      var pass2 = $("#pass2").val();
+      var inputName = new Array();
+      inputName['user_pwd'] = '旧密码';
+      inputName['user_pwd1'] = '新密码';
+      inputName['user_pwd2'] = '确认密码';
+
+      var is = false;
+      var err = '';
+      $.each(input, function (name, field) {
+        if (field.value == '' && field.name != 'verify') {
+          is = true;
+          err = inputName[field.name] + '不能为空';
+          return false;
+        }
+      });
+      if (is) {
+        alert(err);
+        return false;
+      }
+      if (pass1 != pass2) {
+        alert('两次密码不一致');
+        return false;
+      }
+
+      $.ajax({
+        url: "{:url('user/reset')}",
+        type: "post",
+        dataType: "json",
+        data: data,
+        beforeSend: function () {
+          //开启loading
+          //$(".loading_box").css("display","block");
+          $("#btn_submit").css("background", "#fd6a6a").val("loading...");
+        },
+        success: function (r) {
+          alert(r.msg);
+          if (r.code == 1) {
+            location.href = "{:url('user/login')}";
+          }
+          else {
+            $('#verify_img').click();
+          }
+        },
+        complete: function () {
+          //结束loading
+          //$(".loading_box").css("display","none");
+          $("#btn_submit").css("background", "#ff773c").val("完成");
+        }
+      });
+    })
+
+  </script>
+</body>
+
+</html>

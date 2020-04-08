@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<title>在线充值 - {$maccms.site_name}</title>
+  <meta name="keywords" content="电影专题,电视剧专题,综艺专题,动漫专题,推荐专题,专题收录" />
+  <meta name="description" content="本站提供最新最全精品专题数据" />
+  <meta name="keywords" content="{$maccms.site_keywords}" />
+  <meta name="description" content="{$maccms.site_description}" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/vip.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+
+    <!-- 充值主体内容 -->
+    <div class="vip-wrap">
+      <div class="vip-title">
+        <img src="{$maccms.path_tpl}static/image/vip_title.png" alt="超级会员权益">
+      </div>
+      <div class="vip-products">
+        <div class="vip-product" data-id="1" data-price="115">
+          <div class="vip-product-name">月卡</div>
+          <div class="vip-product-price"><span>￥</span>115</div>
+        </div>
+        <div class="vip-product" data-id="2" data-price="540">
+          <div class="vip-product-name">半年卡</div>
+          <div class="vip-product-price"><span>￥</span>540</div>
+        </div>
+        <div class="vip-product active" data-id="3" data-price="900">
+          <div class="vip-product-name">年卡</div>
+          <div class="vip-product-price"><span>￥</span>900</div>
+          <div class="vip-product-badge">再送3个月</div>
+        </div>
+      </div>
+      <div class="vip-type-wrap">
+        <div class="vip-type-title">支付方式</div>
+        <div class="vip-type">
+          <div class="vip-type-item" data-id="1" data-type="1">
+            <div class="name">人工支付</div>
+            <img class="icon" src="{$maccms.path_tpl}static/image/pay_wechat.png">
+            <img class="icon" src="{$maccms.path_tpl}static/image/pay_ali.png">
+            
+            <img class="radio radio1"style="display: none;" src="{$maccms.path_tpl}static/image/radio_select_ok.png">
+            <img class="radio radio2"  src="{$maccms.path_tpl}static/image/radio_select_no.png">
+
+
+          </div>
+          <div class="vip-type-item" data-id="2" data-type="2">
+            <div class="name">信用卡支付</div>
+            <img class="icon" src="{$maccms.path_tpl}static/image/pay_visa.png">
+            <img class="icon" src="{$maccms.path_tpl}static/image/pay_wanshida.png">
+            
+            <img class="radio radio1" src="{$maccms.path_tpl}static/image/radio_select_ok.png">
+            <img class="radio radio2" style="display: none;" src="{$maccms.path_tpl}static/image/radio_select_no.png">
+
+          </div>
+        </div>
+      </div>
+      <div id="btn_submit_pay" class="vip-pay">去支付</div>
+
+    </div>
+    <div class="rights-wrap">
+      <div class="rights-title">——  会员尊享权益  ——</div>
+      <div class="rights">
+        <div class="rights-item">
+          <img src="{$maccms.path_tpl}static/image/vip_rights_hd.png">
+          <p>超高清画质</p>
+        </div>
+        <div class="rights-item">
+          <img src="{$maccms.path_tpl}static/image/vip_rights_ad.png">
+          <p>去广告</p>
+        </div>
+        <div class="rights-item">
+          <img src="{$maccms.path_tpl}static/image/vip_rights_show.png">
+          <p>尊享身份特权</p>
+        </div>
+        <div class="rights-item">
+          <img src="{$maccms.path_tpl}static/image/vip_rights_down.png">
+          <p>下载视频</p>
+        </div>
+      </div>
+    </div>
+    <!-- 充值主体内容 -->
+
+    <!-- 公共底部footer  -->
+    {include file="public/footer"}
+    <!-- 公共底部footer  -->
+
+  </div>
+
+  {include file="public/footer-include"}
+  <script>
+    var curProductId = 3;
+    var curPrice = 900;
+    var curPayType = 2;
+    $('.vip-products').on('click', '.vip-product', function(){
+      var cId = $(this).attr('data-id');
+      var cPrice = $(this).attr('data-price');
+      console.log('Cid', cId);
+      console.log('cPrice', cPrice);
+      console.log(cId === curProductId);
+      if(cId === curProductId) {
+        return false;
+      }
+
+      curProductId = cId;
+      curPrice = cPrice;
+
+      $('.vip-products .vip-product').removeClass('active');
+      $(this).addClass('active');
+
+    });
+
+    $('.vip-type').on('click', '.vip-type-item', function(){
+      var cId = $(this).attr('data-id');
+      var cType = $(this).attr('data-type');
+      if(cType === curPayType) {
+        return false;
+      }
+
+      curPayType = cType;
+
+      $('.radio1').hide();
+      $('.radio2').show();
+      
+      $($(this).find('.radio1')[0]).show();
+      $($(this).find('.radio2')[0]).hide();
+
+    });
+
+    $('#btn_submit_pay').click(function(){
+      var that=$(this);
+      // var price = $("input[name='price']").val();
+      var price = curPrice;
+      if(Number(price)<1){
+        return;
+      }
+      if(confirm('确定要充值吗')) {
+        $.ajax({
+          url: "{:url('user/buy')}",
+          type: "post",
+          dataType: "json",
+          data: {price: price,flag:'pay'},
+          beforeSend: function () {
+            $("#btn_submit_pay").css("background","#fd6a6a").val("loading...");
+          },
+          success: function (r) {
+            if (r.code == 1) {
+              location.href="{:url('user/pay')}?order_code=" + r.data.order_code;
+            }
+            else{
+              alert(r.msg);
+            }
+          },
+          complete: function () {
+            $("#btn_submit_pay").css("background","#FF773C").val("去支付");
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

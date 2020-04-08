@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>在线播放{$obj.vod_name} {$obj['vod_play_list'][$param['sid']]['urls'][$param['nid']]['name']} - 高清资源 - {$maccms.site_name}</title>
+  <meta name="keywords" content="{$obj.vod_name}{$obj['vod_play_list'][$param['sid']]['urls'][$param['nid']]['name']}免费在线观看,{$obj.vod_name}剧情介绍" />
+  <meta name="description" content="{$obj.vod_name}{$obj['vod_play_list'][$param['sid']]['urls'][$param['nid']]['name']}免费在线观看,{$obj.vod_name}剧情介绍" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/video.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+    <!-- 视频详情 -->
+    <!-- 播放器 -->
+    <div id="detail-box">
+      <div id="bofang_box">
+          {$player_data}
+          {$player_js}
+      </div>
+    </div>
+    <div class="video-wrapper">
+
+      <div class="video-catalog">
+        <div class="video-catalog-hd">
+          {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+          <div class="video-catalog-hd-item {if condition="$key eq 1"} active {/if}" data-id="{$key}">
+            <p>{$vo.player_info.show}</p>
+            {notempty name="$vo.player_info.tip"}
+            <span>{$vo.player_info.tip}</span>
+            {/notempty}
+          </div>
+          {/maccms:foreach}
+
+          <!-- <div class="video-catalog-hd-item active" data-id="1">
+            <p>480P</p>
+          </div>
+          <div class="video-catalog-hd-item" data-id="2">
+            <p>HD720P/HD1080P</p>
+            <span>VIP会员尊享</span>
+          </div> -->
+        </div>
+        {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+        <div class="video-catalog-bd jsCatalog{$key}" style="display: none;">
+          {maccms:foreach name="vo.urls" id="vo2" key="key2"}
+          <a class="video-catalog-bd-item" href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" target="{$vo.player_info.target}">{$vo2.name}</a>
+          {/maccms:foreach}
+        </div>
+        {/maccms:foreach}
+      </div>
+      <!-- 评论 -->
+      <!--WAP版评论-->
+      
+      <div class="video-comment">
+        <div class="video-comment-title">
+          <img src="{$maccms.path_tpl}static/image/icon_comment.png" >
+          <span>评论</span>
+        </div>
+      </div>
+      <div class="mac_comment" data-id="{$obj.vod_id}" data-mid="{$maccms.mid}" ></div>
+      <script>
+          $(function(){
+              MAC.Comment.Login = {$comment.login};
+              MAC.Comment.Verify = {$comment.verify};
+              MAC.Comment.Init();
+              MAC.Comment.Show(1);
+          });
+      </script>
+
+      <!-- 评论 -->
+
+    </div>
+    <!-- 视频详情 -->
+
+
+  </div>
+  <span style="display:none" class="mac_ulog_set" alt="设置播放页浏览记录" data-type="4" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}" data-sid="{$param.sid}" data-nid="{$param.nid}"></span>
+
+  {include file="public/footer-include"}
+  <script>
+    // function changeShowBrief(){
+    //   if($('#briefContent').hasClass('limit')){
+    //     $('#briefContent').removeClass('limit');
+    //     $('#briefArrow').attr('class', 'icon-arrow icon-arrow-t');
+    //   }else{
+    //     $('#briefContent').addClass('limit');
+    //     $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+    //   }
+    // }
+
+    $(function () {
+      var slideHeight = 60; // px
+      var defHeight = $('#briefContent').height();
+      if (defHeight >= slideHeight) {
+        $('#briefContent').css('height', slideHeight + 'px');
+        // $('#read-more').append('<a href="#">点击查看更多。。</a>');
+        $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+
+        $('#jsBrief').click(function () {
+          var curHeight = $('#briefContent').height();
+          if (curHeight == slideHeight) {
+            $('#briefContent').animate({
+              height: defHeight
+            }, "normal");
+            // $('#read-more a').html('点击隐藏');
+            $('#briefArrow').attr('class', 'icon-arrow icon-arrow-t');
+
+            // $('#gradient').fadeOut();
+          } else {
+            $('#briefContent').animate({
+              height: slideHeight
+            }, "normal");
+            $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+            // $('#read-more a').html('点击查看更多。。');
+            // $('#gradient').fadeIn();
+          }
+          return false;
+        });
+      }
+    });
+
+    $(function(){
+      $('.video-catalog-hd-item').each(function(){
+        if($(this).hasClass('active')){
+          var idx = $(this).attr('data-id');
+          console.log(idx);
+          // $('.video-catalog-bd').hide();
+          $('.jsCatalog'+idx).show();
+        }
+      })
+    });
+
+    $('.video-catalog-hd').on('click', '.video-catalog-hd-item', function(){
+      if($(this).hasClass('active')){
+        return false;
+      }
+      $('.video-catalog-hd-item').removeClass('active');
+      $(this).addClass('active');
+      var idx = $(this).attr('data-id');
+      console.log(idx);
+      $('.video-catalog-bd').hide();
+      $('.jsCatalog'+idx).show();
+
+    });
+
+  </script>
+</body>
+
+</html>

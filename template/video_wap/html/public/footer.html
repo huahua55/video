@@ -1,0 +1,24 @@
+<!-- 页面底部tab  -->
+<div class="vid-footer">
+  <div class="vid-tab">
+    <a class="vid-tab-item" href="{$maccms.path}">
+      <img class="img" src="{$maccms.path_tpl}static/image/tab_home.png">
+      <p class="name">首页</p>
+    </a>
+    {maccms:type num="1" ids="parent"  order="asc" by="sort"}
+    <a class="vid-tab-item" href="{:mac_url_type($vo)}">
+      <img class="img" src="{$maccms.path_tpl}static/image/tab_sort.png">
+      <p class="name">分类</p>
+    </a>
+    {/maccms:type}
+    <a class="vid-tab-item" href="{:mac_url('user/buy')}">
+      <img class="img" src="{$maccms.path_tpl}static/image/tab_recharge.png">
+      <p class="name">充值</p>
+    </a>
+    <a class="vid-tab-item" href="{:mac_url('topic/index')}">
+      <img class="img" src="{$maccms.path_tpl}static/image/tab_topic.png">
+      <p class="name">专题</p>
+    </a>
+  </div>
+</div>
+<div class="vid-footer-space"></div>

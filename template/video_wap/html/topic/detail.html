@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>{$obj.topic_name}专题详情- {$maccms.site_name}</title>
+  <meta name="keywords"
+    content="{$obj.topic_name}电影专题,{$obj.topic_name}电视剧专题,{$obj.topic_name}综艺专题,{$obj.topic_name}动漫专题,{$obj.topic_name}推荐专题" />
+  <meta name="description" content="本站提供{$obj.topic_name},最新最全精品专题数据" />
+  {include file="public/header-include"}
+  <link rel="stylesheet" href="{$maccms.path_tpl}static/css/topic-detail.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 公共头部 -->
+    {include file="public/header"}
+    <!-- 公共头部 -->
+    <!-- 专题详情 -->
+    <div class="todetail-wrapper">
+      <div class="todetail-detail">
+        <div class="todetail-header">
+          <div class="cover">
+            <img src="{$obj.topic_pic|mac_url_img}" alt="{$obj.topic_name}" />
+          </div>
+          <div class="text">
+            <h3 class="title">{$obj.topic_name}</h3>
+            <p class="brief">
+              {$obj.topic_blurb}
+            </p>
+          </div>
+        </div>
+        <!-- <div class="todetail-brief" onclick="changeShowBrief()"> -->
+        <div id="jsBrief" class="todetail-brief">
+          <div class="title">
+            <p>简介</p>
+            <span id="briefArrow" class="jsArrow icon-arrow icon-arrow-b"></span>
+          </div>
+          <div id="briefContent" class="content limit">
+            {$obj.topic_content}
+          </div>
+
+        </div>
+      </div>
+
+      <div class="module-wrapper">
+        <div class="module-list">
+          {maccms:foreach name="$obj.vod_list"}
+          <a class="module-item" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+            <div class="module-item-cover">
+              <img src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" />
+              <div class="serial">
+                <span>{$vo.vod_remarks}</span>
+              </div>
+            </div>
+            <div class="module-item-text">
+              {$vo.vod_name}
+            </div>
+          </a>
+          {/maccms:foreach}
+
+        </div>
+      </div>
+
+    </div>
+    <!-- 专题详情 -->
+
+  </div>
+
+  {include file="public/footer-include"}
+  <script>
+    // function changeShowBrief() {
+    //   if ($('#briefContent').hasClass('limit')) {
+    //     $('#briefContent').removeClass('limit');
+    //     $('#briefArrow').attr('class', 'icon-arrow icon-arrow-t');
+    //   } else {
+    //     $('#briefContent').addClass('limit');
+    //     $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+    //   }
+    // }
+
+
+    $(function () {
+      var slideHeight = 60; // px
+      var defHeight = $('#briefContent').height();
+      if (defHeight >= slideHeight) {
+        $('#briefContent').css('height', slideHeight + 'px');
+        // $('#read-more').append('<a href="#">点击查看更多。。</a>');
+        $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+
+        $('#jsBrief').click(function () {
+          var curHeight = $('#briefContent').height();
+          if (curHeight == slideHeight) {
+            $('#briefContent').animate({
+              height: defHeight
+            }, "normal");
+            // $('#read-more a').html('点击隐藏');
+            $('#briefArrow').attr('class', 'icon-arrow icon-arrow-t');
+
+            // $('#gradient').fadeOut();
+          } else {
+            $('#briefContent').animate({
+              height: slideHeight
+            }, "normal");
+            $('#briefArrow').attr('class', 'icon-arrow icon-arrow-b');
+            // $('#read-more a').html('点击查看更多。。');
+            // $('#gradient').fadeIn();
+          }
+          return false;
+        });
+      }
+    });
+
+
+
+  </script>
+</body>
+
+</html>
