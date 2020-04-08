@@ -224,7 +224,28 @@
                     </div>
                     <div class="layui-form-mid layui-word-aux">单位秒建议设置为3600以上</div>
                 </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">页面缓存：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="app[cache_page]" value="0" title="关闭" {if condition="$config['app']['cache_page'] neq 1"}checked {/if}>
+                        <input type="radio" name="app[cache_page]" value="1" title="开启" {if condition="$config['app']['cache_page'] eq 1"}checked {/if}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">页面缓存时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="app[cache_time_page]" placeholder="建议设置为3600以上" value="{$config['app']['cache_time_page']}" class="layui-input w150" >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单位秒建议设置为3600以上</div>
+                </div>
 
+                <div class="layui-form-item">
+                    <label class="layui-form-label">压缩页面：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="app[compress]" value="0" title="关闭" {if condition="$config['app']['compress'] neq 1"}checked {/if}>
+                        <input type="radio" name="app[compress]" value="1" title="开启" {if condition="$config['app']['compress'] eq 1"}checked {/if}>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">搜索开关：</label>
                     <div class="layui-input-block">

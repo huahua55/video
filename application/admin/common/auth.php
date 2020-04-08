@@ -203,8 +203,7 @@ return array(
 //    '8' => array('name' => '生成', 'icon' => 'xe63e', 'sub' => array(
 //        '81' => array("show"=>1,'name' => '生成选项', 'controller' => 'make',		'action' => 'opt'),
 //        '82' => array("show"=>1,'name' => '生成首页', 'controller' => 'make',		'action' => 'index'),
-//                '83' => array("show"=>1,'name' => '生成地图', 'controller' => 'make',		'action' => 'map'),
-//
+//        '83' => array("show"=>1,'name' => '生成地图', 'controller' => 'make',		'action' => 'map'),
 //
 //        '8101' => array("show"=>0,'name' => '--生成入口', 'controller' => 'make',		'action' => 'make'),
 //        '8102' => array("show"=>0,'name' => '--生成RSS', 'controller' => 'make',		'action' => 'rss'),
@@ -213,8 +212,6 @@ return array(
 //        '8105' => array("show"=>0,'name' => '--生成专题内容', 'controller' => 'make',		'action' => 'topic_info'),
 //        '8106' => array("show"=>0,'name' => '--生成内容页', 'controller' => 'make',		'action' => 'info'),
 //        '8107' => array("show"=>0,'name' => '--生成自定义页', 'controller' => 'make',		'action' => 'label'),
-//
-//
 //    )),
 
     '9' => array('name' => '采集', 'icon' => 'xe727', 'sub' => array(

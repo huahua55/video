@@ -11,9 +11,9 @@ header('Content-Type:text/html;charset=utf-8');
 // 检测PHP环境
 if(version_compare(PHP_VERSION,'5.5.0','<'))  die('PHP版本过低，最少需要PHP5.5，请升级PHP版本！');
 //超时时间
-@ini_set('max_execution_time', '0');
+@ini_set('max_execution_time', '30');
 //内存限制 取消内存限制
-@ini_set("memory_limit",'-1');
+@ini_set("memory_limit",'128M');
 // 定义应用目录
 define('ROOT_PATH', __DIR__ . '/');
 define('APP_PATH', __DIR__ . '/application/');
