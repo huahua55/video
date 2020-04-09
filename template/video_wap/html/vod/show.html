@@ -138,7 +138,7 @@
         return;
       }
       $.ajax({
-        url: '{$__PAGING__.page_url|mac_url_page='+ nextPage +'}?ajax=1',
+        url: '{$__PAGING__.page_url}?page='+ nextPage +'&ajax=1',
         cache: false,
         success: function(html){
           nextPage += 1;
