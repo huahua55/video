@@ -16,12 +16,26 @@ class Vod extends Base
 
     public function type()
     {
+        $param = mac_param_url();
+        if ($param['ajax']) {
+            return $this->ajax_type();
+        }
         $info = $this->label_type();
         return $this->label_fetch( mac_tpl_fetch('vod',$info['type_tpl'],'type') );
     }
 
+    public function ajax_type()
+    {
+        $info = $this->label_type();
+        return $this->label_fetch('vod/ajax_show');
+    }
+
     public function show()
     {
+        $param = mac_param_url();
+        if ($param['ajax']) {
+            return $this->ajax_show();
+        }
         $info = $this->label_type();
         return $this->label_fetch( mac_tpl_fetch('vod',$info['type_tpl_list'],'show') );
     }
@@ -35,6 +49,9 @@ class Vod extends Base
     public function search()
     {
         $param = mac_param_url();
+        if ($param['ajax']) {
+            return $this->ajax_search();
+        }
         $this->check_search($param);
         $this->assign('param',$param);
         return $this->label_fetch('vod/search');
@@ -43,7 +60,7 @@ class Vod extends Base
     public function ajax_search()
     {
         $param = mac_param_url();
-        $this->check_search($param);
+        //$this->check_search($param);
         $this->assign('param',$param);
         return $this->label_fetch('vod/ajax_search');
     }
