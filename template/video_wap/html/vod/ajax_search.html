@@ -1,0 +1,17 @@
+{maccms:vod num="10" paging="yes" pageurl="vod/search" order="desc" by="time"}
+<a class="search-show-item" href="{:mac_url_vod_detail($vo)}">
+  <div class="play-img">
+    <img src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
+    <div class="tips">
+      <span>{if condition="$vo.vod_serial gt 0"}第{$vo.vod_serial}集/共{$vo.vod_total}集{else/}{$vo.vod_remarks}{/if}</span>
+    </div>
+  </div>
+  <div class="play-text">
+    <div class="title">{$vo.vod_name}</div>
+    <div class="role">主演：{$vo.vod_actor}</div>
+    <div class="director">导演：{$vo.vod_director}</div>
+    <div class="type">类型：{$vo.type_name} / {$vo.vod_area} / {$vo.vod_year}</div>
+    <div class="time">时间：{$vo.vod_time|date='Y-m-d',###}</div>
+  </div>
+</a>
+{/maccms:vod}
