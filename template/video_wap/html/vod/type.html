@@ -91,7 +91,7 @@
         </a>
         {/maccms:vod}
       </div>
-      <div class="load-more">
+      <div class="load-more" style="display: none;">
         <a href="javascript:;" onclick="getMoreVod()">加载更多</a>
       </div>
     </div>
@@ -129,11 +129,18 @@
       click: true
     });
 
-    var nextPage = {$__PAGING__.page_next};
-    var totalPage = {$__PAGING__.page_total};
-    console.log('共{$__PAGING__.record_total}条数据,当前{$__PAGING__.page_current}/{$__PAGING__.page_total}页');
+    var nextPage = Number({$__PAGING__.page_next});
+    var totalPage = Number({$__PAGING__.page_total});
+    console.log('共{$__PAGING__.record_total}条数据,当前{$__PAGING__.page_current}/{$__PAGING__.page_total}页,下一页{$__PAGING__.page_next}');
+    $(function(){
+      console.log(nextPage, Boolean(nextPage));
+      if($('#moduleList a').length && nextPage>1){
+        $('.load-more').show();
+      }
+    });
+
     function getMoreVod(){
-      if(nextPage > totalPage){
+      if(!nextPage || nextPage > totalPage){
         $('.load-more a').text('暂无更多数据');
         return;
       }
@@ -142,8 +149,8 @@
         cache: false,
         success: function(html){
           nextPage += 1;
-          console.log('nextPage', nextPage);
-          console.log('totalPage', totalPage);
+          // console.log('nextPage', nextPage);
+          // console.log('totalPage', totalPage);
           $("#moduleList").append(html);
         }
       });

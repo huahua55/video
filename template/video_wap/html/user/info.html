@@ -129,6 +129,19 @@
     //   alert(err);
     // });
 
+    // $(".face").imageUpload({
+    //   formAction: "{:url('user/portrait')}",
+    //   inputFileName:'file',
+    //   browseButtonValue: '点击上传',
+    //   browseButtonClass:'upload-choice',
+    //   automaticUpload: false,
+    //   hideDeleteButton: true,
+    //   hover:true
+    // })
+    // $(".face").on("imageUpload.uploadFailed", function (ev, err) {
+    //   alert(err);
+    // });
+
     $(".camera").imageUpload({
       formAction: "{:url('user/portrait')}",
       inputFileName:'file',
@@ -138,9 +151,14 @@
       hideDeleteButton: true,
       hover:true
     })
+    // $(".camera").on("imageUpload.imageChanged", function () {
+    //   window.location.reload();
+    // });
     $(".camera").on("imageUpload.uploadFailed", function (ev, err) {
       alert(err);
     });
+
+    
 
   </script>
 </body>

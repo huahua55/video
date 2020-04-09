@@ -298,6 +298,21 @@
 .select-button:focus {
   outline: none;
 }
+.upload-choice {
+  display: block;
+  width: 0.44rem;
+  height: 0.44rem;
+  margin-left: 1.8rem;
+  margin-top: 1.88rem;
+  font-size: 0;
+  color: #ffffff;
+  background: none;
+  border-radius: 50%;
+  border: none;
+}
+.upload-choice:focus {
+  outline: none;
+}
 .upload-button {
   display: block;
   width: 0.44rem;
