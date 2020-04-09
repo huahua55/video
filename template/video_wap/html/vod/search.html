@@ -16,66 +16,9 @@
     <!-- 公共头部 -->
     {include file="public/header"}
     <!-- 公共头部 -->
-
+    
     <!-- 搜索页面 主体content -->
-    <!-- 搜索结果为空时展示以下内容 -->
-    <div class="search-no" style="display: none;">
-      <div class="search-history">
-        <div class="search-history-title">
-          搜索历史
-          <div class="img">
-            <img src="{$maccms.path_tpl}static/image/search_delete.png" alt="清空历史">
-          </div>
-        </div>
-        <div class="search-history-list">
-          <a class="search-history-item" href="javascript:;">辩护人</a>
-          <a class="search-history-item" href="javascript:;">屏息</a>
-          <a class="search-history-item" href="javascript:;">我在故宫修文物</a>
-        </div>
-      </div>
-
-      <div class="search-hot">
-        <div class="search-hot-title">
-          全网热搜
-        </div>
-        <div class="search-hot-list">
-          <a class="search-hot-item item1" href="javascript:;">
-            <i>1</i>
-            <span>辩护人</span>
-          </a>
-          <a class="search-hot-item item2" href="javascript:;">
-            <i>2</i>
-            <span>辩护人</span>
-          </a>
-          <a class="search-hot-item item3" href="javascript:;">
-            <i>3</i>
-            <span>新世界</span>
-          </a>
-          <a class="search-hot-item" href="javascript:;">
-            <i>4</i>
-            <span>柏林档案</span>
-          </a>
-          <a class="search-hot-item" href="javascript:;">
-            <i>5</i>
-            <span>毒液：致命守护者</span>
-          </a>
-          <a class="search-hot-item" href="javascript:;">
-            <i>6</i>
-            <span>毒液：致命守护者</span>
-          </a>
-          <a class="search-hot-item" href="javascript:;">
-            <i>7</i>
-            <span>毒液：致命守护者毒液：致命守护者</span>
-          </a>
-          <a class="search-hot-item" href="javascript:;">
-            <i>8</i>
-            <span>毒液：致命守护者</span>
-          </a>
-        
-        </div>
-      </div>
-    </div>
-
+    
     <!-- 搜索结果存在时展示以下内容 -->
     <div class="search-result">
       <div class="search-show">
@@ -97,17 +40,75 @@
         </a>
         {/maccms:vod}
       </div>
+      <!-- <div class="ui-bar list-page fn-clear">
+        {include file="public/paging"}
+      </div> -->
     </div>
 
-    
+    <!-- $__PAGING__.record_total必须在下方调用，尴尬，凑合实现 -->
+    {if condition="$__PAGING__.record_total eq 0"}
+    <!-- 搜索结果为空时展示以下内容 -->
+    <div class="search-no">
+      <div class="search-history">
+        <div class="search-history-title">
+          搜索历史
+          <div id="clearHistory" class="img">
+            <img src="{$maccms.path_tpl}static/image/search_delete.png" alt="清空历史">
+          </div>
+        </div>
+        <div id="searchHistory" class="search-history-list">
+          <!-- <a class="search-history-item" href="javascript:;">辩护人</a>
+          <a class="search-history-item" href="javascript:;">屏息</a>
+          <a class="search-history-item" href="javascript:;">我在故宫修文物</a> -->
+        </div>
+      </div>
+
+      <div class="search-hot">
+        <div class="search-hot-title">
+          全网热搜
+        </div>
+        <div class="search-hot-list">
+          {maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
+          <a class="search-hot-item item{$key+1}" href="{:mac_url('vod/search',['wd'=>$vo])}">
+            <i>{$key+1}</i>
+            <span>{$vo}</span>
+          </a>
+          {/maccms:foreach}
+        </div>
+      </div>
+    </div>
+
+    {/if}
 
     <!-- 搜索页面 主体content -->
-
-    
-
   </div>
 
   {include file="public/footer-include"}
+  <script>
+    var curKeyword = '{$param.wd}';
+    var keywords = [];
+    var searchHistory = localStorage.getItem('search_history');
+    if(searchHistory && JSON.parse(searchHistory)){
+      keywords = JSON.parse(searchHistory);
+    }
+    if(keywords.indexOf(curKeyword) === -1){
+      keywords.push(curKeyword);
+      localStorage.setItem('search_history', JSON.stringify(keywords));
+    }
+
+    var _HTML = '';
+    $(keywords).each(function(){
+      _HTML = _HTML + '<a class="search-history-item" href="./search.html?wd='+this+'">'+this+'</a>';
+    })
+    $('#searchHistory').html(_HTML);
+
+    $('body').on('click', '#clearHistory', function(){
+      $('#searchHistory').empty();
+      localStorage.removeItem('search_history');
+    });
+
+
+  </script>
 </body>
 
 </html>
