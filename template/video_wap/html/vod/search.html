@@ -21,7 +21,7 @@
     
     <!-- 搜索结果存在时展示以下内容 -->
     <div class="search-result">
-      <div class="search-show">
+      <div id="moduleList" class="search-show">
         {maccms:vod num="10" paging="yes" pageurl="vod/search" order="desc" by="time"}
         <a class="search-show-item" href="{:mac_url_vod_detail($vo)}">
           <div class="play-img">
@@ -39,6 +39,9 @@
           </div>
         </a>
         {/maccms:vod}
+      </div>
+      <div class="load-more">
+        <a href="javascript:;" onclick="getMoreVod()">加载更多</a>
       </div>
       <!-- <div class="ui-bar list-page fn-clear">
         {include file="public/paging"}
@@ -106,6 +109,27 @@
       $('#searchHistory').empty();
       localStorage.removeItem('search_history');
     });
+
+
+    var nextPage = {$__PAGING__.page_next};
+    var totalPage = {$__PAGING__.page_total};
+    console.log('共{$__PAGING__.record_total}条数据,当前{$__PAGING__.page_current}/{$__PAGING__.page_total}页');
+    function getMoreVod(){
+      if(nextPage > totalPage){
+        $('.load-more a').text('暂无更多数据');
+        return;
+      }
+      $.ajax({
+        url: '{$__PAGING__.page_url|mac_url_page='+ nextPage +'}?ajax=1',
+        cache: false,
+        success: function(html){
+          nextPage += 1;
+          console.log('nextPage', nextPage);
+          console.log('totalPage', totalPage);
+          $("#moduleList").append(html);
+        }
+      });
+    }
 
 
   </script>

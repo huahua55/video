@@ -9,6 +9,8 @@
   <meta name="description" content="{$maccms.site_description}" />
   {include file="public/header-include"}
   <link rel="stylesheet" href="{$maccms.path_tpl}static/css/user-account.css">
+  <script src="{$maccms.path}static/js/jquery.imageupload.js"></script>
+
 </head>
 
 <body>
@@ -25,9 +27,9 @@
       <div class="account-header-space"></div>
       <div class="account-top">
         <div class="jsUpdateAvatar account-top-avatar">
-          <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" alt="头像">
+          <img class="face" src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" alt="头像">
           <div class="account-top-avatar-icon">
-            <img src="{$maccms.path_tpl}static/image/icon_camera.png" alt="选择图片">
+            <img class="camera" src="{$maccms.path_tpl}static/image/icon_camera.png" alt="选择图片">
           </div>
         </div>
         <div class="account-top-nickname">
@@ -110,8 +112,34 @@
       }
     });
 
-    $('body').on('click', '.jsUpdateAvatar', function(){
-      alert('修改头像')
+    // $('body').on('click', '.jsUpdateAvatar', function(){
+    //   alert('修改头像')
+    // });
+
+    // $(".face").imageUpload({
+    //   formAction: "{:url('user/portrait')}",
+    //   inputFileName:'file',
+    //   browseButtonValue: '点击上传',
+    //   browseButtonClass:'select-button',
+    //   automaticUpload: true,
+    //   hideDeleteButton: true,
+    //   hover:true
+    // })
+    // $(".face").on("imageUpload.uploadFailed", function (ev, err) {
+    //   alert(err);
+    // });
+
+    $(".camera").imageUpload({
+      formAction: "{:url('user/portrait')}",
+      inputFileName:'file',
+      browseButtonValue: '点击上传',
+      browseButtonClass:'upload-button',
+      automaticUpload: true,
+      hideDeleteButton: true,
+      hover:true
+    })
+    $(".camera").on("imageUpload.uploadFailed", function (ev, err) {
+      alert(err);
     });
 
   </script>

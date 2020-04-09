@@ -75,7 +75,7 @@
     <!-- 筛选条件 -->
     <!-- 视频列表 -->
     <div class="module-wrapper">
-      <div class="module-list">
+      <div id="moduleList" class="module-list">
         {maccms:vod num="30" paging="yes" type="current" order="desc" by="time"}
         <a class="module-item" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
           <div class="module-item-cover">
@@ -90,6 +90,9 @@
           </div>
         </a>
         {/maccms:vod}
+      </div>
+      <div class="load-more">
+        <a href="javascript:;" onclick="getMoreVod()">加载更多</a>
       </div>
     </div>
     <!-- 视频列表 -->
@@ -125,6 +128,26 @@
       scrollX: true,
       click: true
     });
+
+    var nextPage = {$__PAGING__.page_next};
+    var totalPage = {$__PAGING__.page_total};
+    console.log('共{$__PAGING__.record_total}条数据,当前{$__PAGING__.page_current}/{$__PAGING__.page_total}页');
+    function getMoreVod(){
+      if(nextPage > totalPage){
+        $('.load-more a').text('暂无更多数据');
+        return;
+      }
+      $.ajax({
+        url: '{$__PAGING__.page_url|mac_url_page='+ nextPage +'}?ajax=1',
+        cache: false,
+        success: function(html){
+          nextPage += 1;
+          console.log('nextPage', nextPage);
+          console.log('totalPage', totalPage);
+          $("#moduleList").append(html);
+        }
+      });
+    }
 
 
   </script>

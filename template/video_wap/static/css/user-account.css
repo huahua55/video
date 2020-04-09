@@ -1,0 +1,313 @@
+.account {
+  width: 7.5rem;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+.account-header {
+  width: 100%;
+  height: 1.12rem;
+  padding: 0 0.32rem;
+  box-sizing: border-box;
+  background-color: #ffffff display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-box-align: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: space-between; -ms-flex-pack: space-between; justify-content: space-between;;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.account-header-space {
+  width: 100%;
+  height: 1.12rem;
+}
+.account-header-back {
+  border-right: 1px solid #eee;
+  border-top: 1px solid #eee;
+  height: 6px;
+  width: 6px;
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+  border-color: #707070;
+  border-left: none;
+  border-bottom: none;
+  display: inline-block;
+}
+.account-header-title {
+  width: 3rem;
+  font-size: 0.32rem;
+  font-weight: 800;
+  color: #000000;
+  text-align: center;
+}
+.account-header-tool {
+  width: 0.2rem;
+}
+.account-top {
+  width: 100%;
+  height: 4.72rem;
+  background: url(../image/account_bg.png) no-repeat center center;
+  background-size: 100% 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.account-top-avatar {
+  width: 2.32rem;
+  height: 2.32rem;
+  margin-bottom: 0.32rem;
+  position: relative;
+}
+.account-top-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.account-top-avatar-icon {
+  width: 0.44rem;
+  height: 0.44rem;
+  position: absolute;
+  right: 0.08rem;
+  bottom: 0;
+}
+.account-top-nickname {
+  width: 80%;
+  height: 0.48rem;
+  line-height: 0.48rem;
+  font-size: 0.32rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.account-top-uid {
+  width: 80%;
+  height: 0.32rem;
+  line-height: 0.32rem;
+  font-size: 0.22rem;
+  color: #ffffff;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.account-renew {
+  width: 6.94rem;
+  margin: 0.32rem auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+}
+.account-renew-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+}
+.account-renew-title img {
+  width: 0.48rem;
+  height: 0.4rem;
+  margin-right: 0.16rem;
+}
+.account-renew-title span {
+  font-size: 0.24rem;
+  color: #000000;
+}
+.account-renew-btn {
+  width: 1.36rem;
+  height: 0.6rem;
+  line-height: 0.6rem;
+  border-radius: 0.3rem;
+  font-size: 0.24rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #ff773c;
+  text-align: center;
+}
+.account-renew-btn a {
+  color: inherit;
+  display: block;
+}
+.account-vip {
+  width: 6.94rem;
+  min-height: 5.6rem;
+  margin: 0.32rem auto;
+  box-shadow: 0 0 0.2rem rgba(113, 128, 188, 0.16);
+  border-radius: 0.2rem;
+  background-color: #ffffff;
+}
+.account-vip-show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+  padding: 0.32rem 0;
+  position: relative;
+}
+.account-vip-show:after {
+  content: '';
+  display: block;
+  height: 1px;
+  background-color: #f5f5f5;
+  position: absolute;
+  bottom: 0;
+  left: 0.3rem;
+  right: 0.3rem;
+}
+.account-vip-show-item {
+  width: 50%;
+  box-sizing: border-box;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+}
+.account-vip-show-item .num {
+  width: 100%;
+  height: 0.56rem;
+  line-height: 0.56rem;
+  font-size: 0.4rem;
+  font-weight: 800;
+  color: #000000;
+}
+.account-vip-show-item .title {
+  width: 100%;
+  height: 0.56rem;
+  line-height: 0.56rem;
+  font-size: 0.24rem;
+  font-weight: 400;
+  color: #000000;
+}
+.account-vip-show-item ~ .account-vip-show-item {
+  border-left: 1px solid #f5f5f5;
+}
+.account-rights {
+  width: 100%;
+  margin: 0.48rem auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+}
+.account-rights-wrap {
+  width: 100%;
+  padding: 0.48rem 0.32rem;
+  box-sizing: border-box;
+}
+.account-rights-title {
+  width: 100%;
+  font-size: 0.24rem;
+  color: #000000;
+  text-align: center;
+}
+.account-rights-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+}
+.account-rights-item img {
+  width: 1.06rem;
+  height: 1.06rem;
+  margin-bottom: 0.32rem;
+}
+.account-rights-item p {
+  font-size: 0.24rem;
+}
+.select-button {
+  width: 2.32rem;
+  height: 2.32rem;
+  font-size: 0.3rem;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: none;
+}
+.select-button:focus {
+  outline: none;
+}
+.upload-button {
+  display: block;
+  width: 0.44rem;
+  height: 0.44rem;
+  font-size: 0;
+  color: #ffffff;
+  background: none;
+  border-radius: 50%;
+  border: none;
+}
+.upload-button:focus {
+  outline: none;
+}
