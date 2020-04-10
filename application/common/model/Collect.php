@@ -288,11 +288,11 @@ class Collect extends Base {
     {
         $url_param = [];
         $url_param['ac'] = $param['ac'];
-        $url_param['t'] = $param['t'];
+        $url_param['t'] = $param['t']; // 分类ID
         $url_param['pg'] = is_numeric($param['page']) ? $param['page'] : '';
-        $url_param['h'] = $param['h'];
+        $url_param['h'] = $param['h']; // 小时
         $url_param['ids'] = $param['ids'];
-        $url_param['wd'] = $param['wd'];
+        $url_param['wd'] = $param['wd'];// 搜索关键词
 
         if($param['ac']!='list'){
             $url_param['ac'] = 'videolist';
@@ -376,7 +376,8 @@ class Collect extends Base {
 
     public function syncImages($pic_status,$pic_url,$flag='vod')
     {
-        if($pic_status == 1){
+        // 固定下载图片到本地
+        //if($pic_status == 1){
             $img_url = model('Image')->down_load($pic_url, $GLOBALS['config']['upload'], $flag);
             $link = MAC_PATH . $img_url;
             $link = str_replace('mac:', $GLOBALS['config']['upload']['protocol'].':', $img_url);
@@ -387,7 +388,7 @@ class Collect extends Base {
                 $pic_url = $img_url;
                 $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
             }
-        }
+        //}
         return ['pic'=>$pic_url,'msg'=>$des];
     }
 
@@ -641,6 +642,12 @@ class Collect extends Base {
                         $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                         $v['vod_pic'] = (string)$tmp['pic'];
                         $msg = $tmp['msg'];
+                        // 针对本站修改为固定
+                        {
+                            $v['vod_play_from'] = 'dplayer$$$dplayerHD';
+                            $v['vod_play_url'] = '';
+                        }
+                        // end
                         $res = model('Vod')->insert($v);
                         if ($res === false) {
 
@@ -863,6 +870,12 @@ class Collect extends Base {
                             $update['vod_time'] = time();
                             $where = [];
                             $where['vod_id'] = $info['vod_id'];
+                            // 针对本站修改为固定
+                            {
+                                $update['vod_play_from'] = 'dplayer$$$dplayerHD';
+                                $update['vod_play_url'] = $info['vod_play_url'];
+                            }
+                            // end
                             $res = model('Vod')->where($where)->update($update);
                             $color = 'green';
                             if ($res === false) {
