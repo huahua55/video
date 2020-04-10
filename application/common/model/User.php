@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model;
 use think\Db;
+use think\Log;
 
 class User extends Base
 {
@@ -123,7 +124,13 @@ class User extends Base
         $data['user_pwd2'] = htmlspecialchars(urldecode(trim($param['user_pwd2'])));
         $data['verify'] = $param['verify'];
         $uid = $param['uid'];
-
+        // 手机号注册
+        $isPhoneRegister = false;
+        if ($param['ac'] == 'phone' && $param['to'] && preg_match('/^\d{6,16}$/', $param['to'])) {
+            $isPhoneRegister = true;
+            $data['user_name'] = substr_replace($param['to'], '****', 3, 4);
+            $data['user_pwd2'] = $data['user_pwd'];
+        }
 
         if ($config['user']['status'] == 0 || $config['user']['reg_open'] == 0) {
             return ['code' => 1001, 'msg' => '未开放注册'];
@@ -131,35 +138,36 @@ class User extends Base
         if (empty($data['user_name']) || empty($data['user_pwd']) || empty($data['user_pwd2'])) {
             return ['code' => 1002, 'msg' => '请填写必填项'];
         }
-        if (empty($param['user_openid_qq']) && empty($param['user_openid_weixin'])
-            && !captcha_check($data['verify']) &&  $config['user']['reg_verify']==1) {
-            return ['code' => 1003, 'msg' => '验证码错误'];
-        }
-        if ($data['user_pwd'] != $data['user_pwd2']) {
-            return ['code' => 1004, 'msg' => '密码与确认密码不一致'];
-        }
-        $row = $this->where('user_name', $data['user_name'])->find();
-        if (!empty($row)) {
-            return ['code' => 1005, 'msg' => '用户名已被注册，请更换'];
-        }
-        if (!preg_match("/^[a-zA-Z\d]*$/i", $data['user_name'])) {
-            return ['code' => 1006, 'msg' => '用户名只能包含字母和数字，请更换'];
-        }
+        if (!$isPhoneRegister) {
+            if (empty($param['user_openid_qq']) && empty($param['user_openid_weixin'])
+                && !captcha_check($data['verify']) && $config['user']['reg_verify'] == 1) {
+                return ['code' => 1003, 'msg' => '验证码错误'];
+            }
+            if ($data['user_pwd'] != $data['user_pwd2']) {
+                return ['code' => 1004, 'msg' => '密码与确认密码不一致'];
+            }
+            $row = $this->where('user_name', $data['user_name'])->find();
+            if (!empty($row)) {
+                return ['code' => 1005, 'msg' => '用户名已被注册，请更换'];
+            }
+            if (!preg_match("/^[a-zA-Z\d]*$/i", $data['user_name'])) {
+                return ['code' => 1006, 'msg' => '用户名只能包含字母和数字，请更换'];
+            }
 
-        $validate = \think\Loader::validate('User');
-        if (!$validate->scene('add')->check($data)) {
-            return ['code' => 1007, 'msg' => '参数错误：' . $validate->getError()];
-        }
+            $validate = \think\Loader::validate('User');
+            if (!$validate->scene('add')->check($data)) {
+                return ['code' => 1007, 'msg' => '参数错误：' . $validate->getError()];
+            }
 
-        $filter = $GLOBALS['config']['user']['filter_words'];
-        if(!empty($filter)) {
-            $filter_arr = explode(',', $filter);
-            $f_name = str_replace($filter_arr, '', $data['user_name']);
-            if ($f_name != $data['user_name']) {
-                return ['code' => 1008, 'msg' => '用户名禁止包含：' . $filter . '等字符，请重试'];
+            $filter = $GLOBALS['config']['user']['filter_words'];
+            if (!empty($filter)) {
+                $filter_arr = explode(',', $filter);
+                $f_name = str_replace($filter_arr, '', $data['user_name']);
+                if ($f_name != $data['user_name']) {
+                    return ['code' => 1008, 'msg' => '用户名禁止包含：' . $filter . '等字符，请重试'];
+                }
             }
         }
-
         $ip = sprintf('%u',ip2long(request()->ip()));
         if($ip>2147483647){
             $ip=0;
@@ -189,7 +197,7 @@ class User extends Base
         $fields['user_openid_qq'] = (string)$param['user_openid_qq'];
         $fields['user_openid_weixin'] = (string)$param['user_openid_weixin'];
 
-        if($config['user']['reg_phone_sms'] == '1'){
+        if($config['user']['reg_phone_sms'] == '1' && $isPhoneRegister){
             $param['type'] = 3;
             $res = $this->check_msg($param);
             if($res['code'] >1){
@@ -320,12 +328,19 @@ class User extends Base
     {
         $data = [];
         $data['user_name'] = htmlspecialchars(urldecode(trim($param['user_name'])));
+        $data['user_phone'] = htmlspecialchars(urldecode(trim($param['user_phone'])));
         $data['user_pwd'] = htmlspecialchars(urldecode(trim($param['user_pwd'])));
         $data['verify'] = $param['verify'];
         $data['openid'] = htmlspecialchars(urldecode(trim($param['openid'])));
         $data['col'] = htmlspecialchars(urldecode(trim($param['col'])));
 
         if (empty($data['openid'])) {
+            $isPhoneLogin = false;
+            if ($data['user_phone'] && preg_match('/^\d{6,16}$/', $data['user_phone'])) {
+                $data['user_name'] = $data['user_phone'];
+                $isPhoneLogin = true;
+            }
+
             if (empty($data['user_name']) || empty($data['user_pwd'])) {
                 return ['code' => 1001, 'msg' => '请填写必填项'];
             }
@@ -336,14 +351,16 @@ class User extends Base
 
             $pwd = md5($data['user_pwd']);
             $where = [];
-
-            $pattern = '/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/';
-            if (!preg_match($pattern, $data['user_name'])) {
-                $where['user_name'] = ['eq', $data['user_name']];
+            if ($isPhoneLogin) {
+                $where['user_phone'] = ['eq', $data['user_phone']];
             } else {
-                $where['user_email'] = ['eq', $data['user_name']];
+                $pattern = '/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/';
+                if (!preg_match($pattern, $data['user_name'])) {
+                    $where['user_name'] = ['eq', $data['user_name']];
+                } else {
+                    $where['user_email'] = ['eq', $data['user_name']];
+                }
             }
-
             $where['user_pwd'] = ['eq', $pwd];
         } else {
             if (empty($data['openid']) || empty($data['col'])) {
@@ -627,7 +644,9 @@ class User extends Base
 
         $to = $param['to'];
         $code = mac_get_rndstr(6,'num');
-
+        if (in_array(\think\Env::get('env'), ['dev', 'test'])) {
+            $code = '1111';
+        }
         $sign = '【'.$GLOBALS['config']['site']['site_name'].'】';
         $r=0;
 
@@ -651,35 +670,43 @@ class User extends Base
             $msg = $sign.'的会员您好，'.$GLOBALS['user']['user_name'].'。'.$type_des.'验证码为：'. $code .',请在5分钟内完成验证。' ;
             $msg = str_replace(['[用户]','[类型]','[时长]','[验证码]'],[$GLOBALS['user']['user_name'],$type_des,'5',$code],$msg);
 
-            $res_send = mac_send_mail($to, $sign.$title, $msg);
-            if($res_send){
+            if (in_array(\think\Env::get('env'), ['dev', 'test'])) {
                 $r=1;
+            } else {
+                $res_send = mac_send_mail($to, $sign.$title, $msg);
+                if($res_send){
+                    $r=1;
+                }
             }
         }
         else{
-            $pattern = "/^1{1}\d{10}$/";
+            //$pattern = "/^1{1}\d{10}$/";
+            $pattern = "/^\d{6,16}$/";
             if(!preg_match($pattern,$to)){
                 return ['code'=>9004,'msg'=>'手机号格式不正确'];
-            }
-            if(empty($GLOBALS['config']['sms']['type'])){
-                return ['code'=>9005,'msg'=>'未配置短信发送服务'];
             }
 
             $msg = $GLOBALS['config']['sms']['content'];
             $msg = str_replace(['[用户]','[类型]','[时长]','[验证码]'],[$GLOBALS['user']['user_name'],$type_des,'5',$code],$msg);
 
-
-            $cp = 'app\\common\\extend\\sms\\' . ucfirst($GLOBALS['config']['sms']['type']);
-            if (class_exists($cp)) {
-                $c = new $cp;
-                $res_send = $c->submit($to,$code,$type_flag,$type_des,$msg);
-            }
-            //$res_send = Model('Sms'.$GLOBALS['config']['sms']['type'])->submit($to,$code,$type_flag,$type_des,$msg);
-            if($res_send['code']==1){
+            if (in_array(\think\Env::get('env'), ['dev', 'test'])) {
                 $r=1;
-            }
-            else{
-                $res_msg = ','.$res_send['msg'];
+            } else {
+                if(empty($GLOBALS['config']['sms']['type'])){
+                    return ['code'=>9005,'msg'=>'未配置短信发送服务'];
+                }
+                $cp = 'app\\common\\extend\\sms\\' . ucfirst($GLOBALS['config']['sms']['type']);
+                if (class_exists($cp)) {
+                    $c = new $cp;
+                    $res_send = $c->submit($to,$code,$type_flag,$type_des,$msg);
+                }
+                //$res_send = Model('Sms'.$GLOBALS['config']['sms']['type'])->submit($to,$code,$type_flag,$type_des,$msg);
+                if($res_send['code']==1){
+                    $r=1;
+                }
+                else{
+                    $res_msg = ','.$res_send['msg'];
+                }
             }
         }
 

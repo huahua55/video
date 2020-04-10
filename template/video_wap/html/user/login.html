@@ -171,14 +171,14 @@
 
     // 手机号登录
     $('#btn_submit_phone').click(function(){
-      var user_name = $('input[name="user_phone"]').val();
+      var user_phone = $('input[name="user_phone"]').val();
       var user_pwd = $('input[name="user_phone_pwd"]').val();
       var verify = $('input[name="phone_verify"]').val();
 
       // 获取带区号的手机号码
       // var number = itiPhone.getNumber(intlTelInputUtils.numberFormat.E164);
 
-      if(user_name==''){
+      if(user_phone==''){
         alert('手机号不能为空');
         $('input[name="user_phone"]').focus();
         return;
@@ -204,7 +204,7 @@
         return;
       }
 
-      var data = {user_name:user_name, user_pwd:user_pwd, verify:verify };
+      var data = {user_phone:user_phone, user_pwd:user_pwd, verify:verify };
       $.ajax({
         url: "{:url('user/login')}",
         type: "post",

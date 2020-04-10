@@ -12,7 +12,7 @@ uploads
 assets.json
 runtime
 upload
-*.env
+.env
 application/extra
 application/data
 /index.html

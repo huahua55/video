@@ -44,6 +44,7 @@ class User extends Base
         return $this->fetch('user/ajax_info');
     }
 
+    // 用户记录日志，比如1浏览、2收藏、3想看、4点播、5下载
     public function ajax_ulog()
     {
         $param = input();
