@@ -22,7 +22,16 @@ class Ulog extends Base {
             $where = json_decode($where,true);
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
-        $total = $this->where($where)->count();
+        if ($where['ulog_type'] == 4) {
+            $total = $this->where($where)->group('ulog_rid')->count();
+            $ulog_times = Db::name('Ulog')
+                ->where($where)
+                ->group('ulog_rid')
+                ->column('max(ulog_time) ulog_time');
+            $where['ulog_time'] = ['in', $ulog_times];
+        } else {
+            $total = $this->where($where)->count();
+        }
         $list = Db::name('Ulog')->where($where)->order($order)->limit($limit_str)->select();
 
         $user_ids=[];
