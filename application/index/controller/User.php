@@ -2,6 +2,7 @@
 namespace app\index\controller;
 use think\Controller;
 use think\Request;
+use think\Db;
 use login\ThinkOauth;
 use app\index\event\LoginEvent;
 use app\common\util\Qrcode;
@@ -984,6 +985,119 @@ class User extends Base
             }
         }
         $this->redirect($url);
+    }
+
+    // 用户签到
+    public function ajax_sign_in()
+    {
+        // 积分配置
+        $config = array(
+            1 => 5, // 第一天5积分
+            2 => 5,
+            3 => 7,
+            4 => 7,
+            5 => 8,
+            6 => 8,
+            7 => 20,
+            8 => 5,
+            9 => 5,
+            10 => 7,
+            11 => 7,
+            12 => 8,
+            13 => 8,
+            14 => 20,
+            15 => 5,
+            16 => 5,
+            17 => 7,
+            18 => 7,
+            19 => 8,
+            20 => 8,
+            21 => 20,
+            22 => 5,
+            23 => 5,
+            24 => 7,
+            25 => 7,
+            26 => 8,
+            27 => 8,
+            28 => 20,
+            29 => 5,
+            30 => 5,
+        );
+
+        $param = input();
+        // 验证今日是否已签到
+        // 获取今日凌晨时间戳, 通过查询 sign_in_at 字段来判断
+        $todayAt = strtotime(date('Y-m-d'));
+        // 查询条件
+        $where = [
+            'user_id' => $GLOBALS['user']['user_id'],
+            'sign_in_at' => ['EGT', $todayAt]
+        ];
+        // 查询今日是否已签到
+        $exist = model('UserSignIn')->where($where)->count();
+        if ($exist > 0) {
+            return json(['code' => 0, 'msg' => '今日已签到']);
+        }
+
+        /**
+         * 开始签到逻辑
+         * 先查询昨天的签到记录
+         *   如果查到, 则说明是连续签到, 连续签到天数加1
+         *   未查到, 连续签到天数为1
+         * 根据连续签到天数, 获取相应的积分
+         */
+        $yesterdayAt = $todayAt - 86400;
+        $where['sign_in_at'] = ['EGT', $yesterdayAt];
+        // 昨天的签到记录
+        $yesterdayRecord = model('UserSignIn')->where($where)->find();
+        // 连续签到天数
+        $continuousDays = 1;
+        if (!empty($yesterdayRecord)) {
+            // 更新连续签到天数
+            $continuousDays += $yesterdayRecord['continuous_days'];
+        }
+        if ($continuousDays > count($config)) {
+            $continuousDays = 1;
+        }
+        // 通过连续签到天数, 获取相应的积分
+        foreach ($config as $day => $integralItem) {
+            if ($day > $continuousDays) {
+                break;
+            }
+            $integral = $integralItem;
+        }
+        $msg = sprintf('签到成功, 连续签到%d天, 获得%d积分', $continuousDays, $integral);
+        // 插入数据
+        Db::startTrans();
+        try{
+            $timestamp = time();
+            $insertData = array(
+                'user_id' => $GLOBALS['user']['user_id'],
+                'integral' => $integral,
+                'continuous_days' => $continuousDays,
+                'sign_in_at' => $timestamp,
+                'created_at' => $timestamp,
+            );
+            // 签到记录
+            $r1 = model('UserSignIn')->insert($insertData);
+            // 增加用户积分
+            $r2 = model('User')->where(['user_id' => $GLOBALS['user']['user_id']])->setInc('user_points', $integral);
+            // 积分日志
+            $data = [];
+            $data['user_id'] = $GLOBALS['user']['user_id'];
+            $data['plog_type'] = 10;
+            $data['plog_points'] = $integral;
+            $data['plog_remarks'] = $msg;
+            model('Plog')->saveData($data);
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['code' => 0, 'msg' => '签到失败']);
+        }
+        return json([
+            'code' => 1,
+            'msg' => $msg
+        ]);
     }
 
 }

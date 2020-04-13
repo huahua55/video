@@ -461,7 +461,7 @@ CREATE TABLE `plog` (
   `plog_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `user_id_1` int(10) NOT NULL DEFAULT '0',
-  `plog_type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '1、积分充值 2、注册推广 3、访问推广 4、三季分销 5、积分升级 6、积分消费 7、积分提现',
+  `plog_type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '1、积分充值 2、注册推广 3、访问推广 4、三季分销 5、积分升级 6、积分消费 7、积分提现 8、签到',
   `plog_points` smallint(6) unsigned NOT NULL DEFAULT '0',
   `plog_time` int(10) unsigned NOT NULL DEFAULT '0',
   `plog_remarks` varchar(100) NOT NULL DEFAULT '',
