@@ -16,7 +16,7 @@ class UserSignIn extends Base {
     protected $auto       = [];
     protected $insert     = [];
     protected $update     = [];
-    
+
     public function infoData($where,$field='*')
     {
         if(empty($where) || !is_array($where)){
