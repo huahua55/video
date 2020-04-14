@@ -69,6 +69,7 @@ class User extends Base
                 $data['ulog_points'] = $res['info']['vod_points_' . $flag];
             }
             $data['ulog_points'] = intval($data['ulog_points']);
+
             $res = model('Ulog')->infoData($data);
             if ($res['code'] == 1) {
                 $r = model('Ulog')->where($data)->update(['ulog_time'=>time()]);

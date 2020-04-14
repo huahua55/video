@@ -200,19 +200,19 @@ return array(
         '73' => array("show"=>1,'name' => '标签向导', 'controller' => 'template',		'action' => 'wizard'),
     )),
 
-//    '8' => array('name' => '生成', 'icon' => 'xe63e', 'sub' => array(
-//        '81' => array("show"=>1,'name' => '生成选项', 'controller' => 'make',		'action' => 'opt'),
-//        '82' => array("show"=>1,'name' => '生成首页', 'controller' => 'make',		'action' => 'index'),
-//        '83' => array("show"=>1,'name' => '生成地图', 'controller' => 'make',		'action' => 'map'),
-//
-//        '8101' => array("show"=>0,'name' => '--生成入口', 'controller' => 'make',		'action' => 'make'),
-//        '8102' => array("show"=>0,'name' => '--生成RSS', 'controller' => 'make',		'action' => 'rss'),
-//        '8103' => array("show"=>0,'name' => '--生成分类', 'controller' => 'make',		'action' => 'type'),
-//        '8104' => array("show"=>0,'name' => '--生成专题首页', 'controller' => 'make',		'action' => 'topic_index'),
-//        '8105' => array("show"=>0,'name' => '--生成专题内容', 'controller' => 'make',		'action' => 'topic_info'),
-//        '8106' => array("show"=>0,'name' => '--生成内容页', 'controller' => 'make',		'action' => 'info'),
-//        '8107' => array("show"=>0,'name' => '--生成自定义页', 'controller' => 'make',		'action' => 'label'),
-//    )),
+    '8' => array('name' => '生成', 'icon' => 'xe63e', 'sub' => array(
+        '81' => array("show"=>1,'name' => '生成选项', 'controller' => 'make',		'action' => 'opt'),
+        '82' => array("show"=>1,'name' => '生成首页', 'controller' => 'make',		'action' => 'index'),
+        '83' => array("show"=>1,'name' => '生成地图', 'controller' => 'make',		'action' => 'map'),
+
+        '8101' => array("show"=>0,'name' => '--生成入口', 'controller' => 'make',		'action' => 'make'),
+        '8102' => array("show"=>0,'name' => '--生成RSS', 'controller' => 'make',		'action' => 'rss'),
+        '8103' => array("show"=>0,'name' => '--生成分类', 'controller' => 'make',		'action' => 'type'),
+        '8104' => array("show"=>0,'name' => '--生成专题首页', 'controller' => 'make',		'action' => 'topic_index'),
+        '8105' => array("show"=>0,'name' => '--生成专题内容', 'controller' => 'make',		'action' => 'topic_info'),
+        '8106' => array("show"=>0,'name' => '--生成内容页', 'controller' => 'make',		'action' => 'info'),
+        '8107' => array("show"=>0,'name' => '--生成自定义页', 'controller' => 'make',		'action' => 'label'),
+    )),
 
     '9' => array('name' => '采集', 'icon' => 'xe727', 'sub' => array(
         '91' => array("show"=>0,'name' => '推荐资源', 'controller' => 'collect',		'action' => 'union'),
@@ -250,6 +250,13 @@ return array(
 
         '102' => array("show"=>1,'name' => '执行SQL语句', 'controller' => 'database',		'action' => 'sql'),
         '103' => array("show"=>1,'name' => '数据批量替换', 'controller' => 'database',		'action' => 'rep'),
-    ))
+    )),
+
+    '11' => array('name' => '应用', 'icon' => 'xe621', 'sub' => array(
+        '112' => array("show"=>1,'name' => 'URL推送', 'controller' => 'urlsend',		'action' => 'index', 'param'=>''),
+        '11200' => array("show"=>0,'name' => '--推送入口', 'controller' => 'urlsend',		'action' => 'push'),
+        '11201' => array("show"=>0,'name' => '--百度主动推送', 'controller' => 'urlsend',		'action' => 'baidu_push'),
+        '11202' => array("show"=>0,'name' => '--百度熊掌推送', 'controller' => 'urlsend',		'action' => 'baidu_bear'),
+    )),
 
 );

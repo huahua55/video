@@ -32,7 +32,11 @@ class Visit extends Base {
         }
         $list = Db::name('Visit')->field($field)->where($where)->order($order)->limit($limit_str)->select();
         foreach($list as $k=>$v){
-
+            $visit_mid = 6;
+            if($v['user_id']==0){
+                $visit_mid = 11;
+            }
+            $list[$k]['visit_mid'] = $visit_mid;
         }
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }

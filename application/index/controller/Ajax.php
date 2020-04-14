@@ -212,6 +212,89 @@ class Ajax extends Base
         return json(['code'=>1,'msg'=>'操作成功！','data'=>$data]);
     }
 
+    public function referer()
+    {
+        $url = $this->_param['url'];
+        $type = $this->_param['type'];
+        $domain = $this->_param['domain'];
+
+        if(empty($url)) {
+            return json(['code'=>1001,'msg'=>'参数错误']);
+        }
+
+        if(strpos($_SERVER["HTTP_REFERER"],$_SERVER['HTTP_HOST'])===false){
+            return json(['code'=>1002,'msg'=>'参数错误']);
+        }
+
+        if(strpos($url,$domain)===false){
+            return json(['code'=>1003,'msg'=>'参数错误']);
+        }
+
+        $pre = 'website';
+        $where=[];
+        $where[$pre.'_jumpurl'] =  ['like', ['http://'.$domain.'%','https://'.$domain.'%'],'OR'];
+        $model = model($pre);
+        $field = $pre.'_referer,'.$pre.'_referer_day,'.$pre.'_referer_week,'.$pre.'_referer_month,'.$pre.'_time_referer';
+        $res = $model->infoData($where,$field);
+        if($res['code']>1){
+            return json($res);
+        }
+        $info = $res['info'];
+        $id = $info[$pre.'_id'];
+
+        //来路访问记录验证
+        $res = model('Website')->visit($this->_param);
+        if($res['code']>1){
+            return json($res);
+        }
+
+        if($type == 'update'){
+            //初始化值
+            $update[$pre.'_referer'] = $info[$pre.'_referer'];
+            $update[$pre.'_referer_day'] = $info[$pre.'_referer_day'];
+            $update[$pre.'_referer_week'] = $info[$pre.'_referer_week'];
+            $update[$pre.'_referer_month'] = $info[$pre.'_referer_month'];
+            $new = getdate();
+            $old = getdate($info[$pre.'_time_referer']);
+            //月
+            if($new['year'] == $old['year'] && $new['mon'] == $old['mon']){
+                $update[$pre.'_referer_month'] ++;
+            }else{
+                $update[$pre.'_referer_month'] = 1;
+            }
+            //周
+            $weekStart = mktime(0,0,0,$new["mon"],$new["mday"],$new["year"]) - ($new["wday"] * 86400);
+            $weekEnd = mktime(23,59,59,$new["mon"],$new["mday"],$new["year"]) + ((6 - $new["wday"]) * 86400);
+            if($info[$pre.'_time_referer'] >= $weekStart && $info[$pre.'_time_referer'] <= $weekEnd){
+                $update[$pre.'_referer_week'] ++;
+            }else{
+                $update[$pre.'_referer_week'] = 1;
+            }
+            //日
+            if($new['year'] == $old['year'] && $new['mon'] == $old['mon'] && $new['mday'] == $old['mday']){
+                $update[$pre.'_referer_day'] ++;
+            }else{
+                $update[$pre.'_referer_day'] = 1;
+            }
+            //更新数据库
+            $update[$pre.'_referer'] = $update[$pre.'_referer']+1;
+            $update[$pre.'_time_referer'] = time();
+            $model->where($where)->update($update);
+
+            $data['referer'] = $update[$pre.'_referer'];
+            $data['referer_day'] = $update[$pre.'_referer_day'];
+            $data['referer_week'] = $update[$pre.'_referer_week'];
+            $data['referer_month'] = $update[$pre.'_referer_month'];
+        }
+        else{
+            $data['referer'] = $info[$pre.'_referer'];
+            $data['referer_day'] = $info[$pre.'_referer_day'];
+            $data['referer_week'] = $info[$pre.'_referer_week'];
+            $data['referer_month'] = $info[$pre.'_referer_month'];
+        }
+        return json(['code'=>1,'msg'=>'操作成功！','data'=>$data]);
+    }
+
     public function digg()
     {
         $id = $this->_param['id'];

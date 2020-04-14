@@ -400,6 +400,8 @@ class Collect extends Base {
 
         $config = config('maccms.collect');
         $config = $config['vod'];
+        $players = config('vodplayer');
+        $downers = config('voddowner');
 
         $type_list = model('Type')->getCache('type_list');
         $filter_arr = explode(',',$config['filter']);
@@ -566,6 +568,17 @@ class Collect extends Base {
                 foreach($cj_play_from_arr as $kk=>$vv){
                     if(empty($vv)){
                         unset($cj_play_from_arr[$kk]);
+                        unset($cj_play_url_arr[$kk]);
+                        unset($cj_play_server_arr[$kk]);
+                        unset($cj_play_note_arr[$kk]);
+                        continue;
+                    }
+
+                    if(empty($players[$vv])){
+                        unset($cj_play_from_arr[$kk]);
+                        unset($cj_play_url_arr[$kk]);
+                        unset($cj_play_server_arr[$kk]);
+                        unset($cj_play_note_arr[$kk]);
                         continue;
                     }
 
@@ -585,8 +598,19 @@ class Collect extends Base {
                 foreach($cj_down_from_arr as $kk=>$vv){
                     if(empty($vv)){
                         unset($cj_down_from_arr[$kk]);
+                        unset($cj_down_url_arr[$kk]);
+                        unset($cj_down_server_arr[$kk]);
+                        unset($cj_down_note_arr[$kk]);
                         continue;
                     }
+                    if(empty($downers[$vv])){
+                        unset($cj_down_from_arr[$kk]);
+                        unset($cj_down_url_arr[$kk]);
+                        unset($cj_down_server_arr[$kk]);
+                        unset($cj_down_note_arr[$kk]);
+                        continue;
+                    }
+
                     $cj_down_url_arr[$kk] = rtrim($cj_down_url_arr[$kk]);
                     $cj_down_server_arr[$kk] = $cj_down_server_arr[$kk];
                     $cj_down_note_arr[$kk] = $cj_down_note_arr[$kk];

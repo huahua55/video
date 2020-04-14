@@ -138,6 +138,11 @@ class Website extends Base {
         $not = $lp['not'];
         $cachetime = $lp['cachetime'];
 
+        $refermonth = $lp['refermonth'];
+        $referweek = $lp['refermonth'];
+        $referday = $lp['refermonth'];
+        $refer = $lp['refer'];
+
         $page = 1;
         $where = [];
         $totalshow=0;
@@ -301,6 +306,42 @@ class Website extends Base {
             }
             else{
                 $where['website_hits'] = [$tmp[0],$tmp[1]];
+            }
+        }
+        if(!empty($refermonth)){
+            $tmp = explode(' ',$refermonth);
+            if(count($tmp)==1){
+                $where['website_refer_month'] = ['gt', $tmp];
+            }
+            else{
+                $where['website_refer_month'] = [$tmp[0],$tmp[1]];
+            }
+        }
+        if(!empty($referweek)){
+            $tmp = explode(' ',$referweek);
+            if(count($tmp)==1){
+                $where['website_refer_week'] = ['gt', $tmp];
+            }
+            else{
+                $where['website_refer_week'] = [$tmp[0],$tmp[1]];
+            }
+        }
+        if(!empty($referday)){
+            $tmp = explode(' ',$referday);
+            if(count($tmp)==1){
+                $where['website_refer_day'] = ['gt', $tmp];
+            }
+            else{
+                $where['website_refer_day'] = [$tmp[0],$tmp[1]];
+            }
+        }
+        if(!empty($refer)){
+            $tmp = explode(' ',$refer);
+            if(count($tmp)==1){
+                $where['website_refer'] = ['gt', $tmp];
+            }
+            else{
+                $where['website_refer'] = [$tmp[0],$tmp[1]];
             }
         }
 
@@ -501,6 +542,41 @@ class Website extends Base {
             $ids = array_unique($ids);
         }
         return ['code'=>1,'msg'=>'获取成功','data'=> join(',',$ids) ];
+    }
+
+    public function visit($param)
+    {
+        $ip = sprintf('%u', ip2long(request()->ip()));
+        if ($ip > 2147483647) {
+            $ip = 0;
+        }
+
+        $max_cc = $GLOBALS['config']['website']['refer_visit_num'];
+        if(empty($max_cc)){
+            $max_cc=1;
+        }
+        $todayunix = strtotime("today");
+        $where = [];
+        $where['user_id'] = 0;
+        $where['visit_ip'] = $ip;
+        $where['visit_time'] = ['gt', $todayunix];
+        $cc = model('visit')->where($where)->count();
+        if ($cc>= $max_cc){
+            return ['code' => 102, 'msg' => '每日仅能'.$max_cc.'次来路记录'];
+        }
+
+        $data = [];
+        $data['user_id'] = 0;
+        $data['visit_ip'] = $ip;
+        $data['visit_time'] = time();
+        $data['visit_ly'] = htmlspecialchars($param['url']);
+        $res = model('visit')->saveData($data);
+
+        if ($res['code'] > 1) {
+            return ['code' => 103, 'msg' => '来路记录失败，请重试'];
+        }
+
+        return ['code'=>1,'msg'=>'来路记录成功'];
     }
 
 }

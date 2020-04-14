@@ -80,7 +80,7 @@ class Upload extends Base
             return self::upload_return('禁止上传php,html文件！', $param['from']);
         }
 
-        $upload_image_ext = 'jpg,png,gif';
+        $upload_image_ext = 'jpg,jpeg,png,gif';
         $upload_file_ext = 'doc,docx,xls,xlsx,ppt,pptx,pdf,wps,txt,rar,zip,torrent';
         $upload_media_ext = 'rm,rmvb,avi,mkv,mp4,mp3';
         $sys_max_filesize = ini_get('upload_max_filesize');

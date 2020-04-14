@@ -69,24 +69,30 @@ class Base extends All
         if(strpos(','.$group['group_type'],','.$type_id.',')!==false && !empty($group['group_popedom'][$type_id][$popedom])!==false){
             $res = true;
         }
+        $pre = $flag;
+        $col = 'detail';
+        if($flag=='play' || $flag=='down'){
+            $pre = 'vod';
+            $col = $flag;
+        }
 
-        if(in_array($flag,['art','play','down','actor','website'])){
-            $points = $info[$flag.'_points_detail'];
-            if($GLOBALS['config']['user'][$flag.'_points_type']=='1'){
-                $points = $info[$flag.'_points'];
+        if(in_array($pre,['art','vod','actor','website'])){
+            $points = $info[$pre.'_points_'.$col];
+            if($GLOBALS['config']['user'][$pre.'_points_type']=='1'){
+                $points = $info[$pre.'_points'];
             }
         }
 
         if($GLOBALS['config']['user']['status']==0){
 
         }
-        elseif($popedom==2 && in_array($flag,['art','actor','website'])){
+        elseif($popedom==2 && in_array($pre,['art','actor','website'])){
 
             if($res===false && (empty($group['group_popedom'][$type_id][2]) || $trysee==0)){
                 return ['code'=>3001,'msg'=>'您没有权限访问此数据，请升级会员','trysee'=>0];
             }
             elseif($group['group_id']<3 && $points>0  ){
-                $mid = mac_get_mid($flag);
+                $mid = mac_get_mid($pre);
                 $where=[];
                 $where['ulog_mid'] = $mid;
                 $where['ulog_type'] = 1;
@@ -95,7 +101,7 @@ class Base extends All
                 $where['ulog_nid'] = 0;
                 $where['user_id'] = $user['user_id'];
                 $where['ulog_points'] = $points;
-                if($GLOBALS['config']['user'][$flag.'_points_type']=='1'){
+                if($GLOBALS['config']['user'][$pre.'_points_type']=='1'){
                     $where['ulog_sid'] = 0;
                 }
                 $res = model('Ulog')->infoData($where);

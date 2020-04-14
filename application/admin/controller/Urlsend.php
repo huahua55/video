@@ -248,11 +248,15 @@ class Urlsend extends Base
             Cache::rm('urlsend_break_baidu_push');
 
             mac_echo('数据推送完毕');
-            mac_jump(url('urlsend/index'), 3);
+            if(ENTRANCE=='admin') {
+                mac_jump(url('urlsend/index'), 3);
+            }
         }
         else {
             $url = url('urlsend/baidu_push') . '?' . http_build_query($this->_param);
-            mac_jump($url, 3);
+            if(ENTRANCE=='admin') {
+                mac_jump($url, 3);
+            }
         }
 
     }
@@ -317,12 +321,15 @@ class Urlsend extends Base
         if ($res['page'] >= $res['pagecount']) {
             Cache::rm('urlsend_break_baidu_bear');
             mac_echo('数据推送完毕');
-            mac_jump(url('urlsend/index'), 3);
+            if(ENTRANCE=='admin') {
+                mac_jump(url('urlsend/index'), 3);
+            }
         }
         else {
-
             $url = url('urlsend/baidu_bear') . '?' . http_build_query($this->_param);
-            mac_jump($url, 3);
+            if(ENTRANCE=='admin') {
+                mac_jump($url, 3);
+            }
         }
     }
 

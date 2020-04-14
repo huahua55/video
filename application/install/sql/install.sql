@@ -868,6 +868,7 @@ CREATE TABLE `website` (
   `website_time_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
   `website_time_hits` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击时间',
   `website_time_make` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '生成时间',
+  `website_time_referer` int(10) unsigned NOT NULL DEFAULT '0',
   `website_hits` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `website_hits_day` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `website_hits_week` mediumint(8) unsigned NOT NULL DEFAULT '0',

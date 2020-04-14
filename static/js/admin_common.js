@@ -104,8 +104,8 @@ layui.define(['element', 'form'], function(exports) {
 
     /* 导航菜单切换 */
     $('.main-nav a').click(function () {
-        var that = $(this), i = $('.main-nav a').index(this);
-        $('.layui-nav-tree').hide().eq(i).show();
+        var that = $(this), i = $(this).attr('data-i');
+        $('.layui-nav-tree').hide().eq(i-1).show();
     });
 
     /* 操作提示 */

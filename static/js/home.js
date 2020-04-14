@@ -518,7 +518,6 @@ var MAC={
             $('.mac_history_box').html('<li class="hx_clear">已清空观看记录。</li>');
         },
     },
-
     'Ulog':{
         'Init':function(){
             MAC.Ulog.Set();
@@ -554,6 +553,29 @@ var MAC={
                         }
                     });
                 }
+            });
+        }
+    },
+    'Website':{
+        'Referer':function() {
+            if($('.mac_referer').length==0){
+                return;
+            }
+
+            var url = document.referrer
+                ,domain=''
+                ,host = window.location.host
+                ,reg = /^http(s)?:\/\/(.*?)\//i
+                ,mc = url.match(reg);
+
+            if(url=='' || url.indexOf(host)!=-1 || mc ==null){
+                return;
+            }
+            domain = mc[2];
+            MAC.Ajax(maccms.path + '/index.php/ajax/referer?domain='+encodeURIComponent(domain)+'&url='+encodeURIComponent(url)+'&type=update','get','json','',function(r){
+                if (r.code == 1) {
+                }
+                console.log(r);
             });
         }
     },
@@ -907,6 +929,8 @@ $(function(){
     MAC.Ulog.Init();
     //联想搜索初始化
     MAC.Suggest.Init('.mac_wd',1,'');
+    //网址导航来路统计
+    MAC.Website.Referer();
     //定时任务初始化
     MAC.Timming();
 });

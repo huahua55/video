@@ -317,7 +317,7 @@ function mac_convert_encoding($str,$nfate,$ofate){
 
 function mac_get_refer()
 {
-    return $_SERVER["HTTP_REFERER"];
+    return trim(urldecode($_SERVER["HTTP_REFERER"]));
 }
 
 function mac_send_mail($to, $title, $body,$conf=[]) {
@@ -501,7 +501,7 @@ function mac_curl_post($url,$data,$heads=array(),$cookie='')
     curl_setopt($ch, CURLOPT_HEADER,0);
     curl_setopt($ch, CURLOPT_REFERER, $url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -1333,6 +1333,7 @@ function mac_param_url(){
     $param['version'] = htmlspecialchars(urldecode(trim($input['version'])));
     $param['blood'] = htmlspecialchars(urldecode(trim($input['blood'])));
     $param['starsign'] = htmlspecialchars(urldecode(trim($input['starsign'])));
+    $param['domain'] = htmlspecialchars(urldecode(trim($input['domain'])));
 
     return $param;
 }

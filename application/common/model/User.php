@@ -168,6 +168,7 @@ class User extends Base
                 }
             }
         }
+
         $ip = sprintf('%u',ip2long(request()->ip()));
         if($ip>2147483647){
             $ip=0;
@@ -883,7 +884,7 @@ class User extends Base
         $where['visit_ip'] = $ip;
         $where['visit_time'] = ['gt', $todayunix];
         $cc = model('visit')->where($where)->count();
-        if ($cc> $max_cc){
+        if ($cc>= $max_cc){
             return ['code' => 102, 'msg' => '每日仅能获取'.$max_cc.'次推广访问积分'];
         }
 
@@ -891,7 +892,7 @@ class User extends Base
         $data['user_id'] = $param['uid'];
         $data['visit_ip'] = $ip;
         $data['visit_time'] = time();
-        $data['visit_ly'] = htmlspecialchars(urldecode(trim(mac_get_refer())));
+        $data['visit_ly'] = htmlspecialchars(mac_get_refer());
         $res = model('visit')->saveData($data);
 
         if ($res['code'] > 1) {

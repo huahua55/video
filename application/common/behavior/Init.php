@@ -15,6 +15,19 @@ class Init
             $isMobile = 1;
         }
 
+        $isDomain=0;
+        if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
+            $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
+            $isDomain=1;
+            if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
+                $config['site']['mob_template_dir'] = $config['site']['template_dir'];
+            }
+            $config['site']['site_wapurl'] = $config['site']['site_url'];
+            $config['site']['mob_html_dir'] = $config['site']['html_dir'];
+            $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
+        }
+
+
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
         $TMP_HTMLDIR = $config['site']['html_dir'];
@@ -22,7 +35,7 @@ class Init
 
 
         if($isMobile){
-            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl'])) {
+            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
                 $TMP_HTMLDIR = $config['site']['mob_html_dir'];
@@ -62,7 +75,8 @@ class Init
         }
         config('pathinfo_depr',$config['app']['pathinfo_depr']);
 
-        config('cache.expire', $config['app']['cache_time'] * 60);
+        config('cache.expire', intval($config['app']['cache_time']) );
+
         if($config['app']['cache_type'] =='0' || $config['app']['cache_type'] =='file'){
             config('cache.type','file');
         }
