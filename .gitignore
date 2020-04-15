@@ -17,5 +17,6 @@ application/extra
 application/data
 /index.html
 /map.html
+static/js/tj.js
 rss
 label
