@@ -35,12 +35,12 @@ class Init
 
 
         if($isMobile){
-            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
+            //if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
                 $TMP_HTMLDIR = $config['site']['mob_html_dir'];
                 $TMP_ADSDIR = $config['site']['mob_ads_dir'];
-            }
+            //}
         }
 
         define('MAC_PATH', '/');
