@@ -126,7 +126,9 @@ class Admin extends Base {
         if(empty($row)){
             return ['code'=>1003,'msg'=>'账号或密码错误'];
         }
-        $random = md5(rand(10000000,99999999));
+        // 暂时去掉单点登录限制
+        // $random = md5(rand(10000000,99999999));
+        $random = 10000001;
         $ip = sprintf('%u',ip2long(request()->ip()));
         if($ip>2147483647){
             $ip=0;
