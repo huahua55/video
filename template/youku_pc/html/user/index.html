@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>会员中心 - {$maccms.site_name}</title>
+	<meta name="keywords" content="会员中心">
+	<meta name="description" content="会员中心">
+ <link rel="stylesheet" href="{$maccms.path_tpl}youku/css/user.css?3.7.180327">
+ {include file="public/include" /}
+</head>
+<body style="background: url({$maccms.path_tpl}youku/css/hybg.jpg);">
+{include file="user/head" /}
+<!-- 会员中心 -->
+<div class="menu-box"></div>
+<div class="ucenter-main">
+        <!--左侧导航-->
+				<div class="wrapper-content-header">
+			<div class="header-left">
+				<div class="u-info">
+					<div class="u-avatar">
+				<a href="{:url('user/index')}"  >
+<img class="face" src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}"></a></div>
+							<div class="u-profile">
+						<div class="u-name">
+				<a href="{:url('user/index')}" class="u-link"   title="昵称加载中">{$obj.user_name}</a> &nbsp;&nbsp;IP: <span>{$obj.user_login_ip|mac_long2ip}</span></div>
+				<div class="u-credit">
+				<a href="{:url('user/index')}"  ><span class="vip-level-icon level-vip1" title="最新VIP会员：VIP1"></span></a>
+				<a href="{:url('user/index')}"   class="user-grade"><span class="user-grade-icon user-grade-lv1" title="最新用户等级：Lv1" ></span></a>
+				<a class="ico-valid-email " href="{:url('user/index')}" title="我的消息"></a></div>
+				<div class="user-desc"><div class="entry"><span class="desc">暂无简介</span></div></div>
+				<div class="u-point">
+				<i class="arrow"></i>
+				<a href="{:url('user/buy')}"  >我的积分：<em>{$obj.user_points}</em><span>立即充值</span></a>
+				</div>
+				</div>
+				</div>
+				</div>
+                <div class="header-right">
+           <div class="share-link"><a href="http://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}"  >http://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}</a><div class="overlay"></div></div>
+            </div>
+			</div>
+
+ <div class="User-main">
+        <div class="ucenter-slider">
+            <ul class="slider-nav scroll">
+                <li class="cur"><a href="{:url('user/index')}">我的主页</a></li>
+                <li ><a href="{:url('user/buy')}">充值中心</a></li>
+                <li ><a href="{:url('user/orders')}">订单管理</a></li>
+                <li ><a href="{:url('user/plays')}">观看记录</a></li>
+				<li ><a href="{:url('user/upgrade')}">会员升级</a></li>
+                <li><a class="ff-text" href="{:url('user/logout')}">注销登陆</a></li>
+            </ul>
+        </div>
+<!-- 个人中心 -->
+        <div class="ucenter-con">
+            <div class="ucenter-tit">
+                <h2 class="tit">个人中心</h2>
+            </div>
+
+                <div class="fill_infor_form">
+				<ul>
+      <li><span class="s_tit">我的积分</span>
+      <div class="form_con"><dd>积分可用来支付付费点播影片或购买VIP权限 您现在拥有（{$obj.user_points}）个积分
+			<a href="{:url('user/index')}" class="user-score-payment">在线充值</a> 		</dd></div> </li>
+
+      <li><span class="s_tit">ＶIP权限</span>
+     <div class="form_con"><dd>VIP权限到期后将不能观看付费影片，您的VIP到期时间为（{$obj.user_end_time|mac_day}）
+	 <a href="{:url('user/index')}" class="user-score-upvip">升级VIP</a></dd></li>
+
+	 <li><span class="s_tit">登录邮箱</span>
+      <div class="form_con"><dd>{$obj.user_email}</span><a href="{:url('user/info')}" class="user-change-email">修改邮箱</a></dd></div></li>
+
+      <li><span class="s_tit">用户密码</span>
+      <div class="form_con"><dd>建议使用字母、数字与标点的组合，可以大幅提升帐号安全<a href="{:url('user/info')}" class="user-change-pwd">修改密码</a></dd></div></li>
+
+      <li><span class="s_tit">邀请奖励</span>
+      <div class="form_con"><dd>每邀请一个用户注册后将获得（<em>10</em>）积分奖励，推广链接：<a href="http://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}l">hhttp://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}</a></dd></div></li>
+
+      <li><span class="s_tit">登录ＩＰ</span>
+      <div class="form_con"><dd>您最近一次登录本站的IP为（{$obj.user_login_ip|long2ip}）</span></div></li>
+
+      <li><span class="s_tit">登录时间</span>
+      <div class="form_con"><dd>您最近一次登录本站的时间为（{$obj.user_login_time|mac_day}）</dd></div> </li>
+			</ul>
+
+            </div>
+        </div>
+    </div>
+	</div>
+
+
+<script>
+	$(".face").imageUpload({
+		formAction: "{:url('user/portrait')}",
+		inputFileName:'file',
+		browseButtonValue: '修改头像',
+		browseButtonClass:'btn btn-default btn-xs',
+		automaticUpload: true,
+		hideDeleteButton: true,
+		hover:true
+	})
+	$(".face").on("imageUpload.uploadFailed", function (ev, err) {
+		alert(err);
+	});
+</script>
+{include file="public/foot" /}
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>播放记录 - 会员中心 -{$maccms.site_name}</title>
+<meta name="keywords" content="{$maccms.site_keywords}"/>
+<meta name="description" content="{$maccms.site_description}"/>
+ <link rel="stylesheet" href="{$maccms.path_tpl}youku/css/user.css?3.7.180327">
+ {include file="public/include" /}
+</head>
+<body style="background: url({$maccms.path_tpl}youku/css/hybg.jpg);">
+{include file="user/head" /}
+<!-- 会员中心 -->
+<div class="menu-box"></div>
+<div class="ucenter-main">
+        <!--左侧导航-->
+				<div class="wrapper-content-header">
+			<div class="header-left">
+				<div class="u-info">
+					<div class="u-avatar">
+				<a href="{:url('user/index')}"  >
+<img class="face" src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}"></a></div>
+							<div class="u-profile">
+						<div class="u-name">
+				<a href="{:url('user/index')}" class="u-link"   title="昵称加载中">{$obj.user_name}</a> &nbsp;&nbsp;IP: <span>{$obj.user_login_ip|mac_long2ip}</span></div>
+				<div class="u-credit">
+				<a href="{:url('user/index')}"  ><span class="vip-level-icon level-vip1" title="最新VIP会员：VIP1"></span></a>
+				<a href="{:url('user/index')}"   class="user-grade"><span class="user-grade-icon user-grade-lv1" title="最新用户等级：Lv1" ></span></a>
+				<a class="ico-valid-email " href="{:url('user/index')}" title="我的消息"></a></div>
+				<div class="user-desc"><div class="entry"><span class="desc">暂无简介</span></div></div>
+				<div class="u-point">
+				<i class="arrow"></i>
+				<a href="{:url('user/buy')}"  >我的积分：<em>{$obj.user_points}</em><span>立即充值</span></a>
+				</div>
+				</div>
+				</div>
+				</div>
+                <div class="header-right">
+           <div class="share-link"><a href="http://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}"  >http://{$maccms.site_url}{:mac_url('user/reg')}?uid={$obj.user_id}</a><div class="overlay"></div></div>
+            </div>
+			</div>
+
+ <div class="User-main">
+        <div class="ucenter-slider">
+            <ul class="slider-nav scroll">
+                <li><a href="{:url('user/index')}">我的主页</a></li>
+                <li ><a href="{:url('user/buy')}">充值中心</a></li>
+                <li ><a href="{:url('user/orders')}">订单管理</a></li>
+                <li class="cur" ><a href="{:url('user/plays')}">观看记录</a></li>
+				<li ><a href="{:url('user/upgrade')}">会员升级</a></li>
+                <li><a class="ff-text" href="{:url('user/logout')}">注销登陆</a></li>
+            </ul>
+        </div>
+<!-- 个人中心 -->
+<div class="ucenter-con">
+	<div class="ucenter-tit"><h2 class="tit">观看记录</h2></div>
+    <ul class="index-list-5">
+
+
+		  {volist name="list" id="vo"}
+		   <li class="yk-pack">
+          <div class="p-thumb">
+           <a href="{$vo.data.link}" title=" {$vo.data.name}"  ></a>
+           <img class="quic ff-img" data-original="{$vo.data.pic}" src="{$vo.data.pic}" alt=" {$vo.data.name}" />
+           <span class="playshow">{$vo.data.type.type_name}</span>
+          </div>
+          <ul class="info-list">
+           <li class="title"><a href="{$vo.data.link}"  > {$vo.data.name}</a></li>
+           <li><span>{$vo.ulog_rid}次播放</span></li>
+          </ul>
+		  </li>
+
+
+	    {/volist}
+		</ul>
+  <!--row end -->
+
+</div>
+
+		<div class="gong">
+			<a href="javascript:;" onClick="MAC.CheckBox.All('ids[]');">全选</a>
+			<a href="javascript:;" onClick="MAC.CheckBox.Other('ids[]');">反选</a>
+			<a href="javascript:;" id="btnDel">删除</a>
+			<a href="javascript:;" id="btnClear">清空</a>
+		</div>
+
+</div>
+</div>
+</div>
+<script>
+	function delData(ids,all){
+		var msg ='删除';
+		if(all==1){
+			msg='清空';
+		}
+		if(confirm('确定要'+msg+'记录吗')){
+			$.post("{:url('user/ulog_del')}",{ids:ids,type:4,all:all},function(data) {
+				if (data.code == '1') {
+					alert('删除成功');
+					location.reload();
+				}else {
+					alert('删除失败：' + data.msg);
+				}
+			}, 'json')
+		}
+	}
+	$("#btnClear").click(function(){
+		delData('',1);
+	});
+	$("#btnDel").click(function(){
+		var ids = MAC.CheckBox.Ids('ids[]');
+		if(ids==''){
+			alert("请至少选择一个数据");
+			return;
+		}
+		delData(ids,0);
+	});
+</script>
+{include file="public/foot" /}
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$obj.art_name} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.art_name}最新资讯,推荐资讯" />
+    <meta name="description" content="{$obj.art_name}最新资讯,推荐资讯" />
+	<link rel="stylesheet" href="{$maccms.path_tpl}youku/css/news.css"/>
+    {include file="public/include"} 
+</head>
+<body>
+{include file="public/heada"}
+<div class="menu-box"></div>
+<div class="main-box">
+<div class="main newslist">
+<div class="listl list2">
+<div class="news_title">
+        <h1>{$obj.art_name}</h1>
+        <div class="news_line">
+          <div class="news_z">
+            </ul>
+          </div>
+          <div class="news_time">发布时间：<span>{$obj.art_time|date='Y-m-d H:i:s',###}</span></div>
+		  <div class="news_time">来源：<a href="{:mac_url_type($obj.type)}" target="_self">{$obj.type.type_name}</a></div>  </div>
+      </div>
+	<div class="news_content">{$obj.art_page_list[$param['page']]['content']}  <div class="tags text-center">
+    <a class="btn btn-default btn-lg ff-updown-set" href="javascript:;" data-id="118" data-module="news" data-type="up" data-toggle="tooltip" data-placement="top" title="支持">
+      <span class="glyphicon glyphicon-thumbs-up"></span> 有用 (<span class="ff-updown-val">6</span>)
+    </a>  
+ 
+	
+  </div>
+	
+	</div>
+	</div>
+	
+    <div class="listr">
+   <div class="recommena scroll">
+	<div class="module-tit"> 
+	  <h2>今日头条</h2>
+	</div>
+      <ul class="topnews-list">
+	 
+
+                {maccms:art num="20" order="desc" by="hits_month"}
+				<li>
+           <a href="{:mac_url_art_detail($vo)}" title="{$vo.art_name}">
+             <p class="lipic">
+              <img src="{$vo.art_pic}" alt="{$vo.art_name}"></p>
+                  <p class="litxt">
+                    <span class="name tvname">{$vo.art_name}</span></p>
+                  </a>
+              </li>
+                 {/maccms:art}
+                 </ul>
+		</div>
+	 </div>	
+  </div>	
+</div>	
+<span class="ff-hits" data-sid="news" data-id="118" data-type="insert"></span>   
+
+<script> 
+var top1=$(".scroll").offset().top;
+　　　　$(window).scroll(function(){
+　　　　　　var  win_top=$(this).scrollTop();
+　　　　　　var  top=$(".scroll").offset().top;
+　　　　　　if(win_top>=top){
+　　　　　　　　$(".scroll").css({"position":"fixed","top":"0","left":"1055","z-index":"10"}).addClass('stosition');  
+　　　　　　}
+　　　　　　if(win_top<top1){
+　　　　　　　　$(".scroll").css({"position":"","top":"","left":"","z-index":""}).removeClass('stosition');   
+　　　　　　}
+  });
+
+</script>
+
+ 
+{include file="public/foot"}
+</body>
+</html>
+

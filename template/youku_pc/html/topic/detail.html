@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{$obj.topic_name}专题详情- {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.topic_name}电影专题,{$obj.topic_name}电视剧专题,{$obj.topic_name}综艺专题,{$obj.topic_name}动漫专题,{$obj.topic_name}推荐专题" />
+    <meta name="description" content="本站提供{$obj.topic_name},最新最全精品专题数据" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/heada"}
+<!--当前位置-->
+  
+  <div class="menu-box"></div>
+<div class="main-box">
+  <div class="main-top clearfix"> 
+   <dl> 
+    <dt>
+     <a href="{$obj.topic_link} " title="{$obj.topic_name}"><img src="{$obj.topic_pic|mac_url_img}" alt="{$obj.topic_name}" width="820" height="380" /></a>
+    </dt> 
+    <dd> 
+     <h1>{$obj.topic_name}</h1> 
+     <div class="article-tips">
+      <span>时间：{$obj.topic_time_add}</span>
+      <span>责任编辑：{$maccms.site_name} </span>
+     </div> 
+     <div class="article">
+      <p> {$obj.topic_content}</p>
+     </div><link rel="stylesheet" href="{$maccms.path_tpl}youku/css/share.css"/> 
+     <div class="share clearfix"> 
+     <span class="ff-desc">分享给朋友：</span>
+      <span class="ff-share">
+	  <div class="bdsharebuttonbox bdshare-button-style0-24" data-bd-bind="1535888444486">
+	  <span class="bds_shere"></span>
+	  <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+      <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+      <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+      <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+      <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+      <a href="#" class="bds_tqf" data-cmd="tqf" title="分享到腾讯朋友"></a>
+      <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+      <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+      <a href="#" class="bds_kaixin001" data-cmd="kaixin001" title="分享到复制网址"></a>
+      <a href="#" class="bds_twi" data-cmd="twi" title="分享到复制网址"></a>
+      <a class="bds_more" data-cmd="more" title="更多"></a>
+	  <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"32"},"share": [{"bdSize": 32,bdCustomStyle: '{$maccms.path_tpl}youku/css/share.css'}]};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)]; </script>
+     
+	  </div></span>
+     </div>
+    </dd> 
+   </dl> 
+  </div>
+
+ <div class="main-link"> 
+   <ul> 
+   <li><a href="javascript:history.go(-1)" title="返回">返回 </a>&nbsp;/</li><li>
+     {maccms:topic order="desc" by="time" num="8"}
+   <li><a href="{:mac_url_topic_detail($vo)} " title="{$vo.topic_name} ">{$vo.topic_name} </a>&nbsp;/</li><li>
+     {/maccms:topic}
+   </ul> 
+  </div> 
+
+<!--专题视频-->
+<div class="main-list"> 
+   <ul class="show-model clearfix"> 
+   
+
+                    {maccms:foreach name="$obj.vod_list"}
+      <li class="model-mb"> 
+     <dl> 
+	 <dt class="playlike">
+       <a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name} "  >
+	   <img class="ff-img" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name} " width="180" height="246" />
+	   <span class="playicon"></span><span class="playshow">{$vo.vod_remarks} </span></a>
+      </dt> 
+      <dd> 
+       <a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name} "  ><h3>{$vo.vod_name} </h3></a> 
+       <p>年代：{$vo.vod_year}</p> 
+	   <p>地区：{$vo.vod_area}</p> 
+       <p>导演：{$vo.vod_director} </p> 
+       <p>主演：{$vo.vod_actor}</p> 
+       <div class="show-model-art"> 
+
+        <p>简介：{$vo.vod_content|mac_filter_html|mac_substring=27}</p> 
+        <a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name} "  >详情&gt;&gt;</a> 
+       </div> 
+      </dd> 
+     </dl>
+     </li>
+                    {/maccms:foreach}
+              </ul> 
+  </div>  
+ </div> 
+</div> 
+
+ 
+{include file="public/foot"}
+</body>
+</html>
+

@@ -1,0 +1,170 @@
+
+@charset "utf-8";
+.yk-con{
+    padding-top: 120px;
+}
+.yk-error{
+    color: #909090;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    left: 0;
+  
+     margin-top: 65px;
+    overflow: hidden;
+}
+.yk-error .yk-error-bg{
+    height: 372px;
+    position: relative;
+}
+.yk-error .yk-error-bg .yk-error-img{
+    height: 100%;
+    background: url("http://r2.ykimg.com/0510000055C9AE1967BC3D7C830BD417?404_01.jpg") no-repeat top center;
+    background-size: auto 100%;
+    position: relative;
+    z-index: 2;
+}
+.yk-error .yk-error-bg .yk-error-banner{
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+.yk-error p,.yk-error a, .yk-error h1{
+    font-family: "Microsoft YaHei", "微软雅黑", helvetica, arial, verdana, tahoma, sans-serif;
+}
+.yk-error .yk-error-bg2 .yk-error-img{
+    background-image: url("http://r4.ykimg.com/051000005656EB9367BC3D4EDE02CD93?404_02.png");
+}
+.yk-error .yk-error-bg2 .yk-error-banner {
+    height: 100%;
+    background-color:#66D0FF;
+}
+.yk-error .yk-error-bg3 .yk-error-img {
+    background-image: url("http://r4.ykimg.com/051000005656EB9367BC3D49A80DEFFC?404_03.png");
+}
+.yk-error .yk-error-bg3 .yk-error-banner {
+    height: 153px;
+    background-color:#64BEE0;
+}
+.yk-error .yk-error-bg4 .yk-error-img {
+    background-image: url("http://r4.ykimg.com/051000005656EB9367BC3D72970D2E40?404_04.png");
+}
+.yk-error .yk-error-bg4 .yk-error-banner {
+    height: 339px;
+    background-color:#2d87b8;
+}
+.yk-error .yk-error-bg5 .yk-error-img {
+    background: url("http://r1.ykimg.com/0510000055C9AE9C67BC3D5C210779D4?404_05.jpg") no-repeat top center;
+}
+.yk-error h1{
+    font-size:30px ;
+    color: #3399e0;
+    line-height: 32px;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+.yk-error .yk-error-detail{
+    font-size: 16px;
+    line-height: 30px;
+    vertical-align: middle;
+    width: 710px;
+    margin:0 auto;
+    *zoom: 1;
+}
+.yk-error .yk-error-detail:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+.yk-error-detail .yk-error-info,.yk-error-detail .yk-error-app{
+    float: left;
+}
+.yk-error-detail .yk-error-info{
+    padding-left: 25px;
+    text-align: left;
+    border-right: 1px solid #cecece;
+    height: 64px;
+    padding-right: 20px;
+}
+.yk-error-detail .yk-error-info span{
+    display: block;
+    font-size: 16px;
+    line-height: 36px;
+}
+.yk-error-detail .yk-error-app{
+    margin-left: 18px;
+    padding: 10px 60px 10px 0;
+    width: 145px;
+    height: 44px;
+    background-color: #1c98e7;
+    border-radius: 2px;
+    position: relative;
+}
+.yk-error-detail .yk-error-app:hover {
+    background-color: #1a8ed8;
+}
+.yk-error-detail .yk-error-app span,.yk-error-detail .yk-error-info em{
+    display: block;
+    text-align: center;
+}
+.yk-error-detail .yk-error-app span{
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 22px;
+}
+.yk-error-detail .yk-error-app em {
+    font-size: 14px;
+    color: #95ddfc;
+    line-height: 14px;
+    margin-top: 8px;
+    font-style: normal;
+}
+.yk-error-detail .yk-error-app img {
+    position: absolute;
+    right: 17px;
+    bottom: 2px;
+}
+.yk-error  p{
+    margin: 20px 0;
+    text-align: center;
+    font-size: 16px;
+}
+.yk-error  p img{
+    vertical-align: bottom;
+}
+.yk-error .yk-error-btn{
+    background-color: #1c98e7;
+    color: #fff;
+    padding:0 10px ;
+    font-size: 16px;
+    line-height: 30px;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0 5px;
+    *display:inline;
+    zoom:1;
+}
+.yk-error .yk-error-btn:hover {
+    background-color: #1a89cf;
+}
+.yk-error a,.yk-error em {
+    color:#3399e0 ;
+    font-style: normal;
+}
+.yk-error .yk-error-detail img{
+    vertical-align: middle;
+}
+.yk-drawer-rec-subscribe .yk-drawer-box .yk-head .yk-title .rec-title{
+    color: #909090;
+}
+.yk-error-rec{
+    padding-top: 540px;
+}
+.yk-error-rec .yk-drawer{
+    border: none;
+}

@@ -1,0 +1,103 @@
+<!-- 页头 -->
+<div class="top-main channel-top-main" id="main-bg">	<div class="test"></div>
+        <div class="newhead">
+          <div class="newhead-main">
+            <div class="hd-logo"><a title="{$maccms.site_name}" href="{$maccms.path}" target="_self" rel="nofollow"></a></div>
+            <div class="newhead-small-nav">
+				<li id="nav-index"><a href="/" target="_self">首页</a></li>
+				            {maccms:type ids="parent" order="asc" by="sort"}
+				<li id="nav-{$vo.type_en}"><a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
+				   {/maccms:type}
+					<li id="nav-{$vo.type_en}"> <a href="{:mac_url('gbook/index')}"
+						   target="_self"
+						   id="nav-gbook">留言</a></li>
+					<li id="nav-{$vo.type_en}"><a href="{:mac_url_topic_index()}"
+						   target="_self"
+						   id="nav-topic">专题</a></li>
+<!--
+				<li class="top-nav-more-large"><a href="javascript:void(0);" class="ico-list"></a>
+					<ul>
+                    <li class="arrow"></li>
+					<li><div class="top-nav-more-content">
+                            <dl class="top-nav-channel">
+                                <dt>其他</dt>
+                                <dd>
+				<a href="{:mac_url('label/rank')}" target="_self" id="nav-rank">娱乐</a>
+				<a href="{:mac_url('gbook/index')}" target="_self" id="nav-gbook">资讯</a>
+				<a href="{:mac_url_topic_index()}" target="_self" id="nav-topic">专题</a>
+	                             </dd>
+							</dl>
+				    </div>
+				</ul>
+				</li> -->
+			</li>
+            </div>
+			<script>$("#nav{$obj.type_en}").addClass("cur");</script>			<div id="searchPane" class="search-main" areacode="search">
+              <div class="head-search pull-left">
+			   		<div id="_js_search_form" class="head-search-box">
+	<form class="search-form ff-search" id="search" action="{:mac_url('vod/search')}" method="post" autocomplete="off">
+			<input type="text" value="" class="form-control ff-wd" id="ff-wd" autocomplete="off" name="wd" placeholder="请输入影片名称">
+				<a class="head-search-top" href="/ajax-top.html"  ></a>
+				<button type="submit" data-action="/video/search/FFWD.html">搜剧</button>
+								</form>
+			   		</div>
+			   	</div>
+				</div>
+			<div class="g-ucenter" id="uerCenter">
+                <div class="u-vip"><div class="handle"><a href="javascript:;"  ><i class="ico-vip"></i>VIP</a></div></div>
+                <div class="u-sub"><div class="handle"><a href="javascript:;" onclick="addFavorite(this);"><i class="ico-sub"></i>订阅</a></div></div>
+                <div class="u-record">
+                    <div class="dropdown" id="u-record">
+                        <div class="handle"><a class="ff-record-get" href="javascript:;" data-toggle="popover" data-container="body" data-html="true" data-trigger="manual" data-placement="bottom" data-content="loading..."><i class="ico-urecord"></i>记录</a></div>
+                        <div class="panel"> <i class="arrow"></i>
+                            <div class="content">
+								<dl class="rec-list">
+								<dt>最近</dt>
+								<i id="bplayer"></i>
+							</dl>
+							</div>
+                        </div>
+                    </div>
+                </div>
+               <div class="u-login">
+                  <div class="login-after dropdown" id="u-login">
+					<a class="text-muted" href="{:url('user/index')}" data-toggle="tooltip" data-placement="bottom">
+                     <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" title="{$obj.user_name}">
+					 <span class="vip-level-icon level-svip level-vip1"></span></a>
+				  			<div class="panel u-panel"><i class="arrow"></i>
+           <div class="content">
+				<div class="u-content">
+					<div class="u-info">
+							<div class="u-avatar">
+				<a href="{:url('user/index')}"  >
+                <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}"></a></div>
+							<div class="u-profile">
+						<div class="u-name">
+				<a href="{:url('user/index')}" class="u-link"   title="{$obj.user_name}">{$obj.user_name}</a></div>
+				<div class="u-credit">
+				<a href="{:url('user/index')}"  ><span class="vip-level-icon level-vip1" title="最新VIP会员：VIP1"></span></a>
+				<a href="{:url('user/index')}"   class="user-grade"><span class="user-grade-icon user-grade-lv1" title="最新用户等级：Lv1" ></span></a>
+				<a class="ico-valid-email " href="{:url('user/index')}" title="我的消息"></a></div>
+				<div class="u-point">
+				<i class="arrow"></i>
+				<a href="{:url('user/buy')}"  >我的积分：<em>{$obj.user_points}</em><span>立即充值</span></a>
+				</div></div></div>
+				<ul class="u-list">
+				<li><a href="{:url('user/info')}"   class="u-watch"><em></em>账号设置</a></li>
+				<li><a href="{:url('user/favs')}"   class="u-collect"><em></em>我的收藏</a></li>
+				<li><a href="{:url('user/plays')}"   class="u-zpd"><em></em>观看记录</a></li>
+				<li><a href="{:url('user/orders')}"   class="u-center"><em></em>订单管理</a></li>
+				</ul>
+				</div>
+					</div>
+                      <div class="u-bottom">
+                        <a href="{:url('user/logout')}" class="singout">退出登录</a>
+                        <a href="{:url('user/info')}"  >账户设置</a>
+                      </div>
+                    </div>                  </div>
+                </div>
+		     </div>
+			</div>
+        </div>
+      </div>
+<!--顶部结束-->
