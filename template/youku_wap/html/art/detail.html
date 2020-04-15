@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$obj.art_name} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.art_name}最新资讯,推荐资讯" />
+    <meta name="description" content="{$obj.art_name}最新资讯,推荐资讯" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+<section class="mod aui-margin-t-0">
+	<div class="article-box">
+		<h1 class="title">{$obj.art_name}</h1>
+		<div class="info">
+            <span>{$obj.art_time|date='Y-m-d H:i:s',###}</span>
+            <span><em class="show_hits">{$obj.art_hits}</em>阅</span>
+            <span></span>
+        </div>
+        <article class="content">
+		{$obj.art_content}
+		
+		</article>
+	</div>
+    </div>
+</section>
+
+<section class="mod aui-margin-t-0">
+	<div class="mod-head" mod-skin="line">
+		<div class="mod-head-title">
+			<span class="mod-head-name">相关推荐</span>
+		</div>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="m-a-list">
+		{maccms:art num="5" order="desc" by="hits_month"}
+                 <article class="news-card card-type-news">
+					<a href="/news/detail/94.html" title="{$vo.art_name}">
+						<div class="news-pic">
+							<img class="ff-img" data-original="	{$vo.art_pic}" src="	{$vo.art_pic}">
+						</div>
+						<div class="news-info">
+							<h3 class="title">{$vo.art_name}</h3>
+							<div class="detail">
+								<span>{$vo.art_time|date='Y-m-d',###}</span>
+								<span>{$vo.art_hits} 阅读</span>
+							</div>
+						</div>
+
+					</a>
+				</article>
+		{/maccms:art}
+         </div>
+	</div>
+</section>
+<span class="ff-hits" data-sid="news" data-id="94" data-type="insert"></span><div class="to-top">
+<div class="scroll-to-top"><i class="aui-iconfont aui-icon-top"></i></div>
+<div class="scroll-to-comment"><a href="/forum/guestbook.html" target="_blank"><i class="aui-iconfont aui-icon-edit"></i></a></div>
+</div>
+
+{include file="public/foot"}
+</body>
+</html>
+

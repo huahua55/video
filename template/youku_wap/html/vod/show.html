@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>最新{$obj.type_name}-推荐{$obj.type_name} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.type_key}" />
+    <meta name="description" content="{$obj.type_des}" />
+    {include file="public/include"} 
+</head>
+<body>
+{include file="public/head"}
+ 
+<!-- 搜索条件 -->
+<section class="mode aui-margin-t-5">
+	<div class="mod-main clearfix">
+		<div class="classifyWarp">
+
+						<div id="classifyList02" class="classifyList">
+				<ul class="swiper-wrapper clearfix">
+
+				
+                        {if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
+				 
+                            <li class="swiper-slide {if condition="$obj['type_id']==1"}active{/if}" tapmode onclick="showDefault('loading')"><a {if condition="$obj['type_id']!=1"} href="{:mac_url_type($obj['parent'],['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}"{/if}>分类</a></li>
+							{maccms:type ids="child" parent="1" by="sort" order="asc"}
+                            <li class="swiper-slide {if condition="$vo['type_id'] == $obj['type_id']"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
+							{/maccms:type}
+	                    
+				 {elseif condition="($obj['type_id']==2) OR ($obj['parent']['type_id']==2)"}
+							 
+				 
+                            <li class="swiper-slide {if condition="$obj['type_id']==2"}active{/if}" tapmode onclick="showDefault('loading')"><a {if condition="$obj['type_id']!=2"} href="{:mac_url_type($obj['parent'],['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}"{/if}>分类</a></li>
+							{maccms:type ids="child" parent="2" by="sort" order="asc"}
+                            <li class="swiper-slide {if condition="$vo['type_id'] == $obj['type_id']"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
+							{/maccms:type}
+	                    
+					
+				 {/if}
+ </ul>
+		</div>
+			<div id="classifyList03" class="classifyList">
+				<ul class="swiper-wrapper clearfix">
+
+
+                               <li class="swiper-slide {if condition="$param['class'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">类型</a></li>
+						{empty name="$obj.type_extend.class"}
+							{maccms:foreach name=":explode(',',$obj.parent.type_extend.class)"}
+                            <li class="swiper-slide {if condition="$param['class'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{else /}
+							{maccms:foreach name=":explode(',',$obj.type_extend.class)"}
+                            <li class="swiper-slide {if condition="$param['class'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{/empty}
+	                   </ul>
+			</div>
+			
+			<div id="classifyList04" class="classifyList">
+				<ul class="swiper-wrapper clearfix">
+
+							<li class="swiper-slide {if condition="$param['area'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">地区</a></li>
+						{empty name="$obj.type_extend.area"}
+							{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)"}
+                            <li class="swiper-slide {if condition="$param['area'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$vo,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{else /}
+							{maccms:foreach name=":explode(',',$obj.type_extend.area)"}
+                            <li class="swiper-slide {if condition="$param['area'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$vo,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{/empty}
+						</ul>
+			</div>
+			
+			
+										<div id="classifyList05" class="classifyList scroll">
+				<ul class="swiper-wrapper clearfix">
+	<li class="swiper-slide {if condition="$param['year'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">年代</a></li>
+						{empty name="$obj.type_extend.year"}
+							{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)"}
+                            <li class="swiper-slide {if condition="$param['year'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{else /}
+							{maccms:foreach name=":explode(',',$obj.type_extend.year)"}
+                            <li class="swiper-slide {if condition="$param['year'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
+							{/maccms:foreach}
+						{/empty}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+        </ul>
+    </div>
+</div>
+ 
+ <script>
+$("#idc81e728d9d4c2f636f067f89cc14862c").addClass("active"); 
+$("#aread41d8cd98f00b204e9800998ecf8427e").addClass("active");
+$("#typed41d8cd98f00b204e9800998ecf8427e").addClass("active");
+$("#yeard41d8cd98f00b204e9800998ecf8427e").addClass("active");
+$("#stard41d8cd98f00b204e9800998ecf8427e").addClass("active");
+$("#orderaddtime").addClass("active");
+$("#stated41d8cd98f00b204e9800998ecf8427e").addClass("active");
+
+
+
+
+var top1=$(".scroll").offset().top;
+　　　　$(window).scroll(function(){
+　　　　　　var win_top=$(this).scrollTop();
+　　　　　　var top=$(".scroll").offset().top;
+　　　　　　if(win_top>=top){
+　　　　　　　　$(".modx").show(); 
+　　　　　　}
+　　　　　　if(win_top<top1){
+　　　　　　　　$(".modx").hide();   
+				
+　　　　　　}
+  });
+
+
+$(function(){	
+  $(window).scroll(function() {
+	if($(window).scrollTop()<=100){
+		$(".classifyWarp").removeClass("mode-shaix");
+	} 
+  });
+});
+  
+
+  
+$(document).ready(function(){
+  $(".mod-shaix").click(function(){
+    $(".classifyWarp").addClass("mode-shaix");
+	$(".modx").hide(); 
+  });
+});
+$(document).ready(function(){
+  $(".swiper-gbx").click(function(){
+    $(".classifyWarp").removeClass("mode-shaix");
+	$(".modx").show(); 
+  });
+});
+</script>   
+
+<script>
+	//导航条
+	$("#classifyList01 li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#classifyList02',{freeMode : true,slidesPerView : 'auto',initialSlide:index-2});
+        }
+	});
+	$("#classifyList02 li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#classifyList02',{freeMode : true,slidesPerView : 'auto',initialSlide:index-2});
+        }
+	});
+	$("#classifyList03 li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#classifyList03',{freeMode : true,slidesPerView : 'auto',initialSlide:index-2});
+        }
+	});
+	$("#classifyList04 li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#classifyList04',{freeMode : true,slidesPerView : 'auto',initialSlide:index-2});
+        }
+	});
+	$("#classifyList05 li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#classifyList05',{freeMode : true,slidesPerView : 'auto',initialSlide:index-2});
+        }
+	});
+</script>
+
+
+<!-- 影片部分 -->
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">资源列表</span>
+		</div>
+	<span class="change"><!--今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部, -->共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
+	</div>
+	<div class="mod-main clearfix">
+				<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+
+            {maccms:vod num="30" paging="yes" pageurl="vod/show" type="current" order="desc" by="time"}
+            <li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="($vo.vod_pic)" src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">主演:{$vo.vod_actor}</p>
+					</div>
+				</li>	
+				{/maccms:vod}
+      </ul>
+		</div>
+			</div>
+</section>
+
+    {include file="public/paging"}
+ 
+{include file="public/foot"}
+</body>
+</html>

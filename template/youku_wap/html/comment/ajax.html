@@ -1,0 +1,68 @@
+ <!--评论开始-->
+ <script type="text/javascript" src="/static/js/home1.js"></script>
+ <div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name mac_user">影片评论	</span>
+		</div>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+<div class="ff-forum-reload">
+    <form class="comment_form cmt_form clearfix"  >
+        <input type="hidden" name="comment_pid" value="0">
+        <!--评论框-->
+        <div class="form-group">
+          
+		   <textarea class="comment_content form-controle" name="comment_content" placeholder="我有话想{$obj.vod_name}说"></textarea>
+            </div>
+              <div class="form-group text-right">
+                
+                 <label>
+                    {if condition="$comment.verify eq 1"}
+                   <input class="mac_verify cmt_text input ff-vcode ff-vcode-input" placeholder="验证码" type="text" id="verify" name="verify" />
+                    {/if} </label>
+                 
+                       
+
+    <label>
+                 <button type="button" class="comment_submit cmt_post submit_btn btn-sms">发表评论</button> 
+ 
+    </label>
+  </div>
+  <div class="ff-alert clearfix">
+  </div>
+   </div>
+   </div>
+</form>
+</div>
+</div>
+    {maccms:comment num="5" paging="yes" order="desc" by="id"}
+    {/maccms:comment}
+   	<div class="mod-main clearfix">
+<div class="ff-forum-item">
+            {maccms:foreach name="__LIST__" id="vo"}
+  
+  <div class="cmt-item clearfix">
+   <div class="cmt-user-icon">
+    <a href="#" target="_parent"><img src="{$vo.user_id|mac_get_user_portrait}" /></a>
+   </div> 
+   <div class="cmt-body">
+    <div class="cmt-action">
+     <a href="#" target="_parent" class="cmt-username cmt-user-vip">{$vo.comment_name}</a> 
+     <a href="javascript:;" target="_parent"><img src="{$maccms.path_tpl}youku_m/images/vip1.png" class="cmt-vip-icon" /></a> 
+     <div class="cmt-action-btn">
+      <div class="cmt-btn-like"><a class="ff-updown-set" data-id="{$vo.comment_id}" data-mid="4" data-type="up" href="javascript:;" title="支持"><span class="ff-updown-val">0</span></a></div> 
+      <div class="cmt-btn-dislike"><a class="ff-updown-set" data-id="{$vo.comment_id}" data-mid="4" data-type="down" href="javascript:;"  title="反对"><span class="ff-updown-val">0</span></a></div>
+     </div>
+    </div> 
+     
+    <div class="cmt-publish">{$vo.comment_time|date='Y-m-d H:i:s',###}</div> 
+    <span class="cmt-content">{$vo.comment_content|mac_em_replace}</span>
+ </div>
+  </div>
+
+            {/maccms:foreach}
+</div>
+  </section>
+    <!--评论结束-->
+     

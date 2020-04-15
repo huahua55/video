@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$obj.vod_name}详情介绍-{$obj.vod_name}在线观看-{$obj.vod_name}迅雷下载 - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.vod_name}在线收看,{$obj.vod_name}迅雷下载" />
+    <meta name="description" content="{$obj.vod_name}剧情:{$obj.vod_blurb}" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+
+
+<!--影片详情-->
+<section class="mod">
+	<div class="albumDetail">
+		<div class="albumDetailWrap">
+			<div class="albumDetailCover"></div>
+			<div class="albumDetailImg">
+				<img src="{:mac_url_img($obj.vod_pic)}" alt="{$obj.vod_name}">
+			</div>
+			<div class="albumDetailMedia">
+				<h1 class="title aui-ellipsis-1">{$obj.vod_name}</h1>
+				<ul class="desc"> 
+					<li>年代：{$obj.vod_year}</li>
+					<li>导演：{$obj.vod_director}</li>
+					<li>主演：{$obj.vod_actor}</li>
+					<li>更新：{$obj.vod_time|date='Y-m-d H:i:s',###}</li>
+				</ul>
+				<div class="btnBox">
+				<a class="btn btn-danger btn-radius" href="{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}">立即播放</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="mod">
+	<div class="albumDetailIntro">
+		<p class="albumDetailIntroTxt" data-clamp="3" data-content="{$obj.vod_blurb}">{$obj.vod_blurb}....<a class="expand" href="javascript:;">(展开)</a></p>
+	</div>
+</section>
+
+<!--剧集-->
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">剧集</span>
+		</div>
+
+	<p class="pSource change">
+              <em class="sTit">来源：</em>
+			  <span class="sSourcee win-xuanji" id="play1_1">
+			  {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+<span class="sSourceico sSource{$vo.player_info.from}"></span><em>{$vo.player_info.show}</em></span><span class="sSourcee win-xuanji" id="play1_{$key}"> 
+{/maccms:foreach}	
+            </p>
+      <i class="iArrow"></i>
+	</div>
+	
+ 
+  <div class="num-tab mod-main clearfix">	
+      {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+    
+<div class="albumSelect"id="play2_{$key}">
+<ul class="num-tab-main">
+ {maccms:foreach name="vo.urls" id="vo2" key="key2"}
+ <li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}"   title="{$vo2.name}">{$key2}</a></li>
+  {/maccms:foreach}
+</ul></div>
+{/maccms:foreach} 
+  
+</div>
+
+</div>
+
+	
+</section>
+<!--正在热播---->
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">正在热播</span>
+		</div>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+						 {maccms:vod num="9" type="current" order="desc" by="time"}	
+							<li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_time|date='Y-m-d',###}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">简介:{$vo.vod_remarks} </p>
+					</div>
+				</li>
+ {/maccms:vod}				
+			</ul>
+		</div>
+	</div>
+</section>
+<!--评论-->
+
+<!--播放器-->
+ <!--播放器-->
+<span class="ff-hits" data-sid="vod" data-id="24508" data-type="insert"></span><a class="btn btn-default btn-sm ff-record-set hidden" href="javascript:;" data-sid="1" data-id="24508" data-type="1" data-id-sid="4" data-id-pid="1"></a><section class="popWinMask popXuanji">
+    <section class="popWin playSource_popWin">
+	       <div class="sTit">请选择播放源</div>
+        <ul class="clearfix">
+            {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+           <li id="play3_{$key}"><div class="sSource popWin_sce"><span class="sSourceico sSource{$vo.player_info.from}"></span><em>{$vo.player_info.show}</em><i></i></div></li> 
+          {/maccms:foreach}
+      </ul>
+        <p class="pBtn clearfix"><em class="gray all hide_popWin">取消</em></p>
+    </section>
+</section>
+<!--播放器-->
+
+<script type="text/javascript">
+function series(a, b, c) {
+    var f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, d = a.find("li").length,
+        e = WidthScreen ? b : c;
+	if (d > 30) {
+        for (f = Math.ceil(d / 30), g = 0; f > g; g++) a.append("<div class='drama-list'></div>");
+        for (h = 1; f >= h; h++) i = h == f ? d - 30 * f + 30 : 30, a.find("li:lt(" + i + ")").appendTo(a.find(".drama-list").eq(h - 1));
+        for ("undefined" != typeof TooLength ? TooLength++ : window.TooLength = 1, 
+		$("body").append("<div class='drama-ning' id='TooLength" + TooLength + "' style='display:none'></div>"), 
+		a.find("li:lt(" + (c + 14) + ")").clone().appendTo($("#TooLength" + TooLength)), 
+		a.find("li:gt(" + (d - (b / 2 - 2) / 2 - 1) + ")").clone().appendTo($("#TooLength" + TooLength)), 
+		$("#TooLength" + TooLength).prependTo(a), 
+		a.find(".drama-ning").hide(), a.find(".drama-ning li").eq(c + 13).after(j), l = 0; f > l; l++) 
+		a.find(".drama-list").eq(l).append(k);
+		
+        for (m = "<div class='drama-tab ff-gallery" + TooLength + "'>", n = 0; f > n; n++) o = 30 * n + 1, p = n == f - 1 ? d : 30 * (n + 1), m += 0 == n ? "<dt class='active'><a href='javascript:;' >" + o + "-" + p + "</a></dt>" : "<dt><a href='javascript:;'>" + o + "-" + p + "</a></dt>";
+        m += "</div>", a.find(".drama-ning").after(m), q = 0, r = a.find(".drama-ning"), s = a.find(".drama-tab"), t = a.find(".drama-list"), t.eq(q).addClass("cur"); 
+
+		a.find(".drama-tab dt").click(function() {
+            if (!$(this).hasClass("active")) {
+                var a = $(this).index();
+                t.eq(q).removeClass("cur"), t.eq(a).addClass("cur"), $(this).addClass("active").siblings(".active").removeClass("active"), q = a
+            }
+			
+        });
+	}	
+}(jQuery), WidthScreen = !0, $(document).ready(function() {
+	
+});
+</script>
+
+
+<script type="text/javascript">
+	function toshare(){
+		$(".am-share").addClass("am-modal-active").slideDown();
+		$("body").addClass("modal-open");	
+		$(".share_btn").click(function(){
+			$(".am-share").removeClass("am-modal-active").slideUp();
+			$("body").removeClass("modal-open");	
+			setTimeout(function(){
+				$(".sharebg-active").removeClass("sharebg-active");	
+			},300);
+		})
+	}		
+$("#play-41").addClass("active");
+$("#play1_1").addClass("cur");
+$("#play2_1").addClass("cur");
+$("#play3_1").addClass("cur");
+$("#play-44 a").last().after("<span class='player-new'>新</span>");
+$("#play-43 a").last().after("<span class='player-new'>新</span>");var line = ["http://yun.baiyug.cn/vip/index.php?url=","https://api.47ks.com/webcloud/?v=","http://www.82190555.com/index/qqvod.php?url=","http://www.52jiexi.com/tong.php?url=","http://api.xfsub.com/index.php?url="];
+playerSwitch = function(lineIndex)
+{
+    $(".albumPlayer iframe").attr("src",line[lineIndex] + "http://v.pptv.com/show/IxoEgibtRwf9ia4Eg.html");
+    $(".player_switch #" + lineIndex + "" ).addClass('cur').attr("onclick","");
+    $(".player_switch #" + lineIndex + "" ).siblings().removeClass('cur').attr("onclick","playerSwitch(this.id)");
+
+}
+
+
+
+</script>
+
+
+{include file="public/foot"}
+</body>
+</html>

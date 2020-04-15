@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$msg}</title>
+    {include file="public/include"} 
+</head>
+<body>
+{include file="public/head"} 
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">亲爱的用户</span>
+		</div>
+      
+	 </div>
+	 <div class="mod-main clearfix"><div style='color:red;text-align:center;font-size:1.5em;'> &nbsp;</div>
+<div style='color:#888;text-align:center;font-size:1.5em;'>{$msg}</div>
+<div style='color:#888;text-align:center;font-size:1.5em;'> &nbsp;</div>
+<div style='color:#888;text-align:center;font-size:1.5em;'>页面自动 <a id="href" href="<?php echo($url);?>">跳转</a> 等待时间： <b id="wait"><?php echo($wait);?></b></div>
+ <div style='color:#888;text-align:center;font-size:1.5em;'> &nbsp;</div></div>
+ 
+
+<script type="text/javascript">
+    (function(){
+        var wait = document.getElementById('wait'),
+                href = document.getElementById('href').href;
+        var interval = setInterval(function(){
+            var time = --wait.innerHTML;
+            if(time <= 0) {
+                location.href = href;
+                clearInterval(interval);
+            };
+        }, 1000);
+    })();
+</script>
+{include file="public/foot"}
+</body>
+</html>
+
+
+

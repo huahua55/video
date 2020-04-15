@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$obj.type_title} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.type_key}" />
+    <meta name="description" content="{$obj.type_des}" />
+    {include file="public/include"} 
+</head>
+<body>
+{include file="public/head"}
+
+ 
+<!--幻灯片-->
+<section class="mod">
+             <section class="row">
+            <div class="swiper-container focus_banner  js-swiper-container" id="js-swiper-focus-banner">
+                <div class="swiper-wrapper focus_banner_list">
+				    {maccms:vod num="5" type="current" order="desc" by="rnd"}
+				    <div class="swiper-slide focus_banner_item">
+                        <a href="{:mac_url_vod_detail($vo)}"   class="v_pic">
+                            <img src="{:mac_url_img($vo.vod_pic)}" alt="" title="{$vo.vod_name}"  class="swiper-lazy">
+                            <span class="s_tit"><em>{$vo.vod_name}</em></span>
+                        </a>
+                    </div>
+					{/maccms:vod}
+					
+					</div>
+                <div class="swiper-pagination focus_banner_point"></div>
+            </div>
+        </section>
+</section>
+
+<!-- 搜索条件 -->
+<section class="select">
+        {if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
+
+        <ul class="show_select hidden">
+		{maccms:type ids="child" parent="1" by="sort" order="asc"}
+		<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
+		{/maccms:type}
+		 <!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
+		 </ul>
+		 
+		{elseif condition="($obj['type_id']==2) OR ($obj['parent']['type_id']==2)"}
+		
+		  <ul class="show_select hidden">
+		{maccms:type ids="child" parent="2" by="sort" order="asc"}
+		<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
+		{/maccms:type}
+		 <!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
+		 </ul>
+		 {elseif condition="($obj['type_id']==3) OR ($obj['parent']['type_id']==3)"}
+		  <ul class="show_select hidden">
+		{maccms:type ids="child" parent="3" by="sort" order="asc"}
+		<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
+		{/maccms:type}
+		 <!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
+		 </ul>
+		 {elseif condition="($obj['type_id']==4) OR ($obj['parent']['type_id']==4)"}
+		  <ul class="show_select hidden">
+		{maccms:type ids="child" parent="4" by="sort" order="asc"}
+		<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
+		{/maccms:type}
+		 <!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
+		 </ul>
+		 {/if}
+    </section>
+	
+<script type="text/javascript">
+$(function(){
+
+  $('.js-swiper-container').each(function(){
+    if($(this).find('.swiper-slide').length > 1 && !$(this).attr('development')){
+      new Swiper('#' + $(this).attr('id'), {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        lazy: {
+          loadPrevNext: true,
+        }
+      });
+    }
+  })
+
+})
+</script> 
+<!--为你推荐-->
+<section class="mod aui-margin-t-5">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">为你推荐</span>
+		</div>
+      <span class="change"><!--今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部, -->共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+            {maccms:vod num="6" paging="yes" type="current" order="desc" by="time"}
+			
+			<li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">主演:{$vo.vod_actor}</p>
+					</div>
+				</li>		
+             {/maccms:vod}
+       </ul>
+		</div>
+	</div>
+</section>
+{if$obj.type_name=='直播'||$obj.parent.type_name=='直播'}
+ 
+{else}
+{if$obj.childids}
+
+{maccms:type ids="current" order="asc" by="sort"}
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">{$vo.type_name}</span>
+		</div>
+		<a class="change" href="{:mac_url_type($vo)}">更多{$vo.type_name}</a>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+		{maccms:vod num="6" type="'.$vo['type_id'].'" order="desc" by="time"}
+	
+                     <li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)} " src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">主演:{$vo.vod_actor}</p>
+					</div>
+				</li>
+				
+	 
+ 
+		{/maccms:vod}
+	</ul>
+				</div>
+			</div>
+		</div>
+{/maccms:type}
+{else} 
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">{$obj.type_name}</span>
+		</div> 
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+		{maccms:vod num="30" paging="yes" half="3" type="current" order="desc" by="time"}
+		    <li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)} " src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">主演:{$vo.vod_actor}</p>
+					</div>
+				</li>
+		{/maccms:vod}   
+                         
+							</ul>
+		</div>
+			</div>
+</section>
+
+       {include file="public/paging"}
+      <!--正在热播-->
+      
+     
+			
+{/if}
+{/if}
+<!-- 分页 -->
+ 
+{include file="public/foot"}
+</body>
+</html>

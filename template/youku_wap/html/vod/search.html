@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果 - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+    <meta name="description" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+ 
+<!--搜索结果-->
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">相关结果</span>
+		</div>
+      
+	 </div>
+  	<div class="mod-main clearfix">
+				<div class="mod-row">
+			<ul class="m-list clearfix" m-list-skin="film">
+        {maccms:vod num="20" paging="yes" pageurl="vod/search" order="desc" by="time"}
+
+			  <li class="m-item">
+					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+						<img class="ff-img" data-original="($vo.vod_pic)" src="{:mac_url_img($vo.vod_pic)}">
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+					</a>
+					<div class="text">
+						<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+						<p class="des">主演:{$vo.vod_actor}</p>
+					</div>
+				</li>
+			{/maccms:vod}
+
+			{empty name="$__PAGING__.record_total"}
+			<div style='color:red;text-align:center;font-size:1.5em;'>很抱歉，暂无[{$param.wd}]相关视频！</div>
+              </br>
+			{/empty}
+
+      
+							</ul>
+		</div>
+			</div>
+</section>
+   
+ 
+    
+
+{include file="public/foot"}
+</body>
+</html>
+

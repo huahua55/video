@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>留言板 - {$maccms.site_name}</title>
+    {include file="public/include"}  
+
+</head>
+<body>
+{include file="public/head"}
+
+ 
+    <script>
+        $(function(){
+            MAC.Gbook.Login = {$gbook.login};
+            MAC.Gbook.Verify = {$gbook.verify};
+            MAC.Gbook.Init();
+        });
+    </script>
+<script src="/static/js/home1.js"></script>
+<section class="mod aui-margin-t-0 ff-forum">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">网站留言</span>
+		</div>
+	</div>
+	<div class="mod-main clearfix">
+		<div class="mod-row">
+<div class="ff-forum-reload">
+
+            <form class="gbook_form">
+                <div class="form-group">
+                 <textarea name="gbook_content" class="form-controle" rows="5" placeholder="期待您的宝贵意见！"></textarea>
+  </div>
+              <div class="form-group text-right">
+    <label>
+      {if condition="$gbook.verify eq 1"}
+                  <input type="text" name="verify" class="mac_verify input ff-vcode ff-vcode-input"placeholder="验证码">
+                    {/if}
+
+   
+      </label>
+                   
+      
+
+    <label>
+                 <button type="submit" class="gbook_submit btn-sms">发表评论</button> 
+ 
+    </label>
+  </div>
+  <div class="ff-alert clearfix">
+  </div>
+   </div>
+   </div>
+</form>
+
+</div>
+</div>
+  {maccms:gbook num="10" paging="yes" order="desc" by="id"}
+	<div class="mod-main clearfix">
+<div class="ff-forum-item">
+	<div class="cmt-item clearfix">
+   <div class="cmt-user-icon">
+    <a href="#" target="_parent"><img src="/static/images/touxiang.png" /></a>
+   </div> 
+   <div class="cmt-body">
+    <div class="cmt-action">
+     <a href="#" target="_parent" class="cmt-username cmt-user-vip">{$vo.gbook_name}</a> 
+     <a href="javascript:;" target="_parent"><img src="{$maccms.path_tpl}youku_m/images/vip1.png" class="cmt-vip-icon" /></a> 
+     <div class="cmt-action-btn">
+      <div class="cmt-btn-like"><a class="ff-updown-set" href="javascript:;" data-id="1" data-module="forum" data-type="up" data-toggle="tooltip" data-placement="top" title="支持"><span class="ff-updown-val">0</span></a></div> 
+      <div class="cmt-btn-dislike"><a class="ff-updown-set" href="javascript:;" data-id="1" data-module="forum" data-type="down" data-toggle="tooltip" data-placement="top" title="反对"><span class="ff-updown-val">0</span></a></div>
+     </div>
+    </div> 
+    <div class="cmt-publish">{$vo.gbook_time|date='Y-m-d H:i:s',###}</div> 
+    <span class="cmt-content">{$vo.gbook_content}</span>
+      {if condition="$vo.gbook_reply_time gt 0"} 
+	  <div class="reply_answer" style="border: 1px solid #2692ff; border-radius: 6px;">
+      <p class="msg_title"><strong style="color: #2692ff">站长回复：</strong>
+	  <span class="time">{$vo.gbook_reply_time|date='Y-m-d H:i:s',###}</span></p>
+      <div class="msg_cont">{$vo.gbook_reply}
+      </div>
+      </div>
+ 
+      {/if}
+   </div>
+  </div></div>
+	</div>
+  {/maccms:gbook}
+</section>
+
+
+    {include file="public/paging"}
+
+  
+
+    
+
+</div>
+{include file="public/foot"}
+</body>
+</html>

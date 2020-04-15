@@ -1,0 +1,12 @@
+downloadBg({"download_bg":"/template/youku_m/images/051000005B7E8D85AD9AB7725B0D01C2.png",
+            "download_btn":"/template/youku_m/images/TB1tOnhSpXXXXafXXXXXXXXXXXX.png",
+            "buttonText":"测试代码","Bizid":"common","person":"234","orderType":"video",
+            "targetUrl":"#","picUrl":"","title":"下载标题地址",
+            "videoId":"123","orderContent":"密令内容可编辑，测试数据123",
+            "downsource":[{"key":"laiyuan1","value":"http://down2.uc.cn/youku/down.php?pub=83f4a52825e07aca"},
+                          {"key":"laiyuan2","value":"http://down2.uc.cn/youku/down.php?pub=83f4a52825e07acasd"}],
+            "wxdownload_bg":"/template/youku_m/images/TB1r.l.e4GYBuNjy0FnXXX5lpXa-750-1217.jpg","paramArray":
+            [{"autodown":false,"speType":"fkdj",
+              "download_bg":"/template/youku_m/images/TB1KrZqX_tYBeNjy1XdXXXXyVXa-750-1334.jpg",
+              "download_btn":"/template/youku_m/images/TB1tOnhSpXXXXafXXXXXXXXXXXX.png"}],
+            "autodown":true,"wxdownload_btn":"/template/youku_m/images/TB1tOnhSpXXXXafXXXXXXXXXXXX.png"})

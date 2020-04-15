@@ -1,0 +1,15 @@
+
+<div class="navigation">
+<ul class="clearfix"> 
+        <li class="page-item"><a class="page_link" href="{$__PAGING__.page_url|mac_url_page=$__PAGING__.page_prev}" title="上一页">《</a></li>
+  
+        {maccms:foreach name="$__PAGING__.page_num" id="num"}
+  
+        {if condition="$__PAGING__['page_current'] eq $num"}
+        <li class="page-item disabled"><a class="page_link" href="javascript:;" title="第{$num}页">{$num}</a></li>
+        {else}
+         <li class="page-item "> <a class="page-link" href="{$__PAGING__.page_url|mac_url_page=$num}" title="第{$num}页" >{$num}</a></li>
+        {/if}
+        {/maccms:foreach}
+        <li class="page-item"><a class="page_link" href="{$__PAGING__.page_url|mac_url_page=$__PAGING__.page_next}" title="下一页">》</a> </li></ul>
+</div>

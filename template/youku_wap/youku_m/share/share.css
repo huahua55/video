@@ -1,0 +1,68 @@
+/**
+ * Created by Jeffery Wang.
+ * Create Time: 2015-06-16 19:52
+ * Author Link: http://blog.wangjunfeng.com
+ */
+#nativeShare {
+    font-size: 13px;
+}
+
+#nativeShare .label {
+    font-size: .75rem;
+}
+
+#nativeShare .list {
+    width: 98%;
+    margin: 0 auto;
+}
+
+#nativeShare .list span {
+    width: 24%;
+    display: inline-block;
+    text-align: center;
+    margin: 10px 0;
+}
+
+#nativeShare .list span i {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 5px;
+}
+
+#nativeShare .weibo i {
+    background-image: url(weibo.png);
+    background-size: cover;
+}
+
+.weixin  {
+    background-image: url(weixin_friend.png);
+    background-size: cover;
+}
+
+.weixin_timeline  {
+    background-image: url(weixin.png);
+    background-size: cover;
+}
+
+.qq  {
+    background-image: url(qq.png);
+    background-size: cover;
+}
+.tsina  {
+    background-image: url(weibo.png);
+    background-size: cover;
+}
+.qzone  {
+    background-image: url(qqzone.png);
+    background-size: cover;
+}
+
+#nativeShare .more i {
+    background-image: url(more.png);
+    background-size: cover;
+}
+.share-tip {text-align: center;font-size: .8rem;color: #d5d5d5;padding: 0.82rem 0 0.66rem;}
+.share-tip span {width: 1rem;height: 1px;border: 0;border-top: 1px solid rgba(0,0,0,.05);display: inline-block;margin: .2rem;}
+.share-container.modWrap {background: #f5f5f5;padding: 0.1rem 0 0.1rem;margin: 0;}

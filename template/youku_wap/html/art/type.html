@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$obj.type_title} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.type_key}" />
+    <meta name="description" content="{$obj.type_des}" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+	<section class="mod aui-margin-t-0">
+		<div class="mod-head" mod-skin="line">
+		<div class="mod-head-title">
+			<span class="mod-head-name">资讯</span>
+		</div>
+		<span class="change"> </span>
+	</div>
+		<div class="mod-main clearfix">
+			<div class="m-a-list">
+
+            {maccms:art num="30" paging="yes" type="current" order="desc" by="time"}
+			<article class="news-card card-type-news">
+					<a href="{:mac_url_art_detail($vo)}" title="{$vo.art_name}">
+						<div class="news-pic">
+							<img class="ff-img" data-original="{$vo.art_pic}" src="{$vo.art_pic}">
+						</div>
+						<div class="news-info">
+							<h3 class="title">{$vo.art_name}</h3>
+							<div class="detail">
+								<span>{$vo.art_time|date='Y-m-d',###}</span>
+								<span>{$vo.art_hits} 阅读</span>
+							</div>
+						</div>
+					</a>
+				</article> 
+            {/maccms:art}
+        </ul>
+        <div class="pages">
+            {include file="public/paging"}
+        </div>
+    </div>
+
+</div>
+
+{include file="public/foot"}
+</body>
+</html>
+

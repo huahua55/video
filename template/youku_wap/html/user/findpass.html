@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>找回密码 - {$maccms.site_name}</title>
+	{include file="public/include" /}
+</head>
+<body>
+<!--子页顶部-->
+<body class="user-forget">
+<header class="aui-bar aui-bar-nav aui-bar-light">
+    <a class="aui-pull-lefta aui-btn" href="javascript:window.history.back(-1);">
+        <span class="aui-iconfonta aui-icon-lefta"></span>
+    </a>
+    <div class="aui-title">找回密码</div>
+</header>
+<section class="mod aui-margin-t-0"><span class="user-forget-alert">
+<div class="aui-tips"><i class="aui-iconfont aui-icon-info"></i><div class="aui-tips-title aui-ellipsis-1">
+通过预留密保找回密码，请输入您密码保密信息</div></div></span></section>
+<section class="mod aui-margin-t-5">
+	<div class="mod-main">
+
+	<form method="post" action="" id="fm" class="loginForm form-user-forget" >
+		<ul class="mod-form-list">
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="text" name="user_name" placeholder="账号"></li>
+
+		<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="text" name="user_question" placeholder="找回问题" value="">
+			</li>
+
+		<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="text" name="user_answer" placeholder="找回答案" value=""></li>
+
+		<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="password" id="pass1" name="user_pwd" placeholder="新密码" value=""></li>
+
+		<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="password" id="pass2" name="user_pwd2" placeholder="确认密码" value="">
+		</li>
+		<li class="form-list-item clearfix">
+				<i class="aui-iconfont aui-icon-info"></i>
+				<input class="input input-check" type="text" name="verify" required placeholder="验证码">
+			<div class="code-img"> <img id="vcode" src="{:url('verify/index')}" onClick="this.src=this.src+'?'" /></div>
+			<span class="Validform_checktip"></span></li>
+			<li class="form-list-item aui-margin-t-30">
+
+         <button type="button" id="btn_submit" class="button button-ture" >提交注册</button> </li>
+			 
+			 <li class="form-list-item aui-margin-t-15">
+				<a class="aui-btn button button-false" href="{:url('user/login')}">登录</a>
+			</li>
+          	<li class="form-list-item aui-margin-t-15">
+				<a class="aui-btn button button-false" href="/">返回首页</a>
+			</li>
+		</ul>
+
+	</form>
+	 
+
+<script>
+	$(".go-back").click(function () {
+		var ref = document.referrer;
+		location.href=ref;
+	});
+
+	$("#btn_submit").click(function(msg) {
+		var data = $("#fm").serialize();
+		var input = $("#fm").serializeArray();
+		var pass1 = $("#pass1").val();
+		var pass2 = $("#pass2").val();
+		var inputName = new Array();
+		inputName['user_name'] = '登录帐号';
+		inputName['user_question'] = '找回问题';
+		inputName['user_answer'] = '找回答案';
+		inputName['user_pwd'] = '密码';
+		inputName['user_pwd2'] = '确认密码';
+		inputName['verify'] = '验证码';
+		var is = false;
+		var err = '';
+		$.each(input,function(name,field) {
+			if (field.value == '') {
+				is = true;
+				err = inputName[field.name] + '不能为空';
+				return false;
+			}
+		})
+		if (is) {
+			alert(err);
+			return false;
+		}
+		if (pass1 != pass2) {
+			alert('两次密码不一致');
+			return false;
+		}
+
+		$.ajax({
+			url: "{:url('user/findpass')}",
+			type: "post",
+			dataType: "json",
+			data: data,
+			beforeSend: function () {
+				//开启loading
+				//$(".loading_box").css("display","block");
+				$("#btn_submit").css("background","#fd6a6a").val("loading...");
+			},
+			success: function (r) {
+				alert(r.msg);
+				if(r.code==1){
+					location.href="{:url('user/login')}";
+				}
+			},
+			complete: function () {
+				//结束loading
+				//$(".loading_box").css("display","none");
+				$("#btn_submit").css("background","#fa4646").val("提交");
+			}
+		});
+	});
+
+</script>
+{include file="user/foot" /}
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>在线充值 - {$maccms.site_name}</title>
+	{include file="user/include" /}
+</head>
+
+<body class="user-center">
+<!--头部 -->
+ <div id="topTips"></div>  
+<header class="header">
+	<div class="aui-bar aui-bar-nav">
+		<a href="/" class="logo aui-pull-left"></a>
+		<div class="search">
+			<div class="text" onclick="openSearch()">请输入影片名称</div>
+			<div class="icon"><i class="aui-iconfont aui-icon-search"></i></div>
+		</div>
+	    <div id="member_info">
+					<a class="aui-pull-right aui-btn ff-user" href="/user/login.html" data-href="/user/index.html" data-toggle="tooltip" data-placement="bottom">
+		 <span class="aui-iconfont aui-icon-my" style="background-image: url({$maccms.path_tpl}youku_m/images/usre1.png);"></span>
+	</a>
+</div>
+</div>
+</header>
+
+<section class="headerTopNav">
+	<div class="navWrap">
+		<div class="shadow-le"></div>
+		<div class="shadow-ri"></div>
+		<div id="headerTopNav" class="warp">
+			<ul class="swiper-wrapper">
+	  <li class="swiper-slide"><a href="/">首页</a></li>
+      <li class="swiper-slide"><a href="{:url('user/index')}">会员中心</a></li>
+	  <li class="swiper-slide"><a href="{:url('user/info')}">账号设置</a></li>
+	  <li class="swiper-slide active"><a href="{:url('user/buy')}">充值中心</a></li>
+      <li class="swiper-slide"><a href="{:url('user/plays')}">观看记录</a></li>
+      <li class="swiper-slide"><a href="{:url('user/orders')}">订单管理</a></li> 
+			</ul>
+		</div>
+	</div>
+</section>
+<!--搜索框-->
+<section class="searchPop">
+	<div class="searchCon">
+		<div class="sSearchInput">
+		    <form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}" onSubmit="return qrsearch();">
+			 <input type="text" id="wd" name="wd" class="searchInput ff-wd" value="请输入影片名或演员名称" onfocus="if(this.value=='请输入影片名或演员名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入影片名或演员名称';};" />
+                <input type="submit" id="searchbutton"  style="display: none;" value="搜索" />
+				 
+			</form>
+		</div>
+		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
+	</div>
+	<div class="aui-search"></div>
+
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">热门搜索</span>
+		</div>
+		
+	</div>
+	<div class="mod-main clearfix">
+				<div class="mod-row">
+			<ul class="search-list clearfix">
+	  {maccms:vod order="desc" by="level" num="20" type="all" level="all" }
+                  {if condition="$key lt 4"}
+	<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+               {if condition="$key eq 1"}
+              {/if}
+				  {else}
+		 
+	<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+                   {/if}
+				  
+				{/maccms:vod} 				</ul>
+		</div>
+			</div>
+</section>  
+</section>
+<script type="text/javascript">
+	$("#headerTopNav li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto',initialSlide:index});
+       	}else{
+       		var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto'});
+       	}
+	});
+
+</script>
+<!--个人中心-->
+<section class="mod aui-margin-t-0">
+    <div class="aui-list aui-media-list">
+        <a class="aui-list-item aui-list-item-middle" href="javascript:;">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" class="aui-img-round img-circle face">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-14"></div>
+                    </div>
+                    <div class="aui-list-item-text"><span class="cmt-vip-span">{$obj.user_name}<img src="{$maccms.path_tpl}youku_m/images/vip1.png" class="cmt-vip-icon"></span></div>
+					<div class="aui-list-item-text">我的积分：{$obj.user_points}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+<!--子页顶部-->
+ 
+ 
+<div class="mod aui-margin-t-15">
+	<div class="mod-main">
+		<form class="loginForm forum-payment" method="post" id="fm">
+			<ul class="mod-form-list">
+					<li class="form-list-item aui-margin-t-0"><span class="user-pay-alert"></span></li>
+				<label for="user_email" class="control-label">充值金额</label> 
+				<li class="form-list-item">
+					<input class="input mod-login-phone" type="text" name="price" value="{$config.min}" type="text" required="">
+				<span class="Validform_checktip"></span></li> 
+				 
+				<li class="form-list-item aui-margin-t-5"> 
+					<button id="btn_submit_pay" class="button button-ture">提交</button>
+				</li>
+					<li class="form-list-item aui-margin-t-0">
+					<span>1元等于<span class="ff-text">{$config.scale}</span>个影币，最低<span class="ff-text">{$config.min}</span>元起充，支持微信、支付宝、网银等在线充值</span>
+				</li>
+			</ul>
+			<ul class="mod-form-list">
+			
+				<li class="form-list-item aui-margin-t-0"><span class="user-pay-alert"></span></li>
+				<label for="user_email" class="control-label">充值卡号</label> 
+				<li class="form-list-item">
+					<input class="input mod-login-phone" type="text" name="card_no"  value=""></span>
+				{if condition="$config['card']['url'] neq ''"}
+				<a target="_blank" href="{$config['card']['url']}" >点击购买卡密</a>
+				{/if}
+			</li>
+				<li class="form-list-item aui-margin-t-0"><span class="user-pay-alert"></span></li>
+				<label for="user_email" class="control-label">充值密码</label> 
+				<li class="form-list-item">
+					<input class="input mod-login-phone" name="card_pwd"  value=""></span></li>
+				<li class="form-list-item aui-margin-t-5"> 
+					<button id="btn_submit_card" class="button button-ture">充值卡充值</button> </li>
+			</ul>
+		</form>
+	</div>
+</div>
+</div>
+
+
+<!--loading start-->
+<div class="loading_box"></div>
+<!--loading end-->
+
+<script>
+
+	$(".go-back").click(function () {
+		var ref = document.referrer;
+		location.href=ref;
+	});
+
+	$('#btn_submit_pay').click(function(){
+		var that=$(this);
+		var price = $("input[name='price']").val();
+		if(Number(price)<1){
+			return;
+		}
+		if(confirm('确定要充值吗')) {
+			$.ajax({
+				url: "{:url('user/buy')}",
+				type: "post",
+				dataType: "json",
+				data: {price: price,flag:'pay'},
+				beforeSend: function () {
+					$("#btn_submit_pay").css("background","#fd6a6a").val("loading...");
+				},
+				success: function (r) {
+					if (r.code == 1) {
+						location.href="{:url('user/pay')}?order_code=" + r.data.order_code;
+					}
+					else{
+						alert(r.msg);
+					}
+				},
+				complete: function () {
+					$("#btn_submit_pay").css("background","#fa4646").val("提交");
+				}
+			});
+		}
+	});
+
+	$('#btn_submit_card').click(function(){
+		var that=$(this);
+		var no = $('input[name="card_no"]').val();
+		var pwd = $('input[name="card_pwd"]').val();
+		if(no=='' || pwd==''){
+			alert('请输入充值卡号和密码');
+			return;
+		}
+
+		if(confirm('确定要使用充值卡充值吗')) {
+			$.ajax({
+				url: "{:url('user/buy')}",
+				type: "post",
+				dataType: "json",
+				data: {card_no: no,card_pwd:pwd,flag:'card'},
+				beforeSend: function () {
+					$("#btn_submit_card").css("background","#fd6a6a").val("loading...");
+				},
+				success: function (r) {
+					alert(r.msg);
+				},
+				complete: function () {
+					$("#btn_submit_card").css("background","#fa4646").val("提交");
+				}
+			});
+		}
+
+	});
+
+</script>
+</body>
+</html>

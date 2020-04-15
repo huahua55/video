@@ -1,0 +1,1 @@
+document.writeln("<a href=\'/\'><img src=\'http://css.tools.chinaz.com/tools/images/public/logos/logo-index.png\' ></a>");

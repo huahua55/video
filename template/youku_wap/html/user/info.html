@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="CcWS3mkJnFfGBElKh0fHWSDXTRWrz4wig0pMvtqA">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Xenon Boostrap Admin Panel" />
+    <meta name="author" content="" />
+
+    <title>会员中心 - {$maccms.site_name}</title>
+	<link rel="stylesheet" href="{$maccms.path_tpl}assets/css/fonts/linecons/css/linecons.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/fonts/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/bootstrap.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/xenon-core.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/xenon-forms.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/xenon-components.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/xenon-skins.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/custom.css">
+    <link rel="stylesheet" href="{$maccms.path_tpl}assets/css/layer.css">
+    <!--extra css-->
+            <script src="{$maccms.path_tpl}assets/js/jquery-1.11.1.min.js"></script>
+    <script src="{$maccms.path_tpl}js/layer.js"></script>
+
+</head>
+<body class="page-body">
+</div>
+
+<div class="page-container">
+
+    <div class="sidebar-menu toggle-others fixed">
+
+        <div class="sidebar-menu-inner">
+
+            <header class="logo-env">
+
+                <!-- logo -->
+                <div class="logo">
+                    <a href="#" class="logo-expanded">
+                        <img src="{$maccms.path_tpl}assets/images/logo@2x.png" width="80" alt="" />
+                    </a>
+
+                    <a href="#" class="logo-collapsed">
+                        <img src="{$maccms.path_tpl}assets/images/logo-collapsed@2x.png" width="40" alt="" />
+                    </a>
+                </div>
+
+                <!-- This will toggle the mobile menu and will be visible only on mobile devices -->
+                <div class="mobile-menu-toggle visible-xs">
+
+                    <a href="#" data-toggle="mobile-menu">
+                        <i class="fa-bars"></i>
+                    </a>
+                </div>
+
+            </header>
+  <ul id="main-menu" class="main-menu">
+                <!-- add class "multiple-expanded" to allow multiple submenus to open -->
+                <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
+                <li class="active">
+                    <a href="/ucenter.html">
+                        <i class="linecons-desktop"></i>
+                        <span class="title">会员中心</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#">
+                        <i class="linecons-cog"></i>
+                        <span class="title">会员信息</span>
+                    </a>
+                    <ul>
+                        <li class="">
+                            <a href="{:url('user/info')}">
+                                <span class="title">修改密码</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="{:url('user/upgrade')}">
+                        <i class="linecons-fire"></i>
+                        <span class="title">升级会员</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="http://www.1314yun.cn">
+                        <i class="linecons-key"></i>
+                        <span class="title">卡密购买</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="/">
+                        <i class="linecons-cloud"></i>
+                        <span class="title">站点首页</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+    <div class="main-content">
+
+        <!-- User Info, Notifications and Menu Bar -->
+        <nav class="navbar user-info-navbar" role="navigation">
+
+            <!-- Left links for user info navbar -->
+            <ul class="user-info-menu left-links list-inline list-unstyled">
+
+                <li class="hidden-sm hidden-xs">
+                    <a href="#" data-toggle="sidebar">
+                        <i class="fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+
+
+            <!-- Right links for user info navbar -->
+            <ul class="user-info-menu right-links list-inline list-unstyled">
+                <li class="dropdown user-profile">
+                    <a href="#" data-toggle="dropdown">
+                        <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" alt="user-image" class="img-circle img-inline userpic-32" width="28" />
+                        <span>
+								{$obj.user_name}
+                            <i class="fa-angle-down"></i>
+							</span>
+                    </a>
+
+                    <ul class="dropdown-menu user-profile-menu list-unstyled">
+                        <li>
+                            <a href="/" target="_blank">
+                                <i class="fa-desktop"></i>
+                                站点首页
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{:url('user/info')}">
+                                <i class="fa-edit"></i>
+                                修改密码
+                            </a>
+                        </li>
+                        <li class="last">
+                            <a href="{:url('user/loginout')}">
+                                <i class="fa-lock"></i>
+                                注销
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </nav>
+	<div id="right">
+		<h2>我的资料</h2>
+		<div id="tab">
+			<div class="list">
+				<ul class="fn-clear">
+					<li><a href="{:url('user/index')}">基本资料</a></li>
+					<li class="cur">修改信息</li>
+					<li><a href="{:url('user/popedom')}">我的权限</a></li>
+				</ul>
+			</div>
+			<div id="listCon">
+
+				<!-- 修改信息 -->
+				<div class="cur">
+					<form id="fm" name="fm" method="post" action="" >
+					<p><span class="xiang">用户名：</span>{$obj.user_name}</p>
+					<p><span class="xiang">原始密码：</span><input type="password" name="user_pwd" class="member-input"></p>
+					<p><span class="xiang">新密码：</span><input type="password" name="user_pwd1" class="member-input"><span class="tishi">不修改请留空</span></p>
+					<p><span class="xiang">重复密码：</span><input type="password" name="user_pwd2" class="member-input"></p>
+					<p><span class="xiang">QQ号码：</span><input type="text" name="user_qq" class="member-input" value="{$obj.user_qq}"></p>
+					{if condition="$obj.user_email neq ''"}
+						<p><span class="xiang">邮箱：</span><input type="text" name="user_email" class="member-input" readonly="readonly" value="{$obj.user_email}">[<a class="btn_unbind" ac="email" href="javascript:;">解绑</a>]</p>
+					{else/}
+						<p><span class="xiang">邮箱：</span><input type="text" name="user_email" class="member-input" value="">[<a href="{:url('user/bind')}?ac=email">绑定</a>]</p>
+					{/if}
+
+					<p><span class="xiang">找回密码问题：</span><input type="text" name="user_question" class="member-input" value="{$obj.user_question}"></p>
+					<p><span class="xiang">找回密码答案：</span><input type="text" name="user_answer" class="member-input" value="{$obj.user_answer}"></p>
+					<p><span class="xiang"></span><input type="button" id="btn_submit" class="search-button" value="保存"><span class="wjmm"><a href="{:url('user/findpass')}">忘记密码了？</a></span></p>
+					<p><span class="xiang"></span></p>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+	$('.btn_unbind').click(function(){
+		var ac = $(this).attr('ac');
+		if(ac!='email' && ac!='phone'){
+			alert('参数错误');
+		}
+		if(confirm('确认解除绑定吗？此操作不可恢复？')) {
+			$.ajax({
+				url: "{:url('user/unbind')}",
+				type: "post",
+				dataType: "json",
+				data: {ac: ac},
+				beforeSend: function () {
+					//开启loading
+				},
+				success: function (r) {
+					alert(r.msg);
+					if(r.code==1){
+						location.href="{:url('user/info')}";
+					}
+				},
+				complete: function () {
+					//结束loading
+				}
+			});
+		}
+	});
+
+	$("#btn_submit").click(function() {
+		var data = $("#fm").serialize();
+		$.ajax({
+			url: "{:url('user/info')}",
+			type: "post",
+			dataType: "json",
+			data: data,
+			beforeSend: function () {
+				//开启loading
+				//$(".loading_box").css("display","block");
+				$("#btn_submit").css("background","#fd6a6a").val("loading...");
+			},
+			success: function (r) {
+				alert(r.msg);
+				if(r.code==1){
+					location.href="{:url('user/info')}";
+				}
+			},
+			complete: function () {
+				//结束loading
+				//$(".loading_box").css("display","none");
+				$("#btn_submit").css("background","#fa4646").val("提交");
+			}
+		});
+	});
+
+</script>
+{include file="user/foot" /}
+</body>
+</html>
