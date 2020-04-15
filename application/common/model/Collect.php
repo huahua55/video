@@ -666,12 +666,6 @@ class Collect extends Base {
                         $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                         $v['vod_pic'] = (string)$tmp['pic'];
                         $msg = $tmp['msg'];
-                        // 针对本站修改为固定
-                        {
-                            $v['vod_play_from'] = 'dplayer$$$dplayerHD';
-                            $v['vod_play_url'] = '';
-                        }
-                        // end
                         $res = model('Vod')->insert($v);
                         if ($res === false) {
 
@@ -894,12 +888,6 @@ class Collect extends Base {
                             $update['vod_time'] = time();
                             $where = [];
                             $where['vod_id'] = $info['vod_id'];
-                            // 针对本站修改为固定
-                            {
-                                $update['vod_play_from'] = 'dplayer$$$dplayerHD';
-                                $update['vod_play_url'] = $info['vod_play_url'];
-                            }
-                            // end
                             $res = model('Vod')->where($where)->update($update);
                             $color = 'green';
                             if ($res === false) {
