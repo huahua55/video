@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>用户注册 - {$maccms.site_name}</title>
+<meta name="keywords" content="{$maccms.site_keywords}"/>
+<meta name="description" content="{$maccms.site_description}"/>
+ <link rel="stylesheet" href="{$maccms.path_tpl}youku/css/user.css?3.7.180327">
+ {include file="public/include" /}
+</head>
+<body  class="user-register">
+{include file="public/heada" /}
+<div class="p-imgcon"></div>
+<div class="p-login">
+    <div class="p-login-content g-clear">
+      <div class="p-login-right">
+
+   <div class="b-registe">
+    <div class="b-registe-signup">
+        <p class="b-registe-title">
+          <b class="b-registe-back"></b>
+          <span class="b-registe-sub-nav">用户注册</span>
+        </p>
+        <div class="b-registe-contentwrap">
+            <div class="b-registe-error-con">
+               <div class="ff-alert"></div>
+            </div>
+            <div class="b-registe-content">
+                <div class="b-registe-cl-reg">
+
+		<form class="form-horizontal form-user-register" method="post" id="fm" action=""> 
+			<div class="b-registe-reg-tel"><input type="text" id="user_name" name="user_name" class="form-control" placeholder="请输入您的登录账号"><i class="b-registe-reg-yh"></i></div>
+			<div class="b-registe-reg-tel"><input type="password" id="user_pwd" name="user_pwd" class="form-control" placeholder="请输入您的登录密码"><i class="b-registe-reg-mm"></i></div>
+			<div class="b-registe-reg-tel"><input type="password" id="user_pwd2" name="user_pwd2" class="form-control" placeholder="请输入您的确认密码"><i class="b-registe-reg-mm"></i></div>
+			<div class="b-registe-reg-tel b-registe-reg-hui"><input type="text" class="form-control w150" id="verify" name="verify" placeholder="请输入验证码"><i class="b-registe-reg-mm"></i></div>
+			<span class="b-registe-reg-tyzm"><img class="ff-vcode-img" id="verify_img" src="{:url('verify/index')}" onClick="this.src=this.src+'?'"  alt="单击刷新" />
+			 
+			     <div class="b-registe-reg-btn js-b-registe-reg-btn text-right">
+            <b><button type="button" id="btn_submit">立即注册</button></b> 
+
+		</div>
+				  </form>
+				  
+                </div>
+                <p class="b-registe-txtbtns">
+                  <span class="b-registe-login js-signin"><a href="{:url('user/login')}">立即登录</a></span>
+                  <span class="b-registe-forgetpwd js-forgetpwd"><a href="{:url('user/findpass')}">找回密码</a></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- // sign-box#regbox end -->
+<script type="text/javascript">
+
+	$(function(){
+		$("body").bind('keyup',function(event) {
+			if(event.keyCode==13){ $('#btnLogin').click(); }
+		});
+		$('#btn_submit').click(function() {
+			if ($('#user_name').val()  == '') { alert('请输入用户！'); $("#user_name").focus(); return false; }
+			if ($('#user_pwd').val()  == '') { alert('请输入密码！'); $("#user_pwd").focus(); return false; }
+			if ($('#verify').val()  == '') { alert('请输入验证码！'); $("#verify").focus(); return false; }
+
+			$.ajax({
+				url: "{:url('user/reg')}",
+				type: "post",
+				dataType: "json",
+				data: $('#fm').serialize(),
+				beforeSend: function () {
+					$("#btn_submit").css("background","#fd6a6a").val("loading...");
+				},
+				success: function (r) {
+					alert(r.msg);
+					if(r.code==1){
+						location.href="{:url('user/login')}";
+					}
+					else{
+						$('#verify_img').click();
+					}
+				},
+				complete: function () {
+					$("#btn_submit").css("background","#fa4646").val("立即注册");
+				}
+			});
+
+		});
+	});
+
+</script>
+{include file="public/foot" /}
+</body>
+</html>

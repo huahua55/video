@@ -1,0 +1,20 @@
+
+
+
+
+<div class="lunhuan" id="carousel1">
+    <div id="lunhuanback">
+      {maccms:vod order="desc" by="time" num="10" paging="false" ids="all" type="all" level="9"}
+	<a style="background-image:url({$vo.vod_pic_slide});opacity: 1;display: block;background-color:rgb({$vo.vod_version});" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
+      {/maccms:vod}
+  </div>
+	<div class="slider_nav" id='lunbonum'>
+        {maccms:vod order="desc" by="time" num="10" paging="false" ids="all" type="all" level="9"}
+		<a href="{:mac_url_vod_detail($vo)}"  >
+      <div class="tit">{$vo.vod_name}</div>
+      <div class="txt">{$vo.vod_actor} </div>
+    </a>
+        {/maccms:vod}
+</div>
+		<div class="slider_mask"></div>
+</div></div>

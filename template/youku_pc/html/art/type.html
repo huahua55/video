@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{$obj.type_title} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.type_key}" />
+    <meta name="description" content="{$obj.type_des}" />
+	<link rel="stylesheet" href="{$maccms.path_tpl}youku/css/news.css"/>
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+
+<!--当前位置-->{include file="public/slide"}<div class="lunhuan" id="carousel1">
+    
+
+<div class="main-box">
+<div class="main newslist">
+<div class="listl list2">
+<div class="yrdaohang">当前位置：<a href="{$maccms.path}">{$maccms.site_name}</a> &gt; <a href="{:mac_url_type($obj)}">{$obj.type_name}</a></div>
+
+ 
+<!--文章列表-->
+<ul>
+		 
+
+            {maccms:art num="30" paging="yes" type="current" order="desc" by="time"}
+			
+			<li>
+					<div class="viewimg">
+                    <a href="{:mac_url_art_detail($vo)}">
+                    <img src="{$vo.art_pic}" alt="{$vo.art_name}" width="250" height="165"></a>
+					</div>
+					<h3><a href="{:mac_url_art_detail($vo)}" title="{$vo.art_name}">{$vo.art_name}</a></h3>
+					<p> {$vo.art_name}</p>
+					<div class="hotimgbz"><span>栏目：{$vo.type.type_name}</span><span>时间：{$vo.art_time|date='Y-m-d',###}4</span><span>热度：{$vo.art_hits}℃</span></div>
+				</li>
+				
+			 
+            {/maccms:art}
+       </ul>
+
+ 
+
+        {include file="public/paging"}
+ </div>
+
+    <div class="listr">
+   <div class="recommend">
+	<div class="module-tit"> 
+	  <h2>为你推荐</h2>
+	</div>
+	<ul class="ulfix">
+
+                {maccms:art num="20" order="desc" by="hits_month"}
+				<li><a href="{:mac_url_art_detail($vo)} " title="{$vo.art_name} " target="_blank"></em>
+				<div class="viewimg"><img src="{$vo.art_pic} " alt="{$vo.art_name} " width="150" height="98"></div>
+				 <p>{$vo.art_name} </p></a></li>
+			 
+                {/maccms:art}
+            			</ul>
+		</div>
+   <div class="recommena scroll">
+	<div class="module-tit"> 
+	  <h2>今日头条</h2>
+	</div>
+      <ul class="topnews-list">
+
+	  {maccms:art num="20" order="desc" by="hits_month"}
+<li>
+           <a href="{:mac_url_art_detail($vo)}" title="{$vo.art_name}">
+             <p class="lipic">
+              <img src="{$vo.art_pic}" alt="{$vo.art_name}"></p>
+                  <p class="litxt">
+                    <span class="name tvname">{$vo.art_name}</span></p>
+                  </a>
+              </li>
+ {/maccms:art}
+          </ul>
+		</div>
+	 </div>	
+  </div>	
+</div>	
+
+<script> 
+var top1=$(".scroll").offset().top;
+　　　　$(window).scroll(function(){
+　　　　　　var  win_top=$(this).scrollTop();
+　　　　　　var  top=$(".scroll").offset().top;
+　　　　　　if(win_top>=top){
+　　　　　　　　$(".scroll").css({"position":"fixed","top":"0","left":"1055","z-index":"10"}).addClass('stosition');  
+　　　　　　}
+　　　　　　if(win_top<top1){
+　　　　　　　　$(".scroll").css({"position":"","top":"","left":"","z-index":""}).removeClass('stosition');   
+　　　　　　}
+  });
+
+
+</script>
+
+{include file="public/foot"}
+</body>
+</html>
+

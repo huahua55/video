@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{$maccms.site_name}</title>
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/heada"}
+{include file="public/slide"} 
+
+
+ <div class="yk-container"> 
+   <div class="yk-row"> 
+ 
+
+    <div class="yk-pannel clearfix"> 
+     <div class="yk-pannel-box"> 
+      <div class="yk-pannel_hd"> 
+       
+      
+  </div> 
+ </div>
+<!-- 横幅广告开始index_1400 -->
+<script type="text/javascript" src="{$maccms.path_ads}index-1400.js" charset="utf-8"></script><!--广告END-->
+ <!-- 为你推荐推荐值4 -->
+ <div class="yk-pannel clearfix"> 
+   <div class="yk-pannel-box"> 
+    <div class="yk-pannel_hd"> 
+     <div class="yk-pannel_head clearfix"> 
+      <h3 class="title">最新更新排行榜</h3> 
+     </div> 
+    </div> 
+    <div class="yk-pannel_bd clearfix"> 
+     <ul class="index-list-1 active clearfix">
+
+	 {maccms:vod num="102" order="desc" by="time" type="all" }
+	 <li class="yk-pack">
+		<div class="p-thumb">
+		<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}" target="_blank"></a>
+		<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
+		<div class="p-thumb-tagrt" style="left:0;"><span class="red">{$vo.vod_remarks} </span></div>
+          <div class="p-thumb-tagrt" style="left:0;top:calc(100% - 20px);"><span class="red" style="background: linear-gradient(to left,#ff0202 0,#6e00ff 100%);">{$vo.type.type_name}</span></div>
+		<span class="figure_mask"></span>
+		<span class="figure_thermometer _animate0">
+		<i class="icon_thermometer"> 
+		<i class="icon_thermometer_ball"></i> 
+		<i class="icon_thermometer_progress" style="height:83%;"> </i> </i> 
+		<span class="thermometer_info"> 
+		<span class="txt">播放指数</span> 
+		<span class="txt">{$vo.vod_up}</span> </span> 
+		</div>
+		<ul class="info-list">
+		<li class="title"><a href="{:mac_url_vod_detail($vo)}" target="_blank">{$vo.vod_name}</a></li>
+		<span>主演：{$vo.vod_actor} </span>
+		</ul>
+		</li>
+		{/maccms:vod}
+		 </ul>
+		 
+    </div> 
+   </div> 
+  </div>
+ 
+  <!-- 分类列表 -->
+ </div> </div> </div> </div>
+  
+
+{include file="public/foot"}
+</body>
+</html>

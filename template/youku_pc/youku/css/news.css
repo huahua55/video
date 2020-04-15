@@ -1,0 +1,51 @@
+﻿/********新闻列表*******/
+.newslist {position: relative;}
+.yrdaohang{ width:985px; float: left; position: relative; margin: 0 auto;font-size:16px; padding-top:15px; padding-bottom:15px; border-bottom: 1px solid #E5E5E5;}
+.yrarcdh{ width:960px; float: left; position: relative; margin: 0 auto;font-size:16px; padding-top:10px; padding-bottom:10px;   border-bottom: 1px solid #F2F2F2; padding-left:10px;}
+.main .listl .share-component{margin-left: 8%;}
+.main .listl {float: left;width: 990px;position: relative;}
+.main .listl .inner{ padding:65px 0 0 0;}
+.listl .listview { float: left; width: 150px; height: 32px; line-height: 32px; padding:0 10px; top: 0; left: -25px; background-color: #00AA98; font-size: 18px; color: #fff; text-align: center; }
+.listl .listview2 { float: left; width: 100px; height: 32px; line-height: 32px; top: 0; left: -25px; background-color: #00AA98; font-size: 18px; color: #fff; text-align: center; }
+.main .list2  ul { padding-top:55px;}
+.main .list2  ul li { width: 985px; height: 170px; padding: 10px 0; border-bottom: 1px solid #E5E5E5; }
+.main .list2  ul li .viewimg { width: 250px; height: 165px; float: left; display: inline; margin-right: 30px; position: relative;overflow: hidden;}
+.main .list2  ul li img { width: 250px; height: 165px;transition: all .7s;}
+.main .list2  ul li img:hover{-webkit-transition: all .7s;transition: all .7s;transform: scale(1.05);-webkit-transform: scale(1.05);}
+.main .list2  ul li h3 { font-size: 18px; font-weight: bold; height: 35px; line-height: 35px; margin-bottom: 5px;}
+.main .list2  ul li p { color: #3e3e3e; font-size: 14px; height: 102px; line-height: 25px;}
+.main .list2  ul li span { background: url(../images/symbol-9.png) no-repeat 0 4px; display: inline-block !important; *display: inline; zoom: 1; text-indent: 20px; color: #3e3e3e;margin-right: 20px;}
+.main .list2  ul li span+span { background: url(../images/sj.png) no-repeat 0 2px;}
+.main .list2  ul li span+span+span { background: url(../images/huo.png) no-repeat;}
+.main .listr { float:right; display: inline; width: 335px;}
+.listr .recommend, .listr .recommena {margin-top:20px;float: right;display: inline;width: 335px;}
+.listr .recommend ul{float: right;display: inline;width: 335px;position: relative;}
+.listr .recommend ul li { float: left; width: 167px; height: 150px;font-size: 14px; color: #6b6a6a;padding-bottom: 10px;}
+.listr .recommend ul li.borderl { margin-left: 10px;}
+.listr .recommend ul li .viewimg {position: relative;overflow: hidden;width: 164px; height: 98px;}
+.listr .recommend ul li .viewimg img { width: 164px; height: 98px;transition: all .7s;}
+.listr .recommend ul li .viewimg img:hover{-webkit-transition: all .7s;transition: all .7s;transform: scale(1.05);-webkit-transform: scale(1.05);}
+.listr .recommend ul li p { height: 46px; line-height: 23px; overflow: hidden;}
+.listr .follow .followcon2 { height: 240px;}
+/********新闻内容*******/
+.news_title h1{font-size:36px}
+.news_line{height:20px;float:left;width:100%;margin-top:20px;color:#758598;font-size:14px}
+.news_line .news_z{float:left;margin-right:20px}
+.news_line .news_z li{float:left;color:#758598}
+.news_line .news_z li a,.news_time span{color:#0071ff}
+.news_time{float:left;margin-right:20px}
+.news_content{width:100%;float:left;margin-top:20px;font-size:16px;box-sizing:border-box;line-height:1.9}
+.news_content img{max-width:100%;height:auto;margin:10px auto 0}
+.news_content img:hover{border-color:#555;box-shadow:0 0 2px #555;-moz-box-shadow:0 0 2px #555}
+.news_content p{margin:.63em 0 1.8em 0;padding:0;counter-reset:list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9}
+.news_content p .ykico{background:url(../images/ykico.png) no-repeat 0 2px}
+.news_content p .ykegt{color:#007dc5;padding-left:25px}
+.recommena .topnews-list{width:335px}
+.topnews-list li{overflow:hidden;margin-bottom:10px}
+.topnews-list li a{display:block;width:100%;zoom:1;position:relative;height:90px}
+.topnews-list li .lipic{display:inline-block;overflow:hidden;position:absolute;height:98px;width:164px}
+.topnews-list li .lipic img{width:100%;height:100%;transition:all .7s}
+.topnews-list li .litxt{margin-left:170px}
+.topnews-list li .litxt span.name{max-height:100px;position:relative;line-height:23px;font-size:16px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.topnews-list li .lipic img:hover{-webkit-transition:all .7s;transition:all .7s;transform:scale(1.05);-webkit-transform:scale(1.05)}
+/********新闻内容*******/

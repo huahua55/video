@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果 - {$maccms.site_name}</title>
+<meta name="keywords" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+<meta name="description" content="{$param.wd}{$param.actor}{$param.director}{$param.area}{$param.lang}{$param.year}{$param.class}搜索结果" />
+{include file="public/include"}
+</head>
+<body>
+{include file="public/heada"}
+<!--顶部结束--> 
+
+<div class="menu-box"></div>
+<div class="main-box"> 
+
+<ul class="styleTab mt15">
+<i class="iLine"></i>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#idcfcd208495d565ef66e7dff9f98764da").removeClass("btn-default").addClass('active');
+});
+</script>
+<a href="#" class="btn-default gallery-cell" id="idcfcd208495d565ef66e7dff9f98764da">
+<em>全部</em> </a>
+ </ul>
+
+<div class="itemList">
+{maccms:vod num="20" paging="yes" pageurl="vod/search" order="desc" by="time"}
+<div class="item clearfix">
+<div class="posterPlaceholder">
+<div class="pic playlike">
+<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name} "  >
+<img class="ff-img" data-original="{$vo.vod_name} " src="{:mac_url_img($vo.vod_pic)} " alt="{$vo.vod_name} " title="{$vo.vod_name} " src="/Uploads/vod/2018-08-06/5b6811848f4ef.jpg" style="display: inline;">
+<span class="playicon"></span>
+<span class="playshow"><span class="p-num"><em>0.</em>0</span></span>
+</a>
+</div>
+</div>
+<div class="txtIntroCon">
+<div class="tit">
+<h2>
+<a   href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name} ">
+{$vo.vod_name} </a>
+</h2>
+<span class="sTime">{$vo.vod_year} </span>
+<span class="sStyle">{$vo.type.type_name}</span>
+
+</div>
+<div class="wholeTxt">
+<ul class="txtList minHeightTxt clearfix">
+<li>
+<em class="emTit">主演：</em>{$vo.vod_actor} </li>
+<li class="li_4">
+<em class="emTit">导演：</em>{$vo.vod_director}</li>
+<li class="li_4">
+<em class="emTit">类型：</em>{$vo.vod_state} </li>  
+<li class="li_4">
+<em class="emTit">国家/地区：</em>	{$vo.vod_area}</li>
+<li class="li_4"><em class="emTit">别名：</em>{$vo.vod_sub}</li>
+<li class="extend">
+<em class="emTit">简介：</em>
+<p class="pIntro">
+<span>
+{$vo.vod_blurb}</span>
+</p>
+</li>
+</ul>
+<div class="playBtnCon clearfix">
+<a href="{:mac_url_vod_detail($vo)}"   class="v_blue_btn latestBtn">
+<i class="iconfont"></i>立即播放</a>
+	</div>
+  </div>
+ </div>
+</div>
+
+ {/maccms:vod}
+  
+</div> 
+<div class="list-pager-v2"></div>
+</div>
+{include file="public/foot"}
+</body>
+</html>

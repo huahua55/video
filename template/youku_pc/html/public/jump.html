@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>{$msg}</title>
+    {include file="public/include"}
+    <style type="text/css">
+
+body{background-color:#fff;}
+
+.mBox{background-color:#fff;border:1px solid #83cfff;}
+.mBox .head{background:#cfecff url(//r1.ykimg.com/100120080909172151D87163EB1944481E2EE41F48B7645C1E) repeat-x;border-bottom:1px solid #83cfff;}
+.mBox .head .c{padding:2px 0;}
+.mBox .title,
+.mBox .title *,
+.bigVideo .v_title a{color:#000;}
+
+input.txt,
+textarea{background-color:#fff;border:1px solid #83cfff;}
+.s_body button,
+.s_body input.btn{color:#000;}
+
+.line{border-top-color:#e5e5e5;}
+
+.label{color:#909090;}
+.disabled{color:#909090;}
+
+.pageBar .page_stat{color:#909090;}
+.pageBar .page_stat .num{color:#909090;}
+
+.LPageBar{border-top:1px solid #c6c6c6;}
+.LPageBar .pages a{border:1px solid #bbdded;}
+.LPageBar .pages a:hover{background:#bbdded;}
+
+.uListColl_T .user,
+.uListColl_W .user{background:#fff;border:1px solid #e5e5e5;}
+.user_head img{background-color:#fff;border:1px solid #83cfff;}
+
+.order{color:#83cfff;}
+.top1,
+.top2,
+.top3{color:#d71118;}
+
+.message .user,
+.message .reply{color:#909090;}
+
+
+
+
+
+
+
+</style>
+
+</head>
+<body>
+{include file="public/heada"}
+<div class="c-top">
+ <div name="m_pos">
+<link href="{$maccms.path_tpl}youku/css/404.css" type="text/css" rel="stylesheet" />
+<div class="yk-error">
+       <div class="yk-error-bg yk-error-bg1">
+              <div class="yk-error-img"></div>
+              <div class="yk-error-banner"></div>
+        </div>
+	<h1 id="errorcont">{$msg}</h1>
+	 <div class="yk-error-detail">
+                            <div class="yk-error-info">
+                                <span>若是通过站外搜索而报错，可以点击<a href="/search/-------------.html" class="yk-error-btn">去搜库 </a>重新搜索~~</span>
+                                <span>若是查看站内链接而报错，请联系<a href="/">在线客服</a>哦(づ￣3￣)づ</span>
+                            </div>
+                            <a class="yk-error-app" href="javascript:void(0)" >
+                                <span>客户端免广告</span>
+                                <em>海量资源 极速缓冲</em>
+                                <img src="//r1.ykimg.com/0510000055F0F5B467BC3D0A740705B6">
+                            </a>
+                        </div>
+                        <p><img src="//r1.ykimg.com/0510000055F0F5AD67BC3D208D044B4E">还剩<em id="countdown">5</em>秒</p>
+                    
+</div>
+
+     
+		 </div>
+		</div>
+		</div>
+	</div>
+
+
+
+<script type="text/javascript">
+(function($){
+//	$('#qheader_nav').hide();
+	var randObj = $('.yk-error .yk-error-bg'), randNum = Math.floor(Math.random()*100)%4 +1;
+	var errText = [
+		'{$msg}',
+		'{$msg}',
+		'{$msg}',
+		'{$msg}'
+	];
+//	randObj.removeClass('yk-error-bg1 yk-error-bg2 yk-error-bg3 yk-error-bg4 yk-error-bg5');
+	randObj.addClass('yk-error-bg'+randNum);
+	if ( errText[randNum-1] ) {
+		$("#errorcont").html(errText[randNum-1]);
+	}
+	$(document).ready(function(){
+		var num = 5; //设置倒计时秒数
+		var timer = setInterval(function(){
+			num--;
+			if(num==-1){
+				clearInterval(timer);
+				window.location.href="<?php echo($url);?>";
+			}else{
+				$('#countdown').html(num);
+			}
+		},1000);
+         
+               //下载app
+               $("#ikuDownLoad").on('click', function (evt) {
+                    if (window.ikuDownloadIng) return false;
+                    var target =this;
+                    if (!target) {
+                        return false;
+                    }
+                    var src;
+                    src = $(target).attr('data-down-href');
+                    if (!src || window.ikuDownloadIng) return false;
+                    window.ikuDownloadIng = true;
+                    var iframe = document.createElement("iframe");
+                    iframe.width = 0;
+                    iframe.height = 0;
+                    iframe.src = src;
+                    document.body.appendChild(iframe);
+                    setTimeout(function () {
+                        document.body.removeChild(iframe);
+                        window.ikuDownloadIng = false;
+                    }, 2000);
+                    return false;
+                })
+	});
+})(jQuery);
+</script><div><div>
+  </div>
+
+
+</div>
+<div class="g-footer" style="margin-bottom:720px;"></div>
+
+< 
+{include file="public/foot"}
+</body>
+</html>

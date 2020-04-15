@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>专题首页 - 精品专题 - 推荐专题 - {$maccms.site_name}</title>
+    <meta name="keywords" content="电影专题,电视剧专题,综艺专题,动漫专题,推荐专题,专题收录" />
+    <meta name="description" content="本站提供最新最全精品专题数据" />
+  {include file="public/include"}
+</head>
+<body>
+{include file="public/heada"}
+ 
+<!--当前位置-->
+<div class="top_banner">
+	<div class="banner_main">
+		<div class="container_inner">
+			<h1 class="banner_title Special_title">全网影视专题榜</h1>
+			<div class="banner_img"></div>
+		</div>
+	</div>
+</div>
+  <div class="yk-container"> 
+   <div class="yk-row"> 
+    <div class="yk-pannel clearfix"> 
+     <div class="yk-pannel-box"> 
+      <div class="yk-special">
+
+
+        {maccms:topic num="5" paging="yes" order="desc" by="time"}
+       
+        <a href="{:mac_url_topic_detail($vo)}"   class="cover_item">
+      <img class="cover_pic quic ff-img" data-original="{$vo.topic_pic} " src="{$vo.topic_pic} " alt="{$vo.topic_name}">
+        <div class="cover_title">{$vo.topic_name}</div></a>
+        
+        {/maccms:topic}
+    </div > 
+       </div > 
+      </div> 
+     </div> 
+    </div>
+
+ 
+</body>
+</html>
+
