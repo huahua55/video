@@ -5,20 +5,30 @@ use think\Cache;
 
 class Collect extends Base
 {
+    protected $Collect = '';
     public function __construct()
     {
         parent::__construct();
+        $cjurl = input('cjurl');
+        //ok站点走不同的采集数据
+        if(strpos($cjurl,'okzy') !== false){
+            $this->Collect = 'CollectOk';
+        }else{
+            $this->Collect = 'Collect';
+        }
+        
     }
 
     public function index()
     {
+        
         $param = input();
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? 100 : $param['limit'];
         $where = [];
 
         $order = 'collect_id desc';
-        $res = model('Collect')->listData($where, $order, $param['page'], $param['limit']);
+        $res = model($this->Collect)->listData($where, $order, $param['page'], $param['limit']);
 
         $this->assign('list', $res['list']);
         $this->assign('total', $res['total']);
@@ -42,7 +52,7 @@ class Collect extends Base
     public function test()
     {
         $param = input();
-        $res = model('Collect')->vod($param);
+        $res = model($this->Collect)->vod($param);
         return json($res);
     }
 
@@ -50,7 +60,7 @@ class Collect extends Base
     {
         if (Request()->isPost()) {
             $param = input('post.');
-            $res = model('Collect')->saveData($param);
+            $res = model($this->Collect)->saveData($param);
             if ($res['code'] > 1) {
                 return $this->error($res['msg']);
             }
@@ -60,7 +70,7 @@ class Collect extends Base
         $id = input('id');
         $where = [];
         $where['collect_id'] = ['eq', $id];
-        $res = model('Collect')->infoData($where);
+        $res = model($this->Collect)->infoData($where);
         $this->assign('info', $res['info']);
         $this->assign('title', '采集接口信息');
         return $this->fetch('admin@collect/info');
@@ -75,7 +85,7 @@ class Collect extends Base
             $where = [];
             $where['collect_id'] = ['in', $ids];
 
-            $res = model('Collect')->delData($where);
+            $res = model($this->Collect)->delData($where);
             if ($res['code'] > 1) {
                 return $this->error($res['msg']);
             }
@@ -203,7 +213,7 @@ class Collect extends Base
         if($param['ac'] != 'list'){
             Cache::set('collect_break_vod', url('collect/api').'?'. http_build_query($param) );
         }
-        $res = model('Collect')->vod($param);
+        $res = model($this->Collect)->vod($param);
         if($res['code']>1){
             return $this->error($res['msg']);
         }
@@ -246,7 +256,7 @@ class Collect extends Base
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model('Collect')->vod_data($param,$res );
+        model($this->Collect)->vod_data($param,$res );
 
     }
 
@@ -255,7 +265,7 @@ class Collect extends Base
         if($param['ac'] != 'list'){
             Cache::set('collect_break_art', url('collect/api').'?'. http_build_query($param) );
         }
-        $res = model('Collect')->art($param);
+        $res = model($this->Collect)->art($param);
         if($res['code']>1){
             return $this->error($res['msg']);
         }
@@ -298,7 +308,7 @@ class Collect extends Base
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model('Collect')->art_data($param,$res );
+        model($this->Collect)->art_data($param,$res );
     }
 
     public function actor($param)
@@ -306,7 +316,7 @@ class Collect extends Base
         if($param['ac'] != 'list'){
             Cache::set('collect_break_actor', url('collect/api').'?'. http_build_query($param) );
         }
-        $res = model('Collect')->actor($param);
+        $res = model($this->Collect)->actor($param);
         if($res['code']>1){
             return $this->error($res['msg']);
         }
@@ -349,7 +359,7 @@ class Collect extends Base
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model('Collect')->actor_data($param,$res );
+        model($this->Collect)->actor_data($param,$res );
     }
 
     public function role($param)
@@ -357,7 +367,7 @@ class Collect extends Base
         if ($param['ac'] != 'list') {
             Cache::set('collect_break_role', url('collect/api') . '?' . http_build_query($param));
         }
-        $res = model('Collect')->role($param);
+        $res = model($this->Collect)->role($param);
         if ($res['code'] > 1) {
             return $this->error($res['msg']);
         }
@@ -400,7 +410,7 @@ class Collect extends Base
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model('Collect')->role_data($param,$res );
+        model($this->Collect)->role_data($param,$res );
     }
 
     public function website($param)
@@ -408,7 +418,7 @@ class Collect extends Base
         if ($param['ac'] != 'list') {
             Cache::set('collect_break_website', url('collect/api') . '?' . http_build_query($param));
         }
-        $res = model('Collect')->website($param);
+        $res = model($this->Collect)->website($param);
         if ($res['code'] > 1) {
             return $this->error($res['msg']);
         }
@@ -451,6 +461,6 @@ class Collect extends Base
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model('Collect')->website_data($param,$res );
+        model($this->Collect)->website_data($param,$res );
     }
 }
