@@ -10,6 +10,24 @@
 */
 error_reporting(E_ERROR | E_PARSE );
 
+// 打印函数
+function p($array, $ext = 0){
+    echo "<pre>";
+    print_r($array);
+    if ($ext == 0) {
+        die;
+    }
+}
+
+// 打印函数
+function v($array, $ext = 0){
+    echo "<pre>";
+    var_dump($array);
+    if ($ext == 0) {
+        die;
+    }
+}
+
 // 应用公共文件
 function mac_return($msg,$code=1,$data=''){
     if(is_array($msg)){
