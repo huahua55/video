@@ -11,6 +11,7 @@ class Timming extends Base
 
     public function index()
     {
+
         $param = input();
         $name = $param['name'];
         if(empty($name)){
@@ -33,8 +34,11 @@ class Timming extends Base
             //测试
             //$v['runtime']=0;
 
-            if( ($v['status']=='1' && ( empty($v['runtime']) || ($oldweek."-".$oldhours) != ($curweek."-".$curhours)
-                    && strpos($v['weeks'],$curweek)!==false && strpos($v['hours'],$curhours)!==false)) ) {
+        /*    if( ($v['status']=='1' && ( empty($v['runtime']) || ($oldweek."-".$oldhours) != ($curweek."-".$curhours)
+                    && strpos($v['weeks'],$curweek)!==false && strpos($v['hours'],$curhours)!==false)) ) {*/
+
+            if( $param['force'] || ($v['status']=='1' && ( empty($v['runtime']) || ($oldweek."-".$oldhours) != ($curweek."-".$curhours)
+                        && strpos($v['weeks'],$curweek)!==false && strpos($v['hours'],$curhours)!==false)) ) {
                 mac_echo('任务：'.$v['name'] . '，状态：'. $status .'，上次执行时间：'. $last . '---执行');
                 $list[$k]['runtime'] = time();
 

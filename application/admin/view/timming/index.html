@@ -34,7 +34,7 @@
                 </td>
                 <td>{$vo.runtime|mac_day}</td>
                 <td>
-                    <a class="layui-badge-rim" target="_blank" href="{php}echo $GLOBALS['config']['site']['install_dir'];{/php}api.php/timming/index.html?name={$vo['name']|rawurlencode}" title="测试">测试</a>
+                    <a class="layui-badge-rim" target="_blank" href="{php}echo $GLOBALS['config']['site']['install_dir'];{/php}/api.php/timming/index.html?name={$vo['name']|rawurlencode}" title="测试">测试</a>
                     <a class="layui-badge-rim j-iframe" data-href="{:url('info')}?id={$vo['name']|rawurlencode}" href="javascript:;" title="编辑">编辑</a>
                     <a class="layui-badge-rim j-tr-del" data-href="{:url('del')}?ids={$vo['name']|rawurlencode}" href="javascript:;" title="删除">删除</a>
                 </td>
