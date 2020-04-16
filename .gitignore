@@ -18,5 +18,6 @@ application/data
 /index.html
 /map.html
 static/js/tj.js
+static/js/playerconfig.js
 rss
 label

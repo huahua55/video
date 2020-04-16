@@ -144,7 +144,7 @@ class VodPlayer extends Base
                 if($res===false){
                     return $this->error('保存代码文件失败，请重试!');
                 }
-
+                $res = $this->_cache_clear();
             }
             return $this->success('导入失败，请检查文件格式');
         }
