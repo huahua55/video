@@ -376,8 +376,7 @@ class Collect extends Base {
 
     public function syncImages($pic_status,$pic_url,$flag='vod')
     {
-        // 固定下载图片到本地
-        //if($pic_status == 1){
+        if($pic_status == 1){
             $img_url = model('Image')->down_load($pic_url, $GLOBALS['config']['upload'], $flag);
             $link = MAC_PATH . $img_url;
             $link = str_replace('mac:', $GLOBALS['config']['upload']['protocol'].':', $img_url);
@@ -388,7 +387,7 @@ class Collect extends Base {
                 $pic_url = $img_url;
                 $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
             }
-        //}
+        }
         return ['pic'=>$pic_url,'msg'=>$des];
     }
 
@@ -400,8 +399,6 @@ class Collect extends Base {
 
         $config = config('maccms.collect');
         $config = $config['vod'];
-        $players = config('vodplayer');
-        $downers = config('voddowner');
 
         $type_list = model('Type')->getCache('type_list');
         $filter_arr = explode(',',$config['filter']);
@@ -574,14 +571,6 @@ class Collect extends Base {
                         continue;
                     }
 
-                    if(empty($players[$vv])){
-                        unset($cj_play_from_arr[$kk]);
-                        unset($cj_play_url_arr[$kk]);
-                        unset($cj_play_server_arr[$kk]);
-                        unset($cj_play_note_arr[$kk]);
-                        continue;
-                    }
-
                     $cj_play_url_arr[$kk] = rtrim($cj_play_url_arr[$kk],'#');
                     $cj_play_server_arr[$kk] = $cj_play_server_arr[$kk];
                     $cj_play_note_arr[$kk] = $cj_play_note_arr[$kk];
@@ -597,13 +586,6 @@ class Collect extends Base {
                 }
                 foreach($cj_down_from_arr as $kk=>$vv){
                     if(empty($vv)){
-                        unset($cj_down_from_arr[$kk]);
-                        unset($cj_down_url_arr[$kk]);
-                        unset($cj_down_server_arr[$kk]);
-                        unset($cj_down_note_arr[$kk]);
-                        continue;
-                    }
-                    if(empty($downers[$vv])){
                         unset($cj_down_from_arr[$kk]);
                         unset($cj_down_url_arr[$kk]);
                         unset($cj_down_server_arr[$kk]);
