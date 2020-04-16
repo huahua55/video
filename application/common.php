@@ -28,6 +28,36 @@ function v($array, $ext = 0){
     }
 }
 
+function type_extend($extend){
+
+    $extend['type'] = $extend['class'] ?? "";
+    $extend['area'] = $extend['area'] ?? "";
+    $extend['year'] = $extend['year'] ?? "";
+    return json_encode([
+        ['name'=>'type',"data"=>$extend['type']],
+        ['name'=>'area',"data"=>$extend['area']],
+        ['name'=>'year',"data"=>$extend['year']],
+    ],JSON_UNESCAPED_UNICODE);
+}
+
+
+function getScreen($id){
+    $where = [
+        'type_id'   => $id
+    ];
+    $res =  model("Type")->infoData($where);
+    $res = $res['info'] ?? [];
+
+    $type = explode(',','类型,'.$res["type_extend"]["class"]);
+    $area = explode(',','地区,'.$res["type_extend"]["area"]);
+    $year = explode(',','年份,'.$res["type_extend"]["year"]);
+    return array(
+        array('name'=>'type',"data"=>$type),
+        array('name'=>'area',"data"=>$area),
+        array('name'=>'year',"data"=>$year),
+    );
+}
+
 // 应用公共文件
 function mac_return($msg,$code=1,$data=''){
     if(is_array($msg)){
