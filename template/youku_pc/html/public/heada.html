@@ -1,21 +1,17 @@
 <!-- 页头 -->
-<div class="top-main channel-top-main" id="main-bg">	<div class="test"></div>
-        <div class="newhead">
-          <div class="newhead-main">
-            <div class="hd-logo"><a title="{$maccms.site_name}" href="{$maccms.path}" target="_self" rel="nofollow"></a></div>
-            <div class="newhead-small-nav">
-				<li id="nav-index"><a href="/" target="_self">首页</a></li>
-				            {maccms:type ids="parent" order="asc" by="sort"}
-				<li id="nav-{$vo.type_en}"><a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
-				   {/maccms:type}
-	<li id="nav-{$vo.type_en}"> <a href="{:mac_url('gbook/index')}"
-		   target="_self"
-		   id="nav-gbook">留言</a></li>
-	<li id="nav-{$vo.type_en}"><a href="{:mac_url_topic_index()}"
-		   target="_self"
-		   id="nav-topic">专题</a></li>
-
-				<!-- <li class="top-nav-more-large"><a href="javascript:void(0);" class="ico-list"></a>
+<div class="top-main channel-top-main" id="main-bg">
+	<div class="newhead">
+		<div class="newhead-main">
+			<div class="head-left" style="font-size: 0;">
+				<div class="hd-logo"><a title="{$maccms.site_name}" href="{$maccms.path}" target="_self" rel="nofollow"></a></div>
+				<div class="newhead-small-nav">
+					<li id="nav-index"><a href="/" target="_self">首页</a></li>
+					{maccms:type ids="parent" order="asc" by="sort"}
+					<li id="nav-{$vo.type_en}"><a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
+					{/maccms:type}
+					<li id="nav-{$vo.type_en}"> <a href="{:mac_url('gbook/index')}" target="_self" id="nav-gbook">留言</a></li>
+					<li id="nav-{$vo.type_en}"><a href="{:mac_url_topic_index()}" target="_self" id="nav-topic">专题</a></li>
+					<!-- <li class="top-nav-more-large"><a href="javascript:void(0);" class="ico-list"></a>
 					<ul>
                     <li class="arrow"></li>
 					<li><div class="top-nav-more-content">
@@ -39,66 +35,69 @@
 				    </div>
 				</ul>
 				</li> -->
-			</li>
-            </div>
-			<script>$("#nav{$obj.type_en}").addClass("cur");</script>
-
-
-          <div id="searchbar" class="search-main " areacode="search">
-              <div class="head-search pull-left">
-			   		<div id="_js_search_form" class="head-search-box ">
-	         <form class="search-form ff-search" id="search" name="search"  action="{:mac_url('vod/search')}" method="post" autocomplete="off">
-			<input type="text" name="wd" class="form-control ff-wd mac_wd"  value="" placeholder="">
-				<a class="head-search-top" href="/label/top.html"  ></a>
-				<button type="submit" id="searchbutton" class="search-button mac_search">搜剧</button>
-								</form>
-			   		</div>
-			   	</div>
+					</li>
 				</div>
-			<div class="g-ucenter" id="uerCenter">
-                <div class="u-vip"><div class="handle"><a href="javascript:;"  ><i class="ico-vip"></i>VIP</a></div></div>
-                <div class="u-sub"><div class="handle"><a href="javascript:;" onclick="addFavorite(this);"><i class="ico-sub"></i>订阅</a></div></div>
-                <div class="u-record">
-                    <div class="dropdown" id="u-record">
-
-                        <div class="handle  mac_history"> <a class="ff-record-get" href="javascript:;"> <i class="ico-urecord"></i>记录</a></div>
-
-                    </div>
-                </div>
-                <div class="u-upload">
-                    <div class="dropdown">
-                        <div class="handle"><a href="javascript:;"  ><i class="ico-upload"></i>上传</a></div>
-                    </div>
-                </div>
-                <div class="u-app">
-                  <div class="dropdown" id="u-app">
-                      <div class="handle"><a href="javascript:;"  ><i class="ico-app"></i>客户端</a> </div>
-					  <div class="panel"><i class="arrow"></i>
-                          <div class="content"><div class="g-nav-app-intro">
-						<a href="javascript:;"   class="g-nav-iku">
-						<img src="{$maccms.path_tpl}youku/images/xiazai1.png" width="64">
-						<h3>最新客户端</h3>
-						<span>快速·稳定的观看体验</span>
-						</a><a href="javascript:;"   class="g-nav-app">
-						<img src="{$maccms.path_tpl}youku/images/xiazai2.jpg" width="64">
-						<h3>微信公众号</h3>
-						<span>全网独播尽在手中</span>
-						</a>
-
-						</div>
-					   </div>
-                     </div>
-                  </div>
-                </div>
-
-
-			<div class="u-login">
-                  <div class="login-after dropdown" id="u-login">
-					      <a class="text-muted ff-user user-login-modal mac_user" href="javascript:;">
-                          <img src="{$maccms.path_tpl}youku/images/user.png" title="未登录"> </a>			                  </div>
-                </div>
-		     </div>
 			</div>
-        </div>
-      </div>
+			<script>$("#nav{$obj.type_en}").addClass("cur");</script>
+			<div id="searchbar" class="search-main " areacode="search">
+				<div class="head-search pull-left">
+					<div id="_js_search_form" class="head-search-box ">
+						<form class="search-form ff-search" id="search" name="search" action="{:mac_url('vod/search')}" method="post"
+						 autocomplete="off">
+							<input type="text" name="wd" class="form-control ff-wd mac_wd" value="" placeholder="">
+							<a class="head-search-top" href="/label/top.html"></a>
+							<button type="submit" id="searchbutton" class="search-button mac_search">搜剧</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="g-ucenter" id="uerCenter">
+				<div class="u-vip">
+					<div class="handle"><a href="javascript:;"><i class="ico-vip"></i>VIP</a></div>
+				</div>
+				<div class="u-sub visible-lg">
+					<div class="handle"><a href="javascript:;" onclick="addFavorite(this);"><i class="ico-sub"></i>订阅</a></div>
+				</div>
+				<div class="u-record">
+					<div class="dropdown" id="u-record">
+						<div class="handle  mac_history"> <a class="ff-record-get" href="javascript:;"> <i class="ico-urecord"></i>记录</a></div>
+					</div>
+				</div>
+				<div class="u-upload">
+					<div class="dropdown">
+						<div class="handle"><a href="javascript:;"><i class="ico-upload"></i>上传</a></div>
+					</div>
+				</div>
+				<div class="u-app">
+					<div class="dropdown" id="u-app">
+						<div class="handle"><a href="javascript:;"><i class="ico-app"></i>客户端</a> </div>
+						<div class="panel"><i class="arrow"></i>
+							<div class="content">
+								<div class="g-nav-app-intro">
+									<a href="javascript:;" class="g-nav-iku">
+										<img src="{$maccms.path_tpl}youku/images/xiazai1.png" width="64">
+										<h3>最新客户端</h3>
+										<span>快速·稳定的观看体验</span>
+									</a><a href="javascript:;" class="g-nav-app">
+										<img src="{$maccms.path_tpl}youku/images/xiazai2.jpg" width="64">
+										<h3>微信公众号</h3>
+										<span>全网独播尽在手中</span>
+									</a>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="u-login">
+					<div class="login-after dropdown" id="u-login">
+						<a class="text-muted ff-user user-login-modal mac_user" href="javascript:;">
+							<img src="{$maccms.path_tpl}youku/images/user.png" title="未登录">
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <!--顶部结束-->

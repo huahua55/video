@@ -981,6 +981,15 @@ CREATE TABLE `utcc_task` (
   KEY `idx_vid` (`vid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `user_sign_in` (
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `continuous_days` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '连续签到天数',
+  `integral` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '本次签到获取积分数',
+  `sign_in_at` int(10) NOT NULL DEFAULT '0' COMMENT '签到时间, 时间戳',
+  `created_at` int(10) NOT NULL DEFAULT '0' COMMENT '记录创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户签到表';
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

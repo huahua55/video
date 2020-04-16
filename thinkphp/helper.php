@@ -166,6 +166,9 @@ if (!function_exists('model')) {
      */
     function model($name = '', $layer = 'model', $appendSuffix = false)
     {
+        if(isset($_SERVER['argv']) && $_SERVER['argv'][0] == 'think'){
+            $layer = 'common\model';
+        }
         return Loader::model($name, $layer, $appendSuffix);
     }
 }
