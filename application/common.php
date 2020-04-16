@@ -1910,13 +1910,14 @@ function mac_url($model,$param=[],$info=[])
             if(!empty(IN_FILE)){
                 $url = str_replace(IN_FILE.'/',$sto,$url);
                 $url = str_replace(ENTRANCE.'/','',$url);
+                $url = $GLOBALS['http_type'] . $config['site']['site_url'] . $url;
             }
         }
         elseif($config['rewrite']['status']==0 && strpos($url,'index.php')===false){
             if(MAC_PATH !='/'){
                 $url = str_replace(MAC_PATH,'/',$url);
             }
-            $url = MAC_PATH. 'index.php' . $url;
+            //$url = MAC_PATH. 'index.php' . $url;
         }
 
         if($config['rewrite']['suffix_hide']==1){

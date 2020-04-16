@@ -19,7 +19,15 @@
             <div class="layui-tab-content">
 
                 <div class="layui-tab-item layui-show">
-                    
+                <div class="layui-form-item">
+                    <label class="layui-form-label">ID：</label>
+                    <div class="layui-input-inline w50">
+                        <input type="text" class="layui-input" value="{$info.vod_id}" readonly>
+                    </div>
+                    <div class="layui-input-inline w110">
+                        <input type="checkbox" name="uptime" title="更新时间" value="1" checked class="layui-checkbox checkbox-ids" lay-skin="primary">
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">参数：</label>
                     <div class="layui-input-inline w150">
@@ -73,9 +81,6 @@
                             <option value="0" {if condition="$info.vod_copyright eq '0'"}selected{/if}>关闭版权处理</option>
                             <option value="1" {if condition="$info.vod_copyright eq '1'"}selected{/if}>开启版权处理</option>
                         </select>
-                    </div>
-                    <div class="layui-input-inline w110">
-                        <input type="checkbox" name="uptime" title="更新时间" value="1" checked class="layui-checkbox checkbox-ids" lay-skin="primary">
                     </div>
                 </div>
 
@@ -725,7 +730,7 @@
                             $('#vod_sub').val(r.data.vod_sub);
                         }
                         if(r.data.vod_pic){
-                            $('#vod_pic').val(r.data.vod_pic);
+                            //$('#vod_pic').val(r.data.vod_pic);
                         }
                         if(r.data.vod_year){
                             $('#vod_year').val(r.data.vod_year);
