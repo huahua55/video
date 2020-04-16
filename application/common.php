@@ -219,6 +219,7 @@ function mac_jump($url,$sec=0)
 function mac_echo($str)
 {
     echo $str.'<br>';
+    \think\Log::log($str);
     ob_flush();flush();
 }
 
