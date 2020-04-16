@@ -12,8 +12,6 @@
 	<body>
 		{include file="public/head"}
 		{include file="public/slide"}
-
-
 		<div class="yk-container">
 			<div class="yk-row">
 				<div class="yk-guide clearfix">
@@ -37,8 +35,6 @@
 									</dd>
 								</dl>
 							</span>
-
-
 							<span class="channel yk-dsj"><a href="/vodtype/2" target="_self">连续剧</a>
 								<dl class="channel-layer">
 									<span class="arrow"></span>
@@ -76,7 +72,6 @@
 									</dd>
 								</dl>
 							</span>
-
 							<span class="channel yk-dsj"><a href="/vodtype/4" target="_self">动漫</a>
 								<dl class="channel-layer">
 									<span class="arrow"></span>
@@ -97,9 +92,7 @@
 							</span>
 							<!-- <span class="channel yk-dsj"><a href="http://bbs.52yuanma.com.cn" target="_self">吾爱源码</a>
 							</span> -->
-
 						</li>
-
 						<li class="nav-group">
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/喜剧/id/1.html">喜剧片</a></span>
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/动作/id/1.html">动作片</a></span>
@@ -138,7 +131,6 @@
 						</li>
 					</ul>
 				</div>
-
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
@@ -151,7 +143,6 @@
 						<div class="yk-pannel_bd clearfix">
 							<div id="myCarousel" class="carousel slide1">
 								<div class="carousel-inner">
-
 									<div class="yk-vodlist clearfix item active">
 										{maccms:vod order="asc" by="hits" num="18" paging="false" ids="all"}
 										<li class="yk-pack">
@@ -168,9 +159,7 @@
 										{/maccms:vod}
 										</li>
 									</div>
-
 									<div class="yk-vodlist clearfix item">
-
 										{maccms:vod order="asc" by="rnd" num="18" paging="false" ids="all"}
 										<li class="yk-pack">
 											<div class="p-thumb">
@@ -203,7 +192,6 @@
 						</div>
 						<div class="yk-pannel_bd clearfix">
 							<ul class="index-list-1 active clearfix">
-
 								{maccms:vod num="18" order="desc" by="time" type="all" level="1,2,3,5,6,7"}
 								<li class="yk-pack">
 									<div class="p-thumb">
@@ -227,7 +215,6 @@
 								</li>
 								{/maccms:vod}
 							</ul>
-
 						</div>
 					</div>
 				</div>
@@ -243,7 +230,6 @@
 							<div id="myCarousel" class="carousel slide1">
 								<div class="carousel-inner">
 									<div class="yk-vodlist clearfix item active">
-
 										{maccms:topic order="desc" by="time" num="6"ids="all"}
 										<li class="yk-pack">
 											<div class="p-thumb">
@@ -282,10 +268,7 @@
 								</div>
 							</div>
 						</div>
-
-
 						<div class="yk-pannel_bd statetab1 clearfix">
-
 							<ul class="index-list-1 tabcon clearfix active">
 								{maccms:vod num="18" ids="all" type="1" order="asc" by="time"}
 								<li class="yk-pack">
@@ -397,9 +380,7 @@
 						</div>
 					</div>
 				</div>
-
 				{/maccms:type}
-
 				{maccms:type order="asc" by="sort" ids="2"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
@@ -416,10 +397,7 @@
 								</div>
 							</div>
 						</div>
-
-
 						<div class="yk-pannel_bd statetab clearfix">
-
 							<ul class="index-list-1 tabcon clearfix active">
 								{maccms:vod num="18" ids="all" type="2" order="asc" by="time"}
 								<li class="yk-pack">
@@ -483,9 +461,7 @@
 						</div>
 					</div>
 				</div>
-
 				{/maccms:type}
-
 				<!--列表-->
 				<script type="text/javascript" src="{$maccms.path_ads}index-1400-2.js" charset="utf-8"></script>
 				<!--广告END-->
@@ -516,9 +492,7 @@
 											<a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>{$vo.vod_blurb} </span>
 									</ul>
 								</li>
-
 								{/maccms:vod}
-
 								{maccms:vod num="9" type="3" order="asc" by="hits"}
 								<li class="yk-pack">
 									<div class="p-thumb">
@@ -538,7 +512,6 @@
 				</div>
 				{/maccms:type}
 				<!--列表3-->
-
 				<!--列表4-->
 				{maccms:type order="asc" by="sort" ids="4"}
 				<div class="yk-pannel clearfix">
@@ -565,7 +538,6 @@
 									</ul>
 								</li>
 								{/maccms:vod}
-
 								{maccms:vod num="9" type="4" order="asc" by="hits"}
 								<li class="yk-pack">
 									<div class="p-thumb">
@@ -579,7 +551,6 @@
 										<span>{$vo.vod_actor} </span>
 									</ul>
 								</li>
-
 								{/maccms:vod}
 							</ul>
 						</div>
@@ -614,8 +585,6 @@
           </ul>
 		  </li>
 		  {/maccms:vod}
-
-
        </div >
        </div >
       </div>
@@ -623,7 +592,6 @@
     </div>
  </div>
   列表4
-
 <div class="yk-pannel clearfix">
      <div class="yk-pannel-box">
       <div class="yk-pannel_hd">
@@ -636,7 +604,6 @@
 	  	  <div id="myCarousel" class="carousel slide1">
 	  <div class="carousel-inner">
        <div class="yk-vodlist clearfix item active">
-
 {maccms:vod order="asc" by="time" num="12" type="5"}
 	    <li class="yk-pack">
           <div class="p-thumb">
@@ -650,8 +617,6 @@
           </ul>
 		  </li>
 		  {/maccms:vod}
-
-
        </div >
        </div >
       </div>
@@ -659,7 +624,6 @@
     </div>
  </div> 
 -->
-
 				<!-- <div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
@@ -673,7 +637,6 @@
 								{maccms:link num="10" type="all" order="asc" by="id"}
 								<li><a href="{$vo.link_url}">{$vo.link_name}</a></li>
 								{/maccms:link}
-
 							</div>
 						</div>
 					</div>
