@@ -34,9 +34,9 @@ function type_extend($extend){
     $extend['area'] = $extend['area'] ?? "";
     $extend['year'] = $extend['year'] ?? "";
     return json_encode([
-        ['name'=>'type',"data"=>$extend['type']],
-        ['name'=>'area',"data"=>$extend['area']],
-        ['name'=>'year',"data"=>$extend['year']],
+        ['name'=>'type',"data"=>[$extend['type']]],
+        ['name'=>'area',"data"=>[$extend['area']]],
+        ['name'=>'year',"data"=>[$extend['year']]],
     ],JSON_UNESCAPED_UNICODE);
 }
 

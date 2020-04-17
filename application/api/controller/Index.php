@@ -23,6 +23,8 @@ class Index extends Base
         $list = $list['list'] ?? [];
         $array = [];
 
+
+
         foreach($list as $key=>$item){
             $array[$key]['id']      = $item['type_id'];
             $array[$key]['name']    = $item['type_name'];
