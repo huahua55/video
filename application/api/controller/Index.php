@@ -32,7 +32,7 @@ class Index extends Base
             $array[$key]['msg']     = type_extend($item['type_extend']) ?? [];
         }
         $list = array_merge($data , $array);
-        return mac_return($list);
+        return json_return($list);
     }
 
     // 首页导航下数据
@@ -84,7 +84,7 @@ class Index extends Base
             'video' => $getListBlock,
         );
 
-        return mac_return($list);
+        return json_return($list);
     }
 
     // 推荐
@@ -166,7 +166,7 @@ class Index extends Base
             'playcode'  => $info["vod_play_from"],
             'playlist'  => $info["vod_play_url"],
         );
-        return mac_return($data);
+        return json_return($data);
     }
 
     // 详情
@@ -189,7 +189,7 @@ class Index extends Base
             );
             array_push($data,$d);
         }
-        return mac_return($data);
+        return json_return($data);
     }
 
 
@@ -241,7 +241,7 @@ class Index extends Base
             );
             array_push($array,$d);
         }
-        return mac_return($array);
+        return json_return($array);
     }
 
 }

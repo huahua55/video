@@ -66,6 +66,18 @@ function imageDir($pic){
     return $pic;
 }
 
+// 应用公共文件
+function json_return($msg,$code=1,$data=''){
+    if(is_array($msg)){
+        return json_encode($msg, JSON_UNESCAPED_UNICODE);
+    }
+    else {
+        $rs = ['code' => $code, 'msg' => $msg, 'data'=>'' ];
+        if(is_array($data)) $rs['data'] = $data;
+        return json_encode($rs, JSON_UNESCAPED_UNICODE);
+    }
+}
+
 
 
 // 应用公共文件
