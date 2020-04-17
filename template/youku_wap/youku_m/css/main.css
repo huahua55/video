@@ -9,6 +9,7 @@
 .logo{
 	float: left;
 	background: none !important;
+	height: 2.25rem;
 }
 .logo img{
 	height: 2.25rem;
