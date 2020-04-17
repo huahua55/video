@@ -10,12 +10,20 @@
 </head>
 <body>
 {include file="public/head"}
-
 <!-- 搜索条件 -->
 <section class="mode aui-margin-t-5">
 	<div class="mod-main clearfix">
 		<div class="classifyWarp">
-
+			<div id="classifyList01" class="classifyList">
+				<ul class="swiper-wrapper clearfix">
+					<li class="swiper-slide"><a href="javascript:void(0);">频道</a></li>
+					{maccms:type ids="parent" order="asc" by="sort"}
+					{if condition="$vo.type_mid eq 1"}
+					<li class="swiper-slide {if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
+					{/if}
+					{/maccms:type}
+				</ul>
+			</div>
 			<div id="classifyList02" class="classifyList">
 				<ul class="swiper-wrapper clearfix">
 					{if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
