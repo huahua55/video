@@ -51,17 +51,17 @@
 		<div class="mod-main clearfix">
 			<div class="mod-row">
 				<ul class="search-list clearfix">
-					{maccms:vod order="desc" by="level" num="20" type="all" level="all" }
-					{if condition="$key lt 4"}
-					<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em
+					{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
+					{if condition="$key+1 lt 4"}
+					<li class="aui-ellipsis-1"> <span class="colred{$key+1}">{$key+1}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
 						 class="up"></em></li>
-					{if condition="$key eq 1"}
+					{if condition="$key+1 eq 1"}
 					{/if}
 					{else}
-					<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em
+					<li class="aui-ellipsis-1"><span>{$key+1}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
 						 class="up"></em></li>
 					{/if}
-					{/maccms:vod}
+					{/maccms:foreach}
 				</ul>
 			</div>
 		</div>
