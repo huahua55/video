@@ -37,6 +37,7 @@ class Index extends Base
     public function home_data(){
         $id = $this->_param['id'] ?? 0;
 
+        $host = config('api_host');
         // 轮播图
         $lp = [
             'status'   => 1,
@@ -48,7 +49,7 @@ class Index extends Base
         foreach($bannel as $k=>$item){
             $getSlide[$k]['id']     = $item['id'];
             $getSlide[$k]['name']   = $item['name'];
-            $getSlide[$k]['img']    = $item['img'];
+            $getSlide[$k]['img']    = $host . "/" . $item['img'];
             $getSlide[$k]['url']    = $item['link'];
             $getSlide[$k]['type']   = 1;
         }
@@ -172,6 +173,7 @@ class Index extends Base
     // 详情
     public function search(){
         $key = $this->_param['key'] ?? "";
+        $host = config('api_host');
 
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
@@ -182,7 +184,7 @@ class Index extends Base
         $data = [];
         foreach($res as $r){
             $d = array(
-                'img'   => $r['vod_pic'],
+                'img'   => $host . "/" . $r['vod_pic'],
                 'name'  => $r['vod_name'],
                 'msg'   => $r['vod_content'],
                 'url'   => $r['vod_id'],
