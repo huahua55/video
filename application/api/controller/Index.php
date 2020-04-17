@@ -209,7 +209,7 @@ class Index extends Base
 
         $where = [];
         if($id != 0){
-            $where['type_id']   = ['eq',$id];
+            $where['type_id_1']   = ['eq',$id];
         }
 
         if($type != ""){
