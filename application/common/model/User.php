@@ -380,8 +380,9 @@ class User extends Base
             $row['group_id'] = 2;
             $update['group_id'] = 2;
         }
-
-        $random = md5(rand(10000000, 99999999));
+        // 暂时去掉单点登录限制
+        //$random = md5(rand(10000000, 99999999));
+        $random = 10000001;
         $ip = sprintf('%u',ip2long(request()->ip()));
         if($ip>2147483647){
             $ip=0;
