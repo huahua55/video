@@ -248,4 +248,6 @@ return [
     ],
 
     'utcc_host' => \think\Env::get('utcc_host', ''),
+
+    'api_host' => \think\Env::get('api_host', ''),
 ];
