@@ -46,7 +46,7 @@ class Banner extends Base {
 
         $order = $lp['order'];
         $by = $lp['by'];
-        $type_id = intval($lp['type']);
+        $type = $lp['type'];
         $start = intval(abs($lp['start']));
         $num = intval(abs($lp['num']));
         $cachetime = $lp['cachetime'];
@@ -66,7 +66,12 @@ class Banner extends Base {
         if (!in_array($by, ['id', 'sort'])) {
             $by = 'id';
         }
-        $where['type_id'] = $type_id;
+        if (!empty($type)) {
+            if($type=='current'){
+                $type = intval( $GLOBALS['type_id'] );
+            }
+        }
+        $where['type_id'] = $type;
 
         $order = $by . ' ' . $order;
 

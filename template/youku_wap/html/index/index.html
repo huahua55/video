@@ -18,7 +18,7 @@
 			<section class="row">
 				<div class="swiper-container focus_banner  js-swiper-container" id="js-swiper-focus-banner">
 					<div class="swiper-wrapper focus_banner_list">
-						{macdiy:banner num="10" type="'.$param['tid'].'" order="asc" by="sort"}
+						{macdiy:banner num="10" type="current" order="asc" by="sort"}
 						<div class="swiper-slide focus_banner_item">
 							<a href="{$vo.link}" class="v_pic">
 								<img src="{$vo.img}" alt="" title="{$vo.vod_name}" class="swiper-lazy">
@@ -63,243 +63,45 @@
 				<!-- Swiper -->
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
-						<!-- {macdiy:notice num="10" type="'.$param['tid'].'" order="asc" by="level"}
-						<div class="swiper-slide">
-							<a href="{:mac_url_art_detail($obj)} ">
+						{macdiy:notice num="10" type="current" order="asc" by="level"}
+						<div class="swiper-slide" style="height: 2rem;">
+							<a href="{:mac_url_art_detail($vo)}">
 								{$vo.art_name}
 							</a>
 						</div>
 						{/macdiy:notice} -->
-						<div class="swiper-slide" style="height: 2rem;">
-							<a href="1212121">
-								法国红酒看来
-							</a>
-						</div>
-						<div class="swiper-slide" style="height: 2rem;">
-							<a href="1212121">
-								法国红酒看来
-							</a>
-						</div>
-						<div class="swiper-slide" style="height: 2rem;">
-							<a href="1212121">
-								法国红酒看来
-							</a>
-						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 		<!-- 公告-------------over------- -->
-		<!-- 图标导航 -->
+		{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
 		<section class="mod aui-margin-t-0">
 			<div class="mod-head aui-clearfix">
 				<div class="mod-head-title">
-					<span class="mod-head-name">猜你喜欢</span>
+					<span class="mod-head-name">{$vo.name}</span>
 				</div>
-				<span class="change">今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部影片</span>
 			</div>
 			<div class="mod-main clearfix">
 				<div class="mod-row">
 					<ul class="m-list aui-clearfix" m-list-skin="small">
-						{maccms:vod order="desc" by="rnd" num="4" paging="false" ids="all" type="all" }
+						{volist name="$vo.rel_vod" id="vo2"}
 						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;">
+							<a class="thumb" href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">
+								<img class="ff-img" data-original="{:mac_url_img($vo2.vod_pic)}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;">
 								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+								<div class="icon-br"><span class="label">{$vo2.vod_remarks}</span></div>
 							</a>
 							<div class="text">
-								<h3 class="stitle ellipsis-2"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+								<h3 class="stitle ellipsis-2"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">{$vo2.vod_name}</a></h3>
 							</div>
 						</li>
-						{/maccms:vod}
+						{/volist}
 					</ul>
 				</div>
 			</div>
 		</section>
-		<!--为你推荐-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">为你推荐</span>
-				</div>
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-						{maccms:vod num="6" type="1,2,3,4" level="8" order="desc" by="time"}
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor} </p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section>
-		<!-- 最新电影资源 -->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">电影</span>
-				</div>
-				{maccms:type ids="1" order="asc" by="sort"}
-				<a href="{:mac_url_type($vo)}" class="change">更多</a>
-				{/maccms:type}
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-						{maccms:vod num="6" type="1" order="desc" by="time"}
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section>
-		<!--最新电视剧资源-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">电视剧</span>
-				</div>
-				{maccms:type ids="2" order="asc" by="sort"}
-				<a href="{:mac_url_type($vo)}" class="change">更多</a>
-				{/maccms:type}
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-						{maccms:vod num="6" type="2" order="desc" by="time"}
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section>
-
-		<!--最新综艺节目资源-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">综艺</span>
-				</div>
-				{maccms:type ids="3" order="asc" by="sort"}
-				<a href="{:mac_url_type($vo)}" class="change">更多</a>
-				{/maccms:type}
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-
-
-						{maccms:vod num="6" type="3" order="desc" by="time"}
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section>
-
-		<!--最新动画片资源-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">动画片</span>
-				</div>
-				{maccms:type ids="4" order="asc" by="sort"}
-				<a href="{:mac_url_type($vo)}" class="change">更多</a>
-				{/maccms:type}
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-						{maccms:vod num="6" type="4" order="desc" by="time"}
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section>
-		<!--最新影视资讯-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head">
-				<div class="mod-head-title">
-					<span class="mod-head-name">资讯·预告</span>
-				</div>{maccms:type ids="5" order="asc" by="sort"}
-				<a href="{:mac_url_type($vo)}" class="change">更多</a>
-				{/maccms:type}
-			</div>
-			<div class="mod-main clearfix">
-				<div class="m-a-list">
-					{maccms:art num="12" type="6" order="desc" by="time"}
-					<article class="news-card card-type-news">
-						<a href="{:mac_url_art_detail($vo)}" title="{$vo.art_name}">
-							<div class="news-pic">
-								<img class="ff-img" data-original="{$vo.art_pic}" src="{$vo.art_pic}">
-							</div>
-							<div class="news-info">
-								<h3 class="title">{$vo.art_name}</h3>
-								<div class="detail">
-									<span>{$vo.art_time_add}</span>
-									<span>{$vo.art_hits}</span>
-								</div>
-							</div>
-						</a>
-					</article>
-					{/maccms:art}
-
-				</div>
-			</div>
-		</section>
-		</volist>
+		{/macdiy:vodrecommend}
 		<script type="text/javascript">
 			$(function() {
 				$('.js-swiper-container').each(function() {
