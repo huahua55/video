@@ -58,6 +58,18 @@ function getScreen($id){
     );
 }
 
+// 补全图片路径
+function imageDir($pic){
+    $hostStr = strpos($pic, "http");
+    $host = config('api_host');
+    if($hostStr === false){
+        $pic = $host . "/" . $pic;
+    }
+    return $pic;
+}
+
+
+
 // 应用公共文件
 function mac_return($msg,$code=1,$data=''){
     if(is_array($msg)){

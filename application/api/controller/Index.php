@@ -49,7 +49,7 @@ class Index extends Base
         foreach($bannel as $k=>$item){
             $getSlide[$k]['id']     = $item['id'];
             $getSlide[$k]['name']   = $item['name'];
-            $getSlide[$k]['img']    = $host . "/" . $item['img'];
+            $getSlide[$k]['img']    = imageDir($item['img']);
             $getSlide[$k]['url']    = $item['link'];
             $getSlide[$k]['type']   = 1;
         }
@@ -136,7 +136,7 @@ class Index extends Base
                 $msg = "更新至".$msg."集";
             }
             $d = array(
-                'img'=>$r['vod_pic'],
+                'img'=> imageDir($r['vod_pic']),
                 'id' => $r['vod_id'],
                 'name'=>$r['vod_name'],
                 'score'=>$r['vod_score'],
@@ -159,7 +159,7 @@ class Index extends Base
 
         $data = array(
             'name'      => $info["vod_name"],
-            'img'       => $info["vod_pic"],
+            'img'       => imageDir($info["vod_pic"]),
             'msg'       => $info["vod_year"],
             'score'     => $info["vod_score"],
             'type'      => $info["vod_area"] ,
@@ -184,7 +184,7 @@ class Index extends Base
         $data = [];
         foreach($res as $r){
             $d = array(
-                'img'   => $host . "/" . $r['vod_pic'],
+                'img'   => imageDir($r['vod_pic']),
                 'name'  => $r['vod_name'],
                 'msg'   => $r['vod_content'],
                 'url'   => $r['vod_id'],
@@ -232,7 +232,7 @@ class Index extends Base
                 $msg = "更新至".$msg."集";
             }
             $d = array(
-                'img'   => $r['vod_pic'],
+                'img'   => imageDir($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_score'],
