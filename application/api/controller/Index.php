@@ -205,7 +205,7 @@ class Index extends Base
 
         $type = $type == "类型" ? "" : $type;
         $area = $area == "地区" ? "" : $area;
-        $year = $area == "年份" ? "" : $year;
+        $year = $year == "年份" ? "" : $year;
 
         $where = [];
         if($id != 0){
