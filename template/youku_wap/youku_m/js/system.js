@@ -26,7 +26,7 @@ var MAC={
             if( $("#mac_flash_copy").get(0) ==undefined ){ $('<div id="mac_flash_copy"></div>'); } else {$('#mac_flash_copy').html(''); }
             $('#mac_flash_copy').html('<embed src='+SitePath+'"images/_clipboard.swf" FlashVars="clipboard='+escape(s)+'" width="0" height="0" type="application/x-shockwave-flash"></embed>');
         }
-        MAC.Pop.Msg(100,20,'复制成功',1000);
+        MAC.Pop.Msg(200,50,'复制成功',1000);
     },
     'Home': function(o,u){
         try{
@@ -310,10 +310,10 @@ var MAC={
         'Login':0,
         'Verify':0,
         'Init':function(){
-            $('body').on('keyup', '.gbook_content', function(e){
+            $('body').on('keyup', '.form-controle', function(e){
                 MAC.Remaining($(this),200,'.gbook_remaining')
             });
-            $('body').on('focus', '.gbook_content', function(e){
+            $('body').on('focus', '.form-controle', function(e){
                 if(MAC.Gbook.Login==1 && MAC.User.IsLogin!=1){
                     MAC.User.Login();
                 }
@@ -336,8 +336,9 @@ var MAC={
             });
         },
         'Submit':function(){
-            if($(".gbook_content").val() == ''){
-                MAC.Pop.Msg(100,20,'请输入您的留言!',1000);
+			console.log($(".form-controle").val() == '')
+            if($(".form-controle").val() == ''){
+                MAC.Pop.Msg(200,50,'请输入您的留言!',1000);
                 return false;
             }
             $.ajax({
@@ -345,7 +346,7 @@ var MAC={
                 url: maccms.path + '/index.php/gbook/saveData',
                 data: $('.gbook_form').serialize(),
                 success:function($r){
-                    MAC.Pop.Msg(100,20,$r.msg,1000);
+                    MAC.Pop.Msg(200,50,$r.msg,1000);
                     if($r.code == 1){
                         location.reload();
                     }
@@ -697,8 +698,8 @@ var MAC={
                 $('.mac_pop_msg').remove();
             });
 
-            $('.mac_pop_msg').width($w);
-            $('.mac_pop_msg').height($h);
+            // $('.mac_pop_msg').width($w);
+            // $('.mac_pop_msg').height($h);
             $('.mac_pop_msg .pop-msg').html($msg);
             $('.mac_pop_msg_bg,.mac_pop_msg').show();
             setTimeout(MAC.Pop.RemoveMsg,$timeout);

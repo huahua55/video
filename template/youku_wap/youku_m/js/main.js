@@ -1,6 +1,5 @@
 $(function() {
 	$("img").each(function() {
-		console.log("????")
 		var wid = $(this).innerWidth();
 		var hei = $(this).innerHeight();
 		if (wid > hei) {

@@ -805,8 +805,14 @@ cursor: pointer;
     border-radius: 3px;
     min-height: 1.2rem;
     text-align: center;
-	margin-left: 4rem;
+	float: left;
+	margin-right: .5rem;
 	}
+.ff-forum-reload .btn-sms{
+	display: block;
+	margin: .5rem auto;
+	width: 80%;
+}
 .bg-forum .modal-dialog{padding-top: 16rem;}
 
 #cms_player #cms-player-vip{
