@@ -29,17 +29,15 @@ function v($array, $ext = 0){
 }
 
 function type_extend($extend){
-
-    $extend['type'] = $extend['class'] ?? "";
-    $extend['area'] = $extend['area'] ?? "";
-    $extend['year'] = $extend['year'] ?? "";
+    $type = explode(',','类型,'.$extend['class']);
+    $area = explode(',','地区,'.$extend['area']);
+    $year = explode(',','年份,'.$extend['year']);
     return json_encode([
-        ['name'=>'type',"data"=>$extend['type']],
-        ['name'=>'area',"data"=>$extend['area']],
-        ['name'=>'year',"data"=>$extend['year']],
+        ['name'=>'type',"data"=>$type],
+        ['name'=>'area',"data"=>$area],
+        ['name'=>'year',"data"=>$year],
     ],JSON_UNESCAPED_UNICODE);
 }
-
 
 function getScreen($id){
     $where = [

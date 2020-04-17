@@ -23,6 +23,8 @@ class Index extends Base
         $list = $list['list'] ?? [];
         $array = [];
 
+
+
         foreach($list as $key=>$item){
             $array[$key]['id']      = $item['type_id'];
             $array[$key]['name']    = $item['type_name'];
@@ -37,7 +39,6 @@ class Index extends Base
     public function home_data(){
         $id = $this->_param['id'] ?? 0;
 
-        $host = config('api_host');
         // 轮播图
         $lp = [
             'status'   => 1,
@@ -173,7 +174,6 @@ class Index extends Base
     // 详情
     public function search(){
         $key = $this->_param['key'] ?? "";
-        $host = config('api_host');
 
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
@@ -202,6 +202,9 @@ class Index extends Base
         $type   = $this->_param['type'] ?? "";
         $area   = $this->_param['area'] ?? "";
         $year   = $this->_param['year'] ?? "";
+
+        $type = $type == "类型" ? "" : $type;
+        $area = $area == "地区" ? "" : $area;
 
         $where = [];
         if($id != 0){
