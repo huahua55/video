@@ -98,7 +98,9 @@ class VodRecommend extends Base {
                     $vods = array_column(model("Vod")->listCacheData($lp)['list'], null, 'vod_id');
                     foreach ($arr_vod_ids as $vod_id) {
                         // $v['rel_vod'][] = Arr::only($vods[$vod_id], ['vod_id', 'vod_name', 'vod_pic']);
-                        $v['rel_vod'][] = $vods[$vod_id];
+                        if (isset($vods[$vod_id])) {
+                            $v['rel_vod'][] = $vods[$vod_id];
+                        }
                     }
                 }
 
