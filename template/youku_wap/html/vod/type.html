@@ -15,14 +15,14 @@
 			<section class="row">
 				<div class="swiper-container focus_banner  js-swiper-container" id="js-swiper-focus-banner">
 					<div class="swiper-wrapper focus_banner_list">
-						{maccms:vod num="5" type="current" order="desc" by="rnd"}
+						{macdiy:banner num="10" type="current" order="asc" by="sort"}
 						<div class="swiper-slide focus_banner_item">
-							<a href="{:mac_url_vod_detail($vo)}" class="v_pic">
-								<img src="{:mac_url_img($vo.vod_pic)}" alt="" title="{$vo.vod_name}" class="swiper-lazy">
-								<span class="s_tit"><em>{$vo.vod_name}</em></span>
+							<a href="{$vo.link}" class="v_pic">
+								<img src="{$vo.img}" alt="" title="{$vo.vod_name}" class="swiper-lazy">
+								<span class="s_tit"><em>{$vo.name}</em></span>
 							</a>
 						</div>
-						{/maccms:vod}
+						{/macdiy:banner}
 					</div>
 					<div class="swiper-pagination focus_banner_point"></div>
 				</div>
@@ -86,13 +86,12 @@
 			})
 		</script>
 		<!--为你推荐-->
-		<section class="mod aui-margin-t-5">
+		<!-- <section class="mod aui-margin-t-5">
 			<div class="mod-head clearfix">
 				<div class="mod-head-title">
 					<span class="mod-head-name">为你推荐</span>
 				</div>
-				<span class="change">
-					<!--今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部, -->共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
+				<span class="change">共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
 			</div>
 			<div class="mod-main clearfix">
 				<div class="mod-row">
@@ -114,7 +113,35 @@
 					</ul>
 				</div>
 			</div>
+		</section> -->
+		<!-- 模板 -->
+		{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
+		<section class="mod aui-margin-t-0">
+			<div class="mod-head aui-clearfix">
+				<div class="mod-head-title">
+					<span class="mod-head-name">{$vo.name}</span>
+				</div>
+			</div>
+			<div class="mod-main clearfix">
+				<div class="mod-row">
+					<ul class="m-list aui-clearfix" m-list-skin="small">
+						{volist name="$vo.rel_vod" id="vo2"}
+						<li class="m-item">
+							<a class="thumb" href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">
+								<img class="ff-img" data-original="{:mac_url_img($vo2.vod_pic)}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;">
+								<i class="mask"></i>
+								<div class="icon-br"><span class="label">{$vo2.vod_remarks}</span></div>
+							</a>
+							<div class="text">
+								<h3 class="stitle"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">{$vo2.vod_name}</a></h3>
+							</div>
+						</li>
+						{/volist}
+					</ul>
+				</div>
+			</div>
 		</section>
+		{/macdiy:vodrecommend}
 		{if$obj.type_name=='直播'||$obj.parent.type_name=='直播'}
 		{else}
 		{if$obj.childids}

@@ -56,7 +56,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .search-list li .colred3{background:linear-gradient(to left,#76dbfd 0,#55d2fd 100%);color:#fff}
 .search-list li span{float:left;width:1.1rem;height:1rem;font-size:.7rem;color:#fff;font-style:normal;background:#b1b1b1;text-align:center;line-height:1.1rem;margin-right:.25rem}
 .search-list li em.top{background:url(../images/top.png);background-size: .8rem .8rem;}
-.search-list li em.up{background:url(../images/up.png);background-size: .8rem .8rem;}
+.search-list li em.up{background:url(../images/icon-right.png);background-size: .8rem .8rem;}
 .search-list li em.down{background:url(../images/down.png);background-size: .8rem .8rem;}
 .search-list li em{float:right;display:block;width:.8rem;height:.8rem;margin-right: .3rem;}
 /*幻灯片*/
@@ -93,7 +93,9 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .modal-dialog .mod-main{border-radius: .2rem;}
 .mod-main .mod-row{padding:0 .25rem;position:relative}
 .mod-main .mod-row-select{padding:0}
-.m-list:after{content:"";display:block;height:0;clear:both;visibility:hidden}
+.m-list{display: flex;justify-content: space-between;align-items: center;flex-direction: row;flex-wrap: wrap;}
+.m-list::after{content: '';flex: 1;display: block;width: 100%;}
+.m-list:after{flex: 1;}
 .m-list .m-item{float:left;margin-bottom:.75rem}
 .m-list .m-item .thumb{position:relative;display:block;overflow:hidden;font-size: 0;}
 .m-list .m-item .ff-img{position:relative;}
@@ -105,11 +107,12 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .m-list .m-item .thumb .label .score{color: #F60;}
 .m-list .m-item .text{padding-top:.4rem}
 .m-list .m-item .text .stitle{width:100%;height:1rem;overflow:hidden;font-size:.7rem;line-height:1rem;font-weight:400}
-.m-list .m-item .text .stitle.ellipsis-2,.m-list .m-item .text .dtitle.ellipsis-2{height:1.8rem;line-height:.9rem;font-size:.7rem}
+.m-list .m-item .text .stitle.ellipsis-2,.m-list .m-item .text .dtitle.ellipsis-2{height:.9rem;line-height:.9rem;font-size:.7rem}
+.m-list .m-item .text .stitle a{overflow: hidden; text-overflow:ellipsis;white-space:nowrap;display: block;}
 .m-list .m-item .text .des{width:100%;height:.9rem;overflow:hidden;line-height:.9rem;color:#b8b8b8;font-size:.6rem;text-overflow:ellipsis;white-space:nowrap;margin:0}
-.m-list[m-list-skin=small] .m-item{width:9rem}
+.m-list[m-list-skin=small] .m-item{width:5.7rem}
 .m-list[m-list-skin=small] .m-item:nth-child(2n){margin-left:.25rem}
-.m-list[m-list-skin=small] .m-item .ff-img{width:9rem;height:5rem}
+.m-list[m-list-skin=small] .m-item .ff-img{width:5.7rem;height: 8rem;}
 .m-list[m-list-skin=small-xs] .m-item{width:7.5rem;margin-right:.25rem}
 .m-list[m-list-skin=small-xs] .m-item:first-child{margin-left:.25rem}
 .m-list[m-list-skin=small-xs] .m-item .ff-img{width:7.5rem;height:4.5rem}
@@ -792,7 +795,7 @@ cursor: pointer;
     border-radius: 3px;
     min-height: 1.2rem;
     text-align: center;
-	
+	margin-left: 4rem;
 	}
 .bg-forum .modal-dialog{padding-top: 16rem;}
 
