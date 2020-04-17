@@ -6,7 +6,17 @@
 .clearfix:after {
     clear: both;
 }
-
+img{
+	background: 0 0 no-repeat;
+	background-size: 100% 100%;
+	/* background-image: url(../images/errorLogo-bj1.png); */
+}
+img.bj1{
+	background-image: url(../images/errorLogo-bj1.png);
+}
+img.bj2{
+	background-image: url(../images/errorLogo-bj2.png);
+}
 .icon-logo:before {
     content: "\e63a1";
 	}

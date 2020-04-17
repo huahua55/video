@@ -1,4 +1,18 @@
 $(function() {
+	$("img").each(function() {
+		console.log("????")
+		var wid = $(this).innerWidth();
+		var hei = $(this).innerHeight();
+		if (wid > hei) {
+			$(this).addClass("bj2")
+			// $(this).css('background-image', "url(../images/errorLogo-bj1.png)");
+			// $(this).attr('src', "images/errorLogo-bj2.png");
+		} else {
+			$(this).addClass("bj1")
+			// $(this).css('background-image', "url(../images/errorLogo-bj1.png)");
+			// $(this).attr('src', "images/errorLogo-bj1.png");
+		}
+	});
 	/*!
 	 * =====================================================
 	 * 网站日志
@@ -98,9 +112,28 @@ $(function() {
 	for (var i = 0; i < $(".albumSelect .num-tab-main").length; i++) {
 		series($(".albumSelect .num-tab-main").eq(i), 20, 16);
 	}
-	$(".albumDetailIntroTxt").click(function() {
-		$(this).text($(this).data("content"));
-	});
+	// $(".albumDetailIntroTxt").click(function() {
+	// 	console.log($(this).data("content"))
+	// 	$(this).text($(this).data("content"));
+	// });
+	var num = 0,
+		suolue, xiangq;
+	$("#expand").click(function() {
+		if (num == 0) {
+			suolue = $(this).siblings("span").html()
+			xiangq = $(this).parent().data("content")
+			num++
+		}
+		console.log(typeof($(this).html()))
+		if ($(this).html() == "展开") {
+			console.log("1")
+			$(this).html("收起")
+			$(this).siblings("span").html(xiangq)
+		} else {
+			$(this).html("展开")
+			$(this).siblings("span").html(suolue)
+		}
+	})
 	// 历史记录
 	var jsonstr = MAC.Cookie.Get('wap_history'),
 		jsonstrList = "",
@@ -108,9 +141,7 @@ $(function() {
 		html = '',
 		booleanTag = true,
 		link = document.URL;
-	console.log(jsonstr)
 	// 判断是否为play页面
-	// console.log($("#player").length != 0)
 	if ($("#player").length != 0) {
 		if (jsonstr != undefined) {
 			jsondata = encode(jsonstr);
@@ -180,4 +211,15 @@ $(function() {
 		}
 		return staer
 	}
+	// 加载默认图片
+	// $('img').error(function() {
+	// 	console.log("????")
+	// 	var wid = $(this).innerWidth();
+	// 	var hei = $(this).innerHeight();
+	// 	if (wid > hei) {
+	// 		$(this).attr('src', "images/errorLogo-bj2.png");
+	// 	} else {
+	// 		$(this).attr('src', "images/errorLogo-bj1.png");
+	// 	}
+	// })
 });
