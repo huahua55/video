@@ -22,7 +22,9 @@
 			<ul class="swiper-wrapper">
 				<li class="swiper-slide" id="nav-index"><a class="item" href="/" title="首页">首页</a></li>
 				{maccms:type ids="parent" order="asc" by="sort"}
+				{if condition="$vo.type_mid eq 1"}
 				<li class="swiper-slide" id="nav-{$vo.type_en}"><a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
+				{/if}
 				{/maccms:type}
 			</ul>
 		</div>
@@ -52,13 +54,14 @@
 			<div class="mod-row">
 				<ul class="search-list clearfix">
 					{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
-					{if condition="$key+1 lt 4"}
-					<li class="aui-ellipsis-1"> <span class="colred{$key+1}">{$key+1}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
+					{php}$i=$key+1;{/php}
+					{if condition="$i lt 4"}
+					<li class="aui-ellipsis-1"> <span class="colred{$i}">{$i}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
 						 class="up"></em></li>
-					{if condition="$key+1 eq 1"}
+					{if condition="$i eq 1"}
 					{/if}
 					{else}
-					<li class="aui-ellipsis-1"><span>{$key+1}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
+					<li class="aui-ellipsis-1"><span>{$i}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
 						 class="up"></em></li>
 					{/if}
 					{/maccms:foreach}
