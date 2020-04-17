@@ -65,8 +65,10 @@ class Index extends Base
             ];
             $res =  model("Type")->listData($where,"type_sort desc");
             $res = $res['list'] ?? [];
-
-
+            if($res == []){
+                $res =  model("Type")->listData(['type_id' => $id],"type_sort desc");
+                $res = $res['list'] ?? [];
+            }
             foreach($res as $item){
                 $r = $item["type_id"];
                 $d = array(
