@@ -61,20 +61,19 @@ class Index extends Base
             $getListBlock = $this->tuijian();
         }else{
             $where = [
-                'type_id'   => $id
+                'type_pid'   => $id
             ];
-            $res =  model("Type")->infoData($where);
-            $res = $res['info'] ?? [];
+            $res =  model("Type")->listData($where,"type_sort desc");
+            $res = $res['list'] ?? [];
 
-            $arr = explode(',',$res["type_extend"]["class"]);
-            $cou = count($arr);
-            if ($cou > 10) $cou = 10;
-            for ($i=0;$i<$cou;$i++){
-                $r = $arr[$i];
+
+            foreach($res as $item){
+                $r = $item["type_id"];
                 $d = array(
-                    'name'=>$r,
-                    'data'=>$this->getVodList($id,6,1),
+                    'name' => $item['type_name'],
+                    'data' => $this->getVodList($r,6,1),
                 );
+
                 array_push($getListBlock,$d);
             }
         }
@@ -84,7 +83,6 @@ class Index extends Base
             'slide' => $getSlide,
             'video' => $getListBlock,
         );
-
 
         return mac_return($list);
     }
