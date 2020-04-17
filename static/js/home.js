@@ -707,12 +707,11 @@ var MAC={
             $('.mac_pop_msg .pop_close').click(function(){
                 $('.mac_pop_msg').remove();
             });
-
             $('.mac_pop_msg').width($w);
             $('.mac_pop_msg').height($h);
             $('.mac_pop_msg .pop-msg').html($msg);
             $('.mac_pop_msg_bg,.mac_pop_msg').show();
-            // setTimeout(MAC.Pop.RemoveMsg,$timeout);
+            setTimeout(MAC.Pop.RemoveMsg,$timeout);
         },
         'Show':function($w,$h,$title,$url,$callback) {
             if($('.mac_pop_bg').length !=1) {

@@ -44,9 +44,9 @@ $(function() {
 	 * =====================================================
 	 */
 	$(".scroll-to-top").on("click", function() {
-		$("body").scrollTo({
-			toT: 0
-		});
+		$('body,html').animate({
+			scrollTop: 0
+		}, 500);
 	});
 	var popup = new auiPopup();
 
