@@ -110,8 +110,8 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .m-list .m-item .text .stitle.ellipsis-2,.m-list .m-item .text .dtitle.ellipsis-2{height:.9rem;line-height:.9rem;font-size:.7rem}
 .m-list .m-item .text .stitle a{overflow: hidden; text-overflow:ellipsis;white-space:nowrap;display: block;}
 .m-list .m-item .text .des{width:100%;height:.9rem;overflow:hidden;line-height:.9rem;color:#b8b8b8;font-size:.6rem;text-overflow:ellipsis;white-space:nowrap;margin:0}
-.m-list[m-list-skin=small] .m-item{width:5.7rem}
-.m-list[m-list-skin=small] .m-item:nth-child(2n){margin-left:.25rem}
+.m-list[m-list-skin=small] .m-item{width:32%}
+.m-list[m-list-skin=small] .m-item:nth-child(3n-1){margin: 0 2% .75rem;}
 .m-list[m-list-skin=small] .m-item .ff-img{width:5.7rem;height: 8rem;}
 .m-list[m-list-skin=small-xs] .m-item{width:7.5rem;margin-right:.25rem}
 .m-list[m-list-skin=small-xs] .m-item:first-child{margin-left:.25rem}
