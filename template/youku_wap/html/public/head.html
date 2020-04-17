@@ -1,5 +1,5 @@
 <!--头部 -->
- <div id="topTips"></div>  
+<div id="topTips"></div>
 <header class="header">
 	<div class="aui-bar aui-bar-nav">
 		<a href="/" class="logo aui-pull-left"></a>
@@ -7,24 +7,23 @@
 			<div class="text mac_wd " onclick="openSearch()">请在此处输入影片名或演员名称</div>
 			<div class="icon mac_search"><i class="aui-iconfont aui-icon-search"></i></div>
 		</div>
-	    <div id="member_info">
-		<a class="aui-pull-right aui-btn ff-user mac_user" >
-		 <span class="aui-iconfont aui-icon-my " style="background-image: url({$maccms.path_tpl}youku_m/images/usre.png);"></span>
-	</a>
-</div>
-</div>
+		<div id="member_info">
+			<a class="aui-pull-right aui-btn ff-user history-btn">
+				<span class="aui-iconfont aui-icon-my" style="background-image: url({$maccms.path_tpl}youku_m/images/icon-history.png);"></span>
+			</a>
+		</div>
+	</div>
 </header>
-
 <section class="headerTopNav">
 	<div class="navWrap">
 		<div class="shadow-le"></div>
 		<div class="shadow-ri"></div>
 		<div id="headerTopNav" class="warp">
 			<ul class="swiper-wrapper">
-			<li class="swiper-slide" id="nav-index"><a class="item" href="/" title="首页">首页</a></li>
-			 {maccms:type ids="parent" order="asc" by="sort"}
-			<li class="swiper-slide" id="nav-{$vo.type_en}"><a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
-			{/maccms:type}  
+				<li class="swiper-slide" id="nav-index"><a class="item" href="/" title="首页">首页</a></li>
+				{maccms:type ids="parent" order="asc" by="sort"}
+				<li class="swiper-slide" id="nav-{$vo.type_en}"><a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
+				{/maccms:type}
 			</ul>
 		</div>
 	</div>
@@ -33,51 +32,75 @@
 <section class="searchPop">
 	<div class="searchCon">
 		<div class="sSearchInput">
-         
-		    <form class="search-form  ff-search"  id="search" name="search" method="get" action="{:mac_url('vod/search')}" onSubmit="return qrsearch();">
-			 <input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称" />
-             <input type="submit" id="searchbutton"  style="display: none;"class="mac_search" value="搜索" />
-			  
+			<form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}"
+			 onSubmit="return qrsearch();">
+				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称" />
+				<input type="submit" id="searchbutton" style="display: none;" class="mac_search" value="搜索" />
+
 			</form>
 		</div>
 		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
 	</div>
 	<div class="aui-search"></div>
-
-<section class="mod aui-margin-t-0">
-	<div class="mod-head clearfix">
-		<div class="mod-head-title">
-			<span class="mod-head-name">热门搜索</span>
-		</div>
-		
-	</div>
-	<div class="mod-main clearfix">
-				<div class="mod-row">
-			<ul class="search-list clearfix">
-             {maccms:vod order="desc" by="level" num="20" type="all" level="all" }
-                  {if condition="$key lt 4"}
-	<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
-               {if condition="$key eq 1"}
-              {/if}
-				  {else}
-		 
-	<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
-                   {/if}
-				  
-				{/maccms:vod} 
-	 						</ul>
-		</div>
+	<section class="mod aui-margin-t-0">
+		<div class="mod-head clearfix">
+			<div class="mod-head-title">
+				<span class="mod-head-name">热门搜索</span>
 			</div>
-</section>  
+		</div>
+		<div class="mod-main clearfix">
+			<div class="mod-row">
+				<ul class="search-list clearfix">
+					{maccms:vod order="desc" by="level" num="20" type="all" level="all" }
+					{if condition="$key lt 4"}
+					<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em
+						 class="up"></em></li>
+					{if condition="$key eq 1"}
+					{/if}
+					{else}
+					<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em
+						 class="up"></em></li>
+					{/if}
+					{/maccms:vod}
+				</ul>
+			</div>
+		</div>
+	</section>
 </section>
- <script>$("#nav-{$obj.type_en}").addClass("active");</script>
-  <script type="text/javascript">
-	$("#headerTopNav li").each(function(index){
-		if($(this).hasClass("active")){
-        	var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto',initialSlide:index});
-       	}else{
-       		var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto'});
-       	}
+<!-- 历史记录 -->
+<section class="historyWarp">
+	<div class="history-main">
+		<div class="history-head history-item">
+			<div>观看记录</div>
+			<a href="javascript:;" class="claerWap">清空</a>
+		</div>
+	</div>
+	<div class="history-items">
+		<!-- <a href="" class="history-item">
+			<span>飒飒飒飒飒飒飒飒</span>
+			<span>啊啊啊</span>
+		</a>	 -->
+	</div>
+</section>
+<script>
+	$("#nav-{$obj.type_en}").addClass("active");
+</script>
+<script type="text/javascript">
+	$("#headerTopNav li").each(function(index) {
+		if ($(this).hasClass("active")) {
+			var videoSelectWrap = new Swiper('#headerTopNav', {
+				freeMode: true,
+				slidesPerView: 'auto',
+				initialSlide: index
+			});
+		} else {
+			var videoSelectWrap = new Swiper('#headerTopNav', {
+				freeMode: true,
+				slidesPerView: 'auto'
+			});
+		}
 	});
-
+	$(".history-btn").on("click",function(){
+		$(".historyWarp").toggleClass("on")
+	})
 </script>
