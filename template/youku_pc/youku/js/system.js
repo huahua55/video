@@ -424,7 +424,6 @@ var MAC={
             if($('.mac_history').length ==0){
                 return;
             }
-
             $('.mac_history').hover(function(e){
                 $('.mac_history_box').show();
             }, function(){
@@ -435,7 +434,6 @@ var MAC={
                     $('.mac_history_box').hide();
                 });
             });
-
             var jsondata = [];
             if(this.Json){
                 jsondata = this.Json;
@@ -445,10 +443,8 @@ var MAC={
                     jsondata = eval(jsonstr);
                 }
             }
-
             html = '<div class="panel"> <i class="arrow"></i><div class="content"><dl class="rec-list"><dt>最近播放</dt><i id="bplayer">';
             html +='';
-
             if(jsondata.length > 0){
                 for($i=0; $i<jsondata.length; $i++){
                     if($i%2==1){
@@ -462,13 +458,10 @@ var MAC={
                 html +='<dd class="hide">暂无浏览记录</dd>';
             }
             html += '<dd></dd><dd><a href="javascript:void(0)" onclick="MAC.History.Clear();">清空历史记录</a><span>历史记录</span></dd><dt></dt></i></dl></div></div></div></div>';
-
             $('.mac_history').after(html);
             var h = $('.mac_history').height();
             var position = $('.mac_history').position();
             $('.mac_history_box').css({'left':position.left,'top':(position.top+h)});
-
-
             if($(".mac_history_set").attr('data-name')){
                 var $that = $(".mac_history_set");
                 MAC.History.Set($that.attr('data-name'),$that.attr('data-link'),$that.attr('data-pic'));
@@ -477,16 +470,13 @@ var MAC={
         'Set':function(name,link,pic){
             if(!link){ link = document.URL; }
             var jsondata = MAC.Cookie.Get('mac_history');
-
             if(jsondata != undefined){
                 this.Json = eval(jsondata);
-
                 for($i=0;$i<this.Json.length;$i++){
                     if(this.Json[$i].link == link){
                         return false;
                     }
                 }
-
                 jsonstr = '{log:[{"name":"'+name+'","link":"'+link+'","pic":"'+pic+'"},';
                 for($i=0; $i<this.Json.length; $i++){
                     if($i<= this.Limit && this.Json[$i]){
