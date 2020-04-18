@@ -991,6 +991,20 @@ CREATE TABLE `user_sign_in` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户签到表';
 
+CREATE TABLE `douban_recommend` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '名称',
+  `vod_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '视频id',
+  `type_id` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '一级分类id',
+  `douban_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '豆瓣视频id',
+  `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 2 下线',
+  `time` varchar(30) DEFAULT '' COMMENT '时间  2020-03-04',
+  PRIMARY KEY (`id`),
+  KEY `vid` (`name`,`type_id`,`vod_id`,`status`,`time`),
+  KEY `time` (`time`),
+  KEY `douban_id` (`douban_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='爬取豆瓣的推荐的数据 App使用';
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
