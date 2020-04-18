@@ -139,7 +139,7 @@ class Ulog extends Base {
 
     public function saveData($data)
     {
-        $data['user_id'] = intval(cookie('user_id'));
+        $data['user_id'] = !isset($data['user_id']) || $data['user_id'] == "" ? intval(cookie('user_id')) : $data['user_id'];
         $data['ulog_time'] = time();
 
         $validate = \think\Loader::validate('Ulog');

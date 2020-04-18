@@ -5,6 +5,8 @@ use think\Cache;
 
 class Index extends Base
 {
+    private $sort = "vod_score desc,vod_time_add desc";
+
     public function __construct()
     {
         parent::__construct();
@@ -91,32 +93,52 @@ class Index extends Base
 
     // 推荐
     public function tuijian(){
-        $data = array(
-            array(
+
+        $tuijianData = [];
+        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort desc" );
+        $tuijian = $tuijian['list'] ?? [];
+        foreach($tuijian as $item){
+            $tuijianData[] = [
+                'type'  => 2,
+                'id'    => 0,
+                'msg'   => "",
+                'name'  => $item['name'],
+                'data'  => $this->vodStrData($item['rel_ids']),
+            ];
+        }
+
+
+        $data = [
+            [
+                'type'  => 1,
                 'id'    => 1,
                 'msg'   => json_encode(getScreen(1),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播电影',
                 'data'  => $this->getVodList(1,6,1),
-            ),
-            array(
-                'id'    => 2,
-                'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播剧',
-                'data'  => $this->getVodList(2,6,1),
-            ),
-            array(
+            ],
+            [
+                'type'  => 1,
                 'id'    => 3,
                 'msg'   => json_encode(getScreen(3),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播动漫',
                 'data'  => $this->getVodList(3,6,1),
-            ),
-            array(
+            ],
+            [
+                'type'  => 1,
                 'id'    => 4,
                 'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播综艺',
                 'data'  => $this->getVodList(4,6,1),
-            ),
-        );
+            ],
+            [
+                'type'  => 1,
+                'id'    => 4,
+                'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
+                'name'  => '热播综艺',
+                'data'  => $this->getVodList(4,6,1),
+            ],
+        ];
+        $data = array_merge($tuijianData,$data);
         return $data;
     }
 
@@ -125,7 +147,7 @@ class Index extends Base
         $lp = [
             'type_id'   => $id,
         ];
-        $info = model("Vod")->listData($lp, "vod_level desc",$page,$limit);
+        $info = model("Vod")->listData($lp, $this->sort, $page, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -148,6 +170,36 @@ class Index extends Base
         return $array;
     }
 
+    // 分类视频
+    public function vodStrData($vodIds){
+
+        $vodIds = explode(",",$vodIds);
+
+        $lp = [
+            'vod_id'   => ['in',$vodIds],
+        ];
+        $info = model("Vod")->listData($lp,  $this->sort, 1, 6);
+
+        $info = $info['list'] ?? [];
+        $array = array();
+        foreach($info as $r){
+            $msg = $r['vod_continu'];
+            if ($msg == null || $msg == 0){
+                $msg = $r['vod_year'];
+            }else{
+                $msg = "更新至".$msg."集";
+            }
+            $d = array(
+                'img'=> imageDir($r['vod_pic']),
+                'id' => $r['vod_id'],
+                'name'=>$r['vod_name'],
+                'score'=>$r['vod_score'],
+                'msg'=>$msg,
+            );
+            array_push($array,$d);
+        }
+        return $array;
+    }
 
     // 详情
     public function vod(){
@@ -178,7 +230,7 @@ class Index extends Base
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
         ];
-        $res = model("Vod")->listData($where, "vod_level desc");
+        $res = model("Vod")->listData($where, $this->sort);
         $res = $res['list'] ?? [];
 
         $data = [];
@@ -193,7 +245,6 @@ class Index extends Base
         }
         return json_return($data);
     }
-
 
     // 筛选
     public function screen(){
@@ -224,7 +275,7 @@ class Index extends Base
             $where['vod_year']   = ['eq',$year];
         }
 
-        $info = model("Vod")->listData($where, "vod_level desc", $page);
+        $info = model("Vod")->listData($where, $this->sort, $page);
         $info = $info['list'] ?? [];
 
         $array = array();
@@ -246,5 +297,50 @@ class Index extends Base
         }
         return json_return($array);
     }
+
+    // 用户记录日志
+    public function userLog(){
+        // 用户注册
+        $mac    = $this->_param['mac'] ??  "" ;
+        $type   = $this->_param['type'] ??  "" ;
+        $rid    = $this->_param['rid'] ??  "" ;
+        $sid    = $this->_param['sid'] ??  "" ;
+        $nid    = $this->_param['nid'] ??  "" ;
+
+        if($mac == "" || $type == "" || $rid == ""){
+            return json_return("参数错误");
+        }
+
+        $userModel = model("User");
+        $userRes = $userModel->infoData(['user_name' => $mac],"user_id");
+
+        if($userRes['code'] == 1002){
+            $userModel->saveData([
+                'user_name' => $mac,
+                'user_pwd'  => "123456",
+            ]);
+            $userId = $userModel::getLastInsID();
+        }else{
+            $userId = $userRes['info']['user_id'];
+        }
+
+        $data = [
+            'user_id'    => $userId ,   // 用户ID
+            'ulog_mid'   => 1 ,         // 模块 1视频 2文章 3专题 8演员
+            'ulog_type'  => $type ,     // 类型 1浏览 2收藏 3想看 4点播 5下载
+            'ulog_rid'   => $rid ,      // 关联ID ：视频ID
+            'ulog_sid'   => $sid ,      // 来源 ：播放源
+            'ulog_nid'   => $nid ,      // 第几集
+        ];
+        $res = model("Ulog")->saveData($data);
+        if($res['code'] != 1){
+            return json_return(['记录日志失败']);
+        }
+
+        return json_return(['保存成功']);
+    }
+
+
+
 
 }
