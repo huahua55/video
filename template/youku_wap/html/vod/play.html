@@ -84,7 +84,9 @@
 			<section class="mod-head clearfix">
 				<div class="mod-head-title" id="drama-nav">
 					<span class="mod-head-name on">播放列表</span>
+					{notempty name="$obj.vod_down_list"}
 					<span class="mod-head-name">下载列表</span>
+					{/notempty}
 				</div>
 			</section>
 			<section class="mod-main clearfix">
@@ -123,6 +125,7 @@
 							{/maccms:foreach}
 						</div>
 					</li>
+					{notempty name="$obj.vod_down_list"}
 					<li>
 						<!-- 下载列表 -->
 						<div class="download-nav nav-main">
@@ -145,6 +148,7 @@
 							{/maccms:foreach}
 						</div>
 					</li>
+					{/notempty}
 				</ul>
 			</section>
 		</section>
