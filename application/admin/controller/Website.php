@@ -48,7 +48,9 @@ class Website extends Base
         if(!empty($param['repeat'])){
             if($param['page'] ==1){
                 Db::execute('DROP TABLE IF EXISTS '.config('database.prefix').'tmpwebsite');
-                Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpwebsite` as (SELECT min(website_id)as id1,website_name as name1 FROM '.config('database.prefix').'website GROUP BY name1 HAVING COUNT(name1)>1)');
+                // Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpwebsite` as (SELECT min(website_id)as id1,website_name as name1 FROM '.config('database.prefix').'website GROUP BY name1 HAVING COUNT(name1)>1)');
+                Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpwebsite` (`id1` int(10) unsigned, `name1` varchar(255) NOT NULL DEFAULT \'\')');
+                Db::execute('insert into `'.config('database.prefix').'tmpwebsite` (SELECT min(website_id),website_name FROM '.config('database.prefix').'website GROUP BY website_name HAVING COUNT(website_name)>1)');
             }
             $order='website_name asc';
             $res = model('Website')->listRepeatData($where,$order,$param['page'],$param['limit']);

@@ -128,8 +128,6 @@
 						<!-- 下载列表 -->
 						<div class="download-nav nav-main">
 							<span class="on">迅雷下载</span>
-							<span>百度云</span>
-							<span>本地下载</span>
 						</div>
 						<div class="download-main">
 							<div class="mod-head clearfix">
@@ -137,23 +135,15 @@
 									<span class="mod-head-name small">剧集</span>
 								</div>
 							</div>
+							{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
 							<ul class="download-item">
 								<li class="on">
-									<span><a href="///">BD中字</a></span>
-									<span><a href="///">英文</a></span>
-									<span><a href="///">粤语</a></span>
-								</li>
-								<li>
-									<span><a href="///">1</a></span>
-									<span><a href="///">2</a></span>
-									<span><a href="///">3</a></span>
-								</li>
-								<li>
-									<span><a href="///">A</a></span>
-									<span><a href="///">B</a></span>
-									<span><a href="///">C</a></span>
+									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
+									<span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span>
+									{/maccms:foreach}
 								</li>
 							</ul>
+							{/maccms:foreach}
 						</div>
 					</li>
 				</ul>
