@@ -143,8 +143,8 @@
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
 									<!-- <span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span> -->
 									<div>
-										<input type="text" value="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">
-										<span style="margin-left: 3%;"><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">下载{$vo2.name}</a></span>
+										<input type="text" value="{$vo2.url}">
+										<span style="margin-left: 3%;"><a href="{$vo2.url}" target="_blank">下载{$vo2.name}</a></span>
 									</div>
 									{/maccms:foreach}
 								</li>

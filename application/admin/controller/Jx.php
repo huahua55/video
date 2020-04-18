@@ -21,9 +21,12 @@ class Jx extends Base
         }
 
         $param = input();
+        $jx_list = [
+            'oopw.top' => 'http://api.oopw.top/api.php?url=',
+        ];
 
         $this->assign('title','视频解析');
-        return $this->fetch('admin@banner/index');
+        return $this->fetch('admin@jx/index');
     }
 
 }
