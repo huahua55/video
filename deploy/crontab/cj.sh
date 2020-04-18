@@ -6,28 +6,28 @@ cd /data/www/video/
 ## 强制采集 #force=1
 
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
-php think Cj name=okzycj#force=1
+php think Cj name=cjokzyxs
 sleep 30
 ##OK迅雷下载链接
-php think Cj name=cjokzyxlxs#force=1
+php think Cj name=cjokzyxlxs
 sleep 30
 ##卧龙采集
-php think Cj name=wlzyxs#force=1
+php think Cj name=wlzyxs
 sleep 30
 ##135迅雷下载
-php think Cj name=135xlcj#force=1
+php think Cj name=135xlcj
 sleep 30
 ##135采集
-php think Cj name=135cj#force=1
+php think Cj name=135cj
 sleep 30
 ##1886采集
-php think Cj name=1886zycj#force=1
+php think Cj name=1886zycj
 sleep 30
 ##1886迅雷下载
-php think Cj name=1886zyxlcj#force=1
+php think Cj name=1886zyxlcj
 sleep 30
 ##秒播迅雷下载
-php think Cj name=mbzycj#force=1
+php think Cj name=mbzycj
 sleep 30
 ##秒播迅雷下载
-php think Cj name=mbzyxlcj#force=1
+php think Cj name=mbzyxlcj
