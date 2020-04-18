@@ -52,6 +52,11 @@ class DoubanScore extends Command
         $where = [
             'vod_douban_id'=>0,
         ];
+        $is_vod_id = Cache::get('vod_id_list_douban_score');
+        if(!empty($is_vod_id)){
+            $where['vod_id'] = ['LT',$is_vod_id];
+        }
+
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -128,13 +133,14 @@ class DoubanScore extends Command
                            }
                        }
                    }
-                    sleep(8);
+                    sleep(5);
                 }
-
+                Cache::set('vod_id_list_douban_score',$v['vod_id']);
                 if($is_log == false){
                     log::info('采集豆瓣评分-过滤::'.$v['vod_name']);
                 }
                 sleep(2);
+
             }
             $page = $page + 1;
         }
