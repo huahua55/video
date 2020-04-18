@@ -133,7 +133,7 @@ class DoubanScore extends Command
                            }
                        }
                    }
-                    sleep(5);
+                    sleep(8);
                 }
                 Cache::set('vod_id_list_douban_score',$v['vod_id']);
                 if($is_log == false){
