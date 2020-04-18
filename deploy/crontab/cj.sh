@@ -6,7 +6,7 @@ cd /data/www/video/
 ## 强制采集 #force=1
 
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
-php think Cj name=okzycj
+php think Cj name=cjokzyxs
 sleep 30
 ##OK迅雷下载链接
 php think Cj name=cjokzyxlxs
