@@ -79,13 +79,33 @@
 			</a>
 		</div>
 		</section>
+		<!--播放器-->
+		<section class="popWinMask popXuanji aui-margin-t-0">
+			<div class="mod-head clearfix">
+				<div class="mod-head-title">
+					<span class="mod-head-name">播放源</span>
+				</div>
+			</div>
+			<section class="popWin playSource_popWin">
+				<ul class="clearfix">
+					{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+					<li id="play3_{$key}">
+						<div class="sSource popWin_sce">
+							<span class="sSourceico sSource{$vo.player_info.from}"></span>
+							<em>{$vo.player_info.show}</em>
+						</div>
+					</li>
+					{/maccms:foreach}
+				</ul>
+			</section>
+		</section>
 		<!--剧集-->
 		<section class="mod aui-margin-t-0">
 			<div class="mod-head clearfix">
 				<div class="mod-head-title">
 					<span class="mod-head-name">剧集</span>
 				</div>
-				<p class="pSource change">
+				<!-- <p class="pSource change">
 					<em class="sTit">来源：</em>
 					<span class="sSourcee win-xuanji" id="play1_1">
 						{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
@@ -93,7 +113,7 @@
 					 id="play1_{$key}">
 						{/maccms:foreach}
 				</p>
-				<i class="iArrow"></i>
+				<i class="iArrow"></i> -->
 			</div>
 			<div class="num-tab mod-main clearfix">
 				{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
