@@ -133,13 +133,13 @@ class DoubanScore extends Command
                            }
                        }
                    }
-                    sleep(8);
+                    sleep(2);
                 }
                 Cache::set('vod_id_list_douban_score',$v['vod_id']);
                 if($is_log == false){
                     log::info('采集豆瓣评分-过滤::'.$v['vod_name']);
                 }
-                sleep(2);
+                sleep(8);
 
             }
             $page = $page + 1;
