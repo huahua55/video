@@ -10,5 +10,6 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\crontab\command\Cj'
+    'app\crontab\command\Cj',
+    'app\crontab\command\DoubanScore'
 ];
