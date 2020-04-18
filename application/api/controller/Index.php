@@ -273,6 +273,8 @@ class Index extends Base
         if($area != ""){
             if($area == "国产" || $area == "大陆" ){
                 $where['vod_area']   = ['in',["中国大陆","大陆","中国"]];
+            }else{
+                $where['vod_area']   = ['eq',$area];
             }
         }
 
