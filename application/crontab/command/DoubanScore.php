@@ -199,8 +199,7 @@ class DoubanScore extends Command
         }
         //平均分
         if (isset($res['vod_score'])){
-            $vod_score = trim($res['vod_score']);
-            $vod_data['vod_score'] ="'$vod_score'";
+            $vod_data['vod_score'] = trim($res['vod_score']);
         }
         //评分次数
         if (isset($res['vod_score_num'])){
