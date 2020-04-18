@@ -388,7 +388,6 @@ body.modal-open{position:fixed;width:100%}
     padding: 0 .67rem;
 	box-sizing: border-box;
 	text-align: center;
-	border: .05rem solid #e2e2e2;
 }
 .download-item input{
 	display: inline-block;
@@ -400,7 +399,6 @@ body.modal-open{position:fixed;width:100%}
 	padding: 0 .5rem;
 	border: none;
 	box-sizing: border-box;
-	border: .05rem solid #e2e2e2;
 }
 .download-main .download-item li{
 	display: none;
