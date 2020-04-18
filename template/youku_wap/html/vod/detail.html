@@ -101,15 +101,22 @@
 									<span class="mod-head-name small">剧集</span>
 								</div>
 							</div>
-							{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
 							<ul class="download-item">
-								<li class="on">
+								{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
+								<li>
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span>
+									<!-- <span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span> -->
+									<div>
+										<input type="text" value="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">
+										<span style="margin-left: 3%;"><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">下载{$vo2.name}</a></span>
+									</div>
 									{/maccms:foreach}
 								</li>
+								{/maccms:foreach}
 							</ul>
-							{/maccms:foreach}
+							<script type="text/javascript">
+								$(".download-item li").eq(0).addClass("on")
+							</script>
 						</div>
 					</li>
 					{/notempty}

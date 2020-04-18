@@ -61,11 +61,29 @@ $(function() {
 	// 	});
 	// });
 	// $(document).ready(function() {
-	// 	$(".hdwrap").click(function() {
-	// 		$(".popXianlu").addClass("popWinMask_transition");
-	// 		$(".popXianlu .playSource_popWin").addClass("popWin_transition");
-	// 		$("body").addClass("modal-open");
-	// 	});
+	// $(".hdwrap").click(function() {
+	// 	var clipBoardContent = this.location.href;
+
+	// 	window.clipboardData.setData("Text", clipBoardContent);
+	// 	// $(".popXianlu").addClass("popWinMask_transition");
+	// 	// $(".popXianlu .playSource_popWin").addClass("popWin_transition");
+	// 	// $("body").addClass("modal-open");
+	// });
+
+	$('.hdwrap').on('click', function() {
+		copyUrl($(this));
+	});
+
+	function copyUrl(obj) {
+		if ($('#urlText').length == 0) {
+			// 创建input
+			obj.after('<input id="urlText" style="position:fixed;top:-200%;left:-200%;" type="text" value=' + window.location.href +
+				'>');
+		}
+		$('#urlText').select(); //选择对象
+		document.execCommand("Copy"); //执行浏览器复制命令
+		alert("已复制链接，快去分享吧！")
+	}
 	// });
 	// $(document).ready(function() {
 	// 	$(".hide_popWin").click(function() {
@@ -95,17 +113,17 @@ $(function() {
 		// h.removeClass("modal-open");
 	})
 	// 
-	$("#drama-nav span").on("click",function(){
+	$("#drama-nav span").on("click", function() {
 		var index = $(this).index();
 		$(this).addClass("on").siblings().removeClass("on")
 		$("#drama-main>li").eq(index).addClass("on").siblings().removeClass("on")
 	})
-	$(".nav-main span").on("click",function(){
+	$(".nav-main span").on("click", function() {
 		var index = $(this).index();
 		$(this).addClass("on").siblings().removeClass("on")
 		$(".download-main .download-item li").eq(index).addClass("on").siblings().removeClass("on")
 	})
-	
+
 	// 
 	$(document).ready(function() {
 		$(".popXianlu li").bind("click", function() {
