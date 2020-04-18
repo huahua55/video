@@ -94,6 +94,19 @@ $(function() {
 		// d.removeClass("popWin_transition");
 		// h.removeClass("modal-open");
 	})
+	// 
+	$("#drama-nav span").on("click",function(){
+		var index = $(this).index();
+		$(this).addClass("on").siblings().removeClass("on")
+		$("#drama-main>li").eq(index).addClass("on").siblings().removeClass("on")
+	})
+	$(".nav-main span").on("click",function(){
+		var index = $(this).index();
+		$(this).addClass("on").siblings().removeClass("on")
+		$(".download-main .download-item li").eq(index).addClass("on").siblings().removeClass("on")
+	})
+	
+	// 
 	$(document).ready(function() {
 		$(".popXianlu li").bind("click", function() {
 			var e = $(this).index(),

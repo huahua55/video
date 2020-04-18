@@ -79,55 +79,85 @@
 			</a>
 		</div>
 		</section>
-		<!--播放器-->
-		<section class="popWinMask popXuanji aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">播放源</span>
+		<!-- 播放器与剧集以及下载的选项卡 -->
+		<section class="mod aui-margin-t-0">
+			<section class="mod-head clearfix">
+				<div class="mod-head-title" id="drama-nav">
+					<span class="mod-head-name on">播放列表</span>
+					<span class="mod-head-name">下载列表</span>
 				</div>
-			</div>
-			<section class="popWin playSource_popWin">
-				<ul class="clearfix">
-					{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-					<li id="play3_{$key}">
-						<div class="sSource popWin_sce">
-							<span class="sSourceico sSource{$vo.player_info.from}"></span>
-							<em>{$vo.player_info.show}</em>
+			</section>
+			<section class="mod-main clearfix">
+				<ul id="drama-main">
+					<li class="on">
+						<!--播放器-->
+						<section class="popWinMask popXuanji">
+							<section class="popWin playSource_popWin">
+								<ul class="clearfix">
+									{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+									<li id="play3_{$key}">
+										<div class="sSource popWin_sce">
+											<em>{$vo.player_info.show}</em>
+										</div>
+									</li>
+									{/maccms:foreach}
+								</ul>
+							</section>
+						</section>
+						<!--播放器-->
+						<!--剧集-->
+						<div class="line"></div>
+						<div class="mod-head clearfix" style="padding: .0 .75rem .5rem;">
+							<div class="mod-head-title">
+								<span class="mod-head-name small">剧集</span>
+							</div>
+						</div>
+						<div class="num-tab mod-main clearfix">
+							{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+							<div class="albumSelect" id="play2_{$key}">
+								<ul class="num-tab-main">
+									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
+									<li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$key2}</a></li>
+									{/maccms:foreach}
+								</ul>
+							</div>
+							{/maccms:foreach}
 						</div>
 					</li>
-					{/maccms:foreach}
+					<li>
+						<!-- 下载列表 -->
+						<div class="download-nav nav-main">
+							<span class="on">迅雷下载</span>
+							<span>百度云</span>
+							<span>本地下载</span>
+						</div>
+						<div class="download-main">
+							<div class="mod-head clearfix">
+								<div class="mod-head-title">
+									<span class="mod-head-name small">剧集</span>
+								</div>
+							</div>
+							<ul class="download-item">
+								<li class="on">
+									<span><a href="///">BD中字</a></span>
+									<span><a href="///">英文</a></span>
+									<span><a href="///">粤语</a></span>
+								</li>
+								<li>
+									<span><a href="///">1</a></span>
+									<span><a href="///">2</a></span>
+									<span><a href="///">3</a></span>
+								</li>
+								<li>
+									<span><a href="///">A</a></span>
+									<span><a href="///">B</a></span>
+									<span><a href="///">C</a></span>
+								</li>
+							</ul>
+						</div>
+					</li>
 				</ul>
 			</section>
-		</section>
-		<!--剧集-->
-		<section class="mod aui-margin-t-0">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">剧集</span>
-				</div>
-				<!-- <p class="pSource change">
-					<em class="sTit">来源：</em>
-					<span class="sSourcee win-xuanji" id="play1_1">
-						{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-						<span class="sSourceico sSource{$vo.player_info.from}"></span><em>{$vo.player_info.show}</em></span><span class="sSourcee win-xuanji"
-					 id="play1_{$key}">
-						{/maccms:foreach}
-				</p>
-				<i class="iArrow"></i> -->
-			</div>
-			<div class="num-tab mod-main clearfix">
-				{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-				<div class="albumSelect" id="play2_{$key}">
-					<ul class="num-tab-main">
-						{maccms:foreach name="vo.urls" id="vo2" key="key2" order="desc"}
-						<li id="play2_{$key}{$vo2.name}" {if condition="$param.sid eq $vo.sid && $param.nid eq $vo2.nid" }class="active"
-						 {/if}> <a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$key2}</a></li>
-						{/maccms:foreach}
-					</ul>
-				</div>
-				{/maccms:foreach}
-			</div>
-			</div>
 		</section>
 		<!--正在热播-->
 		<section class="mod aui-margin-t-0">

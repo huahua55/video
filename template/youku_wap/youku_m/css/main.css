@@ -107,6 +107,9 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .mod-head{position:relative;height:2.5rem;line-height:2.5rem;background-color:#FFF;font-size:.7rem;padding:0 .25rem}
 .mod-head .mod-head-title{float:left}
 .mod-head .mod-head-title .mod-head-name{float:left;font-size:.9rem;font-weight:700}
+.mod-head .mod-head-title .mod-head-name.small{
+	font-size: .8rem;
+}
 .mod-head .mod-head-title .mod-head-gold{color: #ff8610;font-size: .7rem;font-weight: 700;margin-left: .3rem;}
 .mod-head .change{float:right;display:block;color:#757575;font-size:.7rem;line-height:2.25rem;margin-right: 0.1rem;margin-top: .1rem;}
 .mod-main{position:relative;background:#FFF;overflow:hidden;}
@@ -342,17 +345,57 @@ body.modal-open{position:fixed;width:100%}
 .popWinMask .popWin{border:1px solid #fff;background-color:#fff;text-align:center;padding-top:1rem;transition:all .5s ease-out;-moz-transition:all .5s ease-out;-webkit-transition:all .5s ease-out;-ms-transition:all .5s ease-out;-o-transition:all .5s ease-out;border-radius:.27rem;-moz-border-radius:.27rem;-webkit-border-radius:.27rem;-ms-border-radius:.27rem;-o-border-radius:.27rem;transform:translateX(-50%) translateY(-50%);-moz-transform:translateX(-50%) translateY(-50%);-webkit-transform:translateX(-50%) translateY(-50%);-ms-transform:translateX(-50%) translateY(-50%);-o-transform:translateX(-50%) translateY(-50%);display:block}
 .popWinMask .playSource_popWin{width:100%;min-width:100%;border:0;padding: .0 .5rem .5rem;text-align:left;border-radius:0;-moz-border-radius:0;-webkit-border-radius:0;-ms-border-radius:0;-o-border-radius:0;transform:translateX(0) translateY(0);-moz-transform:translateX(0) translateY(0);-webkit-transform:translateX(0) translateY(0);-ms-transform:translateX(0) translateY(0);-o-transform:translateX(0) translateY(0)}
 .popWinMask .playSource_popWin li{width:auto;float:left;line-height:2rem;height: 2rem; background: #F5F5F5;margin-right: .25rem;margin-bottom: .25rem;}
-@media screen and (-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(-webkit-min-device-pixel-ratio:2),(min-device-pixel-ratio:2){
+/* @media screen and (-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(-webkit-min-device-pixel-ratio:2),(min-device-pixel-ratio:2){
 	.popWinMask .playSource_popWin li,.popWinMask .popWin .pBtn,.Modtransition{border:0;background-image:-webkit-gradient(linear,left top,left bottom,color-stop(10%,transparent),color-stop(10%,#eee));background-position:left top;background-repeat:repeat-x;background-size:100% 1px}
-}
+} */
 .popWinMask .playSource_popWin .sTit{float:left;color:#333;font-size:.65rem;padding:0 .57rem;line-height:1.6rem}
 .sSource{display:block;width:100%;float:left;overflow:hidden;padding:0 .67rem;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;font-size:.7rem}
-.sSource em{float:left}
-.sSource i{float:right;line-height:2rem;color:#39f;font-size:1.33rem;display:none;background-image:url(../images/dui.png);background-size:.7rem .7rem;height:.7rem;width:.7rem;margin-top:.6rem}
 .popWinMask.popWinMask_transition{pointer-events:auto;background:rgba(0,0,0,.5)}
 .popWinMask .playSource_popWin.popWin_transition{top:auto;bottom:0}
 .popWinMask .popWin .pBtn em.all.gray{color:#666;width:100%;float:none;display:block;border:0;font-size:.8rem;line-height:2rem;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;text-align:center}
 .popWinMask .playSource_popWin .cur .sSource em{color: #1184f9;}
+.line{
+	width: 100%;
+	height: .2rem;
+	background-color: #F5F5F5;
+}
+#drama-nav span.on{
+	color: #1184f9;
+}
+#drama-nav span + span{
+	margin-left: .5rem;
+}
+#drama-main{
+}
+#drama-main>li{
+	display: none;
+}
+#drama-main>li.on{
+	display: block;
+}
+.nav-main,.download-main{
+	padding: .0 .5rem .5rem;
+}
+.nav-main>span,.download-main .download-item span{
+    width: auto;
+    line-height: 2rem;
+    height: 2rem;
+    background: #F5F5F5;
+    margin-right: .25rem;
+    margin-bottom: .25rem;
+    display: inline-block;
+	font-size: .7rem;
+    padding: 0 .67rem;
+}
+.download-main .download-item li{
+	display: none;
+}
+.download-main .download-item li.on{
+	display: block;
+}
+.nav-main span.on{
+    color: #1184f9;
+}
 .sSourceico{float:left;background-image:url(../ico/youku.png);height:1rem;width:1rem;background-size:1rem 1rem;margin-top:.5rem;margin-right:.3rem}
 .sSourceqq{background-image:url(../ico/qq.png)}
 .sSourcezuidam3u8{background-image:url(../ico/zuidam3u8.png)}
@@ -414,7 +457,7 @@ body.modal-open{position:fixed;width:100%}
 .aui-bar-tab-item.aui-active .aui-icon-zongyi{background-image:url(../ico/zy_active.png);}
 .aui-bar-tab-item.aui-active .aui-icon-dongman{background-image:url(../ico/dm_active.png);}
 .drama-tab{padding: .5rem;overflow: hidden;margin-left: -1.1rem;}
-.drama-tab dt{font-size: 1.1em;float: left;min-width: 4rem;text-align: left;font-weight: 700;}
+.drama-tab dt{font-size: 1.1em;float: left;min-width: 4rem;text-align: left;font-weight: 600;}
 .drama-tab dt a{margin-left: .5rem;}
 
 
