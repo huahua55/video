@@ -225,12 +225,12 @@ class Index extends Base
 
     // 详情
     public function search(){
-        $key = $this->_param['key'] ?? "";
-
+        $key  = $this->_param['key'] ?? "";
+        $page = $this->_param['page'] ?? 1;
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
         ];
-        $res = model("Vod")->listData($where, $this->sort);
+        $res = model("Vod")->listData($where, $this->sort, $page, 18);
         $res = $res['list'] ?? [];
 
         $data = [];
@@ -282,7 +282,7 @@ class Index extends Base
             $where['vod_year']   = ['eq',$year];
         }
 
-        $info = model("Vod")->listData($where, $this->sort, $page);
+        $info = model("Vod")->listData($where, $this->sort, $page, 18);
         $info = $info['list'] ?? [];
 
         $array = array();
