@@ -118,23 +118,23 @@ class Index extends Base
             ],
             [
                 'type'  => 1,
+                'id'    => 2,
+                'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
+                'name'  => '热播剧',
+                'data'  => $this->getVodList(2,6,1),
+            ],
+            [
+                'type'  => 1,
                 'id'    => 3,
                 'msg'   => json_encode(getScreen(3),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播动漫',
+                'name'  => '热播综艺',
                 'data'  => $this->getVodList(3,6,1),
             ],
             [
                 'type'  => 1,
                 'id'    => 4,
                 'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播综艺',
-                'data'  => $this->getVodList(4,6,1),
-            ],
-            [
-                'type'  => 1,
-                'id'    => 4,
-                'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播综艺',
+                'name'  => '热播动漫',
                 'data'  => $this->getVodList(4,6,1),
             ],
         ];
