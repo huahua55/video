@@ -9,6 +9,7 @@
 	<body>
 		{include file="public/head"}
 		<script>
+			$("#nav-last").addClass("active")
 			$(function(){
             MAC.Gbook.Login = {$gbook.login};
             MAC.Gbook.Verify = {$gbook.verify};
@@ -70,7 +71,6 @@
 								<div class="msg_cont">{$vo.gbook_reply}
 								</div>
 							</div>
-
 							{/if}
 						</div>
 					</div>
