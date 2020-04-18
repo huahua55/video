@@ -65,12 +65,14 @@ class Index extends Base
             $where = [
                 'type_pid'   => $id
             ];
-            $res =  model("Type")->listData($where,"type_sort desc");
-            $res = $res['list'] ?? [];
-            if($res == []){
-                $res =  model("Type")->listData(['type_id' => $id],"type_sort desc");
-                $res = $res['list'] ?? [];
-            }
+            $fatherRes =  model("Type")->listData($where,"type_sort desc");
+            $fatherRes = $fatherRes['list'] ?? [];
+
+            $sonRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
+            $sonRes = $sonRes['list'] ?? [];
+
+            $res = array_merge($sonRes,$fatherRes);
+            
             foreach($res as $item){
                 $r = $item["type_id"];
                 $d = array(
