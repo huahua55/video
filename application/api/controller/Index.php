@@ -271,7 +271,9 @@ class Index extends Base
         }
 
         if($area != ""){
-            $where['vod_area']   = ['eq',$area];
+            if($area == "国产" || $area == "大陆" ){
+                $where['vod_area']   = ['in',["中国大陆","大陆","中国"]];
+            }
         }
 
         if($year != ""){
