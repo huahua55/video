@@ -259,8 +259,11 @@ class Index extends Base
         $year = $year == "年份" ? "" : $year;
 
         $where = [];
-        if($id != 0){
+        if($id == 1 || $id == 2 ){
+            // 电影电视剧 有一级分类
             $where['type_id_1']   = ['eq',$id];
+        }else{
+            $where['type_id']   = ['eq',$id];
         }
 
         if($type != ""){
