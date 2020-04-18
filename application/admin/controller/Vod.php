@@ -101,7 +101,9 @@ class Vod extends Base
         if(!empty($param['repeat'])){
             if($param['page'] ==1){
                 Db::execute('DROP TABLE IF EXISTS '.config('database.prefix').'tmpvod');
-                Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpvod` as (SELECT min(vod_id) as id1,vod_name as name1 FROM '.config('database.prefix').'vod GROUP BY name1 HAVING COUNT(name1)>1)');
+                // Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpvod` as (SELECT min(vod_id) as id1,vod_name as name1 FROM '.config('database.prefix').'vod GROUP BY name1 HAVING COUNT(name1)>1)');
+                Db::execute('CREATE TABLE IF NOT EXISTS `'.config('database.prefix').'tmpvod` (`id1` int(10) unsigned, `name1` varchar(255) NOT NULL DEFAULT \'\')');
+                Db::execute('insert into `'.config('database.prefix').'tmpvod` (SELECT min(vod_id),vod_name FROM '.config('database.prefix').'vod GROUP BY vod_name HAVING COUNT(vod_name)>1)');
             }
             $order='vod_name asc';
             $res = model('Vod')->listRepeatData($where,$order,$param['page'],$param['limit']);
