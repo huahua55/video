@@ -17,11 +17,12 @@ class DoubanTopList extends Command
     protected $vodDb;//db
     protected $search_url = [
         'tv' => 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0',
-        'tv_dm' => 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E6%97%A5%E6%9C%AC%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=0',
+//        'tv_dm' => 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E6%97%A5%E6%9C%AC%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=0',
         'movie' => 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0',
     ];
     protected $get_tv_tag = ["热门"];//电视剧 热门 ,"日本动画"
     protected $get_movie_tag = ["热门"];//电影 热门
+
 
 
     protected function configure()
@@ -36,7 +37,11 @@ class DoubanTopList extends Command
     // 取出数据豆瓣id数据
     protected function getVodDouBanFindData($where)
     {
-        return $this->vodDb->field('vod_id,type_id_1 as type_id,vod_name as name')->whereOr($where)->find();
+      return  $this->vodDb->field('vod_id,type_id_1 as type_id, vod_name as name')->whereOr(function($query) use($where){
+            $query->whereOr("replace(`vod_name`,' ','') = '".$where['vod_name']."' ");
+            $query->whereOr("replace(`vod_sub`,' ','') = '".$where['vod_sub']."' ");
+            $query->whereOr("vod_douban_id = '".$where['id']."' ");
+        })->find();
     }
 
     // 取出数据爬取豆瓣的推荐的数据
@@ -48,33 +53,6 @@ class DoubanTopList extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
-
-
-        //bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg;
-        // ll="108288"; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78;
-        // ap_v=0,6.0; __utmc=30149280; apiKey=; __utma=30149280.1772134204.1587359482.1587363078.1587363096.3;
-        // __utmz=30149280.1587363096.3.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; regpop=1;
-        // user_data={"area_code":" 86","number":"17701291600","code":"7942"};
-        // vtoken=phone_register 06e62bcfb1c94beaba4f5aaf519305cc;
-        // last_login_way=phone; push_noty_num=0; push_doumail_num=0
-        //; __utmv=30149280.21552; douban-profile-remind=1
-        //; __utmb=30149280.46.9.1587363621775;
-        // _pk_ref.100001.2fad=["","",1587363729,"https://www.douban.com/people/215524010/"];
-        // _pk_id.100001.2fad=fe6d111b0557130d.1587363729.1.1587363729.1587363729.;
-        // _pk_ses.100001.2fad=*;
-        // login_start_time=1587363730884
-        $data = [
-             'ck'=>'',
-             'name'=>'17701291600',
-             'password'=>'123456qaz',
-             'remember'=>'false',
-             'ticket'=>'',
-        ];
-        //https://accounts.douban.com/j/mobile/login/basic
-
-        $dataurl =  mac_curl_post('https://accounts.douban.com/j/mobile/login/basic',$data,[],'bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg; ll="108288"; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; ap_v=0,6.0; __utmc=30149280; apiKey=; __utma=30149280.1772134204.1587359482.1587363078.1587363096.3; __utmz=30149280.1587363096.3.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; regpop=1; user_data={%22area_code%22:%22+86%22%2C%22number%22:%2217701291600%22%2C%22code%22:%227942%22}; vtoken=phone_register%2006e62bcfb1c94beaba4f5aaf519305cc; push_noty_num=0; push_doumail_num=0; __utmv=30149280.21552; douban-profile-remind=1; _pk_ref.100001.2fad=%5B%22%22%2C%22%22%2C1587363729%2C%22https%3A%2F%2Fwww.douban.com%2Fpeople%2F215524010%2F%22%5D; _pk_ses.100001.2fad=*; __utmt=1; last_login_way=account; __utmb=30149280.52.9.1587364297203; _pk_id.100001.2fad=fe6d111b0557130d.1587363729.1.1587364383.1587363729.; login_start_time=1587364385056');
-        print_r($dataurl);die;
 
 
 
@@ -114,7 +92,6 @@ class DoubanTopList extends Command
             log::info('采集豆瓣热门-url-data::' . $mac_curl_get_data);
             if (isset($getSearchData['subjects']) && !empty($getSearchData['subjects'])) {
                 foreach ($getSearchData['subjects'] as $sub_key => $sub_val) {
-
                     //存在豆瓣id 不采集数据
                     $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
                     $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
@@ -122,9 +99,9 @@ class DoubanTopList extends Command
                         $vodDouBanFindData['status'] = 0;
                         log::info('采集豆瓣热门-存在过滤-::' . $sub_val['id']);
                     }
-                    $vodDouBanFindWhere['vod_name'] = $sub_val['title'];
-                    $vodDouBanFindWhere['vod_sub'] = $sub_val['title'];
-                    $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
+                    $vodDouBanFindWhere['vod_name'] = mac_trim_all($sub_val['title']);
+                    $vodDouBanFindWhere['vod_sub'] = mac_trim_all($sub_val['title']);
+                    $vodDouBanFindWhere['id'] = $sub_val['id'];
                     $vodDouBanFindData = $this->getVodDouBanFindData($vodDouBanFindWhere);
                     if (empty($vodDouBanFindData)) {
                         $vodDouBanFindData['status'] = 0;
@@ -135,6 +112,7 @@ class DoubanTopList extends Command
                     }
                     $vodDouBanFindData['douban_id'] = $sub_val['id'];
                     $vodDouBanFindData['time'] = date("Y-m-d", time());
+
                     $res = Db::name('douban_recommend')->insert($vodDouBanFindData);
                     if ($res) {
                         log::info('采集豆瓣热门-succ' . $sub_val['title']);
@@ -147,4 +125,5 @@ class DoubanTopList extends Command
         $output->writeln("开启采集:采集豆瓣热门end:");
 
     }
+
 }

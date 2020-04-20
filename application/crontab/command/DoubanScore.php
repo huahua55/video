@@ -13,6 +13,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 use think\Log;
+use QL\QueryList;
 
 class DoubanScore extends Command
 {
@@ -23,6 +24,20 @@ class DoubanScore extends Command
 //    protected $get_search_id= 'http://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';//cms 通过id获取内容
 //30393997
 
+
+
+    protected $proxy_username = 'ze34232tp1';
+    protected $proxy_passwd = '94155035';
+    protected $proxy_server = '183.129.244.16';
+    protected $proxy_port = '88';
+    protected $pattern = 'json';//API访问返回信息格式：json和text可选
+    protected $num = 10;//获取代理端口数量
+    protected $key_name = 'user_name=';
+    protected $key_timestamp = 'timestamp=';
+    protected $key_md5 = 'md5=';
+    protected $key_pattern = 'pattern=';
+    protected $key_num = 'number=';
+    protected $key_port = 'port=';
     protected function configure()
     {
         //db
@@ -41,8 +56,136 @@ class DoubanScore extends Command
         return ['pagecount'=>ceil($total/$limit),'list'=>$list];
     }
 
+    public function getDouBan(){
+      $ql =  new QueryList();
+
+
+        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
+        $file  = 'log.txt';
+        $port = '';//代理端口变量
+        $test_url = 'https://movie.douban.com/j/subject_suggest?q=清平乐'; //测试访问链接
+        try {
+            $open_url = $this->get_open_url();
+            var_dump($open_url);
+//            p($open_url);
+            $r = file_get_contents($open_url);
+            $result =iconv("gb2312", "utf-8//IGNORE",$r);
+            echo $result . "\n <br>";
+            file_put_contents($file, date('Y-m-d H:i:s',time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL,FILE_APPEND);
+            $json_arr = json_decode($result,true);
+            $code = $json_arr['code'];
+            if ($code == 108){
+                $reset_url = $this->get_reset_url();
+                $r = file_get_contents($reset_url);
+            }else if ($code == 100){
+                $port = strval($json_arr['port'][0]);
+            }
+
+        } catch (\Exception $e) {
+            p(11);
+            file_put_contents($file, 'open_url||' . $e . PHP_EOL,FILE_APPEND);
+        }
+
+        var_dump($test_url);
+        $tmp = $this->testing($test_url, $port);
+        p($tmp);
+        p($port);
+        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
+        file_put_contents($file, 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
+        try {
+            $close_url = get_close_url($port);
+            $r = file_get_contents($close_url);
+            $result =iconv("gb2312", "utf-8//IGNORE",$r);
+            echo 'close_url||' .  $result;
+            file_put_contents($file, 'close_url||' . $result . PHP_EOL,FILE_APPEND);
+        } catch (\Exception $e) {
+            file_put_contents($file, 'close_url||' . $e . PHP_EOL,FILE_APPEND);
+        }
+
+    }
+    //返回当前时间戳（单位为 ms）
+   public function get_timestamp(){
+        list($s1,$s2)=explode(' ',microtime());
+        return (float)sprintf('%.0f',(floatval($s1)+floatval($s2))*1000);
+    }
+
+//进行md5加密
+   public function get_md5_str($str){
+        return md5($str);
+    }
+
+//返回请求分配代理端口URL链接
+  public  function get_open_url(){
+        $time_stamp = $this->get_timestamp();
+        $md5_str =  $this->get_md5_str($this->proxy_username . $this->proxy_passwd. strval($time_stamp));
+        return 'http://' . $this->proxy_server . ':'
+            . $this->proxy_port . '/open?' . $this->key_name. $this->proxy_username .
+            '&' . $this->key_timestamp . strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern .
+            '&' . $this->key_num. strval($this->num);
+    }
+
+//返回释放代理端口URL链接
+   public function get_close_url($auth_port){
+        $time_stamp =  $this->get_timestamp();
+        $md5_str =  $this->get_md5_str($this->proxy_username. $this->proxy_passwd . strval($time_stamp));
+        return 'http://' . $this->proxy_server. ':'
+            . $this->proxy_port . '/close?' . $this->key_name . $this->proxy_username.
+            '&' . $this->key_timestamp . strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern .
+            '&' . $this->key_port. strval($auth_port);
+    }
+
+//返回重置本用户已使用ip URL链接
+    public function get_reset_url(){
+        $time_stamp = $this-> get_timestamp();
+        $md5_str =  $this->get_md5_str($this->proxy_username. $this->proxy_passwd. strval($time_stamp));
+        return 'http://' . $this->proxy_server. ':'
+            . $this->proxy_port . '/reset_ip?' . $this->key_name . $this->proxy_username .
+            '&' . $this->key_timestamp. strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern ;
+    }
+
+//使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
+   public function testing($url, $auth_port){
+        $ch = curl_init();
+        $timeout = 30;
+        curl_setopt ($ch, CURLOPT_URL, $url);
+        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
+        curl_setopt($ch, CURLOPT_PROXY, $this->proxy_server); //代理服务器地址
+        curl_setopt($ch, CURLOPT_PROXYPORT, $auth_port); //代理服务器端口
+        curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
+        //如果访问为https协议
+        if (substr($url,0,5)=="https") {
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // 对认证证书来源的检查
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); // 从证书中检查SSL加密算法是否存在
+        }
+
+        $file_contents = curl_exec($ch);
+        $httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+        return $file_contents;
+    }
+
+
+
+
+
+
+
+
+
+
+
     protected function execute(Input $input, Output $output)
     {
+        p($this->getDouBan());
+
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
         $start = 0;
