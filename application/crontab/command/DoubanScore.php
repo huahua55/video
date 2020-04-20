@@ -251,7 +251,7 @@ class DoubanScore extends Command
 
 //                $url = $this->search_url.$v['vod_name'];
                 //获取豆瓣id
-                sleep(8);
+                sleep(4);
                 $mac_curl_get_data = mac_curl_get($url,$heads,$cookie);
                 $getSearchData = json_decode($mac_curl_get_data,true);
                 log::info('采集豆瓣评分-url-::'.$url);
