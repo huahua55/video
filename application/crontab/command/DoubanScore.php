@@ -109,7 +109,10 @@ class DoubanScore extends Command
 //                $url = $this->search_url.$v['vod_name'];
                 //获取豆瓣id
                 sleep(8);
-                $getSearchData = json_decode(mac_curl_get($url,$heads,$cookie),true);
+                $mac_curl_get_data = mac_curl_get($url,$heads,$cookie);
+                $getSearchData = json_decode($mac_curl_get_data,true);
+                log::info('采集豆瓣评分-url-::'.$url);
+                log::info('采集豆瓣评分-url-data::'.$mac_curl_get_data);
                 if(!empty($getSearchData) && isset($getSearchData[0])){
 
                    if(isset($getSearchData[0]['id'])){
@@ -146,8 +149,6 @@ class DoubanScore extends Command
                 if($is_log == false){
                     log::info('采集豆瓣评分-过滤::'.$v['vod_name']);
                 }
-                sleep(5);
-
             }
             $page = $page + 1;
         }
