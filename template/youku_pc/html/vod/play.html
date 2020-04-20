@@ -25,36 +25,32 @@
 									<h2><a href="#">{$obj.vod_name} </a></h2>
 									<span class="score">{$obj.vod_score}</span>
 									<p class="tvintro"><em></em></p>
-									<div class="vip-sell-wrap">
-										<div class="vip-qr" id="qrcodetobuymem">
-											<img alt="" id="qrFeeImg" src="{$maccms.path_tpl}youku/images/xiazai2.jpg" data-spm-anchor-id="0.0.0.i0"
-											 lcode="xv17it06">
-											<div class="qr-timeout" id="buymemqrcodetimeout" style="display: block;">
-												<div class="qr-mask"></div>
-												<a class="qr-refresh" href="javascript:void(0);" id="buymemqrcoderefresh">
-													点击刷新
-												</a>
-											</div>
-										</div>
-										<a class="vip-btn youku_vip_pay_btn" id="" href="#">扫码关注微信公众号</a>
-										<p>{$obj.vod_remarks} </p>
-									</div>
-									<div class="s-playsite s-playsitee">
+									<!-- <div class="s-playsite s-playsitee">
 										{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
 										<span class="ea-site ea-site-{$vo.player_info.from}" id="{$key}play1" style="display: none;">{$vo.player_info.show}</span>
 										{/maccms:foreach}
-										<div class="sites">
-											<div class="sites-inner">
-												<p class="arrow"></p>
-												<ul class="js-list">
-													{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-													<li id="{$key}play2"><span class="ea-site ea-site-{$vo.player_info.from}">{$vo.player_info.show}</span></li>
-													{/maccms:foreach}
-											</div>
-										</div>
-									</div>
+									</div> -->
 								</div>
 							</div>
+							<p class="source-title">播放源：</p>
+							<ul class="js-list">
+								{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+								<li id="{$key}play2"><span class="ea-site-{$vo.player_info.from}">{$vo.player_info.show}</span></li>
+								{/maccms:foreach}
+							</ul>
+							<script type="text/javascript">
+								$(".js-list li").eq(0).addClass("cur")
+								$(".js-list li").on("click", function() {
+									var index = $(this).index();
+									$(this).addClass("cur").siblings().removeClass("cur");
+									$(".u-listbox>div").eq(index).addClass("cur").animate({
+										opacity: '1'
+									}, 100);
+									$(".u-listbox>div").eq(index).siblings().removeClass("cur").animate({
+										opacity: '0'
+									}, 100);
+								})
+							</script>
 							<div class="c-player-episode">
 								<div class="c-player-aside-list">
 									<div class="player-aside-list-main">
@@ -401,21 +397,12 @@
 							</div>
 						</div>
 					</div>
-
-
-
 					<script>
 						function series(a, b, c) {
 							var f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, d = a.find("a").length,
 								e = WidthScreen ? b : c;
-
-						}(jQuery), WidthScreen = !0, $(document).ready(function() {
-
-						});
-
-
+						}(jQuery), WidthScreen = !0, $(document).ready(function() {});
 						var $guideSlider = $("#guideSlider").eq(0);
-
 						$guideSlider.find(".guide-list .guide").hover(function() {
 							$(this).addClass("sel").siblings().removeClass("sel");
 						});
@@ -430,7 +417,6 @@
 							});
 						});
 					</script>
-
 					<span style="display:none" class="mac_history_set" alt="设置视频历史记录" data-name="[{$obj.type.type_name}]{$obj.vod_name}"
 					 data-pic="{$obj.vod_pic|mac_url_img}"></span>
 					<span style="display:none" class="mac_ulog_set" alt="设置播放页浏览记录" data-type="4" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}"
@@ -441,14 +427,8 @@
 						function series(a, b, c) {
 							var f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, d = a.find("a").length,
 								e = WidthScreen ? b : c;
-
-						}(jQuery), WidthScreen = !0, $(document).ready(function() {
-
-						});
-
-
+						}(jQuery), WidthScreen = !0, $(document).ready(function() {});
 						var $guideSlider = $("#guideSlider").eq(0);
-
 						$guideSlider.find(".guide-list .guide").hover(function() {
 							$(this).addClass("sel").siblings().removeClass("sel");
 						});

@@ -3016,7 +3016,25 @@ h6 {
 	height: 100%;
 }
 
-.sites-inner .js-list .cur span {
+.source-title{
+	padding: 10px 30px;
+	font-size: 18px;
+	color: #FFF;
+}
+
+.js-list{
+	color: #FFF;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+.js-list li{
+	width: 50%;
+	text-align: center;
+	cursor: pointer;
+}
+.js-list li.cur span {
 	color: #1a9eff;
 }
 
@@ -3502,6 +3520,8 @@ h6 {
 
 .aside-tabbox {
 	display: none;
+	opacity: 0;
+	transition: all .3s;
 	overflow: hidden;
 	width: 300px;
 	padding-left: 20px;
