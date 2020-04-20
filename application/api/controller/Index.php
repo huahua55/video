@@ -258,6 +258,15 @@ class Index extends Base
         return json_return($data);
     }
 
+    // 热搜关键词
+    public function search_hot(){
+        $config = config('maccms.app');
+        $search_hot = $config['search_hot'] ?? [];
+
+        $list = explode(",",$search_hot);
+        return json_return($list);
+    }
+
     // 筛选
     public function screen(){
         $id     = $this->_param['id'] ?? 0;
