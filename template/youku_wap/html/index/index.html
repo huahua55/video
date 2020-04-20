@@ -100,16 +100,17 @@
 						});
 					}
 				})
-
-				var noticeSwiper = new Swiper('.notice-swiper .swiper-container', {
-					direction: 'vertical',
-					slidesPerView: 1, // 每页显示几个slide
-					spaceBetween: 0, // slide的间距px
-					followFinger: false, // 
-					speed: 1000, // 速度
-					loop: true, // 循环
-					autoplay: true
-				});
+				if ($(".notice-swiper .swiper-container").length > 1) {
+					var noticeSwiper = new Swiper('.notice-swiper .swiper-container', {
+						direction: 'vertical',
+						slidesPerView: 1, // 每页显示几个slide
+						spaceBetween: 0, // slide的间距px
+						followFinger: false, // 
+						speed: 1000, // 速度
+						loop: true, // 循环
+						autoplay: true
+					});
+				}
 			})
 		</script>
 		{include file="public/foot"}
