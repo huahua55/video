@@ -198,7 +198,7 @@ class DoubanScore extends Command
         if(!empty($is_vod_id)){
             $where['vod_id'] = ['LT',$is_vod_id];
         }
-
+        $this->getDouBan();
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -250,7 +250,7 @@ class DoubanScore extends Command
 
 //                $url = $this->search_url.$v['vod_name'];
                 //获取豆瓣id
-                $this->getDouBan();
+
                 sleep(4);
                 $mac_curl_get_data = mac_curl_get($url,$heads,$cookie);
                 $getSearchData = json_decode($mac_curl_get_data,true);
