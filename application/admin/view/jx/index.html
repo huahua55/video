@@ -6,13 +6,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label">视频播放地址：</label>
             <div class="layui-input-inline w500">
-                <input type="text" class="layui-input" placeholder="" name="play_url">
+                <input type="text" class="layui-input" placeholder="https://v.youku.com/v_show/id_XNDUyMDA3ODE0NA==.html" name="play_url">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">解析地址：</label>
             <div class="layui-input-inline w500">
-                <select name="jx_url" lay-filter="type_id">
+                <select name="method">
                     {volist name="jx_list" id="vo"}
                     <option value="{$vo}">{$key}</option>
                     {/volist}
