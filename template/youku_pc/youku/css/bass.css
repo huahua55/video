@@ -702,7 +702,7 @@ hr {
 	height: 580px;
 	overflow: hidden;
 	transform: translateZ(0);
-	margin-bottom: -80px;
+	margin-bottom: 30px;
 }
 
 .lunhuan #lunhuanback {
@@ -713,11 +713,11 @@ hr {
 	transform: translateZ(0) scale(1);
 }
 
-.lunhuan #lunhuanback p {
+/* .lunhuan #lunhuanback p {
 	height: 520px;
 	background-repeat: no-repeat;
 	background-position: center top;
-}
+} */
 
 .lunhuan #lunhuanback a {
 	position: absolute;
@@ -728,6 +728,17 @@ hr {
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: opacity 0.1s ease;
+}
+
+.lunhuan #lunhuanback .slider-item{
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 40px 80px;
+	color: #FFF;
+	font-size: 18px;
+	background-image: linear-gradient(transparent, rgba(0, 0, 0, .6));
 }
 
 .slider_nav {
@@ -4565,6 +4576,13 @@ i.icon-player.playe {
 	padding: 1px 10px;
 	display: inline-block;
 	white-space: nowrap;
+}
+/*  */
+
+.yk-notice{
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 16px;
 }
 
 .yk-pannel_head .v_th {

@@ -12,8 +12,9 @@
 	</head>
 	<body>
 		{include file="public/head"}
+		{include file="public/slide"}
 		<!-- 频道幻灯 -->
-		<div class="lunhuan" id="carousel1">
+		<!-- <div class="lunhuan" id="carousel1">
 			<div id="lunhuanback">
 				{maccms:vod num="9" type="current" level="1,2,3,4,5,6,7,8,9" order="desc" by="time"}
 				<a style="background-image:url({$vo.vod_pic_slide});opacity: 1;display: block;" href="{:mac_url_vod_detail($vo)}"
@@ -30,12 +31,11 @@
 			</div>
 			<div class="slider_mask"></div>
 		</div>
-		</div>
-
+		</div> -->
+		
 		<!-- 搜索条件 -->
-		<div class="column yk-container">
+		<!-- <div class="column yk-container">
 			<div class="le_screen">
-				<!-- 按类型 -->
 				<div class="nav_box nav_box1">
 					<ul>
 						<li><a {if condition="$param['class'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
@@ -54,7 +54,6 @@
 					</ul>
 				</div>
 				<div class="line"></div>
-				<!-- 按地区 -->
 				<div class="nav_box nav_box1">
 					<ul>
 						<li><a {if condition="$param['area'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
@@ -73,7 +72,6 @@
 					</ul>
 				</div>
 				<div class="line"></div>
-				<!-- 按语言 -->
 				<div class="nav_box nav_box1">
 					<ul>
 						<li><a {if condition="$param['lang'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>'','year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
@@ -92,7 +90,6 @@
 					</ul>
 				</div>
 				<div class="line"></div>
-				<!-- 按年代 -->
 				<div class="nav_box nav_box2">
 					<ul>
 						<li><a {if condition="$param['year'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
@@ -111,12 +108,36 @@
 					</ul>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="yk-container">
 			<div class="yk-row">
-				<script type="text/javascript" src="{$maccms.path_ads}list-1400-1.js" charset="utf-8"></script>
-				<!--为你推荐-->
+				{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
 				<div class="yk-pannel clearfix">
+					<div class="yk-pannel-box">
+						<div class="yk-pannel_hd">
+							<div class="yk-pannel_head clearfix">
+								<h3 class="title"><a href="{:mac_url_type($vo)}">{$vo.name} </a></h3>
+							</div>
+						</div>
+						<div class="yk-pannel_bd statetab clearfix">
+							<ul class="index-list-1 tabcon clearfix active">
+								{volist name="$vo.rel_vod" id="vo2"}
+								<li class="yk-pack">
+									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}"></a><img class="quic ff-img"
+										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
+										 class="playshow">{$vo.vod_remarks}</span></div>
+									<ul class="info-list">
+										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
+									</ul>
+								</li>
+								{/volist}
+							</ul>
+						</div>
+					</div>
+				</div>
+				{/macdiy:vodrecommend}
+				<script type="text/javascript" src="{$maccms.path_ads}list-1400-1.js" charset="utf-8"></script>
+				<!-- <div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
 							<div class="yk-pannel_head clearfix">
@@ -141,7 +162,7 @@
 							</ul>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				{if$obj.type_name=='直播'||$obj.parent.type_name=='直播'}
 				{else}
 				{if$obj.childids}

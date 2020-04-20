@@ -14,7 +14,7 @@
 		{include file="public/slide"}
 		<div class="yk-container">
 			<div class="yk-row">
-				<div class="yk-guide clearfix">
+				<!-- <div class="yk-guide clearfix">
 					<ul class="nav-guide">
 						<li class="nav-group">
 							<span class="channel yk-dsj"><a href="/vodtype/1" target="_self">电影</a>
@@ -90,18 +90,14 @@
 									</dd>
 								</dl>
 							</span>
-							<!-- <span class="channel yk-dsj"><a href="http://bbs.52yuanma.com.cn" target="_self">吾爱源码</a>
-							</span> -->
 						</li>
 						<li class="nav-group">
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/喜剧/id/1.html">喜剧片</a></span>
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/动作/id/1.html">动作片</a></span>
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/爱情/id/1.html">爱情片</a></span></br>
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/科幻/id/1.html">科幻片</a></span>
-							<!-- <span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/恐怖/id/1.html">恐怖片</a></span> -->
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/剧情/id/1.html">剧情片</a></span>
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/战争/id/1.html">战争片</a></span>
-							<!-- <span class="channel"><a href="http://www.9352tv.cn/index.php/vod/show/class/伦理/id/1.html">伦理片</a></span> -->
 						</li>
 						<li class="nav-group">
 							<span class="channel"><a href="http://www.9352tv.cn/index.php/vod/type/id/2.html">国产剧</a></span>
@@ -130,8 +126,13 @@
 								<a href="/topic/" target="_self">影视专题</a> </span>
 						</li>
 					</ul>
+				</div> -->
+				<!-- 公告 -->
+				<div class="yk-notice">
+					test,test,test,test,test,test,
 				</div>
-				<div class="yk-pannel clearfix">
+				<!-- 公告-------------over -->
+				<!-- <div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
 							<div class="yk-pannel_head clearfix">
@@ -178,12 +179,12 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- 横幅广告开始index_1400 -->
-				<script type="text/javascript" src="{$maccms.path_ads}index-1400.js" charset="utf-8"></script>
+				<!-- <script type="text/javascript" src="{$maccms.path_ads}index-1400.js" charset="utf-8"></script> -->
 				<!--广告END-->
 				<!-- 为你推荐推荐值4 -->
-				<div class="yk-pannel clearfix">
+				<!-- <div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
 							<div class="yk-pannel_head clearfix">
@@ -248,11 +249,11 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- 分类列表 -->
-				<script type="text/javascript" src="{$maccms.path_ads}index-1400-1.js" charset="utf-8"></script>
+				<!-- <script type="text/javascript" src="{$maccms.path_ads}index-1400-1.js" charset="utf-8"></script> -->
 				<!-- 分类列表 -->
-				{maccms:type order="asc" by="sort" ids="1"}
+				<!-- {maccms:type order="asc" by="sort" ids="1"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
@@ -380,93 +381,64 @@
 						</div>
 					</div>
 				</div>
-				{/maccms:type}
-				{maccms:type order="asc" by="sort" ids="2"}
+				{/maccms:type} -->
+				<!-- {macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
+				<section class="mod aui-margin-t-0">
+					<div class="mod-head aui-clearfix">
+						<div class="mod-head-title">
+							<span class="mod-head-name">{$vo.name}</span>
+						</div>
+					</div>
+					<div class="mod-main clearfix">
+						<div class="mod-row">
+							<ul class="m-list" m-list-skin="small">
+								{volist name="$vo.rel_vod" id="vo2"}
+								<li class="m-item">
+									<a class="thumb" href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">
+										<img class="ff-img" data-original="{:mac_url_img($vo2.vod_pic)}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;">
+										<i class="mask"></i>
+										<div class="icon-br"><span class="label">{$vo2.vod_remarks}</span></div>
+									</a>
+									<div class="text">
+										<h3 class="stitle"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}">{$vo2.vod_name}</a></h3>
+									</div>
+								</li>
+								{/volist}
+							</ul>
+						</div>
+					</div>
+				</section>
+				{/macdiy:vodrecommend} -->
+				{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
 							<div class="yk-pannel_head clearfix">
-								<h3 class="title"><a href="{:mac_url_type($vo)}">{$vo.type_name} </a></h3>
-								<div id="statetab">
-									<ul class="t_tab">
-										<li class="active"><a href="{:mac_url_type($vo)}">最新</a></li>
-										{maccms:type num="7" parent="2" order="asc" by="sort" mid="vod"}
-										<li><a href="{:mac_url_type($vo)}">{$vo.type_name}</a> </li>
-										{/maccms:type}
-									</ul>
-								</div>
+								<h3 class="title"><a href="{:mac_url_type($vo)}">{$vo.name} </a></h3>
 							</div>
 						</div>
 						<div class="yk-pannel_bd statetab clearfix">
 							<ul class="index-list-1 tabcon clearfix active">
-								{maccms:vod num="18" ids="all" type="2" order="asc" by="time"}
+								{volist name="$vo.rel_vod" id="vo2"}
 								<li class="yk-pack">
-									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;"><span
+									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}"></a><img class="quic ff-img"
+										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
 										 class="playshow">{$vo.vod_remarks}</span></div>
 									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
+										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
 									</ul>
 								</li>
-								{/maccms:vod}
-							</ul>
-							<ul class="index-list-1 tabcon clearfix">
-								{maccms:vod num="18" ids="all" type="15" order="asc" by="time"}
-								<li class="yk-pack">
-									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;"><span
-										 class="playshow">{$vo.vod_remarks}</span></div>
-									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
-									</ul>
-								</li>
-								{/maccms:vod}
-							</ul>
-							<ul class="index-list-1 tabcon clearfix">
-								{maccms:vod num="18" ids="all" type="16" order="asc" by="time"}
-								<li class="yk-pack">
-									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;"><span
-										 class="playshow">{$vo.vod_remarks}</span></div>
-									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
-									</ul>
-								</li>
-								{/maccms:vod}
-							</ul>
-							<ul class="index-list-1 tabcon clearfix">
-								{maccms:vod num="18" ids="all" type="17" order="asc" by="time"}
-								<li class="yk-pack">
-									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;"><span
-										 class="playshow">{$vo.vod_remarks}</span></div>
-									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
-									</ul>
-								</li>
-								{/maccms:vod}
-							</ul>
-							<ul class="index-list-1 tabcon clearfix">
-								{maccms:vod num="18" ids="all" type="18" order="asc" by="time"}
-								<li class="yk-pack">
-									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}" src="{:mac_url_img($vo.vod_pic)}" style="display: inline;"><span
-										 class="playshow">{$vo.vod_remarks}</span></div>
-									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
-									</ul>
-								</li>
-								{/maccms:vod}
+								{/volist}
 							</ul>
 						</div>
 					</div>
 				</div>
-				{/maccms:type}
+				{/macdiy:vodrecommend}
 				<!--列表-->
-				<script type="text/javascript" src="{$maccms.path_ads}index-1400-2.js" charset="utf-8"></script>
+				<!-- <script type="text/javascript" src="{$maccms.path_ads}index-1400-2.js" charset="utf-8"></script> -->
 				<!--广告END-->
 				<!--列表3-->
-				{maccms:type order="asc" by="sort" ids="3"}
+				<!-- {maccms:type order="asc" by="sort" ids="3"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
@@ -510,10 +482,10 @@
 						</div>
 					</div>
 				</div>
-				{/maccms:type}
+				{/maccms:type} -->
 				<!--列表3-->
 				<!--列表4-->
-				{maccms:type order="asc" by="sort" ids="4"}
+				<!-- {maccms:type order="asc" by="sort" ids="4"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
 						<div class="yk-pannel_hd">
@@ -556,7 +528,7 @@
 						</div>
 					</div>
 				</div>
-				{/maccms:type}
+				{/maccms:type} -->
 				<!--列表4-->
 				<!--
 <div class="yk-pannel clearfix">

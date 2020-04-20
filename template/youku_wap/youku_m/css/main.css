@@ -377,7 +377,7 @@ body.modal-open{position:fixed;width:100%}
 	padding: .0 .5rem .5rem;
 }
 .nav-main>span,.download-main .download-item span{
-    width: 31%;
+    /* width: 31%; */
     line-height: 2rem;
     height: 2rem;
     background: #F5F5F5;
