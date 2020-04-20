@@ -52,8 +52,6 @@ class DoubanScore extends Command
         $where = [
             'vod_douban_id'=>0,
         ];
-        Cache::set('vod_id_list_douban_score',1);
-        return true;
         $is_vod_id = Cache::get('vod_id_list_douban_score');
         if(!empty($is_vod_id)){
             $where['vod_id'] = ['LT',$is_vod_id];
