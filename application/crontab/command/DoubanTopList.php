@@ -49,6 +49,35 @@ class DoubanTopList extends Command
     protected function execute(Input $input, Output $output)
     {
 
+
+
+        //bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg;
+        // ll="108288"; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78;
+        // ap_v=0,6.0; __utmc=30149280; apiKey=; __utma=30149280.1772134204.1587359482.1587363078.1587363096.3;
+        // __utmz=30149280.1587363096.3.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; regpop=1;
+        // user_data={"area_code":" 86","number":"17701291600","code":"7942"};
+        // vtoken=phone_register 06e62bcfb1c94beaba4f5aaf519305cc;
+        // last_login_way=phone; push_noty_num=0; push_doumail_num=0
+        //; __utmv=30149280.21552; douban-profile-remind=1
+        //; __utmb=30149280.46.9.1587363621775;
+        // _pk_ref.100001.2fad=["","",1587363729,"https://www.douban.com/people/215524010/"];
+        // _pk_id.100001.2fad=fe6d111b0557130d.1587363729.1.1587363729.1587363729.;
+        // _pk_ses.100001.2fad=*;
+        // login_start_time=1587363730884
+        $data = [
+             'ck'=>'',
+             'name'=>'17701291600',
+             'password'=>'123456qaz',
+             'remember'=>'false',
+             'ticket'=>'',
+        ];
+        //https://accounts.douban.com/j/mobile/login/basic
+
+        $dataurl =  mac_curl_post('https://accounts.douban.com/j/mobile/login/basic',$data,[],'bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg; ll="108288"; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; ap_v=0,6.0; __utmc=30149280; apiKey=; __utma=30149280.1772134204.1587359482.1587363078.1587363096.3; __utmz=30149280.1587363096.3.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; regpop=1; user_data={%22area_code%22:%22+86%22%2C%22number%22:%2217701291600%22%2C%22code%22:%227942%22}; vtoken=phone_register%2006e62bcfb1c94beaba4f5aaf519305cc; push_noty_num=0; push_doumail_num=0; __utmv=30149280.21552; douban-profile-remind=1; _pk_ref.100001.2fad=%5B%22%22%2C%22%22%2C1587363729%2C%22https%3A%2F%2Fwww.douban.com%2Fpeople%2F215524010%2F%22%5D; _pk_ses.100001.2fad=*; __utmt=1; last_login_way=account; __utmb=30149280.52.9.1587364297203; _pk_id.100001.2fad=fe6d111b0557130d.1587363729.1.1587364383.1587363729.; login_start_time=1587364385056');
+        print_r($dataurl);die;
+
+
+
         $heads = [
             'Accept' => '*/*',
 //                    'Accept'=> 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
