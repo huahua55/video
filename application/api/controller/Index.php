@@ -108,7 +108,7 @@ class Index extends Base
         }
 
         // 豆瓣推荐
-        $doubanData = $this->doubanList();
+        $doubanData = $this->doubanRecom();
 
         // 后台推荐配置
         $tuijianData = [];
@@ -162,7 +162,7 @@ class Index extends Base
     }
 
     // 豆瓣推荐
-    public function doubanList(){
+    public function doubanRecom(){
         $doubanData = [];
         $model = model("douban_recommend");
         $where = [
@@ -187,6 +187,48 @@ class Index extends Base
         ];
 
         return $doubanData;
+    }
+
+    // 豆瓣推荐列表
+    public function doubanData(){
+        $page  = $this->_param['page'] ?? 1;
+        $limit = 18;
+        $pageSize = ($page - 1) * $limit;
+
+        $where = [
+            'r.status'    => ['eq','1'],
+            'r.vod_id'    => ['neq','0'],
+        ];
+
+        $list  = model("douban_recommend")
+            ->alias('r')
+            ->field('r.vod_id,r.name,v.vod_pic,v.vod_score,v.vod_year')
+            ->join('vod v','r.vod_id = v.vod_id','left')
+            ->where($where)
+            ->order('id asc')
+            ->limit($pageSize,$limit)
+            ->select();
+        $list  = objectToArray($list);
+
+        $data = [];
+        foreach($list as &$item){
+            $msg = $item['vod_continu'];
+            if ($msg == null || $msg == 0){
+                $msg = $item['vod_year'];
+            }else{
+                $msg = "更新至".$msg."集";
+            }
+
+            $data[] = [
+                'img'   => imageDir($item['vod_pic']),
+                'id'    => $item['vod_id'],
+                'name'  => $item['name'],
+                'score' => $item['vod_score'],
+                'msg'   => $msg,
+            ];
+        }
+
+        return json_return($data);
     }
 
     // 分类视频
@@ -218,13 +260,13 @@ class Index extends Base
     }
 
     // 分类视频
-    public function vodStrData($vodIds){
+    public function vodStrData($vodIds,$limit = 6){
         $vodIds = explode(",",$vodIds);
 
         $lp = [
             'vod_id'   => ['in',$vodIds],
         ];
-        $info = model("Vod")->listData($lp,  $this->sort, 1, 6);
+        $info = model("Vod")->listData($lp,  $this->sort, 1, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
