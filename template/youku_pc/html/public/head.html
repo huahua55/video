@@ -5,7 +5,9 @@
 	<div class="newhead">
 		<div class="newhead-main">
 			<div class="head-left" style="font-size: 0;">
-				<div class="hd-logo"><a title="{$maccms.site_name}" href="{$maccms.path}" target="_self" rel="nofollow"></a></div>
+				<div class="hd-logo">
+					<img src="{$maccms.site_logo|mac_url_img}">
+				</div>
 				<div class="newhead-small-nav">
 					<li id="nav-index"><a href="/" target="_self">首页</a></li>
 					{maccms:type ids="parent" order="asc" by="sort"}

@@ -23,9 +23,9 @@ section {
 
 html {
 	font-size: 100%;
-	width: 100%;
-	height: 100%;
-	min-width: 1100px;
+	/* width: 100%; */
+	/* height: 100%; */
+	min-width: 121px;
 }
 
 * {
@@ -40,7 +40,7 @@ body {
 	-webkit-tap-highlight-color: transparent;
 	font-family: 'Microsoft Yahei', '宋体', Arial, Verdana;
 	background-color: transparent;
-	min-width: 1100px;
+	min-width: 1210px;
 }
 
 address,
@@ -338,14 +338,11 @@ hr {
 	display: inline-block;
 }
 
-.newhead .newhead-main .hd-logo a {
+.newhead .newhead-main .hd-logo img {
 	display: block;
 	width: 130px;
 	height: 40px;
-	background-image: url(../images/logo.png);
-	background-repeat: no-repeat;
 	overflow: hidden;
-	background-size: contain;
 }
 
 .newhead .newhead-main .hd-logo .national-banner {
@@ -384,10 +381,12 @@ hr {
 	position: relative;
 	overflow: hidden;
 	width: 100%;
-	max-width: 1200px;
-	min-width: 1000px;
+	max-width: 1220px;
+	min-width: 1110px;
 	margin: 0 auto;
 	margin-bottom: 30px;
+	padding: 0 30px;
+	box-sizing: border-box;
 }
 
 .module-tit {
@@ -2592,6 +2591,8 @@ h6 {
 	background-color: #f9f9f9;
 	border-bottom: 1px solid #e8e8e8;
 	margin-bottom: 10px;
+	padding: 0 30px;
+	box-sizing: border-box;
 }
 
 .c-top-main-wrap {
@@ -2611,7 +2612,8 @@ h6 {
 
 .c-body-left {
 	float: left;
-	width: calc(100% - 320px);
+	width: calc(100% - 340px);
+	margin-right: 20px;
 }
 
 .c-body-left .yk-pack {
@@ -3221,6 +3223,8 @@ h6 {
 	-o-box-shadow: 0 2px 2px rgba(5, 5, 5, 0.1);
 	-ms-box-shadow: 0 2px 2px rgba(5, 5, 5, 0.1);
 	box-shadow: 0 2px 2px rgba(5, 5, 5, 0.1);
+	padding: 0 30px;
+	box-sizing: border-box;
 }
 
 .play-primary {
@@ -3512,7 +3516,7 @@ h6 {
 .c-player-aside-list .aside-tabbox a {
 	position: relative;
 	display: inline-block;
-	margin: 0 4px 5px 0;
+	/* margin: 0 4px 5px 0; */
 	height: 54px;
 	width: 54px;
 	line-height: 54px;
@@ -5421,7 +5425,7 @@ i.icon-player.playe {
 
 .yk-pack {
 	float: left;
-	min-height: 325px;
+	min-height: 315px;
 	width: 190px;
 	position: relative;
 	padding: 5px;
@@ -6836,4 +6840,9 @@ i.icon-player.playe {
 
 .tab-title {
 	font-size: 16px;
+}
+.notice-swiper .swiper-container{
+	height: 40px;
+	line-height: 40px;
+	overflow: hidden;
 }
