@@ -86,21 +86,21 @@ class DoubanScore extends Command
             file_put_contents($file, 'open_url||' . $e . PHP_EOL,FILE_APPEND);
         }
 
-        var_dump($test_url);
-        $tmp = $this->testing($test_url, $port);
-        p($tmp);
-        p($port);
-        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
-        file_put_contents($file, 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
-        try {
-            $close_url = get_close_url($port);
-            $r = file_get_contents($close_url);
-            $result =iconv("gb2312", "utf-8//IGNORE",$r);
-            echo 'close_url||' .  $result;
-            file_put_contents($file, 'close_url||' . $result . PHP_EOL,FILE_APPEND);
-        } catch (\Exception $e) {
-            file_put_contents($file, 'close_url||' . $e . PHP_EOL,FILE_APPEND);
-        }
+//        var_dump($test_url);
+//        $tmp = $this->testing($test_url, $port);
+//        p($tmp);
+//        p($port);
+//        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
+//        file_put_contents($file, 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
+//        try {
+//            $close_url = get_close_url($port);
+//            $r = file_get_contents($close_url);
+//            $result =iconv("gb2312", "utf-8//IGNORE",$r);
+//            echo 'close_url||' .  $result;
+//            file_put_contents($file, 'close_url||' . $result . PHP_EOL,FILE_APPEND);
+//        } catch (\Exception $e) {
+//            file_put_contents($file, 'close_url||' . $e . PHP_EOL,FILE_APPEND);
+//        }
 
     }
     //返回当前时间戳（单位为 ms）
@@ -184,7 +184,7 @@ class DoubanScore extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        p($this->getDouBan());
+        $this->getDouBan();
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
@@ -245,7 +245,7 @@ class DoubanScore extends Command
                     'Remote Address'=>'154.8.131.165:443',
                     'User-Agent'=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
                 ];
-                $cookie = 'bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg; ll="108288"; __yadk_uid=YtQ3MJmZAPkUGuuQXMJVwIUlrNH54m9L; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1587220615%2C%22https%3A%2F%2Fsearch.douban.com%2Fmovie%2Fsubject_search%3Fsearch_text%3D%25E9%25AC%25BC%25E5%25BA%2597%25E5%258F%25A6%25E6%259C%2589%25E4%25B8%25BB%26cat%3D1002%22%5D; _pk_id.100001.4cf6=cbda30d4a1bb8093.1587174690.6.1587220615.1587206100.; __utma=223695111.831800547.1587174690.1587204372.1587220615.6; __utmz=223695111.1587220615.6.4.utmcsr=search.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/movie/subject_search; __utma=30149280.367404461.1584933975.1587219346.1587220892.11; __utmz=30149280.1587220892.11.8.utmcsr=baidu|utmccn=(organic)|utmcmd=organic';
+                $cookie = 'bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg; ll="108288"; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; __yadk_uid=HPbvxvJ9JN8yUqI6foqDYbhNLOHg2OMc; __utmc=30149280; push_noty_num=0; push_doumail_num=0; __utmv=30149280.21552; douban-profile-remind=1; __utmz=30149280.1587373187.4.3.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; _pk_ref.100001.2939=%5B%22%22%2C%22%22%2C1587381631%2C%22https%3A%2F%2Fmovie.douban.com%2Fsubject%2F30313969%2F%22%5D; _pk_ses.100001.2939=*; ap_v=0,6.0; __utma=30149280.1772134204.1587359482.1587373187.1587381631.5; __utmt=1; _pk_id.100001.2939=1deb2b5e8988f44c.1587174800.7.1587381638.1587374188.; __utmb=30149280.4.9.1587381638405';
 
                 $url = sprintf($this->search_url,$v['vod_name']);
 
