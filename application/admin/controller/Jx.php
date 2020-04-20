@@ -12,19 +12,42 @@ class Jx extends Base
     {
         if (Request()->isPost()) {
             $param = input('post.');
-            $param['website_content'] = str_replace( $GLOBALS['config']['upload']['protocol'].':','mac:',$param['website_content']);
-            $res = model('Website')->saveData($param);
-            if($res['code']>1){
-                return $this->error($res['msg']);
+            $data = [];
+            $url = $param['jx_url'].urlencode($param['play_url']);
+            $resp = mac_curl_get($url);
+            if ($resp) {
+                $resp = trim($resp, '(');
+                $resp = trim($resp, ');');
+            } else {
+                return $this->error('解析失败');
             }
-            return $this->success($res['msg']);
+            $resp = json_decode($resp, true);
+            if (!$resp || !is_array($resp)) {
+                return $this->error('解析失败');
+            }
+            if (strpos($param['jx_url'], 'oopw')) {
+                if ($resp['code'] == 200) {
+                    foreach ($resp['info'] as $k => $info) {
+                        $data[$k]['flag'] = $info['flag_name'].':'.$info['flag'];
+                        $data[$k]['video'] = [];
+                        foreach ($info['video'] as $item) {
+                            list($desc, $url, $play_from) = explode('$', $item);
+                            $data[$k]['video'][] = $desc.'$'.$url;
+                        }
+                    }
+                }
+            }
+            if ($data) {
+                return $this->success('解析成功', null, $data);
+            }
+            return $this->error('解析失败');
         }
 
         $param = input();
         $jx_list = [
-            'oopw.top' => 'http://api.oopw.top/api.php?url=',
+            '大亨影院：oopw.top' => 'http://api.oopw.top/api.php?url=',
         ];
-
+        $this->assign('jx_list', $jx_list);
         $this->assign('title','视频解析');
         return $this->fetch('admin@jx/index');
     }
