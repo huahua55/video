@@ -92,20 +92,8 @@ class Index extends Base
         return json_return($list);
     }
 
-    // 推荐 今日推荐 + 猜你在追 + 热门
+    // 推荐 猜你在追 + 豆瓣推荐  + 今日推荐 + 热门
     public function tuijian(){
-        $tuijianData = [];
-        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort desc" );
-        $tuijian = $tuijian['list'] ?? [];
-        foreach($tuijian as $item){
-            $tuijianData[] = [
-                'type'  => 2,
-                'id'    => 0,
-                'msg'   => "",
-                'name'  => $item['name'],
-                'data'  => $this->vodStrData($item['rel_ids']),
-            ];
-        }
         // 猜你在追
         $guessDatas = [];
         $guessData = $this->guessUserMovies();
@@ -119,6 +107,32 @@ class Index extends Base
             ];
         }
 
+        // 豆瓣推荐
+        $doubanData = [];
+//        $doubanWhere = [
+//            'type_id'   => ['eq',$i],
+//            'status'    => ['eq','1'],
+//            'vod_id'    => ['neq','0'],
+//        ];
+//        $doubanList = model("douban_recommend")->field("vod_id")->where($doubanWhere)->limit(6)->order('time desc')->select();
+//
+//        p($doubanList);
+
+        // 后台推荐配置
+        $tuijianData = [];
+        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort desc" );
+        $tuijian = $tuijian['list'] ?? [];
+        foreach($tuijian as $item){
+            $tuijianData[] = [
+                'type'  => 2,
+                'id'    => 0,
+                'msg'   => "",
+                'name'  => $item['name'],
+                'data'  => $this->vodStrData($item['rel_ids']),
+            ];
+        }
+
+        // 本地热门
         $data = [
             [
                 'type'  => 1,
@@ -150,7 +164,7 @@ class Index extends Base
             ],
         ];
 
-        $data = array_merge($guessDatas,$tuijianData,$data);
+        $data = array_merge($guessDatas,$doubanData,$tuijianData,$data);
 
         return $data;
     }
@@ -231,6 +245,8 @@ class Index extends Base
             'info'      => $info["vod_content"],
             'playcode'  => $info["vod_play_from"],
             'playlist'  => $info["vod_play_url"],
+            'downcode'  => $info["vod_down_from"],
+            'downlist'  => $info["vod_down_url"],
         );
         return json_return($data);
     }
@@ -260,11 +276,25 @@ class Index extends Base
 
     // 热搜关键词
     public function search_hot(){
-        $config = config('maccms.app');
-        $search_hot = $config['search_hot'] ?? [];
+        $douban = model('douban_recommend');
 
-        $list = explode(",",$search_hot);
-        return json_return($list);
+        $data = [];
+        for($i = 1; $i <= 4; $i++){
+            $where = [
+                'type_id'   => ['eq',$i],
+                'status'    => ['eq','1'],
+                'vod_id'    => ['neq','0'],
+            ];
+            $list = $douban->field("name")->where($where)->limit(5)->order('time desc')->select();
+            $list = objectToArray($list);
+            $data = array_merge(array_column($list,'name'),$data);
+        }
+
+//        $config = config('maccms.app');
+//        $search_hot = $config['search_hot'] ?? [];
+//        $list = explode(",",$search_hot);
+
+        return json_return($data);
     }
 
     // 筛选
