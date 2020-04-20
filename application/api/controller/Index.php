@@ -26,7 +26,6 @@ class Index extends Base
         $array = [];
 
 
-
         foreach($list as $key=>$item){
             $array[$key]['id']      = $item['type_id'];
             $array[$key]['name']    = $item['type_name'];
@@ -93,9 +92,8 @@ class Index extends Base
         return json_return($list);
     }
 
-    // 推荐
+    // 推荐 今日推荐 + 猜你在追 + 热门
     public function tuijian(){
-
         $tuijianData = [];
         $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort desc" );
         $tuijian = $tuijian['list'] ?? [];
@@ -108,7 +106,18 @@ class Index extends Base
                 'data'  => $this->vodStrData($item['rel_ids']),
             ];
         }
-
+        // 猜你在追
+        $guessDatas = [];
+        $guessData = $this->guessUserMovies();
+        if($guessData){
+            $guessDatas[] = [
+                'type'  => 3,
+                'id'  => 0,
+                'msg'  => "",
+                'name'  => "猜你在追",
+                'data'  => $guessData,
+            ];
+        }
 
         $data = [
             [
@@ -140,7 +149,9 @@ class Index extends Base
                 'data'  => $this->getVodList(4,6,1),
             ],
         ];
-        $data = array_merge($tuijianData,$data);
+
+        $data = array_merge($guessDatas,$tuijianData,$data);
+
         return $data;
     }
 
@@ -174,7 +185,6 @@ class Index extends Base
 
     // 分类视频
     public function vodStrData($vodIds){
-
         $vodIds = explode(",",$vodIds);
 
         $lp = [
@@ -350,6 +360,59 @@ class Index extends Base
     }
 
 
+    // 猜你在追电视剧
+    public function guessUserMovies(){
+        $mac    = $this->_param['mac'] ??  "" ;
+        if($mac == ""){
+            return [];
+        }
 
+        // 查询用户信息
+        $where = [
+            'user_name' => $mac,
+        ];
+        $userInfo = model("User")->infoData($where,"user_id");
+        $userInfo = $userInfo['info'] ?? [];
+        if($userInfo == ""){
+            return [];
+        }
+        $userId = $userInfo['user_id'] ?? 0;
+
+        // 查询用户 最近日志信息
+        $logWhere = [
+            'user_id'   => ['eq',$userId],
+            'ulog_mid'  => ['eq',1],
+            'ulog_type' => ['in',[2,3,4,5]],
+        ];
+        $userLog = model("Ulog")->field("ulog_rid")->where($logWhere)->order("ulog_time desc")->select();
+        $userLog = objectToArray($userLog);
+
+        // 获取去重ids
+        $rids = array_unique(array_column($userLog,"ulog_rid"));
+
+        $field = "vod_id,vod_name,vod_pic,vod_score,vod_year";
+        $vodList = model("Vod")->field($field)->where(['vod_id'=>['in',$rids]])->order("vod_time_add desc")->select();
+        $vodList = objectToArray($vodList);
+
+        // 获取相应 影视数据
+        $array = [];
+        foreach($vodList as $r){
+            $msg = $r['vod_continu'] ?? "";
+            if ($msg == "" || $msg == 0){
+                $msg = $r['vod_year'];
+            }else{
+                $msg = "更新至".$msg."集";
+            }
+            $d = array(
+                'img'   => imageDir($r['vod_pic']),
+                'id'    => $r['vod_id'],
+                'name'  => $r['vod_name'],
+                'score' => $r['vod_score'],
+                'msg'   => $msg,
+            );
+            array_push($array,$d);
+        }
+        return $array;
+    }
 
 }

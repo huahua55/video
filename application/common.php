@@ -56,6 +56,14 @@ function getScreen($id){
     );
 }
 
+/**
+ * 多维对象转换为数组
+ */
+function objectToArray($object){
+    //数据处理
+    return json_decode(json_encode($object), true);
+}
+
 // 补全图片路径
 function imageDir($pic){
     $hostStr = strpos($pic, "http");
