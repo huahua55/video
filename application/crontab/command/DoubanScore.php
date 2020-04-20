@@ -82,7 +82,6 @@ class DoubanScore extends Command
             }
 
         } catch (\Exception $e) {
-            p(11);
             file_put_contents($file, 'open_url||' . $e . PHP_EOL,FILE_APPEND);
         }
 
@@ -91,16 +90,16 @@ class DoubanScore extends Command
 //        p($tmp);
 //        p($port);
 //        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
-//        file_put_contents($file, 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
-//        try {
-//            $close_url = get_close_url($port);
-//            $r = file_get_contents($close_url);
-//            $result =iconv("gb2312", "utf-8//IGNORE",$r);
-//            echo 'close_url||' .  $result;
-//            file_put_contents($file, 'close_url||' . $result . PHP_EOL,FILE_APPEND);
-//        } catch (\Exception $e) {
-//            file_put_contents($file, 'close_url||' . $e . PHP_EOL,FILE_APPEND);
-//        }
+        file_put_contents($file, 'test_proxy|| httpCode:' . 200 . PHP_EOL,FILE_APPEND);
+        try {
+            $close_url = $this->get_close_url($port);
+            $r = file_get_contents($close_url);
+            $result =iconv("gb2312", "utf-8//IGNORE",$r);
+            echo 'close_url||' .  $result;
+            file_put_contents($file, 'close_url||' . $result . PHP_EOL,FILE_APPEND);
+        } catch (\Exception $e) {
+            file_put_contents($file, 'close_url||' . $e . PHP_EOL,FILE_APPEND);
+        }
 
     }
     //返回当前时间戳（单位为 ms）
@@ -184,7 +183,7 @@ class DoubanScore extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $this->getDouBan();
+
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
@@ -251,6 +250,7 @@ class DoubanScore extends Command
 
 //                $url = $this->search_url.$v['vod_name'];
                 //获取豆瓣id
+                $this->getDouBan();
                 sleep(4);
                 $mac_curl_get_data = mac_curl_get($url,$heads,$cookie);
                 $getSearchData = json_decode($mac_curl_get_data,true);
