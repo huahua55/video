@@ -52,6 +52,8 @@ class DoubanScore extends Command
         $where = [
             'vod_douban_id'=>0,
         ];
+        Cache::set('vod_id_list_douban_score',1);
+        return true;
         $is_vod_id = Cache::get('vod_id_list_douban_score');
         if(!empty($is_vod_id)){
             $where['vod_id'] = ['LT',$is_vod_id];
@@ -60,7 +62,7 @@ class DoubanScore extends Command
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-        $order='vod_id desc';
+        $order='vod_id asc';
         //进入循环 取出数据
         while ($is_true){
             //数据
@@ -76,37 +78,43 @@ class DoubanScore extends Command
                 $is_log = false;
 //                $v['vod_name'] = '斗罗大陆';
                 $heads = [
-                    'Accept'=> '*/*',
+//                    'Accept'=> '*/*',
+                    'Accept'=> 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
                     'Access-Control-Allow-Origin'=> 'https://search.douban.com',
                     'Accept-Encoding'=> 'gzip, deflate, br',
                     'Accept-Language'=> 'zh-CN,zh;q=0.9,en;q=0.8',
                     'Connection'=> 'keep-alive',
                     'DNT'=> '1',
+                    'Cache-Control'=> 'max-age=0',
                     'Content-Type'=> 'application/json; charset=utf-8',
                     'Host'=> 'movie.douban.com',
                     'Origin'=> 'https://search.douban.com',
                     'Referer'=> sprintf($this->search_url_re,$v['vod_name']),
-                    'Sec-Fetch-Dest'=>'empty',
-                    'Sec-Fetch-Mode'=>'cors',
+                    'Sec-Fetch-Dest'=>'document',
+                    'Sec-Fetch-Mode'=>'navigate',
                     'Sec-Fetch-Site'=>'same-site',
                     'X-Content-Type-Options'=>'nosniff',
                     'X-DAE-App'=>'movie',
                     'X-DAE-Instance'=>'default',
+                    'Sec-Fetch-User'=>'?1',
                     'X-Douban-Mobileapp'=>'0',
                     'X-DOUBAN-NEWBID'=>'lPbsZAEfswI',
+                    'Upgrade-Insecure-Requests'=>'1',
                     'X-Xss-Protection'=>'1; mode=block',
                     'Remote Address'=>'154.8.131.165:443',
-                    'User-Agent'=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+                    'User-Agent'=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
                 ];
+                $cookie = 'bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg; ll="108288"; __yadk_uid=YtQ3MJmZAPkUGuuQXMJVwIUlrNH54m9L; _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1587220615%2C%22https%3A%2F%2Fsearch.douban.com%2Fmovie%2Fsubject_search%3Fsearch_text%3D%25E9%25AC%25BC%25E5%25BA%2597%25E5%258F%25A6%25E6%259C%2589%25E4%25B8%25BB%26cat%3D1002%22%5D; _pk_id.100001.4cf6=cbda30d4a1bb8093.1587174690.6.1587220615.1587206100.; __utma=223695111.831800547.1587174690.1587204372.1587220615.6; __utmz=223695111.1587220615.6.4.utmcsr=search.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/movie/subject_search; __utma=30149280.367404461.1584933975.1587219346.1587220892.11; __utmz=30149280.1587220892.11.8.utmcsr=baidu|utmccn=(organic)|utmcmd=organic';
 
                 $url = sprintf($this->search_url,$v['vod_name']);
 
 //                $url = $this->search_url.$v['vod_name'];
                 //获取豆瓣id
-                $getSearchData = json_decode(mac_curl_get($url,$heads,'bid=lPbsZAEfswI; Expires=Sun, 18-Apr-21 10:10:52 GMT; Domain=.douban.com; Path=/'),true);
+                $getSearchData = json_decode(mac_curl_get($url,$heads,$cookie),true);
                 if(!empty($getSearchData) && isset($getSearchData[0])){
 
                    if(isset($getSearchData[0]['id'])){
+                       log::info('采集豆瓣评分-ok-id::'.$getSearchData[0]['id']);
                        $get_url_search_id = $this->get_search_id.$getSearchData[0]['id'];
                        $get_url_search_id_data = mac_curl_get($get_url_search_id);
                        $get_url_search_id_data =str_replace('douban(','',$get_url_search_id_data);
