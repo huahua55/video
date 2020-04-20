@@ -93,7 +93,7 @@
 					<li>
 						<!-- 下载列表 -->
 						<div class="download-nav nav-main">
-							{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+							{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
 							<!-- <li id="play3_{$key}">
 								<div class="sSource popWin_sce">
 									<em>{$vo.player_info.show}</em>
@@ -115,14 +115,15 @@
 									<!-- <span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span> -->
 									<div>
 										<input type="text" value="{$vo2.url}">
-										<span style="margin-left: 3%;width: 31%;"><a href="{$vo2.url}" target="_blank">下载{$vo2.name}</a></span>
+										<span style="margin-left: 3%;width: 31%;"><a href="{$vo2.url}" target="_blank" class="ellipsis" style="display: inline-block;width: 100%;">下载{$vo2.name}</a></span>
 									</div>
 									{/maccms:foreach}
 								</li>
 								{/maccms:foreach}
 							</ul>
 							<script type="text/javascript">
-								$(".download-item li,.nav-main span").eq(0).addClass("on")
+								$(".nav-main span").eq(0).addClass("on")
+								$(".download-item li").eq(0).addClass("on")
 							</script>
 						</div>
 					</li>

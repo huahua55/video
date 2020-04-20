@@ -137,6 +137,12 @@ hr {
 	float: right;
 }
 
+.ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .news-list-picbox {
 	position: relative;
 	width: 190px;
@@ -730,7 +736,7 @@ hr {
 	transition: opacity 0.1s ease;
 }
 
-.lunhuan #lunhuanback .slider-item{
+.lunhuan #lunhuanback .slider-item {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -3076,12 +3082,34 @@ h6 {
 
 .num-tab-main {
 	display: none;
-	-webkit-transition: opacity 0.15s linear;
+	/* -webkit-transition: opacity 0.15s linear;
 	-o-transition: opacity 0.15s linear;
 	transition: opacity 0.15s linear;
-	opacity: 0;
+	opacity: 0; */
+	margin-top: 20px;
 }
 
+.num-tab-main>div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	margin-bottom: 10px;
+	padding-right: 20px;
+}
+
+.num-tab-main>div input {
+	width: 83%;
+	padding: 0 .625rem;
+	width: 100%;
+	height: 2.5rem;
+	line-height: 2.5rem;
+	background-color: #f5f5f5;
+	outline: none;
+}
+.num-tab-main>div a{
+	margin: 0 !important;
+}
 .num-tab .cur {
 	display: block;
 	opacity: 1;
@@ -4577,9 +4605,10 @@ i.icon-player.playe {
 	display: inline-block;
 	white-space: nowrap;
 }
+
 /*  */
 
-.yk-notice{
+.yk-notice {
 	margin-bottom: 30px;
 	text-align: center;
 	font-size: 16px;
@@ -4970,7 +4999,7 @@ i.icon-player.playe {
 }
 
 .s-top-info-detail .playBtnCon {
-	padding-top: 20px;
+	padding-top: 40px;
 }
 
 .playBtnCon .latestBtn {
@@ -6761,4 +6790,50 @@ i.icon-player.playe {
 #cms_player .btn-info {
 	color: #fff;
 	background: linear-gradient(to left, #3b9eff 0, #19c3ff 100%);
+}
+
+/* 播放页下载优化 */
+.nav-main {}
+
+.nav-main div {
+	display: inline-block;
+	margin-right: 14px;
+	cursor: pointer;
+	font-size: 18px;
+}
+
+.nav-main div.on {
+	color: rgba(25, 195, 255, 0.88);
+}
+
+.nav-wrap li {
+	display: none;
+}
+
+.nav-wrap li.on {
+	display: block;
+}
+
+.play-type li {
+	display: inline-block;
+	margin-right: 14px;
+	cursor: pointer;
+	font-size: 18px;
+	text-align: center;
+	line-height: 40px;
+	position: relative;
+	height: 40px;
+	margin: 10px 7px 0 0;
+	border: 1px solid transparent;
+	background-color: #ebebeb;
+	padding: 0 10px;
+}
+
+.play-type li.cur {
+	color: #FFF;
+	background: rgba(25, 195, 255, 0.88);
+}
+
+.tab-title {
+	font-size: 16px;
 }

@@ -70,10 +70,9 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-  $('.js-list li').bind('click', function() {
+  $('#js-list1 li').bind('click', function() {
     var e = $(this).index(),
-      a = $('.num-tab > div');
-    b = $('.js-current > span');
+      a = $('#num-tab1 > div');
     $(this)
       .removeClass()
       .addClass('cur')
@@ -83,8 +82,19 @@ $(document).ready(function() {
     a.eq(e)
       .addClass('cur')
       .animate({ opacity: '1' }, 100);
-    b.hide();
-    b.eq(e).show();
+  });
+  $('#js-list2 li').bind('click', function() {
+    var e = $(this).index(),
+      a = $('#num-tab2 > div');
+    $(this)
+      .removeClass()
+      .addClass('cur')
+      .siblings()
+      .removeClass();
+    a.removeClass('cur').animate({ opacity: '0' }, 100);
+    a.eq(e)
+      .addClass('cur')
+      .animate({ opacity: '1' }, 100);
   });
 });
 
