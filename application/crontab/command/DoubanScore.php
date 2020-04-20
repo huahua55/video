@@ -198,7 +198,7 @@ class DoubanScore extends Command
         if(!empty($is_vod_id)){
             $where['vod_id'] = ['LT',$is_vod_id];
         }
-        $this->getDouBan();
+//        $this->getDouBan();
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
