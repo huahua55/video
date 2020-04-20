@@ -125,9 +125,9 @@
 								<li class="yk-pack">
 									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}"></a><img class="quic ff-img"
 										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
-										 class="playshow">{$vo.vod_remarks}</span></div>
+										 class="playshow">{$vo2.vod_remarks}</span></div>
 									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span>主演： {$vo.vod_actor}</span>
+										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span>{$vo2.vod_actor} </span>
 									</ul>
 								</li>
 								{/volist}
@@ -186,7 +186,7 @@
 									</div>
 									<ul class="info-list">
 										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-										<span>主演：{$vo.vod_actor}</span>
+										<span>{$vo.vod_actor}</span>
 									</ul>
 								</li>
 								{/maccms:vod}
@@ -215,7 +215,7 @@
 									</div>
 									<ul class="info-list">
 										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-										<span>主演：{$vo.vod_actor}</span>
+										<span>{$vo.vod_actor}</span>
 									</ul>
 								</li>
 								{/maccms:vod}
