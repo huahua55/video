@@ -109,14 +109,19 @@ class Index extends Base
 
         // 豆瓣推荐
         $doubanData = [];
-//        $doubanWhere = [
-//            'type_id'   => ['eq',$i],
-//            'status'    => ['eq','1'],
-//            'vod_id'    => ['neq','0'],
-//        ];
-//        $doubanList = model("douban_recommend")->field("vod_id")->where($doubanWhere)->limit(6)->order('time desc')->select();
-//
-//        p($doubanList);
+        $doubanWhere = [
+            'status'    => ['eq','1'],
+            'vod_id'    => ['neq','0'],
+        ];
+        $doubanList = model("douban_recommend")->field("vod_id")->where($doubanWhere)->limit(6)->order('time desc')->select();
+        $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
+        $doubanData[] = [
+            'type'  => 4,
+            'id'    => 0,
+            'msg'   => "",
+            'name'  => "精品推荐",
+            'data'  => $this->vodStrData($doubanIds),
+        ];
 
         // 后台推荐配置
         $tuijianData = [];
