@@ -13,7 +13,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 use think\Log;
-use QL\QueryList;
+//use QL\QueryList;
 
 class DoubanScore extends Command
 {
@@ -57,7 +57,7 @@ class DoubanScore extends Command
     }
 
     public function getDouBan(){
-      $ql =  new QueryList();
+//      $ql =  new QueryList();
 
 
         //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
