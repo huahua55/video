@@ -108,7 +108,7 @@ class Index extends Base
         }
 
         // 豆瓣推荐
-//        $doubanData = [];
+        $doubanData = [];
 //        $doubanWhere = [
 //            'type_id'   => ['eq',$i],
 //            'status'    => ['eq','1'],
