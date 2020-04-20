@@ -108,20 +108,7 @@ class Index extends Base
         }
 
         // 豆瓣推荐
-        $doubanData = [];
-        $doubanWhere = [
-            'status'    => ['eq','1'],
-            'vod_id'    => ['neq','0'],
-        ];
-        $doubanList = model("douban_recommend")->field("vod_id")->where($doubanWhere)->limit(6)->order('time desc')->select();
-        $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
-        $doubanData[] = [
-            'type'  => 4,
-            'id'    => 0,
-            'msg'   => "",
-            'name'  => "精品推荐",
-            'data'  => $this->vodStrData($doubanIds),
-        ];
+        $doubanData = $this->doubanList();
 
         // 后台推荐配置
         $tuijianData = [];
@@ -172,6 +159,34 @@ class Index extends Base
         $data = array_merge($guessDatas,$doubanData,$tuijianData,$data);
 
         return $data;
+    }
+
+    // 豆瓣推荐
+    public function doubanList(){
+        $doubanData = [];
+        $model = model("douban_recommend");
+        $where = [
+            'status'    => ['eq','1'],
+            'vod_id'    => ['neq','0'],
+        ];
+        // 电影取三条
+        $ids  = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',1]]))->order('id asc')->limit(3)->select();
+        $ids2 = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',2]]))->order('id asc')->limit(3)->select();
+        $ids  = objectToArray($ids);
+        $ids2 = objectToArray($ids2);
+
+        $doubanList = array_merge($ids,$ids2);
+        $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
+
+        $doubanData[] = [
+            'type'  => 4,
+            'id'    => 0,
+            'msg'   => "",
+            'name'  => "精品推荐",
+            'data'  => $this->vodStrData($doubanIds),
+        ];
+
+        return $doubanData;
     }
 
     // 分类视频
