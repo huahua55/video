@@ -3,8 +3,8 @@ namespace app\api\controller;
 use think\Controller;
 use think\Cache;
 
-class Index extends Base
-{
+class Index extends Base{
+
     private $sort = "vod_score desc,vod_time_add desc";
 
     public function __construct()
@@ -21,10 +21,9 @@ class Index extends Base
         ];
         $list  = model("Type")->listData($lp,"type_id asc");
 
-        $data[] = ['id'    => 0, 'name'  => "推荐",'img'   => "",];
+        $data[] = ['id' => 0, 'name' => "推荐", 'img' => "",];
         $list = $list['list'] ?? [];
         $array = [];
-
 
         foreach($list as $key=>$item){
             $array[$key]['id']      = $item['type_id'];
@@ -32,7 +31,7 @@ class Index extends Base
             $array[$key]['img']     = $item['img'] ?? "";
             $array[$key]['msg']     = type_extend($item['type_extend']) ?? [];
         }
-        $list = array_merge($data , $array);
+        $list = array_merge($data, $array);
         return json_return($list);
     }
 
@@ -73,9 +72,7 @@ class Index extends Base
             $sonRes =  model("Type")->listData($where,"type_sort desc");
             $sonRes = $sonRes['list'] ?? [];
 
-
             $res = array_merge($sonRes,$fatherRes);
-            
             foreach($res as $item){
                 $r = $item["type_id"];
                 $d = array(
@@ -86,7 +83,7 @@ class Index extends Base
                 array_push($getListBlock,$d);
             }
 
-            // 电影电视剧 加上精品推荐
+            // 电影、电视剧 加上精品推荐
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
                 $where = [
@@ -123,8 +120,8 @@ class Index extends Base
         if($guessData){
             $guessDatas[] = [
                 'type'  => 3,
-                'id'  => 0,
-                'msg'  => "",
+                'id'    => 0,
+                'msg'   => "",
                 'name'  => "猜你在追",
                 'data'  => $guessData,
             ];
@@ -235,19 +232,12 @@ class Index extends Base
 
         $data = [];
         foreach($list as &$item){
-            $msg = $item['vod_continu'];
-            if ($msg == null || $msg == 0){
-                $msg = $item['vod_year'];
-            }else{
-                $msg = "更新至".$msg."集";
-            }
-
             $data[] = [
                 'img'   => imageDir($item['vod_pic']),
                 'id'    => $item['vod_id'],
                 'name'  => $item['name'],
                 'score' => $item['vod_score'],
-                'msg'   => $msg,
+                'msg'   => $item['vod_year'],
             ];
         }
 
@@ -264,18 +254,12 @@ class Index extends Base
         $info = $info['list'] ?? [];
         $array = array();
         foreach($info as $r){
-            $msg = $r['vod_continu'];
-            if ($msg == null || $msg == 0){
-                $msg = $r['vod_year'];
-            }else{
-                $msg = "更新至".$msg."集";
-            }
             $d = array(
-                'img'=> imageDir($r['vod_pic']),
-                'id' => $r['vod_id'],
-                'name'=>$r['vod_name'],
-                'score'=>$r['vod_score'],
-                'msg'=>$msg,
+                'img'   => imageDir($r['vod_pic']),
+                'id'    => $r['vod_id'],
+                'name'  => $r['vod_name'],
+                'score' => $r['vod_score'],
+                'msg'   => $r['vod_year'],
             );
             array_push($array,$d);
         }
@@ -294,18 +278,12 @@ class Index extends Base
         $info = $info['list'] ?? [];
         $array = array();
         foreach($info as $r){
-            $msg = $r['vod_continu'];
-            if ($msg == null || $msg == 0){
-                $msg = $r['vod_year'];
-            }else{
-                $msg = "更新至".$msg."集";
-            }
             $d = array(
-                'img'=> imageDir($r['vod_pic']),
-                'id' => $r['vod_id'],
-                'name'=>$r['vod_name'],
-                'score'=>$r['vod_score'],
-                'msg'=>$msg,
+                'img'   => imageDir($r['vod_pic']),
+                'id'    => $r['vod_id'],
+                'name'  => $r['vod_name'],
+                'score' => $r['vod_score'],
+                'msg'   => $r['vod_year'],
             );
             array_push($array,$d);
         }
@@ -336,7 +314,7 @@ class Index extends Base
         return json_return($data);
     }
 
-    // 详情
+    // 搜索
     public function search(){
         $key  = $this->_param['key'] ?? "";
         $page = $this->_param['page'] ?? 1;
@@ -423,18 +401,12 @@ class Index extends Base
 
         $array = array();
         foreach($info as $r){
-            $msg = $r['vod_continu'] ?? "";
-            if ($msg == "" || $msg == 0){
-                $msg = $r['vod_year'];
-            }else{
-                $msg = "更新至".$msg."集";
-            }
             $d = array(
                 'img'   => imageDir($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_score'],
-                'msg'   => $msg,
+                'msg'   => $r['vod_year'],
             );
             array_push($array,$d);
         }
@@ -483,7 +455,6 @@ class Index extends Base
         return json_return(['保存成功']);
     }
 
-
     // 猜你在追电视剧
     public function guessUserMovies(){
         $mac    = $this->_param['mac'] ??  "" ;
@@ -521,18 +492,12 @@ class Index extends Base
         // 获取相应 影视数据
         $array = [];
         foreach($vodList as $r){
-            $msg = $r['vod_continu'] ?? "";
-            if ($msg == "" || $msg == 0){
-                $msg = $r['vod_year'];
-            }else{
-                $msg = "更新至".$msg."集";
-            }
             $d = array(
                 'img'   => imageDir($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_score'],
-                'msg'   => $msg,
+                'msg'   => $r['vod_year'],
             );
             array_push($array,$d);
         }
