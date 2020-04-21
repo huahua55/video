@@ -210,7 +210,7 @@ class Index extends Base{
     }
 
     // 豆瓣推荐列表
-    public function doubanData(){
+    public function recomData(){
         $page  = $this->_param['page'] ?? 1;
         $limit = 18;
         $pageSize = ($page - 1) * $limit;
