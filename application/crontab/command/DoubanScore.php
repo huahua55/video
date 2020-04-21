@@ -228,8 +228,7 @@ class DoubanScore extends Command
     protected function execute(Input $input, Output $output)
     {
 
-        Cache::set('vod_id_list_douban_score', 1);
-        return true;
+//        Cache::set('vod_id_list_douban_score', 1);
         //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
 //        $file = 'log.txt';
 //        $port = '';//代理端口变量
@@ -301,7 +300,7 @@ class DoubanScore extends Command
             foreach ($douBanScoreData['list'] as $k => $v) {
                 $is_log = false;
                 $mac_curl_get_data = '';
-//                sleep(3);
+                sleep(3);
                 $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
