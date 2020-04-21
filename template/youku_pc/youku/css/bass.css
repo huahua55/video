@@ -3207,7 +3207,7 @@ h6 {
 .line {
 	width: 1px;
 	background-color: rgba(227, 227, 227, 0.55);
-	height: 80px;
+	/* height: 80px; */
 	margin: 0 10px;
 }
 
@@ -6200,6 +6200,7 @@ i.glyphicon {
 	margin-right: auto;
 	margin-left: auto;
 	min-width: 1000px;
+	margin-bottom: 20px;
 }
 
 .yk-container:before,

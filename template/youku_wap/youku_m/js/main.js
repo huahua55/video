@@ -163,7 +163,7 @@ $(function() {
 		}
 	})
 	// 历史记录
-	var jsonstr = MAC.Cookie.Get('wap_history'),
+	var jsonstr = window.localStorage.getItem('wap_history'),
 		jsonstrList = "",
 		jsondata = [],
 		html = '',
@@ -203,7 +203,7 @@ $(function() {
 		}
 		jsonstr = decode(jsondata)
 		console.log(jsondata)
-		MAC.Cookie.Set('wap_history', jsonstr);
+		window.localStorage.setItem('wap_history', jsonstr);
 	}
 	if (jsonstr != undefined) {
 		jsondata = encode(jsonstr);
@@ -217,7 +217,7 @@ $(function() {
 	$(".history-items").html(html)
 	// 清空
 	$(".claerWap").on("click", function() {
-		MAC.Cookie.Del('wap_history');
+		window.localStorage.removeItem('wap_history');
 		if ($.cookie('wap_history') == undefined) {
 			$(".history-items").html('<a href="javascript:;" class = "history-item" style="display: block;">已清空！</a>')
 			alert("你已清空历史记录！")
