@@ -296,7 +296,7 @@ class DoubanScore extends Command
 //                p($mac_curl_get_data);die;
 
                 $getSearchData = objectToArray($mac_curl_get_data);
-                print_r($getSearchData);
+//                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
 //                log::info('采集豆瓣评分-url-data::' . $getSearchData);
                 if (!empty($getSearchData)){
