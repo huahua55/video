@@ -1,9 +1,9 @@
 #!/bin/bash
 
 fpm=php-fpm
-fpm_config=/data/www/config/php-config/php-fpm.conf
+fpm_config=/data/www/video/deploy/php-fpm.conf
 fpm_pidfile=/var/run/php-fpm.pid
-nginx=/usr/sbin/nginx
+nginx=nginx
 
 start_fpm(){
 	printf "重启 php-fpm..."
@@ -25,7 +25,7 @@ stop_fpm(){
     else
         echo ""
         echo "  stopped"
-        break
+        return
     fi
     echo ""
     echo "  php-fpm stop"
