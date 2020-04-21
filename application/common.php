@@ -2318,3 +2318,68 @@ function mac_get_popedom_filter($group_type,$type_list=[])
     return implode(',',$cha_keys);
 }
 
+// 静态资源链接
+function asset($url, $param = [])
+{
+    if(!isset($param['_v']) && is_static_resource($url)){
+        global $asset_md5;
+        if($asset_md5){
+            $relative_path = substr($url, strlen('/'));
+            if(isset($asset_md5[$relative_path])){
+                $param['_v'] = $asset_md5[$relative_path];
+            }
+        }
+        // dev 环境不走缓存
+        if(\think\Env::get('app_debug')){
+            $param['_v'] = time();
+        }
+    }
+    $url = mac_url_img($url);
+    if($param){
+        if(strpos($url, '?')){
+            $url .= '&';
+        }else{
+            $url .= '?';
+        }
+        $url .= build_url_query($param);
+    }
+    return $url;
+}
+
+function is_static_resource($url){
+    static $exts = array('js', 'css');
+    $ps = explode('?', $url);
+    $url = $ps[0];
+    $ps = explode('#', $url);
+    $url = $ps[0];
+    $ps = explode('.', $url);
+    $ext = $ps[count($ps) - 1];
+    return in_array($ext, $exts);
+}
+
+function build_url_query($param, $static=false){
+    $arr = array();
+    foreach($param as $k=>$v){
+        if($static && !is_array($v)){
+            // 路径中不能包含%2F
+            $v = urlencode(str_replace('/', '%2F', $v));
+            $arr[] = $k . '/' . $v;
+        }else{
+            if(is_array($v)){
+                foreach($v as $n=>$s){
+                    $n = urlencode($n);
+                    $arr[] = $k . "[$n]=" . urlencode($s);
+                }
+            }else{
+                $arr[] = $k . '=' . urlencode($v);
+            }
+        }
+    }
+    if($static){
+        $query = join('/', $arr);
+    }else{
+        $query = join('&', $arr);
+    }
+    return $query;
+}
+

@@ -9,6 +9,11 @@ if [ -z "$env" ]; then
 	exit 1
 fi
 
+echo ""
+echo "#######################################"
+echo "Project: $prj"
+echo "Env    : $env"
+echo ""
 
 prj_dir=/data/www/$prj
 dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`

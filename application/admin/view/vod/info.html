@@ -21,7 +21,7 @@
                 <div class="layui-tab-item layui-show">
                 <div class="layui-form-item">
                     <label class="layui-form-label">ID：</label>
-                    <div class="layui-input-inline w50">
+                    <div class="layui-input-inline w100">
                         <input type="text" class="layui-input" value="{$info.vod_id}" readonly>
                     </div>
                     <div class="layui-input-inline w110">
@@ -46,16 +46,16 @@
 
                     <div class="layui-input-inline w150">
                             <select name="vod_level">
-                                <option value="0">请选择推荐</option>
-                                <option value="9" {if condition="$info.vod_level eq 9"}selected{/if}>推荐9-幻灯</option>
-                                <option value="1" {if condition="$info.vod_level eq 1"}selected{/if}>推荐1</option>
-                                <option value="2" {if condition="$info.vod_level eq 2"}selected{/if}>推荐2</option>
-                                <option value="3" {if condition="$info.vod_level eq 3"}selected{/if}>推荐3</option>
-                                <option value="4" {if condition="$info.vod_level eq 4"}selected{/if}>推荐4</option>
-                                <option value="5" {if condition="$info.vod_level eq 5"}selected{/if}>推荐5</option>
-                                <option value="6" {if condition="$info.vod_level eq 6"}selected{/if}>推荐6</option>
-                                <option value="7" {if condition="$info.vod_level eq 7"}selected{/if}>推荐7</option>
-                                <option value="8" {if condition="$info.vod_level eq 8"}selected{/if}>推荐8</option>
+                                <option value="0">请选择显示权重</option>
+                                <option value="9" {if condition="$info.vod_level eq 9"}selected{/if}>权重值：9-幻灯</option>
+                                <option value="1" {if condition="$info.vod_level eq 1"}selected{/if}>权重值：1</option>
+                                <option value="2" {if condition="$info.vod_level eq 2"}selected{/if}>权重值：2</option>
+                                <option value="3" {if condition="$info.vod_level eq 3"}selected{/if}>权重值：3</option>
+                                <option value="4" {if condition="$info.vod_level eq 4"}selected{/if}>权重值：4</option>
+                                <option value="5" {if condition="$info.vod_level eq 5"}selected{/if}>权重值：5</option>
+                                <option value="6" {if condition="$info.vod_level eq 6"}selected{/if}>权重值：6</option>
+                                <option value="7" {if condition="$info.vod_level eq 7"}selected{/if}>权重值：7</option>
+                                <option value="8" {if condition="$info.vod_level eq 8"}selected{/if}>权重值：8</option>
                             </select>
                     </div>
                     <div class="layui-input-inline w120">

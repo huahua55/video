@@ -432,12 +432,27 @@ class Vod extends Base {
         }
 
         if(!in_array($by, ['id', 'time','time_add','score','hits','hits_day','hits_week','hits_month','up','down','level','rnd'])) {
-            $by = 'time';
+            $by_arr = explode(',', $by);
+            if (count($by_arr) < 2) {
+                $by = 'time';
+            }
         }
         if(!in_array($order, ['asc', 'desc'])) {
-            $order = 'desc';
+            $order_arr = explode(',', $order);
+            if (count($order_arr) < 2) {
+                $order = 'desc';
+            }
         }
-        $order= 'vod_'.$by .' ' . $order;
+
+        if (isset($by_arr) && isset($order_arr) && count($by_arr) >= 2 && count($by_arr) == count($order_arr)) {
+            $order = '';
+            foreach ($by_arr as $k => $v) {
+                $order .= 'vod_'.trim($v) .' ' . $order_arr[$k] . ',';
+            }
+            $order = rtrim($order, ',');
+        } else {
+            $order= 'vod_'.$by .' ' . $order;
+        }
         $where_cache = $where;
         if(!empty($randi)){
             unset($where_cache['vod_id']);

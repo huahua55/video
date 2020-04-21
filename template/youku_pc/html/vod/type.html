@@ -163,9 +163,7 @@
 						</div>
 					</div>
 				</div> -->
-				{if$obj.type_name=='直播'||$obj.parent.type_name=='直播'}
-				{else}
-				{if$obj.childids}
+				{if $obj.childids}
 				{maccms:type ids="current" order="asc" by="sort"}
 				<div class="yk-pannel clearfix">
 					<div class="yk-pannel-box">
@@ -177,7 +175,7 @@
 						</div>
 						<div class="yk-pannel_bd clearfix">
 							<ul class="index-list-1 active clearfix">
-								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc" by="time"}
+								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc, desc" by="level, time"}
 								<li class="yk-pack">
 									<div class="p-thumb">
 										<a href="{:mac_url_vod_detail($vo)}" title="沙海"></a>
@@ -222,8 +220,7 @@
 							</ul>
 						</div>
 					</div>
-				</div>{include file="public/paging"}
-				{/if}
+				</div>
 				{/if}
 			</div>
 		</div>
