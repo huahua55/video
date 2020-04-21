@@ -26,8 +26,14 @@ sleep 30
 ##1886迅雷下载
 php think Cj name=1886zyxlcj
 sleep 30
-##秒播迅雷下载
+##秒播下载
 php think Cj name=mbzycj
 sleep 30
 ##秒播迅雷下载
 php think Cj name=mbzyxlcj
+sleep 30
+##最大下载
+php think Cj name=zuidacj
+sleep 30
+##最大迅雷下载
+php think Cj name=zuidaicjxl

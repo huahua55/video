@@ -438,7 +438,7 @@ var MAC={
             if(this.Json){
                 jsondata = this.Json;
             }else{
-                var jsonstr = MAC.Cookie.Get('mac_history');
+                var jsonstr = window.localStorage.getItem('mac_history');
                 if(jsonstr != undefined){
                     jsondata = eval(jsonstr);
                 }
@@ -469,7 +469,7 @@ var MAC={
         },
         'Set':function(name,link,pic){
             if(!link){ link = document.URL; }
-            var jsondata = MAC.Cookie.Get('mac_history');
+            var jsondata = window.localStorage.getItem('mac_history');
             if(jsondata != undefined){
                 this.Json = eval(jsondata);
                 for($i=0;$i<this.Json.length;$i++){
@@ -491,10 +491,10 @@ var MAC={
                 jsonstr = '{log:[{"name":"'+name+'","link":"'+link+'","pic":"'+pic+'"}]}';
             }
             this.Json = eval(jsonstr);
-            MAC.Cookie.Set('mac_history',jsonstr,this.Days);
+            window.localStorage.setItem('mac_history',jsonstr,this.Days);
         },
         'Clear': function(){
-            MAC.Cookie.Del('mac_history');
+            window.localStorage.removeItem('mac_history');
             $('.mac_history_box').html('<li class="hx_clear">已清空观看记录。</li>');
         },
     },
@@ -582,13 +582,13 @@ var MAC={
                 });
             }
 
-            if(MAC.Cookie.Get('user_id') !=undefined && MAC.Cookie.Get('user_id')!=''){
+            if(window.localStorage.getItem('user_id') !=undefined && window.localStorage.getItem('user_id')!=''){
                 var url = maccms.path + '/index.php/user';
-                MAC.User.UserId = MAC.Cookie.Get('user_id');
-                /*MAC.User.UserName = MAC.Cookie.Get('user_name');*/
-                MAC.User.GroupId = MAC.Cookie.Get('group_id');
-                MAC.User.GroupName = MAC.Cookie.Get('group_name');
-                MAC.User.Portrait = MAC.Cookie.Get('user_portrait');
+                MAC.User.UserId = window.localStorage.getItem('user_id');
+                /*MAC.User.UserName = window.localStorage.getItem('user_name');*/
+                MAC.User.GroupId = window.localStorage.getItem('group_id');
+                MAC.User.GroupName = window.localStorage.getItem('group_name');
+                MAC.User.Portrait = window.localStorage.getItem('user_portrait');
                 MAC.User.IsLogin = 1;
 
                 if($('.mac_user').length >0) {
@@ -599,21 +599,16 @@ var MAC={
                     else {
                         //$('.mac_user').html('<a class="mac_text" href="'+ url +'">'+ name +'</a>');
                     }
-
                     var html = '';
                     html += '<div class="login-after dropdown" id="u-login"><a class="text-muted ff-user user-login-modal mac_user" href="javascript:;"><img src="/static/images/touxiang.png" title="会员中心"><span class="vip-level-icon level-svip level-vip1"></span></a><div class="panel u-panel"><i class="arrow"></i><div class="content"> <div class="u-content">                 <div class="u-info"><div class="u-avatar"><a href="/user/index.html" target="_blank"><img src="/static/images/touxiang.png"></a></div><div class="u-profile"><div class="u-name"><a href="/user/index.html" class="u-link" target="_blank" title="会员中心">会员中心</a></div><div class="u-credit"><a href="/user/index.html" target="_blank"><span class="vip-level-icon level-vip1" title="最新VIP会员：VIP1"></span></a><a href="/user/index.html" target="_blank" class="user-grade"><span class="user-grade-icon user-grade-lv1" title="最新用户等级：Lv1" ></span></a><a class="ico-valid-email " href="/user/index.html" title="我的消息"></a></div><div class="u-point"><i class="arrow"></i><a href="/user/buy.html" target="_blank">我的积分：<em>10</em><span>立即充值</span></a></div></div></div> <ul class="u-list"><li><a href="/user/info.html" target="_blank" class="u-watch"><em></em>账号设置</a></li>                            <li><a href="/user/favs.html" target="_blank" class="u-collect"><em></em>我的收藏</a></li><li><a href="/user/plays.html" target="_blank" class="u-zpd"><em></em>观看记录</a></li><li><a href="/user/orders.html" target="_blank" class="u-center"><em></em>订单管理</a></li></ul> </div> </div><div class="u-bottom"><a href="/user/logout.html" class="singout">退出登录</a><a href="/user/info.html" target="_blank">账户设置</a></div></div></div></div>'
-
                     $('.mac_user').after(html);
                     var h = $('.mac_user').height();
                     var position = $('.mac_user').position();
                     $('.mac_user_box').css({'left': position.left, 'top': (position.top + h)});
                 }
-
             }
             else{
-
             }
-
         },
         'CheckLogin':function(){
             if(MAC.User.IsLogin == 0){
@@ -622,7 +617,7 @@ var MAC={
         },
         'Login':function(){
             var ac='ajax_login';
-            if(MAC.Cookie.Get('user_id') !=undefined && MAC.Cookie.Get('user_id')!=''){
+            if(window.localStorage.getItem('user_id') !=undefined && window.localStorage.getItem('user_id')!=''){
                 ac= 'ajax_info';
             }
             MAC.Pop.Show(700,340,'<!--用户登录-->',maccms.path+'/index.php/user/'+ac,function($r){

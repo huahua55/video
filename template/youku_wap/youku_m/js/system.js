@@ -438,7 +438,7 @@ var MAC={
             if(this.Json){
                 jsondata = this.Json;
             }else{
-                var jsonstr = MAC.Cookie.Get('mac_history');
+                var jsonstr = window.localStorage.getItem('mac_history');
                 if(jsonstr != undefined){
                     jsondata = eval(jsonstr);
                 }
@@ -469,7 +469,7 @@ var MAC={
         },
         'Set':function(name,link,pic){
             if(!link){ link = document.URL; }
-            var jsondata = MAC.Cookie.Get('mac_history');
+            var jsondata = window.localStorage.getItem('mac_history');
             if(jsondata != undefined){
                 this.Json = eval(jsondata);
                 for($i=0;$i<this.Json.length;$i++){
@@ -491,10 +491,10 @@ var MAC={
                 jsonstr = '{log:[{"name":"'+name+'","link":"'+link+'","pic":"'+pic+'"}]}';
             }
             this.Json = eval(jsonstr);
-            MAC.Cookie.Set('mac_history',jsonstr,this.Days);
+            window.localStorage.setItem('mac_history',jsonstr,this.Days);
         },
         'Clear': function(){
-            MAC.Cookie.Del('mac_history');
+            window.localStorage.removeItem('mac_history');
             $('.mac_history_box').html('<li class="hx_clear">已清空观看记录。</li>');
         },
     },
@@ -582,13 +582,13 @@ var MAC={
                 });
             }
 
-            if(MAC.Cookie.Get('user_id') !=undefined && MAC.Cookie.Get('user_id')!=''){
+            if(window.localStorage.getItem('user_id') !=undefined && window.localStorage.getItem('user_id')!=''){
                 var url = maccms.path + '#';
-                MAC.User.UserId = MAC.Cookie.Get('user_id');
-                MAC.User.UserName = MAC.Cookie.Get('user_name');
-                MAC.User.GroupId = MAC.Cookie.Get('group_id');
-                MAC.User.GroupName = MAC.Cookie.Get('group_name');
-                MAC.User.Portrait = MAC.Cookie.Get('user_portrait');
+                MAC.User.UserId = window.localStorage.getItem('user_id');
+                MAC.User.UserName = window.localStorage.getItem('user_name');
+                MAC.User.GroupId = window.localStorage.getItem('group_id');
+                MAC.User.GroupName = window.localStorage.getItem('group_name');
+                MAC.User.Portrait = window.localStorage.getItem('user_portrait');
                 MAC.User.IsLogin = 1;
 
                 if($('.mac_user').length >0) {
@@ -621,7 +621,7 @@ var MAC={
         },
         'Login':function(){
             var ac='ajax_login';
-            if(MAC.Cookie.Get('user_id') !=undefined && MAC.Cookie.Get('user_id')!=''){
+            if(window.localStorage.getItem('user_id') !=undefined && window.localStorage.getItem('user_id')!=''){
                 ac= 'ajax_info';
             }
             MAC.Pop.Show(250,280,'用户登录',maccms.path+'/index.php/user/'+ac,function($r){

@@ -2,6 +2,7 @@
 
 namespace app\crontab\command;
 
+use similar_text\similarText;
 use think\Cache;
 use app\common\model\Type;
 use app\common\model\CollectOk;
@@ -13,10 +14,11 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 use think\Log;
-use QL\QueryList;
+
 use GuzzleHttp\Client;
 use Exception;
 use QL\Ext\PhantomJs;
+use QL\QueryList;
 
 class DoubanScore extends Command
 {
@@ -67,56 +69,7 @@ class DoubanScore extends Command
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
-    public function getDouBan()
-    {
 
-
-        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
-        $file = 'log.txt';
-        $port = '';//代理端口变量
-
-
-        $test_url = 'https://movie.douban.com/j/subject_suggest?q=清平乐'; //测试访问链接
-        try {
-            $open_url = $this->get_open_url();
-            var_dump($open_url);
-//            p($open_url);
-            $r = file_get_contents($open_url);
-            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            $code = json_decode($result,true);
-            echo $result . "\n <br>";
-            file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
-            $json_arr = json_decode($result, true);
-            $code = $json_arr['code'];
-            if ($code == 108) {
-                $reset_url = $this->get_reset_url();
-                $r = file_get_contents($reset_url);
-            } else if ($code == 100) {
-                $port = strval($json_arr['port'][0]);
-            }
-
-        } catch (\Exception $e) {
-            file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
-        }
-
-//        var_dump($test_url);
-//        $tmp = $this->testing($test_url, $port);
-        print_r(1);die;
-//        p($tmp);
-//        p($port);
-//        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
-        file_put_contents($file, 'test_proxy|| httpCode:' . 200 . PHP_EOL, FILE_APPEND);
-        try {
-            $close_url = $this->get_close_url($port);
-            $r = file_get_contents($close_url);
-            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            echo 'close_url||' . $result;
-            file_put_contents($file, 'close_url||' . $result . PHP_EOL, FILE_APPEND);
-        } catch (\Exception $e) {
-            file_put_contents($file, 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-        }
-
-    }
 
     //返回当前时间戳（单位为 ms）
     public function get_timestamp()
@@ -228,7 +181,13 @@ class DoubanScore extends Command
     protected function execute(Input $input, Output $output)
     {
 
-//        Cache::set('vod_id_list_douban_score', 1);
+        $lcs = new similarText();
+        $myparme = $input->getArguments();
+        $parameter = $myparme['parameter'];
+        if($parameter == 1){
+            Cache::set('vod_id_list_douban_score', 1);
+        }
+//
         //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
 //        $file = 'log.txt';
 //        $port = '';//代理端口变量
@@ -277,7 +236,7 @@ class DoubanScore extends Command
         ];
         $is_vod_id = Cache::get('vod_id_list_douban_score');
         if (!empty($is_vod_id)) {
-            $where['vod_id'] = ['LT', $is_vod_id];
+            $where['vod_id'] = ['gt', $is_vod_id];
         }
 
 //        $startTime =  date("Y-m-d 00:00:00",time());
@@ -289,7 +248,10 @@ class DoubanScore extends Command
         while ($is_true) {
             //取出数据
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+//            print_r( $this->vodDb->getlastsql());die;
+//            print_r($douBanScoreData);die;
             $pagecount = $douBanScoreData['pagecount'] ?? 0;
+
             if ($page > $pagecount) {
                 $is_true = false;
                 log::info('采集豆瓣评分结束...');
@@ -300,7 +262,8 @@ class DoubanScore extends Command
             foreach ($douBanScoreData['list'] as $k => $v) {
                 $is_log = false;
                 $mac_curl_get_data = '';
-                sleep(3);
+               $sleep =  rand(3,10);
+                sleep($sleep);
                 $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
@@ -314,10 +277,10 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "112.85.125.226:4260",
-//                        '--proxy' => $this->proxy_server.":55096",
+//                        '--proxy' => "183.129.244.16:27394",
+////                        '--proxy' => $this->proxy_server.":55096",
 //                        '--proxy-type' => 'http',
-//                        '--ssl-protocol' =>'any',
+////                        '--ssl-protocol' =>'any',
 //                        '--load-images'=>'no',
 //                        '--ignore-ssl-errors' =>true,
                     ])->rules([
@@ -328,18 +291,23 @@ class DoubanScore extends Command
                         'abstract_2' => ['.abstract_2','text'],
                     ])->range('.item-root')->query()->getData();
                 } catch (Exception $e) {
-                    Log::info('过滤' . $url);
-//                    continue;
+                    Log::info('err--过滤' . $url);
+                    continue;
                 }
-//                p($mac_curl_get_data);
+//                p($mac_curl_get_data);die;
+
                 $getSearchData = objectToArray($mac_curl_get_data);
+//                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
-                log::info('采集豆瓣评分-url-data::' . $getSearchData);
+//                log::info('采集豆瓣评分-url-data::' . $getSearchData);
                 if (!empty($getSearchData)){
                     foreach ($getSearchData as $da_k=>$as_k){
                         log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
                         log::info('采集豆瓣评分-title2-::' . $as_k['title']);
-                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
+//                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
+                          $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']),mac_trim_all($as_k['title'])) *100 ;
+                         log::info('采集豆瓣评分-比例::' . $rade);
+                          if($rade> 50){
                             log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
                             $link =  explode('subject',$as_k['link']);
                             $get_search_id = $link[1] ?? '';
@@ -353,22 +321,25 @@ class DoubanScore extends Command
                                 $get_url_search_id_data = $this->isJsonBool($get_url_search_id_data, true);
                                 if (!empty($get_url_search_id_data) && $get_url_search_id_data['code'] == 1 && !empty($get_url_search_id_data['data'])) {
                                     $res = $get_url_search_id_data['data'];
-                                    $is_log = true;
-                                    $vod_data = $this->getConTent($res);
-                                    if (empty($v['vod_sub']) && $v['vod_name'] != $res['vod_name']) {
-                                        $vod_data['vod_sub'] = $res['vod_name'];
-                                    }
-                                    if (!empty($vod_data)) {
-                                        $whereId = [];
-                                        $whereId['vod_id'] = $v['vod_id'];
-                                        if (isset($vod_data['vod_doucore'])) {
-                                            unset($vod_data['vod_doucore']);
+                                    if(($res['vod_name'] == $v['vod_name'] || $res['vod_name'] == $v['vod_sub']) &&  ($v['vod_director'] == $res['vod_director'])  ){
+                                        $is_log = true;
+                                        $vod_data = $this->getConTent($res);
+                                        if (empty($v['vod_sub']) && $v['vod_name'] != $res['vod_name']) {
+                                            $vod_data['vod_sub'] = $res['vod_name'];
                                         }
-                                        $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                                        if ($up_res) {
-                                            log::info('采集豆瓣评分-succ::' . $v['vod_name']);
+                                        if (!empty($vod_data)) {
+                                            $whereId = [];
+                                            $whereId['vod_id'] = $v['vod_id'];
+                                            if (isset($vod_data['vod_doucore'])) {
+                                                unset($vod_data['vod_doucore']);
+                                            }
+                                            $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                            if ($up_res) {
+                                                log::info('采集豆瓣评分-succ::' . $v['vod_name']);
+                                            }
                                         }
                                     }
+
                                 }
                             }
                         }
@@ -523,6 +494,57 @@ class DoubanScore extends Command
             'Remote Address' => '154.8.131.165:443',
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
         ];
+    }
+
+    public function getDouBan()
+    {
+
+
+        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
+        $file = 'log.txt';
+        $port = '';//代理端口变量
+
+
+        $test_url = 'https://movie.douban.com/j/subject_suggest?q=清平乐'; //测试访问链接
+        try {
+            $open_url = $this->get_open_url();
+            var_dump($open_url);
+//            p($open_url);
+            $r = file_get_contents($open_url);
+            $result = iconv("gb2312", "utf-8//IGNORE", $r);
+            $code = json_decode($result,true);
+            echo $result . "\n <br>";
+            file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
+            $json_arr = json_decode($result, true);
+            $code = $json_arr['code'];
+            if ($code == 108) {
+                $reset_url = $this->get_reset_url();
+                $r = file_get_contents($reset_url);
+            } else if ($code == 100) {
+                $port = strval($json_arr['port'][0]);
+            }
+
+        } catch (\Exception $e) {
+            file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
+        }
+
+//        var_dump($test_url);
+//        $tmp = $this->testing($test_url, $port);
+        print_r(1);die;
+//        p($tmp);
+//        p($port);
+//        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
+        file_put_contents($file, 'test_proxy|| httpCode:' . 200 . PHP_EOL, FILE_APPEND);
+        try {
+            $close_url = $this->get_close_url($port);
+            $r = file_get_contents($close_url);
+            $result = iconv("gb2312", "utf-8//IGNORE", $r);
+            echo 'close_url||' . $result;
+            file_put_contents($file, 'close_url||' . $result . PHP_EOL, FILE_APPEND);
+        } catch (\Exception $e) {
+            file_put_contents($file, 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+        }
+
     }
 
 
