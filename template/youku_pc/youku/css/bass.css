@@ -3016,24 +3016,26 @@ h6 {
 	height: 100%;
 }
 
-.source-title{
+.source-title {
 	padding: 10px 30px;
 	font-size: 18px;
 	color: #FFF;
 }
 
-.js-list{
+.js-list {
 	color: #FFF;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	flex-direction: row;
 }
-.js-list li{
+
+.js-list li {
 	width: 50%;
 	text-align: center;
 	cursor: pointer;
 }
+
 .js-list li.cur span {
 	color: #1a9eff;
 }
@@ -3127,9 +3129,11 @@ h6 {
 	background-color: #f5f5f5;
 	outline: none;
 }
-.num-tab-main>div a{
+
+.num-tab-main>div a {
 	margin: 0 !important;
 }
+
 .num-tab .cur {
 	display: block;
 	opacity: 1;
@@ -3762,6 +3766,15 @@ i.icon-player.error {
 
 i.icon-player.playe {
 	background-position: 0 -366px;
+}
+
+i.glyphicon {
+	font-size: 14px;
+	background-position: -11130px -954px;
+}
+
+.play-fn>li:hover .glyphicon {
+	background-position: -11130px -980px;
 }
 
 .play-fn .fn-info .fn-panel {
@@ -6743,15 +6756,6 @@ i.icon-player.playe {
 	font-weight: 500;
 }
 
-.glyphicon-phone {
-	font-size: 14px;
-	background-position: -11110px -1116px;
-}
-
-.play-fn>li:hover .glyphicon-phone {
-	color: #fff;
-}
-
 .vip-sell-wrap {
 	padding: 10px;
 	background: #18181e;
@@ -6861,7 +6865,8 @@ i.icon-player.playe {
 .tab-title {
 	font-size: 16px;
 }
-.notice-swiper .swiper-container{
+
+.notice-swiper .swiper-container {
 	height: 40px;
 	line-height: 40px;
 	overflow: hidden;
