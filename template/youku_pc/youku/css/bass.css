@@ -3025,13 +3025,17 @@ h6 {
 .js-list {
 	color: #FFF;
 	display: flex;
-	justify-content: space-between;
+	/* justify-content: space-between; */
 	align-items: center;
 	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.c-player-aside-wrapper .js-list li{
+	width: 50%;
 }
 
 .js-list li {
-	width: 50%;
 	text-align: center;
 	cursor: pointer;
 }

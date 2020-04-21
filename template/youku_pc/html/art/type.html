@@ -67,14 +67,16 @@
 			</div>
 		</div>
 		<script>
-			var top1 = $(".scroll").offset().top;
+			var top1 = $(".scroll").offset().top - 70;
 			$(window).scroll(function() {
 				var win_top = $(this).scrollTop();
 				var top = $(".scroll").offset().top;
+				top = top - 70
+				// console.log(top)
 				if (win_top >= top) {
 					$(".scroll").css({
 						"position": "fixed",
-						"top": "0",
+						"top": "70px",
 						"left": "1055",
 						"z-index": "10"
 					}).addClass('stosition');

@@ -1,14 +1,14 @@
-﻿/********新闻列表*******/
+/********新闻列表*******/
 .newslist {position: relative;}
-.yrdaohang{ width:985px; float: left; position: relative; margin: 0 auto;font-size:16px; padding-top:15px; padding-bottom:15px; border-bottom: 1px solid #E5E5E5;}
+.yrdaohang{ width:100%; float: left; position: relative; margin: 0 auto;font-size:16px; padding-top:15px; padding-bottom:15px; border-bottom: 1px solid #E5E5E5;}
 .yrarcdh{ width:960px; float: left; position: relative; margin: 0 auto;font-size:16px; padding-top:10px; padding-bottom:10px;   border-bottom: 1px solid #F2F2F2; padding-left:10px;}
 .main .listl .share-component{margin-left: 8%;}
-.main .listl {float: left;width: 990px;position: relative;}
+.main .listl {float: left;width: 800px;position: relative;}
 .main .listl .inner{ padding:65px 0 0 0;}
 .listl .listview { float: left; width: 150px; height: 32px; line-height: 32px; padding:0 10px; top: 0; left: -25px; background-color: #00AA98; font-size: 18px; color: #fff; text-align: center; }
 .listl .listview2 { float: left; width: 100px; height: 32px; line-height: 32px; top: 0; left: -25px; background-color: #00AA98; font-size: 18px; color: #fff; text-align: center; }
 .main .list2  ul { padding-top:55px;}
-.main .list2  ul li { width: 985px; height: 170px; padding: 10px 0; border-bottom: 1px solid #E5E5E5; }
+.main .list2  ul li { width: 100%; height: 170px; padding: 10px 0; border-bottom: 1px solid #E5E5E5; }
 .main .list2  ul li .viewimg { width: 250px; height: 165px; float: left; display: inline; margin-right: 30px; position: relative;overflow: hidden;}
 .main .list2  ul li img { width: 250px; height: 165px;transition: all .7s;}
 .main .list2  ul li img:hover{-webkit-transition: all .7s;transition: all .7s;transform: scale(1.05);-webkit-transform: scale(1.05);}
@@ -18,7 +18,7 @@
 .main .list2  ul li span+span { background: url(../images/sj.png) no-repeat 0 2px;}
 .main .list2  ul li span+span+span { background: url(../images/huo.png) no-repeat;}
 .main .listr { float:right; display: inline; width: 335px;}
-.listr .recommend, .listr .recommena {margin-top:20px;float: right;display: inline;width: 335px;}
+.listr .recommend, .listr .recommena {padding-top:20px;float: right;display: inline;width: 335px;}
 .listr .recommend ul{float: right;display: inline;width: 335px;position: relative;}
 .listr .recommend ul li { float: left; width: 167px; height: 150px;font-size: 14px; color: #6b6a6a;padding-bottom: 10px;}
 .listr .recommend ul li.borderl { margin-left: 10px;}
