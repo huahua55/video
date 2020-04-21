@@ -88,14 +88,20 @@ class Index extends Base
 
             // 电影电视剧 加上精品推荐
             if(in_array($id,[1,2])){
-                $doubanRecom = $this->doubanRecom(6);
                 $doubanRecomData = [];
-                foreach($doubanRecom as $item){
-                    $doubanRecomData[] = [
-                        "name"  => $item['name'],
-                        "data"  => $item['data'],
-                    ];
-                }
+                $where = [
+                    'type_id'   => ['eq',$id],
+                    'status'    => ['eq','1'],
+                    'vod_id'    => ['neq','0'],
+                ];
+                // 电影取三条
+                $doubanList  = model("douban_recommend")->field('vod_id')->where($where)->order('id asc')->limit(6)->select();
+                $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
+                $doubanRecomData[] = [
+                    'name'  => "精品推荐",
+                    'data'  => $this->vodStrData($doubanIds),
+                ];
+
                 $getListBlock = array_merge($doubanRecomData,$getListBlock);
             }
         }
