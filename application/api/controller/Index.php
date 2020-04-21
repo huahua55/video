@@ -504,4 +504,62 @@ class Index extends Base{
         return $array;
     }
 
+    // 相似关联 影视
+    public function relation(){
+        $id    = $this->_param['id'] ??  "" ;
+        if($id == ""){
+            return json_return([]);
+        }
+
+        $model  = model("vod");
+        $lp = [
+            'vod_id' => $id
+        ];
+        $info = $model->field("vod_id,type_id,type_id_1,vod_actor")->where($lp)->find();
+        $info = objectToArray($info);
+
+        $actor = explode(',',$info['vod_actor']) ?? "";
+        $actor = $actor[0] != "" ? $actor[0] : "";
+        $field = "vod_id,vod_name,vod_pic,vod_score,vod_remarks";
+
+        $where = [
+            'vod_id'    => ['neq',$id],
+            'vod_actor' => ['like', "%".$actor."%"],
+        ];
+
+        if($info['type_id'] == 1 || $info['type_id'] == 2   ) {
+            $where['type_id|type_id_1'] = ['eq',$info['type_id']];
+        }else if($info['type_id'] == 3 || $info['type_id'] == 4   ){
+            $where['type_id'] = ['eq',$info['type_id']];
+        }else if($info['type_id'] > 4){
+            $where['type_id_1'] = ['eq',$info['type_id_1']];
+        }
+
+        $res = $model->field($field)->where($where)->order('vod_time_add desc')->limit(6)->select();
+        $res = objectToArray($res);
+
+        $count = count($res);
+        if($count < 6){
+            unset($where['vod_actor']);
+            $limit = $count >= 6 ? 6 : 6 - $count;
+            $res2 = $model->field($field)->where($where)->order('vod_time_add desc')->limit($limit)->select();
+            $res = array_merge($res,$res2);
+        }
+
+        $res = objectToArray($res);
+
+        $array = [];
+        foreach($res as $r){
+            $d = array(
+                'img'   => imageDir($r['vod_pic']),
+                'id'    => $r['vod_id'],
+                'name'  => $r['vod_name'],
+                'score' => $r['vod_score'],
+                'msg'   => $r['vod_remarks'],
+            );
+            array_push($array,$d);
+        }
+        return json_return($array);
+    }
+
 }
