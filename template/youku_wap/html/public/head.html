@@ -23,10 +23,8 @@
 		<div id="headerTopNav" class="warp">
 			<ul class="swiper-wrapper">
 				<li class="swiper-slide" id="nav-index"><a class="item" href="/" title="首页">首页</a></li>
-				{maccms:type ids="parent" order="asc" by="sort"}
-				{if condition="$vo.type_mid eq 1"}
+				{maccms:type ids="parent" mid="1" order="asc" by="sort"}
 				<li class="swiper-slide" id="nav-{$vo.type_en}"><a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
-				{/if}
 				{/maccms:type}
 				<li class="swiper-slide" id="nav-last"><a class="item" href="/gbook.html" title="求片/留言">求片/留言</a></li>
 			</ul>

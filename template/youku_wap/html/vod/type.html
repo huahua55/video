@@ -33,7 +33,7 @@
 			{if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
 			<ul class="show_select hidden">
 				{maccms:type ids="child" parent="1" by="sort" order="asc"}
-				<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
+				<li><a href="{:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
 				{/maccms:type}
 				<!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
 			</ul>

@@ -17,10 +17,8 @@
 			<div id="classifyList01" class="classifyList">
 				<ul class="swiper-wrapper clearfix">
 					<li class="swiper-slide"><a href="javascript:void(0);">频道</a></li>
-					{maccms:type ids="parent" order="asc" by="sort"}
-					{if condition="$vo.type_mid eq 1"}
+					{maccms:type ids="parent" mid="1" order="asc" by="sort"}
 					<li class="swiper-slide {if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
-					{/if}
 					{/maccms:type}
 				</ul>
 			</div>

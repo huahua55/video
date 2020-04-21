@@ -18,73 +18,29 @@
 			<div class="le_screen">
 				<div class="nav_box nav_box1">
 					<ul>
-						<li><a {if condition="$param['class'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
+						{maccms:type ids="child" parent="current" by="sort" order="asc"}
+						<li>
+							<a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a>
 						</li>
-						{empty name="$obj.type_extend.area"}
-						{maccms:foreach name=":explode(',',$obj.parent.type_extend.class)" id="vo2" key="key2"}
-						<li><a {if condition="$param['class'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{else /}
-						{maccms:foreach name=":explode(',',$obj.type_extend.class)" id="vo2" key="key2"}
-						<li><a {if condition="$param['class'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{/empty}
+						{/maccms:type}
 					</ul>
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box1">
 					<ul>
-						<li><a {if condition="$param['area'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
-						</li>
-						{empty name="$obj.type_extend.area"}
-						{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)" id="vo2" key="key2"}
-						<li><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{else /}
 						{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
-						<li><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
+						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'area'=>$vo2],'show')}">{$vo2}</a>
 						</li>
 						{/maccms:foreach}
-						{/empty}
-					</ul>
-				</div>
-				<div class="line"></div>
-				<div class="nav_box nav_box1">
-					<ul>
-						<li><a {if condition="$param['lang'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>'','year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
-						</li>
-						{empty name="$obj.type_extend.lang"}
-						{maccms:foreach name=":explode(',',$obj.parent.type_extend.lang)" id="vo2" key="key2"}
-						<li><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{else /}
-						{maccms:foreach name=":explode(',',$obj.type_extend.lang)" id="vo2" key="key2"}
-						<li><a {if condition="$param['lang'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$vo2,'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{/empty}
 					</ul>
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box2">
 					<ul>
-						<li><a {if condition="$param['year'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
-						</li>
-						{empty name="$obj.type_extend.year"}
-						{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)" id="vo2" key="key2"}
-						<li><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-						</li>
-						{/maccms:foreach}
-						{else /}
 						{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
-						<li><a {if condition="$param['year'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo2,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
+						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'year'=>$vo2],'show')}">{$vo2}</a>
 						</li>
 						{/maccms:foreach}
-						{/empty}
 					</ul>
 				</div>
 			</div>

@@ -17,48 +17,42 @@
 					<div class="yk-pannel_hd clearfix">
 						<div class="selectList clearfix">
 							<li class="item-extend">
-								<span class="sTit">类型：</span>
+								<span class="sTit">频道：</span>
 								<p class="pSelect">
 									<span>
-										<a id="idc4ca4238a0b923820dcc509a6f75849b" href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a>
-										{empty name="$obj.type_extend.area"}
-										{maccms:foreach name=":explode(',',$obj.parent.type_extend.class)" id="vo2" key="key2"}
-										<a {if condition="$param['class'] eq $vo2" } id="idc81e728d9d4c2f636f067f89cc14862c" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-										{/maccms:foreach}
-										{else /}
-										{maccms:foreach name=":explode(',',$obj.type_extend.class)" id="vo2" key="key2"}
-										<a {if condition="$param['class'] eq $vo2" } id="ideccbc87e4b5ce2fe28308fd9f2a7baf3" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a>
-										{/maccms:foreach}
-										{/empty}
+										{maccms:type ids="parent" mid="1" order="asc" by="sort"}
+										<a class="{if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"} cur {/if}" href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a>
+										{/maccms:type}
 									</span>
+								</p>
+							</li>
+							<li class="item-extend">
+								<span class="sTit">分类：</span>
+								<p class="pSelect">
+									<span><a href="{:mac_url_type($obj, ['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
+
+									{empty name="$obj.parent"}
+									{maccms:type ids="child" parent="current" by="sort" order="asc"}
+									<span><a {if condition="($param['id'] eq $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)" } class="cur" {/if} href="{:mac_url_type($vo,['area'=>$param['area'],'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'],'id'=>$vo.type_id], 'show')}">{$vo.type_name}</a></span>
+									{/maccms:type}
+									{else /}
+									{maccms:type ids="child" parent="'.$obj['parent']['type_id'].'" by="sort" order="asc"}
+									<span><a {if condition="($param['id'] eq $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)" } class="cur" {/if} href="{:mac_url_type($vo,['area'=>$param['area'],'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'],'id'=>$vo.type_id], 'show')}">{$vo.type_name}</a></span>
+									{/maccms:type}
+									{/empty}
 								</p>
 							</li>
 							<li>
 								<span class="sTit">地区：</span>
 								<p class="pSelect">
-									<span><a id="typed41d8cd98f00b204e9800998ecf8427e" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
+									<span><a href="{:mac_url_type($obj,['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
 									{empty name="$obj.type_extend.area"}
 									{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)" id="vo2" key="key2"}
-									<span><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									<span><a {if condition="$param['area'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
 									{/maccms:foreach}
 									{else /}
 									{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
-									<span><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
-									{/maccms:foreach}
-									{/empty}
-								</p>
-							</li>
-							<li>
-								<span class="sTit">语言：</span>
-								<p class="pSelect">
-									<span><a {if condition="$param['lang'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>'','year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
-									{empty name="$obj.type_extend.lang"}
-									{maccms:foreach name=":explode(',',$obj.parent.type_extend.lang)" id="vo2" key="key2"}
-									<span><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
-									{/maccms:foreach}
-									{else /}
-									{maccms:foreach name=":explode(',',$obj.type_extend.lang)" id="vo2" key="key2"}
-									<span><a {if condition="$param['lang'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$vo2,'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									<span><a {if condition="$param['area'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
 									{/maccms:foreach}
 									{/empty}
 								</p>
@@ -77,14 +71,6 @@
 									{/maccms:foreach}
 									{/empty}</p>
 							</li>
-							<li>
-								<span class="sTit">字母：</span>
-								<p class="pSelect">
-									<span><a {if condition="$param['letter'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>'','state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
-									{maccms:foreach name=":explode(',','A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0-9')" id="vo2"
-									key="key2"}
-									<span><a {if condition="$param['letter'] eq $vo2" } class="current" {/if} {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$vo2,'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
-									{/maccms:foreach}
 						</div>
 					</div>
 				</div>
