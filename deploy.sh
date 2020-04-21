@@ -21,6 +21,11 @@ echo ""
 echo "git pull ⬇"
 git pull
 
+echo ""
+echo "composer update⬇"
+
+composer update
+
 function deploy_dev()
 {
 	mkdir -p /data/applogs/$prj
@@ -28,6 +33,8 @@ function deploy_dev()
 
   rm .env
 	ln -sf $prj_dir/test.env $prj_dir/.env
+
+	mkdir -p /var/log/nginx
 	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
@@ -40,6 +47,8 @@ function deploy_online()
 
   rm .env
 	ln -sf $prj_dir/online.env $prj_dir/.env
+
+	mkdir -p /var/log/nginx
 	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf

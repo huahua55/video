@@ -5,6 +5,8 @@ fpm_config=/data/www/video/deploy/php-fpm.conf
 fpm_pidfile=/var/run/php-fpm.pid
 nginx=nginx
 
+mkdir -p /var/log/php-fpm
+
 start_fpm(){
 	printf "重启 php-fpm..."
 	$fpm -y $fpm_config -g $fpm_pidfile

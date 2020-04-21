@@ -4,11 +4,13 @@
 *.map
 node_modules/
 /nbproject/private/
-uploads
 /.vscode
 /package.json
 /npm-shrinkwrap.json
 /.idea
+composer.lock
+vendor
+
 assets.json
 runtime
 upload

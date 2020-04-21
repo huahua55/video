@@ -178,7 +178,7 @@
 								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc, desc" by="level, time"}
 								<li class="yk-pack">
 									<div class="p-thumb">
-										<a href="{:mac_url_vod_detail($vo)}" title="沙海"></a>
+										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
 										<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
 										<span class="playshow">{$vo.vod_remarks}</span>
 									</div>
