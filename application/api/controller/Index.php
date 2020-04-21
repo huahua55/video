@@ -61,14 +61,18 @@ class Index extends Base
         if ($id == 0){
             $getListBlock = $this->tuijian();
         }else{
+            $fatherRes =  [];
+            if(in_array($id,[3,4])){
+                $fatherRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
+                $fatherRes = $fatherRes['list'] ?? [];
+            }
+
             $where = [
                 'type_pid'   => $id
             ];
-            $fatherRes =  model("Type")->listData($where,"type_sort desc");
-            $fatherRes = $fatherRes['list'] ?? [];
-
-            $sonRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
+            $sonRes =  model("Type")->listData($where,"type_sort desc");
             $sonRes = $sonRes['list'] ?? [];
+
 
             $res = array_merge($sonRes,$fatherRes);
             
@@ -80,6 +84,25 @@ class Index extends Base
                 );
 
                 array_push($getListBlock,$d);
+            }
+
+            // 电影电视剧 加上精品推荐
+            if(in_array($id,[1,2])){
+                $doubanRecomData = [];
+                $where = [
+                    'type_id'   => ['eq',$id],
+                    'status'    => ['eq','1'],
+                    'vod_id'    => ['neq','0'],
+                ];
+                // 电影取三条
+                $doubanList  = model("douban_recommend")->field('vod_id')->where($where)->order('id asc')->limit(6)->select();
+                $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
+                $doubanRecomData[] = [
+                    'name'  => "精品推荐",
+                    'data'  => $this->vodStrData($doubanIds),
+                ];
+
+                $getListBlock = array_merge($doubanRecomData,$getListBlock);
             }
         }
 
@@ -162,7 +185,7 @@ class Index extends Base
     }
 
     // 豆瓣推荐
-    public function doubanRecom(){
+    public function doubanRecom($limit = 3){
         $doubanData = [];
         $model = model("douban_recommend");
         $where = [
@@ -170,8 +193,8 @@ class Index extends Base
             'vod_id'    => ['neq','0'],
         ];
         // 电影取三条
-        $ids  = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',1]]))->order('id asc')->limit(3)->select();
-        $ids2 = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',2]]))->order('id asc')->limit(3)->select();
+        $ids  = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',1]]))->order('id asc')->limit($limit)->select();
+        $ids2 = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',2]]))->order('id asc')->limit($limit)->select();
         $ids  = objectToArray($ids);
         $ids2 = objectToArray($ids2);
 
