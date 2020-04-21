@@ -1543,7 +1543,7 @@ li {
 }
 
 .g-ucenter .u-record .panel {
-	right: -150px;
+	right: -40px;
 }
 
 .g-ucenter .u-record .panel .content {
@@ -1551,7 +1551,7 @@ li {
 }
 
 .g-ucenter .u-record .panel .arrow {
-	left: 176px;
+	right: 52px;
 }
 
 .g-ucenter .u-record .ico-device {
@@ -3031,8 +3031,13 @@ h6 {
 	flex-wrap: wrap;
 }
 
-.c-player-aside-wrapper .js-list li{
-	width: 50%;
+.c-player-aside-wrapper .js-list {
+	padding: 0 20px;
+}
+
+.c-player-aside-wrapper .js-list li {
+	width: auto;
+	padding: 10px 10px;
 }
 
 .js-list li {
@@ -4997,7 +5002,7 @@ i.glyphicon {
 }
 
 .itemList .txtIntroCon {
-	width: 960px;
+	width: 920px;
 }
 
 .txtIntroCon .tit {
@@ -6874,4 +6879,68 @@ i.glyphicon {
 	height: 40px;
 	line-height: 40px;
 	overflow: hidden;
+}
+
+/* 热搜 */
+.hot-search {
+	position: absolute;
+	top: 40px;
+	left: 0;
+	right: 0;
+	background: #FFF;
+	display: none;
+}
+
+.hot-title {
+	height: 40px;
+	line-height: 40px;
+	padding: 0 15px;
+	border-bottom: 1px solid #e2e2e2;
+}
+
+.hot-wrap {
+	padding: 10px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.hot-wrap li{
+	width: 50%;
+	height: 36px;
+	line-height: 36px;
+}
+.hot-wrap li a{
+	padding: 0 15px;
+	font-size: 0;
+	overflow: hidden;
+	display: block;
+}
+
+.hot-wrap li a span{
+	font-size: 14px;
+}
+
+.hot-wrap li a span.num{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	text-align: center;
+	line-height: 16px;
+	color: #FFF;
+	background: #cacaca;
+	margin-right: 5px;
+	font-size: 12px;
+}
+
+.hot-wrap li:nth-child(1) a span.num{
+	background: #ff0d29;
+}
+.hot-wrap li:nth-child(2) a span.num{
+	background: #ff920b;
+}
+.hot-wrap li:nth-child(3) a span.num{
+	background: #ffc600;
 }

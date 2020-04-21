@@ -89,13 +89,13 @@
 /*搜索下拉*/
 .mac_results {background-color:#fcfcfc;overflow:hidden;z-index:99999;margin:0;padding:0;text-align:left;min-width: 290px;box-shadow: 1px 1px 3px 1px #ccc;}
 .mac_results ul {width: 100%;list-style-position: outside;list-style: none;padding: 0;margin: 0;}
-.mac_results li {margin: 0px;padding: 2px 5px;cursor: default;display: block;font: menu;font-size: 15px;color: #666;height:25px; line-height: 25px;overflow: hidden;}
+.mac_results li {margin: 0px;padding: 5px 20px;cursor: default;display: block;font: menu;font-size: 15px;color: #666;height:25px; line-height: 25px;overflow: hidden;}
 .mac_results .mac_loading {background: white right center no-repeat;}
 .mac_results .ac_odd {background-color: #fff;}
 .mac_results .ac_over {background-color: #19c3ff;color: white;}
-
-
-
+.mac_results ul::-webkit-scrollbar{width: 5px;border-radius: 50%;background-color: transparent;}
+.mac_results ul::-webkit-scrollbar-thumb {border-radius: 10px;right: 1px;-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);background-color: #666;}
+.mac_results ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 6px transparent;border-radius: 10px;background-color: transparent;}
 
 /*普通评分*/
 .mac_score { height:60px; }

@@ -384,7 +384,7 @@ var MAC={
                     inputClass: "mac_input",
                     resultsClass: "mac_results",
                     loadingClass: "mac_loading",
-                    width: 175, scrollHeight: 300, minChars: 1, matchSubset: 0,
+                    width: 300, scrollHeight: 300, minChars: 1, matchSubset: 0,
                     cacheLength: 10, multiple: false, matchContains: true, autoFill: false,
                     dataType: "json",
                     parse: function ($r) {

@@ -3,7 +3,7 @@
 <header class="header">
 	<div class="aui-bar aui-bar-nav">
 		<a href="/" class="logo">
-			<img src="{$maccms.site_logo|mac_url_img}" >
+			<img src="{$maccms.site_logo|mac_url_img}">
 		</a>
 		<div class="search">
 			<div class="text mac_wd " onclick="openSearch()">请在此处输入影片名或演员名称</div>
@@ -41,7 +41,6 @@
 			 onSubmit="return qrsearch();">
 				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称" />
 				<input type="submit" id="searchbutton" style="display: none;" class="mac_search" value="搜索" />
-
 			</form>
 		</div>
 		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
@@ -64,8 +63,7 @@
 					{if condition="$i eq 1"}
 					{/if}
 					{else}
-					<li class="aui-ellipsis-1"><span>{$i}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em
-						 class="up"></em></li>
+					<li class="aui-ellipsis-1"><span>{$i}</span><a href="{:mac_url('vod/search',['wd'=>$vo])}">{$vo}</a><em class="up"></em></li>
 					{/if}
 					{/maccms:foreach}
 				</ul>
@@ -106,7 +104,7 @@
 			});
 		}
 	});
-	$(".history-btn").on("click",function(){
+	$(".history-btn").on("click", function() {
 		$(".historyWarp").toggleClass("on")
 	})
 </script>

@@ -44,36 +44,78 @@
 				</div>
 			</div>
 			<script>$("#nav{$obj.type_en}").addClass("cur");</script>
-			<div id="searchbar" class="search-main " areacode="search">
-				<div class="head-search pull-left">
+			<div id="searchbar" class="search-main" tabindex="0" >
+				<div class="head-search">
 					<div id="_js_search_form" class="head-search-box ">
 						<form class="search-form ff-search" id="search" name="search" action="{:mac_url('vod/search')}" method="post"
 						 autocomplete="off">
-							<input type="text" name="wd" class="form-control ff-wd mac_wd" value="" placeholder="">
-							<a class="head-search-top" href="/label/top.html"></a>
+							<input type="text" name="wd" class="form-control ff-wd mac_wd" value="">
+							<a class="head-search-top" href="javascript:;"></a>
 							<button type="submit" id="searchbutton" class="search-button mac_search">搜剧</button>
 						</form>
 					</div>
 				</div>
+				<!-- 热搜 -->
+				<div class="hot-search">
+					<p class="hot-title">热门搜索</p>
+					<ul class="hot-wrap">
+						{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
+						{php}$i=$key+1;{/php}
+						<li onclick="goUrl('{:mac_url('vod/search',['wd'=>$vo])}')">
+							<a href="javascript:;">
+								<span class="num">{$i}</span>
+								<span>{$vo}</span>
+							</a>
+						</li>
+						{/maccms:foreach}
+					</ul>
+				</div>
+				<script type="text/javascript">
+					// 获取焦点且没内容时显示热搜
+					$(".mac_wd").on("focus", function() {
+						console.log($(this).val())
+						if ($(this).val() == "") {
+							$(".hot-search").show()
+						}
+					})
+					//  监听input
+					$(".mac_wd").bind("input propertychange", function(event) {
+						console.log($(this).val())
+						if ($(this).val() == "") {
+							$(".hot-search").show()
+						} else {
+							$(".hot-search").hide()
+						}
+					});
+					// 失去焦点隐藏热搜
+					$("#searchbar").on("blur", function() {
+						console.log("??")
+						$(".hot-search").hide()
+					})
+
+					function goUrl(url) {
+						window.location.href = url
+					}
+				</script>
 			</div>
 			<div class="g-ucenter" id="uerCenter">
-				<div class="u-vip">
+				<!-- <div class="u-vip">
 					<div class="handle"><a href="javascript:;"><i class="ico-vip"></i>VIP</a></div>
-				</div>
-				<div class="u-sub visible-lg">
+				</div> -->
+				<!-- <div class="u-sub visible-lg">
 					<div class="handle"><a href="javascript:;" onclick="addFavorite(this);"><i class="ico-sub"></i>订阅</a></div>
-				</div>
+				</div> -->
 				<div class="u-record">
 					<div class="dropdown" id="u-record">
 						<div class="handle  mac_history"> <a class="ff-record-get" href="javascript:;"> <i class="ico-urecord"></i>记录</a></div>
 					</div>
 				</div>
-				<div class="u-upload">
+				<!-- <div class="u-upload">
 					<div class="dropdown">
 						<div class="handle"><a href="javascript:;"><i class="ico-upload"></i>上传</a></div>
 					</div>
-				</div>
-				<div class="u-app">
+				</div> -->
+				<!-- <div class="u-app">
 					<div class="dropdown" id="u-app">
 						<div class="handle"><a href="javascript:;"><i class="ico-app"></i>客户端</a> </div>
 						<div class="panel"><i class="arrow"></i>
@@ -93,7 +135,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- <div class="u-login">
 					<div class="login-after dropdown" id="u-login">
 						<a class="text-muted ff-user user-login-modal mac_user" href="javascript:;">

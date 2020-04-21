@@ -74,10 +74,9 @@
 															<div class="l-left">
 																<ul class="play-fn fenxiang">
 																	<li class="fn-share"><i class="icon-player playe"></i><span class="txt">{$obj.vod_hits} 次播放</span></li>
-																	<!-- <li class="fn-share"><i class="icon-player playe"></i><span class="txt"><a href="javascript:;" style="color:#909096" onclick="MAC.Gbook.Report('编号【{$obj.vod_id}】名称【{$obj.vod_name}】不能观看请检查修复，页面地址' + location.href)">【报错】</a></span></li>
--->
-																	<li class="fn-share"><i class="icon-player playe"></i><span class="sc"><a href="javascript:;" class="mac_ulog"
-																			 style="color:#909096" data-type="2" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}">我要收藏</a></span></li>
+																	<!-- <li class="fn-share"><i class="icon-player playe"></i><span class="txt"><a href="javascript:;" style="color:#909096" onclick="MAC.Gbook.Report('编号【{$obj.vod_id}】名称【{$obj.vod_name}】不能观看请检查修复，页面地址' + location.href)">【报错】</a></span></li>-->
+																	<!-- <li class="fn-share"><i class="icon-player playe"></i><span class="sc"><a href="javascript:;" class="mac_ulog"
+																			 style="color:#909096" data-type="2" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}">我要收藏</a></span></li> -->
 																	<li class="fn-share"><i class="icon-player share"></i><span class="text">分享</span>
 																		<div class="fn-panel">
 																			<div class="fn-panel-header"><span class="fn-panel-title">分享给朋友</span></div>
@@ -120,8 +119,8 @@
 																			</div>
 																		</div>
 																	</li>
-																	<li class="fn-download"><i class="icon-player glyphicon" ta-container="body"
-																		 data-title="手机浏览请扫瞄二维码"></i><span class="text">手机看</span>
+																	<li class="fn-download"><i class="icon-player glyphicon" ta-container="body" data-title="手机浏览请扫瞄二维码"></i><span
+																		 class="text">手机看</span>
 																		<div class="fn-panel">
 																			<div class="fn-panel-header"><span class="fn-panel-title"><img src="http://qr.liantu.com/api.php?text=http://{$maccms.site_url}{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}"
 																					 width="100%" data-bd-imgshare-binded="1"></div>
@@ -153,7 +152,6 @@
 										<div class="l-module">
 											<div class="player-title clearfix">
 												<div class="title-wrap">
-
 													<h1><a href="/video/1260.html">{$obj.vod_name} </a><span class="yk-modules">详情<i class="icon-jiantou unrotate"></i></span></h1>
 													<div class="programDetail" style="display: none;">
 														<div class="programText">
@@ -166,14 +164,12 @@
 																	<p class="u-meta-short">
 																		<span class="babel">年代：</span> >{$obj.vod_year}
 																	</p>
-
 																	<p class="u-meta-long">
 																		<span class="babel">类型：</span> {$obj.vod_state} </p>
 																	<p class="u-meta-short">
 																		<span class="babel">地区：</span>{$obj.vod_area} </p>
 																	<p class="u-meta-short">
 																		<span class="babel">导演：</span>{$obj.vod_director} </p>
-
 																	<p class="u-meta-long">
 																		<span class="babel">主演：</span>{$obj.vod_actor} </p>
 																	<p class="u-meta-intro">
@@ -201,15 +197,10 @@
 											</div>
 										</div>
 										<!--
- 
   <div class="summary-expenb">
 	  <div class="module-title"><h2>相关明星</h2>
 	  <div class="myTab-actor" id="statetab"> 
 	<ul id="myTab1"> 
-
-       
-                
-  
              <li class="active"> 
 			  <div class="item g-clear">
 							<img src="{$user.user_id|mac_get_user_portrait}">
@@ -217,32 +208,20 @@
 							<em class="zhiye">导演</em>
 						</div>
       </li>
-  
- 
       {maccms:role order="asc" name="'.$obj[vod_actor].'" id="vo1" key="key1"}
 {$vo1.actor_name}
 {/maccms:role}
- 
     <li > 
 			  <div class="item g-clear">
 							<img src="{$user.user_id|mac_get_user_portrait}">
 							<p class="name">{$obj.vod_actor}</p>
 							<em class="zhiye">演员</em>
 						</div> </li>
- 
- 
-						
-						 
-						
 						</ul>  
 		</div>
 		</div>
- 
-    
 		<div class="play-actor statetab">
-		
  {maccms:vod num="1" rel="'.$obj['vod_director'].'" order="desc" by="time"}
-          
 <ul class="index-list-1 tabcon active">
 {maccms:vod order="asc" by="time" num="5" type="'.$obj['vod_director'].'"}
 <li class="yk-pack">
@@ -257,14 +236,8 @@
 </ul>
 </li>
  {/maccms:vod} 
-  
           </ul>	
-
 {/maccms:vod}
-
-          
-		  
-
 	 {maccms:vod num="6" rel="'.$obj['vod_actor'].'" order="desc" by="time"} 
 <ul class="index-list-1 tabcon">
   {maccms:vod order="asc" by="time" num="5"  type="'.$vo['vod_actor'].'" } 
@@ -281,9 +254,7 @@
 </li>
 {/maccms:vod}       
 </ul>	
-
 {/maccms:vod}
- 
  	</div> 
 		</div> -->
 										<div class="summary-expend">
@@ -294,10 +265,7 @@
 												<div id="myCarousel" class="carousel slide">
 													<div class="carousel-inner">
 														<div class="index-list-1 item active">
-
 															{maccms:vod num="10" type="current" order="desc" by="time"}
-
-
 															<li class="yk-pack">
 																<div class="p-thumb">
 																	<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
@@ -316,8 +284,6 @@
 														<!--
 		<div class="index-list-1 item">
 		 {maccms:vod num="12" type="current" level="all" order="desc" by="time"}
-			
-			
 	<li class="yk-pack">
 <div class="p-thumb">
 <a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"  ></a>
@@ -328,8 +294,6 @@
 <li class="title"><a href="{:mac_url_vod_detail($vo)}"  >{$vo.vod_name}</a></li>
 <span>主演：{$vo.vod_actor}</span>
 </ul></li>
-
-            
             {/maccms:vod}	</div>-->
 													</div>
 													<a class="mbtn btnprev" href="#myCarousel" role="button" data-slide="prev"><span class="chevron-left"
@@ -339,7 +303,6 @@
 												</div>
 											</div>
 										</div>
-
 									</div>
 									<div class="c-body-right">
 										<div class="d-play-mod d-play-top" id="guideSlider">
@@ -348,7 +311,6 @@
 											</div>
 											<ul class="m-top-toplist guide-list">
 												{maccms:vod type="current" num="20" order="desc" by="time"}
-
 												{if condition="$key lt 4"}
 												<li class="guide">
 													<p class="txt"><em class="on">{$key} </em><span><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></span></p>
@@ -367,7 +329,6 @@
 														<span class="tent"><em>简介：</em> {$vo.vod_content} </span>
 													</p>
 												</li>
-
 												{if condition="$key eq 1"}
 												{/if}
 												{else}
