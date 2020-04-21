@@ -13,28 +13,8 @@
 	<body>
 		{include file="public/head"}
 		{include file="public/slide"}
-		<!-- 频道幻灯 -->
-		<!-- <div class="lunhuan" id="carousel1">
-			<div id="lunhuanback">
-				{maccms:vod num="9" type="current" level="1,2,3,4,5,6,7,8,9" order="desc" by="time"}
-				<a style="background-image:url({$vo.vod_pic_slide});opacity: 1;display: block;" href="{:mac_url_vod_detail($vo)}"
-				 title="{$vo.vod_name}"></a>
-				{/maccms:vod}
-			</div>
-			<div class="slider_nav" id='lunbonum'>
-				{maccms:vod num="9" type="current" level="1,2,3,4,5,6,7,8,9" order="desc" by="time"}
-				<a href="{:mac_url_vod_detail($vo)}">
-					<div class="tit">{$vo.vod_name}</div>
-					<div class="txt">{$vo.vod_actor} </div>
-				</a>
-				{/maccms:vod}
-			</div>
-			<div class="slider_mask"></div>
-		</div>
-		</div> -->
-		
 		<!-- 搜索条件 -->
-		<!-- <div class="column yk-container">
+		<div class="column yk-container">
 			<div class="le_screen">
 				<div class="nav_box nav_box1">
 					<ul>
@@ -108,7 +88,7 @@
 					</ul>
 				</div>
 			</div>
-		</div> -->
+		</div>
 		<div class="yk-container">
 			<div class="yk-row">
 				{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
@@ -137,32 +117,6 @@
 				</div>
 				{/macdiy:vodrecommend}
 				<script type="text/javascript" src="{$maccms.path_ads}list-1400-1.js" charset="utf-8"></script>
-				<!-- <div class="yk-pannel clearfix">
-					<div class="yk-pannel-box">
-						<div class="yk-pannel_hd">
-							<div class="yk-pannel_head clearfix">
-								<h3 class="title">为你推荐</h3>
-							</div>
-						</div>
-						<div class="yk-pannel_bd clearfix">
-							<ul class="index-list-1 active clearfix">
-								{maccms:vod num="9" type="current" order="asc" by="hits"}
-								<li class="yk-pack">
-									<div class="p-thumb">
-										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
-										<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
-										<span class="playshow">{$vo.vod_remarks}</span>
-									</div>
-									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-										<span>主演：{$vo.vod_actor}</span>
-									</ul>
-								</li>
-								{/maccms:vod}
-							</ul>
-						</div>
-					</div>
-				</div> -->
 				{if $obj.childids}
 				{maccms:type ids="current" order="asc" by="sort"}
 				<div class="yk-pannel clearfix">
