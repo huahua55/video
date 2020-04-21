@@ -300,7 +300,7 @@ class DoubanScore extends Command
             foreach ($douBanScoreData['list'] as $k => $v) {
                 $is_log = false;
                 $mac_curl_get_data = '';
-//                sleep(3);
+                sleep(3);
                 $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
