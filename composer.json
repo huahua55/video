@@ -5,7 +5,8 @@
         "topthink/think-captcha": "~1.0",
         "topthink/think-queue": "~1.0",
         "topthink/think-image": "~1.0",
-        "jaeger/querylist": "^4.2"
+        "jaeger/querylist": "^4.2",
+        "jaeger/querylist-phantomjs": "^4.0"
     },
     "repositories": {
         "packagist": {

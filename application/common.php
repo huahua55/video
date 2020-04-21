@@ -945,7 +945,7 @@ function mac_rep_pse_syn($psearr,$txt)
 
 function mac_get_tag($title,$content){
     $url ='http://api.maccms.com/keyword/?callback=&txt='.rawurlencode($title).rawurlencode(mac_substring(strip_tags($content),200));
-    $data = mac_curl_get($url);
+    $data = mac_curdel_get($url);
 	$json = @json_decode($data,true);
 	if($json){
 		if($json['code']==1){
@@ -955,7 +955,7 @@ function mac_get_tag($title,$content){
     return false;
 }
 
-function mac_get_uniqid_code($code_prefix='')
+function mac_get_uniqid_co($code_prefix='')
 {
     $code_prefix = strtoupper($code_prefix);
     $now_date = date('YmdHis');
