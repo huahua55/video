@@ -1,6 +1,6 @@
 {include file="../../../application/admin/view/public/head" /}
 <div class="page-container p10">
-
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
     <div class="my-toolbar-box">
         <div class="center mb10">
             <form class="layui-form " method="post">
@@ -25,12 +25,13 @@
             <tr>
                 <th width="25"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
                 <th width="100">名称</th>
-                <th width="100">状态</th>
-                <th width="100">排序</th>
-                <th width="150">所属分类</th>
-                <th>图片</th>
+                <th width="50">状态</th>
+                <th width="50">排序</th>
+                <th width="50">所属分类</th>
+                <th width="80">图片</th>
+                <th>关联视频</th>
                 <th>链接地址</th>
-                <th width="130">操作</th>
+                <th width="100">操作</th>
             </tr>
             </thead>
 
@@ -49,9 +50,19 @@
                     <a target="_blank" class="layui-badge-rim " href="{:mac_url_img($vo.img)}">点击查看</a>
                     <input type="hidden"  name="img[]" value="{$vo.img}">
                 </td>
+                <td>
+                    {notempty name="$vo.vod"}
+                    [{$vo.vod.type.type_name}] <a target="_blank" class="layui-badge-rim " href="{:mac_url_vod_detail($vo.vod)}">{$vo.vod.vod_name|htmlspecialchars}</a>
+                    {if condition="$vo.vod.vod_status eq 0"} <span class="layui-badge">未审</span>{/if}
+                    {if condition="$vo.vod.vod_lock eq 1"} <span class="layui-badge">锁定</span>{/if}
+                    {if condition="$vo.vod.vod_isend eq 0 && $vo.vod_serial neq ''"} <span class="layui-badge layui-bg-blue">连载{$vo.vod.vod_serial}</span>{/if}
+                    {if condition="$vo.vod.vod_remarks neq ''"} <span class="layui-badge layui-bg-orange">{$vo.vod.vod_remarks}</span>{/if}
+                    {if condition="$vo.vod.vod_plot eq 1"} <span class="layui-badge layui-bg-cyan">剧情</span>{/if}
+                    {/notempty}
+                </td>
                 <td><input type="input" name="link[]" value="{$vo.link}" class="layui-input"></td>
                 <td>
-                    <a class="layui-badge-rim j-iframe" data-href="{:url('info?id='.$vo['id'])}" href="javascript:;" title="编辑">编辑</a>
+                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('info?id='.$vo['id'])}" href="javascript:;" title="编辑">编辑</a>
                     <a class="layui-badge-rim j-tr-del" data-href="{:url('del?ids='.$vo['id'])}" href="javascript:;" title="删除">删除</a>
                 </td>
             </tr>

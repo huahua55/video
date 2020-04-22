@@ -42,6 +42,15 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">相关视频ID：</label>
+            <div class="layui-input-inline w500">
+                <input type="text" class="layui-input" value="{notempty name="$info.rel_vod"} {$info.rel_vod} {/notempty}" placeholder="请选择相关视频ID" id="rel_vod" name="rel_vod">
+            </div>
+            <div class="layui-input-inline ">
+                <a class="layui-btn j-iframe" data-href="{:url('vod/data')}?select=1&input=rel_vod" href="javascript:;" title="查询数据">查询数据</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">链接地址：</label>
             <div class="layui-input-block">
                 <input type="text" class="layui-input" value="{$info.link}" placeholder="请输入链接地址" id="link" name="link">

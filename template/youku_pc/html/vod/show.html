@@ -27,7 +27,7 @@
 							<li class="item-extend">
 								<span class="sTit">分类：</span>
 								<p class="pSelect">
-									<span><a href="{:mac_url_type($obj, ['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
+									<span><a href="{:mac_url_type($obj, ['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'], 'id'=>$obj.type_id1],'show')}">全部</a></span>
 
 									{empty name="$obj.parent"}
 									{maccms:type ids="child" parent="current" by="sort" order="asc"}
@@ -58,14 +58,14 @@
 							<li>
 								<span class="sTit">年代：</span>
 								<p class="pSelect">
-									<span><a {if condition="$param['year'] eq ''" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
+									<span><a {if condition="$param['year'] eq ''" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
 									{empty name="$obj.type_extend.year"}
 									{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)" id="vo2" key="key2"}
-									<span><a {if condition="$param['area'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									<span><a {if condition="$param['year'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
 									{/maccms:foreach}
 									{else /}
 									{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
-									<span><a {if condition="$param['year'] eq $vo2" } class="current" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo2,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									<span><a {if condition="$param['year'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
 									{/maccms:foreach}
 									{/empty}</p>
 							</li>

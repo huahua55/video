@@ -930,11 +930,12 @@ CREATE TABLE `vod_recommend` (
   KEY `idx_type_id` (`type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频推荐';
 
-CREATE TABLE `banner_recommend` (
+CREATE TABLE `banner` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
   `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类ID',
   `img` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
+  `rel_vod` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联视频ID',
   `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
   `sort` tinyint(2) NOT NULL DEFAULT '0' COMMENT '排序',
   `time` int(10) unsigned NOT NULL,

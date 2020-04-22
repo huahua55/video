@@ -34,6 +34,16 @@ class Banner extends Base {
                 $list[$k]['type'] = ['type_name' => '首页'];
             }
         }
+        // 关联视频
+        foreach($list as $k=>$v){
+            $list[$k]['vod'] = [];
+            if ($v['rel_vod']) {
+                $vod = model('Vod')->infoData(['vod_id'=>$v['rel_vod']]);
+                if ($vod['code'] == 1) {
+                    $list[$k]['vod'] = $vod['info'];
+                }
+            }
+        }
 
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }

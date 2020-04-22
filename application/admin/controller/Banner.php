@@ -22,7 +22,6 @@ class Banner extends Base
 
         $order='id desc';
         $res = model('Banner')->listData($where,$order,$param['page'],$param['limit']);
-
         $this->assign('list',$res['list']);
         $this->assign('total',$res['total']);
         $this->assign('page',$res['page']);

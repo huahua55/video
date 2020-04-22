@@ -11,11 +11,10 @@
 				</div>
 				<div class="newhead-small-nav">
 					<li id="nav-index"><a href="/" target="_self">首页</a></li>
-					{maccms:type ids="parent" order="asc" by="sort"}
-					<li id="nav-{$vo.type_en}"><a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
+					{maccms:type ids="parent" mid="1" order="asc" by="sort"}
+					<li id="nav-{$vo.type_en}" class="{if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"} cur {/if}"><a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
 					{/maccms:type}
-					<li id="nav-{$vo.type_en}"> <a href="{:mac_url('gbook/index')}" target="_self" id="nav-gbook">留言</a></li>
-					<li id="nav-{$vo.type_en}"><a href="{:mac_url_topic_index()}" target="_self" id="nav-topic">专题</a></li>
+					<li id="nav-{$vo.type_en}" class="{if condition="($maccms.aid == 4)"} cur {/if}"> <a href="{:mac_url('gbook/index')}" target="_self" id="nav-gbook">求片/留言</a></li>
 					<!-- <li class="top-nav-more-large"><a href="javascript:void(0);" class="ico-list"></a>
 					<ul>
                     <li class="arrow"></li>
@@ -43,7 +42,6 @@
 					</li>
 				</div>
 			</div>
-			<script>$("#nav{$obj.type_en}").addClass("cur");</script>
 			<div id="searchbar" class="search-main" tabindex="0">
 				<div class="head-search">
 					<div id="_js_search_form" class="head-search-box ">
