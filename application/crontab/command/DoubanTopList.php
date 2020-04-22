@@ -67,6 +67,8 @@ class DoubanTopList extends Command
     protected function execute(Input $input, Output $output)
     {
 
+
+
         $port= $this->getPort();
         $heads = [
             'Accept' => '*/*',
@@ -146,7 +148,8 @@ class DoubanTopList extends Command
 
     }
 
-    public function getPort(){
+    public function getPort($a = 0){
+
         $queryData  = $this->get_query_url();
         $queryData = json_decode(mac_curl_get($queryData),true);
         if(!empty($queryData) && isset($queryData['code'])){
@@ -155,7 +158,16 @@ class DoubanTopList extends Command
                     return  $queryData['port'][0];
                 }else{
                     sleep(1);
-                    $this->getPort();
+                    $this->getPort($a);
+                }
+            }
+        }
+        $a  = $a+1;
+        if($a >= 3){
+            $open_data = mac_curl_get($this->get_open_url());
+            if(!empty($open_data) && $open_data['code'] == 100 && $open_data['left_ip'] > 1){
+                    if(!empty($open_data['port'])){
+                        return  $open_data['port'][0];
                 }
             }
         }
@@ -203,6 +215,19 @@ class DoubanTopList extends Command
         $file_contents = curl_exec($ch);
 //        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         return $file_contents;
+    }
+    //返回请求分配代理端口URL链接
+    public function get_open_url()
+    {
+        $this->times = time();
+        $time_stamp = $this->get_timestamp();
+        $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
+        return 'http://' . $this->proxy_server . ':'
+            . $this->proxy_port . '/open?' . $this->key_name . $this->proxy_username .
+            '&' . $this->key_timestamp . strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern .
+            '&' . $this->key_num . strval($this->num);
     }
 
 }
