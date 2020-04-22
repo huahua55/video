@@ -22,12 +22,12 @@
 		<div class="shadow-ri"></div>
 		<div id="headerTopNav" class="warp">
 			<ul class="swiper-wrapper">
-				<li class="swiper-slide {empty name="$param['id']"} active {/empty}"><a class="item" href="/" title="首页">首页</a></li>
+				<li class="swiper-slide {empty name=" $param['id']"} active {/empty}"> <a class="item" href="/" title="首页">首页</a></li>
 				{maccms:type ids="parent" mid="1" order="asc" by="sort"}
 				<li class="swiper-slide {if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"}
-					active {/if}"><a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
+				 active {/if}"> <a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
 				{/maccms:type}
-				<li class="swiper-slide {if condition=" ($maccms.aid==4)"} active {/if}"><a class="item" href="/gbook.html" title="求片/留言">求片/留言</a></li>
+				<li class="swiper-slide {if condition=" ($maccms.aid==4)"} active {/if}"> <a class="item" href="/gbook.html" title="求片/留言">求片/留言</a></li>
 			</ul>
 		</div>
 	</div>
@@ -94,7 +94,7 @@
 			for (var i = 0; i < SearchRecordsArray.length; i++) {
 				searchHtmls += '<li class="aui-ellipsis-1"><a href="/index.php/vod/search/wd/' + SearchRecordsArray[i] +
 					'.html">' + SearchRecordsArray[i] + '</a><em class="up"></em></li>'
-					// <li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}">变形</a><em class="up"></em></li>
+				// <li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}">变形</a><em class="up"></em></li>
 			}
 			$("#searchWrap ul").html(searchHtmls)
 		} else {
