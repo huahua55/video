@@ -281,7 +281,7 @@ class DoubanScore extends Command
                     continue;
                 }
 
-                if(!empty($mac_curl_get_data)){
+                if(empty($mac_curl_get_data)){
                     $error_count ++;
                     if($error_count > 10){
                         $tmp =  $this->testing($url,$this->get_port);
