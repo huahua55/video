@@ -364,19 +364,7 @@ var MAC={
             });
         }
     },
-    'Search':{
-        'Init':function(){
-            $('.mac_search').click(function(){
-                var that=$(this);
-                var url = that.attr('data-href') ? that.attr('data-href') : maccms.path + '/index.php/vod/search.html';
-                location.href = url + '?wd='+ encodeURIComponent($("#wd").val());
-            });
-        },
-        'Submit':function(){
-
-            return false;
-        }
-    },
+  
     'Suggest':{
         'Init':function($obj,$mid,$jumpurl){
             try {
