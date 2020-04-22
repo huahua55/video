@@ -306,7 +306,7 @@ class DoubanScore extends Command
                         }
                     }
                 }
-                print_r($getSearchData);
+//                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
 //                log::info('采集豆瓣评分-url-data::' . $getSearchData);
                 if (!empty($getSearchData)){
