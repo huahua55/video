@@ -62,6 +62,9 @@ class Base extends All
     }
     protected function check_user_popedom($type_id,$popedom,$param=[],$flag='',$info=[],$trysee=0)
     {
+        // 权限验证暂时去掉
+        return ['code'=>1,'msg'=>'权限验证通过'];
+        
         $user = $GLOBALS['user'];
         $group = $GLOBALS['user']['group'];
 
