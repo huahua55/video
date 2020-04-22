@@ -24,42 +24,38 @@
 			</div>
 			<div id="classifyList02" class="classifyList">
 				<ul class="swiper-wrapper clearfix">
-					{if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
+					<li class="swiper-slide"><a href="javascript:void(0);">分类</a></li>
+<!--					{empty name="$obj.parent"}-->
+<!--					<li><a class="swiper-slide active" href="{:mac_url_type($obj, ['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>-->
+<!--					{maccms:type ids="child" parent="current" by="sort" order="asc"}-->
+<!--					<li><a class="swiper-slide {if condition="($param['id'] eq $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)" } active {/if}" href="{:mac_url_type($vo,['area'=>$param['area'],'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'],'id'=>$vo.type_id], 'show')}">{$vo.type_name}</a></li>-->
+<!--					{/maccms:type}-->
 
-						<li class="swiper-slide {if condition="$obj['type_id']==1"}active{/if}" tapmode onclick="showDefault('loading')"><a {if condition="$obj['type_id']!=1"} href="{:mac_url_type($obj['parent'],['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}"{/if}>分类</a></li>
-						{maccms:type ids="child" parent="1" by="sort" order="asc"}
-						<li class="swiper-slide {if condition="$vo['type_id'] == $obj['type_id']"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
-						{/maccms:type}
+<!--					{else /}-->
+<!--					<li><a href="{:mac_url_type($obj.parent, ['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>-->
+<!--					{maccms:type ids="child" parent="'.$obj['parent']['type_id'].'" by="sort" order="asc"}-->
+<!--					<li><a class="swiper-slide {if condition="($param['id'] eq $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)" } active {/if}" href="{:mac_url_type($vo,['area'=>$param['area'],'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'],'id'=>$vo.type_id], 'show')}">{$vo.type_name}</a></li>-->
+<!--					{/maccms:type}-->
+<!--					{/empty}-->
 
-				 	{elseif condition="($obj['type_id']==2) OR ($obj['parent']['type_id']==2)"}
-
-						<li class="swiper-slide {if condition="$obj['type_id']==2"}active{/if}" tapmode onclick="showDefault('loading')"><a {if condition="$obj['type_id']!=2"} href="{:mac_url_type($obj['parent'],['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}"{/if}>分类</a></li>
-						{maccms:type ids="child" parent="2" by="sort" order="asc"}
-						<li class="swiper-slide {if condition="$vo['type_id'] == $obj['type_id']"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></li>
-						{/maccms:type}
-				 	{/if}
+					{empty name="$obj.parent"}
+					<li class="swiper-slide active" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
+					{maccms:type ids="child" parent="current" by="sort" order="asc"}
+					<li class="swiper-slide" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo.type_name}</a></li>
+					{/maccms:type}
+					{else /}
+					<li class="swiper-slide" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj.parent,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
+					{maccms:type ids="child" parent="'.$obj['parent']['type_id'].'" by="sort" order="asc"}
+					<li class="swiper-slide {if condition="$param['id'] eq $vo.type_id"} active {/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($vo,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo.type_name}</a></li>
+					{/maccms:type}
+					{/empty}
  				</ul>
 			</div>
-			{if condition="($obj['type_id']!=1) AND ($obj['parent']['type_id']!=1) AND ($obj['type_id']!=2) AND ($obj['parent']['type_id']!=2)"}
-			<div id="classifyList03" class="classifyList">
-				<ul class="swiper-wrapper clearfix">
-			   		<li class="swiper-slide {if condition="$param['class'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">类型</a></li>
-					{empty name="$obj.type_extend.class"}
-						{maccms:foreach name=":explode(',',$obj.parent.type_extend.class)"}
-						<li class="swiper-slide {if condition="$param['class'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
-						{/maccms:foreach}
-					{else /}
-						{maccms:foreach name=":explode(',',$obj.type_extend.class)"}
-						<li class="swiper-slide {if condition="$param['class'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$vo,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
-						{/maccms:foreach}
-					{/empty}
-			   </ul>
-			</div>
-			{/if}
+
 			<div id="classifyList04" class="classifyList">
 				<ul class="swiper-wrapper clearfix">
-
-					<li class="swiper-slide {if condition="$param['area'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">地区</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0);">分类</a></li>
+					<li class="swiper-slide {if condition="$param['area'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
 					{empty name="$obj.type_extend.area"}
 						{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)"}
 						<li class="swiper-slide {if condition="$param['area'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$vo,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
@@ -75,7 +71,8 @@
 
 			<div id="classifyList05" class="classifyList scroll">
 				<ul class="swiper-wrapper clearfix">
-					<li class="swiper-slide {if condition="$param['year'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>'','level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">年代</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0);">年代</a></li>
+					<li class="swiper-slide {if condition="$param['year'] eq ''"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
 					{empty name="$obj.type_extend.year"}
 						{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)"}
 						<li class="swiper-slide {if condition="$param['year'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
@@ -92,17 +89,6 @@
 </section>
 
  <script>
-$("#idc81e728d9d4c2f636f067f89cc14862c").addClass("active");
-$("#aread41d8cd98f00b204e9800998ecf8427e").addClass("active");
-$("#typed41d8cd98f00b204e9800998ecf8427e").addClass("active");
-$("#yeard41d8cd98f00b204e9800998ecf8427e").addClass("active");
-$("#stard41d8cd98f00b204e9800998ecf8427e").addClass("active");
-$("#orderaddtime").addClass("active");
-$("#stated41d8cd98f00b204e9800998ecf8427e").addClass("active");
-
-
-
-
 var top1=$(".scroll").offset().top;
 　　　　$(window).scroll(function(){
 　　　　　　var win_top=$(this).scrollTop();
@@ -173,18 +159,17 @@ $(document).ready(function(){
 
 <!-- 影片部分 -->
 <section class="mod aui-margin-t-0">
-	<div class="mod-head clearfix">
-		<div class="mod-head-title">
-			<span class="mod-head-name">资源列表</span>
-		</div>
-	<span class="change"><!--今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部, -->共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
-	</div>
+<!--	<div class="mod-head clearfix">-->
+<!--		<div class="mod-head-title">-->
+<!--			<span class="mod-head-name">资源列表</span>-->
+<!--		</div>-->
+<!--	<span class="change">&lt;!&ndash;今日更新<em>【{:mac_data_count($obj.type_id,'today','vod')}】</em>部, &ndash;&gt;共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>-->
+<!--	</div>-->
 	<div class="mod-main clearfix">
-				<div class="mod-row">
+		<div class="mod-row">
 			<ul class="m-list clearfix" m-list-skin="film">
-
-            {maccms:vod num="30" paging="yes" pageurl="vod/show" type="current" order="desc" by="time"}
-            <li class="m-item">
+				{maccms:vod num="30" paging="yes" pageurl="vod/show" type="current" order="desc" by="time"}
+				<li class="m-item">
 					<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
 						<img class="ff-img" data-original="($vo.vod_pic)" src="{:mac_url_img($vo.vod_pic)}">
 						<i class="mask"></i>
@@ -196,12 +181,12 @@ $(document).ready(function(){
 					</div>
 				</li>
 				{/maccms:vod}
-      </ul>
+      		</ul>
 		</div>
-			</div>
+	</div>
 </section>
 
-    {include file="public/paging"}
+{include file="public/paging"}
 
 {include file="public/foot"}
 </body>

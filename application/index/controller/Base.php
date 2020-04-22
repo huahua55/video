@@ -64,7 +64,7 @@ class Base extends All
     {
         // 权限验证暂时去掉
         return ['code'=>1,'msg'=>'权限验证通过'];
-        
+
         $user = $GLOBALS['user'];
         $group = $GLOBALS['user']['group'];
 

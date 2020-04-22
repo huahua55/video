@@ -30,35 +30,11 @@
 		</section>
 		<!-- 搜索条件 -->
 		<section class="select">
-			{if condition="($obj['type_id']==1) OR ($obj['parent']['type_id']==1)"}
 			<ul class="show_select hidden">
-				{maccms:type ids="child" parent="1" by="sort" order="asc"}
+				{maccms:type ids="child" parent="current" by="sort" order="asc"}
 				<li><a href="{:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
 				{/maccms:type}
-				<!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
 			</ul>
-			{elseif condition="($obj['type_id']==2) OR ($obj['parent']['type_id']==2)"}
-			<ul class="show_select hidden">
-				{maccms:type ids="child" parent="2" by="sort" order="asc"}
-				<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
-				{/maccms:type}
-				<!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
-			</ul>
-			{elseif condition="($obj['type_id']==3) OR ($obj['parent']['type_id']==3)"}
-			<ul class="show_select hidden">
-				{maccms:type ids="child" parent="3" by="sort" order="asc"}
-				<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
-				{/maccms:type}
-				<!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
-			</ul>
-			{elseif condition="($obj['type_id']==4) OR ($obj['parent']['type_id']==4)"}
-			<ul class="show_select hidden">
-				{maccms:type ids="child" parent="4" by="sort" order="asc"}
-				<li><a href=" {:mac_url_type($vo,[],'show')}" title="{$vo.type_name">{$vo.type_name}</a></li>
-				{/maccms:type}
-				<!--<li><a class="shows" href="{:mac_url_type($obj,['area'=>'','lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}" title="全部">全部</a></li>-->
-			</ul>
-			{/if}
 		</section>
 		<script type="text/javascript">
 			$(function() {
@@ -85,37 +61,8 @@
 
 			})
 		</script>
-		<!--为你推荐-->
-		<!-- <section class="mod aui-margin-t-5">
-			<div class="mod-head clearfix">
-				<div class="mod-head-title">
-					<span class="mod-head-name">为你推荐</span>
-				</div>
-				<span class="change">共有<em>【{:mac_data_count($obj.type_id,'all','vod')}】</em>部影片</span>
-			</div>
-			<div class="mod-main clearfix">
-				<div class="mod-row">
-					<ul class="m-list clearfix" m-list-skin="film">
-						{maccms:vod num="6" paging="yes" type="current" order="desc" by="time"}
-
-						<li class="m-item">
-							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}">
-								<i class="mask"></i>
-								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-							</a>
-							<div class="text">
-								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
-							</div>
-						</li>
-						{/maccms:vod}
-					</ul>
-				</div>
-			</div>
-		</section> -->
 		<!-- 模板 -->
-		{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
+		{macdiy:vodrecommend num="6" type="current" order="asc" by="sort"}
 		<section class="mod aui-margin-t-0">
 			<div class="mod-head aui-clearfix">
 				<div class="mod-head-title">
@@ -142,16 +89,14 @@
 			</div>
 		</section>
 		{/macdiy:vodrecommend}
-		{if$obj.type_name=='直播'||$obj.parent.type_name=='直播'}
-		{else}
-		{if$obj.childids}
+
 		{maccms:type ids="current" order="asc" by="sort"}
 		<section class="mod aui-margin-t-0">
 			<div class="mod-head clearfix">
 				<div class="mod-head-title">
 					<span class="mod-head-name">{$vo.type_name}</span>
 				</div>
-				<a class="change" href="{:mac_url_type($vo)}">更多{$vo.type_name}</a>
+				<a class="change" href="{:mac_url_type($vo,[],'show')}">更多</a>
 			</div>
 			<div class="mod-main clearfix">
 				<div class="mod-row">
@@ -165,7 +110,6 @@
 							</a>
 							<div class="text">
 								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-								<p class="des">主演:{$vo.vod_actor}</p>
 							</div>
 						</li>
 						{/maccms:vod}
@@ -174,38 +118,7 @@
 			</div>
 			</div>
 			{/maccms:type}
-			{else}
-			<section class="mod aui-margin-t-0">
-				<div class="mod-head clearfix">
-					<div class="mod-head-title">
-						<span class="mod-head-name">{$obj.type_name}</span>
-					</div>
-				</div>
-				<div class="mod-main clearfix">
-					<div class="mod-row">
-						<ul class="m-list clearfix" m-list-skin="film">
-							{maccms:vod num="30" paging="yes" half="3" type="current" order="desc" by="time"}
-							<li class="m-item">
-								<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
-									<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)} " src="{:mac_url_img($vo.vod_pic)}">
-									<i class="mask"></i>
-									<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
-								</a>
-								<div class="text">
-									<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
-									<p class="des">主演:{$vo.vod_actor}</p>
-								</div>
-							</li>
-							{/maccms:vod}
-						</ul>
-					</div>
-				</div>
-			</section>
-			{include file="public/paging"}
 			<!--正在热播-->
-			{/if}
-			{/if}
-			<!-- 分页 -->
 			{include file="public/foot"}
 	</body>
 </html>
