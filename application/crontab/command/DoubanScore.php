@@ -263,12 +263,12 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-                        '--proxy' => "183.129.244.16:4144",
-//                        '--proxy' => $this->proxy_server.":".$this->get_port,
-                        '--proxy-type' => 'http',
-//                        '--ssl-protocol' =>'any',
-                        '--load-images'=>'no',
-//                        '--ignore-ssl-errors' =>true,
+//                        '--proxy' => "183.129.244.16:4144",
+////                        '--proxy' => $this->proxy_server.":".$this->get_port,
+//                        '--proxy-type' => 'http',
+////                        '--ssl-protocol' =>'any',
+//                        '--load-images'=>'no',
+////                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],

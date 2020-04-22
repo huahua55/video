@@ -38,10 +38,10 @@
 				<!-- Swiper -->
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
-						{macdiy:notice num="10" type="current" order="asc" by="level"}
+						{macdiy:notice num="10" type="current" order="desc" by="level"}
 						<div class="swiper-slide" style="height: 2rem;">
 							<a href="{:mac_url_art_detail($vo)}">
-								{$vo.art_name}
+								{$vo.art_content}
 							</a>
 						</div>
 						{/macdiy:notice}
