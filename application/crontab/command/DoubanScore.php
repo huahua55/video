@@ -281,6 +281,8 @@ class DoubanScore extends Command
                     continue;
                 }
 
+                $getSearchData = objectToArray($mac_curl_get_data);
+
                 if(empty($mac_curl_get_data)){
                     $error_count ++;
                     if($error_count > 10){
@@ -290,7 +292,7 @@ class DoubanScore extends Command
                             echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
                             file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
                             try {
-                                $close_url = get_close_url($this->get_port);
+                                $close_url = $this->get_close_url($this->get_port);
                                 $r = file_get_contents($close_url);
                                 $result =iconv("gb2312", "utf-8//IGNORE",$r);
                                 echo 'close_url||' .  $result;
@@ -301,7 +303,6 @@ class DoubanScore extends Command
                         }
                     }
                 }
-                $getSearchData = objectToArray($mac_curl_get_data);
 //                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
 //                log::info('采集豆瓣评分-url-data::' . $getSearchData);
