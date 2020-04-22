@@ -353,7 +353,7 @@ class Index extends Base{
             ];
             $list = $douban->field("name")->where($where)->limit(10)->order('id asc')->select();
             $list = objectToArray($list);
-            $data = array_merge($data,array_column($list,'name'));
+            $data = array_merge(array_column($list,'name'),$data);
         }
 
 //        $config = config('maccms.app');
