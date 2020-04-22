@@ -142,6 +142,7 @@ class DoubanScore extends Command
 
    //更新cookie
     protected function getCookie($url){
+        return 'll="108288";bid=h4nqLajQEBo';
         $client = new Client();
         $response = $client->get($url);
         // 获取响应头部信息
@@ -195,12 +196,13 @@ class DoubanScore extends Command
         }else{
             $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
         }
+
         //使用queryList + PhantomJs
         $this->ql->use(PhantomJs::class,$ph_js_path);
         $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
 
         //开启代理
-         $this->get_port = $this->getDouBan();
+//         $this->get_port = $this->getDouBan();
 //        p($A);
         //开始cookie
         $cookies =  $this->getCookie('https://movie.douban.com/');
@@ -219,7 +221,7 @@ class DoubanScore extends Command
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
         $order = 'vod_id asc';
-
+        $cookie = $this->newCookie($cookies);
         //进入循环 取出数据
         while ($is_true) {
             //取出数据
@@ -234,39 +236,39 @@ class DoubanScore extends Command
             }
 
             foreach ($douBanScoreData['list'] as $k => $v) {
-                $cookie = $this->newCookie($cookies);
+
                 $error_count = 1;
                 $is_log = false;
                 $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-//                sleep($sleep);
-                if(time() > $this->times + (60*3) ){
-                    $this->get_port = $this->getDouBan();
-                }
-                $url = sprintf($this->search_url_re, urlencode('11'));
-                var_dump($url);
+//                sleep(1);
+//                if(time() > $this->times + (60*3) ){
+//                    $this->get_port = $this->getDouBan();
+//                }
+                $url = sprintf($this->search_url_re, urlencode('1'));
+//                var_dump($url);
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
-                        $r->addHeader('Referer', $url);
+//                        $r->addHeader('Referer', $url);
                         $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
                         $r->addHeader('Host', 'search.douban.com');
                         $r->addHeader('DNT', 1);
-                        $r->addHeader('Sec-Fetch-User', '?1');
-                        $r->addHeader('Upgrade-Insecure-Requests', '1');
+//                        $r->addHeader('Sec-Fetch-User', '?1');
+//                        $r->addHeader('Upgrade-Insecure-Requests', '1');
                         $r->setUrl($url);
                         $r->setTimeout(10000); // 10 seconds
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:54034",
-                        '--proxy' => $this->proxy_server.":".$this->get_port,
-                        '--proxy-type' => 'http',
-//                        '--ssl-protocol' =>'any',
-                        '--load-images'=>'no',
-//                        '--ignore-ssl-errors' =>true,
+//                        '--proxy' => "183.129.244.16:4144",
+////                        '--proxy' => $this->proxy_server.":".$this->get_port,
+//                        '--proxy-type' => 'http',
+////                        '--ssl-protocol' =>'any',
+//                        '--load-images'=>'no',
+////                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
@@ -281,16 +283,21 @@ class DoubanScore extends Command
                     continue;
                 }
 
-                if(!empty($mac_curl_get_data)){
+
+                $getSearchData = objectToArray($mac_curl_get_data);
+                p($getSearchData);
+                if(empty($mac_curl_get_data)){
+                    log::info('采集豆瓣评分-url-err::');
                     $error_count ++;
                     if($error_count > 10){
+                        log::info('采集豆瓣评分-url-err1::');
                         $tmp =  $this->testing($url,$this->get_port);
                         if($tmp != 200 && $this->times + (50*3)){
                             $this->get_port = $this->getDouBan(); //重新构成代理端口
                             echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
                             file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
                             try {
-                                $close_url = get_close_url($this->get_port);
+                                $close_url = $this->get_close_url($this->get_port);
                                 $r = file_get_contents($close_url);
                                 $result =iconv("gb2312", "utf-8//IGNORE",$r);
                                 echo 'close_url||' .  $result;
@@ -301,11 +308,11 @@ class DoubanScore extends Command
                         }
                     }
                 }
-                $getSearchData = objectToArray($mac_curl_get_data);
-//                print_r($getSearchData);
+                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
 //                log::info('采集豆瓣评分-url-data::' . $getSearchData);
                 if (!empty($getSearchData)){
+                    log::info('采集豆瓣评分-url2-::' );
                     foreach ($getSearchData as $da_k=>$as_k){
                         log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
                         log::info('采集豆瓣评分-title2-::' . $as_k['title']);
@@ -352,6 +359,7 @@ class DoubanScore extends Command
                     }
 
                 }
+//                p(1);
                 Cache::set('vod_id_list_douban_score', $v['vod_id']);
                 if ($is_log == false) {
                     log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
