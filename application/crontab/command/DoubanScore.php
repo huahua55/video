@@ -26,17 +26,17 @@ class DoubanScore extends Command
     protected $search_url_re = 'https://search.douban.com/movie/subject_search?search_text=%s&cat=1002';//豆瓣搜索接口
     protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
     protected $get_search_id = 'http://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
-   protected $ql;//querylist
+    protected $ql;//querylist
+    protected $times;//超时time
+    protected $get_port;//port
 
-
+    //代理使用
     protected $proxy_username = 'zhangshanap1';
     protected $proxy_passwd = '76836051';
     protected $proxy_server = '183.129.244.16';
     protected $proxy_port = '88';
     protected $pattern = 'json';//API访问返回信息格式：json和text可选
-    protected $num = 10;//获取代理端口数量
-
-
+    protected $num = 1;//获取代理端口数量
     protected $key_name = 'user_name=';
     protected $key_timestamp = 'timestamp=';
     protected $key_md5 = 'md5=';
@@ -49,11 +49,6 @@ class DoubanScore extends Command
         //db
         $this->vodDb = Db::name('vod');
         $this->ql = QueryList::getInstance();
-//        $ph_js_path = ROOT_PATH.'extend/phantomjs_macosx/bin/phantomjs';
-        $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
-        $this->ql->use(PhantomJs::class,$ph_js_path);
-        $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
-//        print_r($ph_js_path);die;
         //获取豆瓣id
         $this->setName('DoubanScore')->addArgument('parameter')
             ->setDescription('定时计划：采集豆瓣评分');
@@ -68,8 +63,6 @@ class DoubanScore extends Command
         $list = $this->vodDb->field('vod_id,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
-
-
 
     //返回当前时间戳（单位为 ms）
     public function get_timestamp()
@@ -87,6 +80,7 @@ class DoubanScore extends Command
 //返回请求分配代理端口URL链接
     public function get_open_url()
     {
+        $this->times = time();
         $time_stamp = $this->get_timestamp();
         $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
         return 'http://' . $this->proxy_server . ':'
@@ -181,52 +175,35 @@ class DoubanScore extends Command
     protected function execute(Input $input, Output $output)
     {
 
-        $lcs = new similarText();
-        $myparme = $input->getArguments();
-        $parameter = $myparme['parameter'];
-        if($parameter == 1){
-            Cache::set('vod_id_list_douban_score', 1);
-        }
-//
-        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
-//        $file = 'log.txt';
-//        $port = '';//代理端口变量
-//
-//        $codeArray = [];
-//        try {
-//            $open_url = $this->get_open_url();
-//            $r = file_get_contents($open_url);
-//            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-//            $codeArray = json_decode($result,true);
-//            echo $result . "\n <br>";
-//            file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
-//            $json_arr = json_decode($result, true);
-//            $code = $json_arr['code'];
-//            if ($code == 108) {
-//                $reset_url = $this->get_reset_url();
-//                $r = file_get_contents($reset_url);
-//            } else if ($code == 100) {
-//                $port = strval($json_arr['port'][0]);
-//            }
-//
-//        } catch (\Exception $e) {
-//            file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
-//        }
-//
-//        $ran =  rand(1,$codeArray['number']);
-//        $portAr = $codeArray['port'][$ran];
-
-
-
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
+        //字符串对比算法
+        $lcs = new similarText();
+        //cli模式接受参数
+        $myparme = $input->getArguments();
+        $parameter = $myparme['parameter'];
+        //参数转义解析
+        $param = $this->ParSing($parameter);
+        $type = $param['type'] ?? ''; //从1 开始爬取
+        $x = $param['x'] ?? '';
+        if(!empty($type) && $type == 1){
+            Cache::set('vod_id_list_douban_score', 1);
+        }
+        //选择mac扩展还是 linux 扩展
+        if(!empty($x) && $x == 'mac'){
+            $ph_js_path = ROOT_PATH.'extend/phantomjs_macosx/bin/phantomjs';
+        }else{
+            $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
+        }
+        //使用queryList + PhantomJs
+        $this->ql->use(PhantomJs::class,$ph_js_path);
+        $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
+
         //开启代理
-//        $A = $this->getDouBan();
+         $this->get_port = $this->getDouBan();
 //        p($A);
         //开始cookie
         $cookies =  $this->getCookie('https://movie.douban.com/');
-        $cookie = $this->newCookie($cookies);
-
         $start = 0;
         $page = 1;
         $limit = 20;
@@ -238,7 +215,6 @@ class DoubanScore extends Command
         if (!empty($is_vod_id)) {
             $where['vod_id'] = ['gt', $is_vod_id];
         }
-
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -249,9 +225,7 @@ class DoubanScore extends Command
             //取出数据
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
 //            print_r( $this->vodDb->getlastsql());die;
-//            print_r($douBanScoreData);die;
             $pagecount = $douBanScoreData['pagecount'] ?? 0;
-
             if ($page > $pagecount) {
                 $is_true = false;
                 log::info('采集豆瓣评分结束...');
@@ -260,29 +234,40 @@ class DoubanScore extends Command
             }
 
             foreach ($douBanScoreData['list'] as $k => $v) {
+                $cookie = $this->newCookie($cookies);
+                $error_count = 1;
                 $is_log = false;
                 $mac_curl_get_data = '';
-               $sleep =  rand(3,10);
-                sleep($sleep);
-                $url = sprintf($this->search_url_re, urlencode('平'));
+//               $sleep =  rand(3,10);
+//                sleep($sleep);
+                if(time() > $this->times + (60*3) ){
+                    $this->get_port = $this->getDouBan();
+                }
+                $url = sprintf($this->search_url_re, urlencode('11'));
+                var_dump($url);
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
-                        $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8');
-                        // $r->addHeader('Referer', 'http://cq.meituan.com/s/%E5%90%83%E9%A5%AD/');
-                        $r->addHeader('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 YaBrowser/18.4.0.2080 Yowser/2.5 Safari/537.36');
+                        $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
+                        $r->addHeader('Referer', $url);
+                        $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
+                        $r->addHeader('Host', 'search.douban.com');
+                        $r->addHeader('DNT', 1);
+                        $r->addHeader('Sec-Fetch-User', '?1');
+                        $r->addHeader('Upgrade-Insecure-Requests', '1');
                         $r->setUrl($url);
                         $r->setTimeout(10000); // 10 seconds
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-                        '--proxy' => "183.129.244.16:15485",
-//                        '--proxy' => $this->proxy_server.":55096",
+//                        '--proxy' => "183.129.244.16:54034",
+                        '--proxy' => $this->proxy_server.":".$this->get_port,
                         '--proxy-type' => 'http',
 //                        '--ssl-protocol' =>'any',
                         '--load-images'=>'no',
-                        '--ignore-ssl-errors' =>true,
+//                        '--ignore-ssl-errors' =>true,
+//                    ])->getHtml();
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
                         'title' => ['a','text'],
@@ -290,12 +275,32 @@ class DoubanScore extends Command
                         'abstract' => ['.abstract','text'],
                         'abstract_2' => ['.abstract_2','text'],
                     ])->range('.item-root')->query()->getData();
+
                 } catch (Exception $e) {
                     Log::info('err--过滤' . $url);
                     continue;
                 }
-                p($mac_curl_get_data);die;
 
+                if(!empty($mac_curl_get_data)){
+                    $error_count ++;
+                    if($error_count > 10){
+                        $tmp =  $this->testing($url,$this->get_port);
+                        if($tmp != 200 && $this->times + (50*3)){
+                            $this->get_port = $this->getDouBan(); //重新构成代理端口
+                            echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
+                            file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
+                            try {
+                                $close_url = get_close_url($this->get_port);
+                                $r = file_get_contents($close_url);
+                                $result =iconv("gb2312", "utf-8//IGNORE",$r);
+                                echo 'close_url||' .  $result;
+                                file_put_contents('log.txt', 'close_url||' . $result . PHP_EOL,FILE_APPEND);
+                            } catch (Exception $e) {
+                                file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL,FILE_APPEND);
+                            }
+                        }
+                    }
+                }
                 $getSearchData = objectToArray($mac_curl_get_data);
 //                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
@@ -496,19 +501,15 @@ class DoubanScore extends Command
         ];
     }
 
+
+    //获取代理端口
     public function getDouBan()
     {
-
-
         //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
         $file = 'log.txt';
         $port = '';//代理端口变量
-
-
-        $test_url = 'https://movie.douban.com/j/subject_suggest?q=清平乐'; //测试访问链接
         try {
             $open_url = $this->get_open_url();
-            var_dump($open_url);
 //            p($open_url);
             $r = file_get_contents($open_url);
             $result = iconv("gb2312", "utf-8//IGNORE", $r);
@@ -527,23 +528,19 @@ class DoubanScore extends Command
         } catch (\Exception $e) {
             file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
         }
+        return $port;
+    }
 
-//        var_dump($test_url);
-//        $tmp = $this->testing($test_url, $port);
-        print_r(1);die;
-//        p($tmp);
-//        p($port);
-//        echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
-        file_put_contents($file, 'test_proxy|| httpCode:' . 200 . PHP_EOL, FILE_APPEND);
-        try {
-            $close_url = $this->get_close_url($port);
-            $r = file_get_contents($close_url);
-            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            echo 'close_url||' . $result;
-            file_put_contents($file, 'close_url||' . $result . PHP_EOL, FILE_APPEND);
-        } catch (\Exception $e) {
-            file_put_contents($file, 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+    protected function ParSing($parameter)
+    {
+        $parameter_array = array();
+        $arry = explode('#', $parameter);
+        foreach ($arry as $key => $value) {
+            $zzz = explode('=', $value);
+            $parameter_array[$zzz[0]] = $zzz[1];
+
         }
+        return $parameter_array;
 
     }
 
