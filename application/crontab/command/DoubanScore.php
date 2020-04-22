@@ -272,6 +272,7 @@ class DoubanScore extends Command
                         '--load-images'=>'no',
 ////                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
+
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
                         'title' => ['a','text'],
