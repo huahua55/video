@@ -22,9 +22,15 @@ echo "git pull ⬇"
 git pull
 
 echo ""
-echo "composer update⬇"
-
-composer update
+echo -n "执行 composer update?(y/n)[n] "
+read yn
+if [ "$yn" = "y" ] ; then
+  echo ""
+  echo "composer update⬇"
+  composer update
+else
+  echo "skip composer update"
+fi
 
 function deploy_dev()
 {

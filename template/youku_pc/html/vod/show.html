@@ -19,11 +19,9 @@
 							<li class="item-extend">
 								<span class="sTit">频道：</span>
 								<p class="pSelect">
-									<span>
-										{maccms:type ids="parent" mid="1" order="asc" by="sort"}
-										<a class="{if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"} cur {/if}" href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a>
-										{/maccms:type}
-									</span>
+									{maccms:type ids="parent" mid="1" order="asc" by="sort"}
+									<span><a class="{if condition="($param['id'] == $vo.type_id) OR ($obj['parent']['type_id'] == $vo.type_id)"} cur {/if}" href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a></span>
+									{/maccms:type}
 								</p>
 							</li>
 							<li class="item-extend">
