@@ -196,6 +196,7 @@ class DoubanScore extends Command
         }else{
             $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
         }
+        p($ph_js_path);
         //使用queryList + PhantomJs
         $this->ql->use(PhantomJs::class,$ph_js_path);
         $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
