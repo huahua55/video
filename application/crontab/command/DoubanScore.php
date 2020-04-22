@@ -262,7 +262,7 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:54034",
+//                        '--proxy' => "183.129.244.16:17238",
                         '--proxy' => $this->proxy_server.":".$this->get_port,
                         '--proxy-type' => 'http',
 //                        '--ssl-protocol' =>'any',
@@ -285,8 +285,10 @@ class DoubanScore extends Command
                 $getSearchData = objectToArray($mac_curl_get_data);
 
                 if(empty($mac_curl_get_data)){
+                    log::info('采集豆瓣评分-url-err::');
                     $error_count ++;
                     if($error_count > 10){
+                        log::info('采集豆瓣评分-url-err1::');
                         $tmp =  $this->testing($url,$this->get_port);
                         if($tmp != 200 && $this->times + (50*3)){
                             $this->get_port = $this->getDouBan(); //重新构成代理端口
@@ -304,10 +306,11 @@ class DoubanScore extends Command
                         }
                     }
                 }
-//                print_r($getSearchData);
+                print_r($getSearchData);
                 log::info('采集豆瓣评分-url-::' . $url);
 //                log::info('采集豆瓣评分-url-data::' . $getSearchData);
                 if (!empty($getSearchData)){
+                    log::info('采集豆瓣评分-url2-::' );
                     foreach ($getSearchData as $da_k=>$as_k){
                         log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
                         log::info('采集豆瓣评分-title2-::' . $as_k['title']);
@@ -354,6 +357,7 @@ class DoubanScore extends Command
                     }
 
                 }
+//                p(1);
                 Cache::set('vod_id_list_douban_score', $v['vod_id']);
                 if ($is_log == false) {
                     log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
