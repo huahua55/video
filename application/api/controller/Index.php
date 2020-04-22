@@ -329,7 +329,8 @@ class Index extends Base{
             $d = array(
                 'img'   => imageDir($r['vod_pic']),
                 'name'  => $r['vod_name'],
-                'msg'   => $r['vod_content'],
+                'msg'   => $r['vod_remarks'],
+                'text'  => $r['vod_content'],
                 'url'   => $r['vod_id'],
             );
             array_push($data,$d);
