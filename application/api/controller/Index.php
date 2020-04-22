@@ -329,7 +329,8 @@ class Index extends Base{
             $d = array(
                 'img'   => imageDir($r['vod_pic']),
                 'name'  => $r['vod_name'],
-                'msg'   => $r['vod_content'],
+                'msg'   => $r['vod_remarks'],
+                'text'  => $r['vod_content'],
                 'url'   => $r['vod_id'],
             );
             array_push($data,$d);
@@ -342,15 +343,15 @@ class Index extends Base{
         $douban = model('douban_recommend');
 
         $data = [];
-        for($i = 1; $i <= 4; $i++){
+        for($i = 1; $i <= 2; $i++){
             $where = [
                 'type_id'   => ['eq',$i],
                 'status'    => ['eq','1'],
                 'vod_id'    => ['neq','0'],
             ];
-            $list = $douban->field("name")->where($where)->limit(5)->order('time desc')->select();
+            $list = $douban->field("name")->where($where)->limit(10)->order('id asc')->select();
             $list = objectToArray($list);
-            $data = array_merge(array_column($list,'name'),$data);
+            $data = array_merge($data,array_column($list,'name'));
         }
 
 //        $config = config('maccms.app');

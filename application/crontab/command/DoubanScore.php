@@ -29,8 +29,8 @@ class DoubanScore extends Command
    protected $ql;//querylist
 
 
-    protected $proxy_username = 'ze34232111tp1';
-    protected $proxy_passwd = '85077792';
+    protected $proxy_username = 'zhangshanap1';
+    protected $proxy_passwd = '76836051';
     protected $proxy_server = '183.129.244.16';
     protected $proxy_port = '88';
     protected $pattern = 'json';//API访问返回信息格式：json和text可选
@@ -264,7 +264,7 @@ class DoubanScore extends Command
                 $mac_curl_get_data = '';
                $sleep =  rand(3,10);
                 sleep($sleep);
-                $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
+                $url = sprintf($this->search_url_re, urlencode('平'));
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
@@ -277,12 +277,12 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:27394",
-////                        '--proxy' => $this->proxy_server.":55096",
-//                        '--proxy-type' => 'http',
-////                        '--ssl-protocol' =>'any',
-//                        '--load-images'=>'no',
-//                        '--ignore-ssl-errors' =>true,
+                        '--proxy' => "183.129.244.16:15485",
+//                        '--proxy' => $this->proxy_server.":55096",
+                        '--proxy-type' => 'http',
+//                        '--ssl-protocol' =>'any',
+                        '--load-images'=>'no',
+                        '--ignore-ssl-errors' =>true,
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
                         'title' => ['a','text'],
@@ -294,7 +294,7 @@ class DoubanScore extends Command
                     Log::info('err--过滤' . $url);
                     continue;
                 }
-//                p($mac_curl_get_data);die;
+                p($mac_curl_get_data);die;
 
                 $getSearchData = objectToArray($mac_curl_get_data);
 //                print_r($getSearchData);

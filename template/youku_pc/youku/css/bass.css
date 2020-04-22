@@ -3017,7 +3017,7 @@ h6 {
 }
 
 .source-title {
-	padding: 10px 30px;
+	padding: 10px 20px;
 	font-size: 18px;
 	color: #FFF;
 }
@@ -3224,16 +3224,20 @@ h6 {
 	color: #444;
 }
 
+.nav_box .nav_box-title{
+	padding: 0 7.5px 13px;
+}
+
 .nav_box ul li {
 	/* float: left; */
-	width: 40px;
-	height: 30px;
+	/* width: 40px;
+	height: 30px; */
 	line-height: 30px;
 	text-align: center;
 	line-height: 16px;
 	/* height: 16px; */
 	overflow: hidden;
-	/* padding: 0 7.5px 13px; */
+	padding: 0 7.5px 13px;
 	white-space: nowrap;
 }
 
@@ -6883,6 +6887,16 @@ i.glyphicon {
 }
 
 /* 热搜 */
+
+#searchWrap {
+	border-bottom: 10px solid #f6f6f6;
+}
+
+#searchWrap span {
+	display: 100%;
+	display: block;
+}
+
 .hot-search {
 	position: absolute;
 	top: 40px;
@@ -6899,6 +6913,18 @@ i.glyphicon {
 	border-bottom: 1px solid #e2e2e2;
 }
 
+.hot-title a {
+	float: right;
+
+}
+
+/* 搜索记录 */
+.search-wrap li {
+	width: 100%;
+	padding: 5px 20px;
+}
+
+
 .hot-wrap {
 	padding: 10px 0;
 	display: flex;
@@ -6908,23 +6934,25 @@ i.glyphicon {
 	flex-wrap: wrap;
 }
 
-.hot-wrap li{
+.hot-wrap li {
 	width: 50%;
 	height: 36px;
 	line-height: 36px;
-}
-.hot-wrap li a{
 	padding: 0 15px;
+	box-sizing: border-box;
+}
+
+.hot-wrap li a {
 	font-size: 0;
 	overflow: hidden;
 	display: block;
 }
 
-.hot-wrap li a span{
+.hot-wrap li a span {
 	font-size: 14px;
 }
 
-.hot-wrap li a span.num{
+.hot-wrap li a span.num {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -6936,12 +6964,14 @@ i.glyphicon {
 	font-size: 12px;
 }
 
-.hot-wrap li:nth-child(1) a span.num{
+.hot-wrap li:nth-child(1) a span.num {
 	background: #ff0d29;
 }
-.hot-wrap li:nth-child(2) a span.num{
+
+.hot-wrap li:nth-child(2) a span.num {
 	background: #ff920b;
 }
-.hot-wrap li:nth-child(3) a span.num{
+
+.hot-wrap li:nth-child(3) a span.num {
 	background: #ffc600;
 }
