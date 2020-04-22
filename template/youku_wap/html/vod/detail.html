@@ -76,16 +76,13 @@
 						</div>
 						<div class="num-tab mod-main clearfix">
 							{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-							{if condition="$param.sid eq $vo.sid"}
-							<div class="albumSelect cur">
+							<div class="albumSelect" id="play2_{$key}">
 								<ul class="num-tab-main">
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<li class="{if condition=" $param.nid eq $vo2.nid"} active {/if}"> <a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}"
-									 title="{$vo2.name}">{$vo2.name}</a></li>
+									<li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$vo2.name}</a></li>
 									{/maccms:foreach}
 								</ul>
 							</div>
-							{/if}
 							{/maccms:foreach}
 						</div>
 					</li>
@@ -107,10 +104,9 @@
 								{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
 								<li>
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<!-- <span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span> -->
 									<div>
 										<input type="text" value="{$vo2.url}">
-										<span style="margin-left: 3%;"><a href="{$vo2.url}" target="_blank">下载{$vo2.name}</a></span>
+										<span style="margin-left: 3%;width: 31%;"><a href="{$vo2.url}" target="_blank" class="ellipsis" style="display: inline-block;width: 100%;">下载{$vo2.name}</a></span>
 									</div>
 									{/maccms:foreach}
 								</li>
