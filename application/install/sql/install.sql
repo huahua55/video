@@ -1006,6 +1006,19 @@ CREATE TABLE `douban_recommend` (
   KEY `douban_id` (`douban_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='爬取豆瓣的推荐的数据 App使用';
 
+CREATE TABLE `douban_vod_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
+  `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
+  `douban_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '豆瓣视频id',
+  `abstract` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要1',
+  `abstract_2` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要2',
+  `rating_nums` varchar(5) NOT NULL DEFAULT '0.0' COMMENT '评分',
+  `time` varchar(20) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `douban_id` (`douban_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='爬取豆瓣的数据';
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
