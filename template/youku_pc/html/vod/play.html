@@ -25,31 +25,18 @@
 									<h2><a href="#">{$obj.vod_name} </a></h2>
 									<span class="score">{$obj.vod_score}</span>
 									<p class="tvintro"><em></em></p>
-									<!-- <div class="s-playsite s-playsitee">
-										{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-										<span class="ea-site ea-site-{$vo.player_info.from}" id="{$key}play1" style="display: none;">{$vo.player_info.show}</span>
-										{/maccms:foreach}
-									</div> -->
 								</div>
 							</div>
 							<p class="source-title">播放源：</p>
 							<ul class="js-list">
 								{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-								<li id="{$key}play2"><span class="ea-site-{$vo.player_info.from}">{$vo.player_info.show}</span></li>
+								<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> <div class="sSource popWin_sce">
+									<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}">{$vo.player_info.show}</a>
+									</div>
+								</li>
 								{/maccms:foreach}
 							</ul>
 							<script type="text/javascript">
-								$(".js-list li").eq(0).addClass("cur")
-								$(".js-list li").on("click", function() {
-									var index = $(this).index();
-									$(this).addClass("cur").siblings().removeClass("cur");
-									$(".u-listbox>div").eq(index).addClass("cur").animate({
-										opacity: '1'
-									}, 100);
-									$(".u-listbox>div").eq(index).siblings().removeClass("cur").animate({
-										opacity: '0'
-									}, 100);
-								})
 							</script>
 							<div class="c-player-episode">
 								<div class="c-player-aside-list">
@@ -59,7 +46,8 @@
 											<div class="looplist aside-tabbox num-tab-main " id="{$key}play">
 												{maccms:foreach name="vo.urls" id="vo2" key="key2"}
 												<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" id="{$key}{$key}{$vo.player_info.from}"
-												 class="{if condition=" $param.sid eq $vo.sid && $param.nid eq $vo2.nid"}current{/if}">{$key2} </a> {/maccms:foreach}
+												 class="{if condition=" $param.nid eq $vo2.nid"} current {/if}">{$key2} </a> 
+												 {/maccms:foreach}
 												 </div> {/maccms:foreach} </div> </div> </div> </div> </div> </div> <div class="c-player-video">
 													<div class="c-player-video-size">
 														<div class="c-player-flash">

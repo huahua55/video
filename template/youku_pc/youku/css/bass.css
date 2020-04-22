@@ -3023,7 +3023,7 @@ h6 {
 }
 
 .js-list {
-	color: #FFF;
+	color: #333;
 	display: flex;
 	/* justify-content: space-between; */
 	align-items: center;
@@ -3038,6 +3038,7 @@ h6 {
 .c-player-aside-wrapper .js-list li {
 	width: auto;
 	padding: 10px 10px;
+	color: #FFF;
 }
 
 .js-list li {
@@ -3045,7 +3046,11 @@ h6 {
 	cursor: pointer;
 }
 
-.js-list li.cur span {
+.js-list li a{
+	color: #FFF;
+}
+
+.js-list li.cur a {
 	color: #1a9eff;
 }
 

@@ -99,17 +99,6 @@
 										<div class="playBtnCon clearfix">
 											<a href="{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}" class="v_blue_btn latestBtn">
 												<i class="iconfont"></i>立即播放</a>
-											<!-- <div class="playSource">
-												<span class="sTit">来源：</span>
-												<span class="ea-site ea-site-{$obj.vod_play_from}">
-													<a href="{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}">
-														{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-														{$vo.player_info.show}
-														<span class="c-gray">（免费）</span>
-														{/maccms:foreach}
-													</a>
-												</span>
-											</div> -->
 										</div>
 									</div>
 								</div>
@@ -132,37 +121,21 @@
 								<div>下载列表</div>
 								{/notempty}
 							</div>
-							<!-- <div class="s-playsite">
-								<em>当前选择：</em>
-								<div class="js-current s-playsite-current">
-									{maccms:foreach name="obj.vod_play_list" id="vo"}
-									<span class="ea-site ea-site-{$vo.player_info.from}" {eq name="$key" value="1" }style="display:block" {else/}style="display:none"{/eq}>{$vo.player_info.show}
-									 </span> {/maccms:foreach} 
-									 </div>
-									 <div class="sites">
-										<div class="sites-inner">
-											<p class="arrow"></p>
-											<ul class="js-list">
-												{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-												<li {eq name="$key" value="1" }class="cur" {else/} {/eq}> <span class="ea-site ea-site-{$vo.player_info.from}">{$vo.player_info.show}
-											</span>
-											</li>
-											{/maccms:foreach}
-											</ul>
-								</div>
-							</div>
-							</div> -->
 							<ul class="nav-wrap">
 								<li>
 									<div class="play-type">
-										<!-- {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<div class="play-tab-main g-clear js-tab js-list">
-										<a href="##" {eq name="$key" value="1" }class="cur" {else/} {/eq}> <span class="ea-site ea-site-{$vo.player_info.from}">{$vo.player_info.show}</a>
-									</div>
-									{/maccms:foreach} -->
-										<ul class="js-list" id="js-list1">
+										<!-- <ul class="js-list" id="js-list1">
 											{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
 											<li>{$vo.player_info.show}</li>
+											<a href=""></a>
+											{/maccms:foreach}
+										</ul> -->
+										<ul>
+											{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
+											<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> <div class="sSource popWin_sce">
+												<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}" style="font-size: 14px;">{$vo.player_info.show}</a>
+												</div>
+											</li>
 											{/maccms:foreach}
 										</ul>
 									</div>
@@ -178,11 +151,6 @@
 								</li>
 								<li>
 									<div class="play-type">
-										<!-- {maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<div class="play-tab-main g-clear js-tab js-list">
-										<a href="##" {eq name="$key" value="1" }class="cur" {else/} {/eq}> <span class="ea-site ea-site-{$vo.player_info.from}">{$vo.player_info.show}</a>
-									</div>
-									{/maccms:foreach} -->
 										<ul class="js-list" id="js-list2">
 											{maccms:foreach name="obj.vod_down_list" id="vo" key="key1"}
 											<li>{$vo.player_info.show}</li>
@@ -194,7 +162,6 @@
 										{maccms:foreach name="obj.vod_down_list" id="vo" key="key1"}
 										<div class="num-tab-main g-clear js-tab2">
 											{maccms:foreach name="vo.urls" id="vo2" key="key2" }
-											<!-- <a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">{$key2}</a> -->
 											<div>
 												<input type="text" value="{$vo2.url}">
 												<span style="margin-left: 3%;width: 31%;"><a href="{$vo2.url}" target="_blank" class="ellipsis" style="display: inline-block;width: 100%;">下载{$vo2.name}</a></span>
@@ -212,7 +179,7 @@
 									$(this).addClass("on").siblings().removeClass("on");
 									$(".nav-wrap>li").eq(index).addClass("on").siblings().removeClass("on");
 								})
-								$(".js-list>li").eq(0).addClass("cur")
+								// $(".js-list>li").eq(0).addClass("cur")
 								$("#js-list2>li").eq(0).addClass("cur")
 								$("#num-tab2 .js-tab2").eq(0).addClass("cur")
 								$(".nav-wrap>li").eq(0).addClass("on")
@@ -229,7 +196,6 @@
 								</div>
 							</div>
 							<div class="d-play-default">
-
 								{maccms:vod order="desc" by="rnd" num="10" paging="false" ids="all"}
 								<li class="yk-pack">
 									<div class="p-thumb">
@@ -285,7 +251,6 @@
 					</div>
 					<ul class="m-top-toplist guide-list">
 						{maccms:vod type="current" num="20" order="desc" by="time"}
-
 						{if condition="$key lt 4"}
 						<li class="guide ">
 							<p class="txt"><em class="on">{$key} </em><span><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></span></p>
@@ -304,7 +269,6 @@
 								<span class="tent"><em>简介：</em> {$vo.vod_content} </span>
 							</p>
 						</li>
-
 						{if condition="$key eq 1"}
 						{/if}
 						{else}

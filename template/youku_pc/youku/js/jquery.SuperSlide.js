@@ -66,40 +66,40 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#js-list1 li').bind('click', function() {
-		var e = $(this).index(),
-			a = $('#num-tab1 > div');
-		$(this)
-			.removeClass()
-			.addClass('cur')
-			.siblings()
-			.removeClass();
-		a.removeClass('cur').animate({
-			opacity: '0'
-		}, 100);
-		a.eq(e)
-			.addClass('cur')
-			.animate({
-				opacity: '1'
-			}, 100);
-	});
-	$('#js-list2 li').bind('click', function() {
-		var e = $(this).index(),
-			a = $('#num-tab2 > div');
-		$(this)
-			.removeClass()
-			.addClass('cur')
-			.siblings()
-			.removeClass();
-		a.removeClass('cur').animate({
-			opacity: '0'
-		}, 100);
-		a.eq(e)
-			.addClass('cur')
-			.animate({
-				opacity: '1'
-			}, 100);
-	});
+	// $('#js-list1 li').bind('click', function() {
+	// 	var e = $(this).index(),
+	// 		a = $('#num-tab1 > div');
+	// 	$(this)
+	// 		.removeClass()
+	// 		.addClass('cur')
+	// 		.siblings()
+	// 		.removeClass();
+	// 	a.removeClass('cur').animate({
+	// 		opacity: '0'
+	// 	}, 100);
+	// 	a.eq(e)
+	// 		.addClass('cur')
+	// 		.animate({
+	// 			opacity: '1'
+	// 		}, 100);
+	// });
+	// $('#js-list2 li').bind('click', function() {
+	// 	var e = $(this).index(),
+	// 		a = $('#num-tab2 > div');
+	// 	$(this)
+	// 		.removeClass()
+	// 		.addClass('cur')
+	// 		.siblings()
+	// 		.removeClass();
+	// 	a.removeClass('cur').animate({
+	// 		opacity: '0'
+	// 	}, 100);
+	// 	a.eq(e)
+	// 		.addClass('cur')
+	// 		.animate({
+	// 			opacity: '1'
+	// 		}, 100);
+	// });
 });
 
 $(function() {
