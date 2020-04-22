@@ -314,14 +314,22 @@ class DoubanScore extends Command
                     foreach ($getSearchData as $da_k=>$as_k){
                         log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
                         log::info('采集豆瓣评分-title2-::' . $as_k['title']);
+                        $link =  explode('subject',$as_k['link']);
+                        $get_search_id = $link[1] ?? '';
+                        $get_search_id = str_replace('/','',$get_search_id);
+                        $deas_data = $as_k;
+                        $deas_data['douban_id']= $get_search_id;
+                        $deas_data['time']= time();
+                        try {
+                            Db::name('douban_vod_details')->insert($deas_data);
+                        } catch (\Exception $e) {
+                            log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
+                        }
 //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
                         $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']),mac_trim_all($as_k['title'])) *100 ;
                         log::info('采集豆瓣评分-比例::' . $rade);
                         if($rade> 50){
                             log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
-                            $link =  explode('subject',$as_k['link']);
-                            $get_search_id = $link[1] ?? '';
-                            $get_search_id = str_replace('/','',$get_search_id);
                             if(!empty($get_search_id)){
                                 log::info('采集豆瓣评分-ok-id::' . $get_search_id);
                                 $get_url_search_id = $this->get_search_id . $get_search_id;
