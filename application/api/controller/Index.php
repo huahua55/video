@@ -299,6 +299,7 @@ class Index extends Base{
         $info = model("Vod")->infoData($where);
         $info = $info['info'] ?? [];
 
+        
         $data = array(
             'name'      => $info["vod_name"],
             'type_id'   => $info["type_id_1"],
