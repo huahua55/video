@@ -219,7 +219,7 @@ class DoubanScore extends Command
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
         $order = 'vod_id asc';
-
+        $cookie = $this->newCookie($cookies);
         //进入循环 取出数据
         while ($is_true) {
             //取出数据
@@ -234,7 +234,7 @@ class DoubanScore extends Command
             }
 
             foreach ($douBanScoreData['list'] as $k => $v) {
-                $cookie = $this->newCookie($cookies);
+
                 $error_count = 1;
                 $is_log = false;
                 $mac_curl_get_data = '';
