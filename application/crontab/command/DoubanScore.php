@@ -245,17 +245,19 @@ class DoubanScore extends Command
 //                if(time() > $this->times + (60*3) ){
 //                    $this->get_port = $this->getDouBan();
 //                }
-                $url = sprintf($this->search_url_re, urlencode('1'));
+                $url = sprintf($this->search_url_re, urlencode('张三'));
+                print_r($url);
 //                var_dump($url);
-                try {
+//                try {
+
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
 //                        $r->addHeader('Referer', $url);
                         $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
-                        $r->addHeader('Host', 'search.douban.com');
-                        $r->addHeader('DNT', 1);
+//                        $r->addHeader('Host', 'search.douban.com');
+//                        $r->addHeader('DNT', 1);
 //                        $r->addHeader('Sec-Fetch-User', '?1');
 //                        $r->addHeader('Upgrade-Insecure-Requests', '1');
                         $r->setUrl($url);
@@ -263,13 +265,14 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:4144",
-////                        '--proxy' => $this->proxy_server.":".$this->get_port,
-//                        '--proxy-type' => 'http',
-////                        '--ssl-protocol' =>'any',
-//                        '--load-images'=>'no',
+                        '--proxy' => "183.129.244.16:39986",
+//                        '--proxy' => $this->proxy_server.":".$this->get_port,
+                        '--proxy-type' => 'http',
+//                        '--ssl-protocol' =>'any',
+                        '--load-images'=>'no',
 ////                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
+
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
                         'title' => ['a','text'],
@@ -278,12 +281,12 @@ class DoubanScore extends Command
                         'abstract_2' => ['.abstract_2','text'],
                     ])->range('.item-root')->query()->getData();
 
-                } catch (Exception $e) {
-                    Log::info('err--过滤' . $url);
-                    continue;
-                }
+//                } catch (Exception $e) {
+//                    Log::info('err--过滤' . $url);
+//                    continue;
+//                }
 
-
+                p($mac_curl_get_data);
                 $getSearchData = objectToArray($mac_curl_get_data);
                 p($getSearchData);
                 if(empty($mac_curl_get_data)){
