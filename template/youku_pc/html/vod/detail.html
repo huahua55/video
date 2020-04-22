@@ -193,7 +193,7 @@
 										<p class="tab-title">全部剧集</p>
 										{maccms:foreach name="obj.vod_down_list" id="vo" key="key1"}
 										<div class="num-tab-main g-clear js-tab2">
-											{maccms:foreach name="vo.urls" id="vo2" key="key2" } 
+											{maccms:foreach name="vo.urls" id="vo2" key="key2" }
 											<!-- <a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}">{$key2}</a> -->
 											<div>
 												<input type="text" value="{$vo2.url}">

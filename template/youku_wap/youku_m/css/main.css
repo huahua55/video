@@ -168,7 +168,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .albumSelect{padding:0 .5rem;padding-bottom:.5rem;overflow:hidden}
 .albumSelect li{float:left;margin-right:.25rem;margin-bottom:.25rem;position: relative;}
 .albumSelect li:nth-child(6n){margin-right:0}
-.albumSelect li a{display:block;width:2.75rem;height:2.5rem;line-height:2.5rem;font-size:.75rem;font-weight:400;text-align:center;background:#F5F5F5;border-radius:.15rem}
+.albumSelect li a{display:block;line-height:2.5rem;font-size:.75rem;min-width: 2.5rem;font-weight:400;text-align:center;background:#F5F5F5;border-radius:.15rem;padding: 0 .5rem;}
 .zy-play .albumSelect li a{width:5.66rem;}
 .albumSelect .active a{color: #1184f9;}
 .albumPSelect li,.albumPSelect li a{width:2.5rem}
@@ -357,7 +357,7 @@ body.modal-open{position:fixed;width:100%}
 .popWinMask.popWinMask_transition{pointer-events:auto;background:rgba(0,0,0,.5)}
 .popWinMask .playSource_popWin.popWin_transition{top:auto;bottom:0}
 .popWinMask .popWin .pBtn em.all.gray{color:#666;width:100%;float:none;display:block;border:0;font-size:.8rem;line-height:2rem;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;text-align:center}
-.popWinMask .playSource_popWin .cur .sSource em{color: #1184f9;}
+.popWinMask .playSource_popWin .cur .sSource a{color: #1184f9;}
 .line{
 	width: 100%;
 	height: .2rem;

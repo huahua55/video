@@ -64,21 +64,6 @@ $(function() {
 		document.execCommand("Copy"); //执行浏览器复制命令
 		alert("已复制链接，快去分享吧！")
 	}
-	$(".popXuanji li").on("click", function() {
-		var e = $(this).index(),
-			a = $(".num-tab > div");
-		b = $(".pSource > span");
-		c = $(".popXuanji");
-		d = $(".popXuanji .playSource_popWin");
-		h = $("body");
-		$(this).removeClass().addClass("cur").siblings().removeClass();
-		a.removeClass("cur").animate({
-			opacity: '0'
-		}, 100);
-		a.eq(e).addClass("cur").animate({
-			opacity: '1'
-		}, 100);
-	})
 	// 
 	$("#drama-nav span").on("click", function() {
 		var index = $(this).index();
@@ -104,9 +89,9 @@ $(function() {
 			h.removeClass("modal-open");
 		})
 	});
-	for (var i = 0; i < $(".albumSelect .num-tab-main").length; i++) {
-		series($(".albumSelect .num-tab-main").eq(i), 20, 16);
-	}
+	// for (var i = 0; i < $(".albumSelect .num-tab-main").length; i++) {
+	// 	series($(".albumSelect .num-tab-main").eq(i), 20, 16);
+	// }
 	var num = 0,
 		suolue, xiangq;
 	$("#expand").click(function() {

@@ -119,7 +119,8 @@
 							<div class="albumSelect cur">
 								<ul class="num-tab-main">
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<li class="{if condition="$param.nid eq $vo2.nid"} active {/if}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$vo2.name}</a></li>
+									<li class="{if condition="$param.nid eq $vo2.nid"} active {/if}">
+									<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$vo2.name}</a></li>
 									{/maccms:foreach}
 								</ul>
 							</div>
