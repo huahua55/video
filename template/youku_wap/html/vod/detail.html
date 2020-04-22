@@ -80,7 +80,7 @@
 							<div class="albumSelect" id="play2_{$key}">
 								<ul class="num-tab-main">
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$key2}</a></li>
+									<li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$vo2.name}</a></li>
 									{/maccms:foreach}
 								</ul>
 							</div>
