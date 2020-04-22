@@ -142,6 +142,7 @@ class DoubanScore extends Command
 
    //更新cookie
     protected function getCookie($url){
+        return 'll="108288";bid=h4nqLajQEBo';
         $client = new Client();
         $response = $client->get($url);
         // 获取响应头部信息
@@ -239,7 +240,7 @@ class DoubanScore extends Command
                 $is_log = false;
                 $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-//                sleep($sleep);
+                sleep(3);
                 if(time() > $this->times + (60*3) ){
                     $this->get_port = $this->getDouBan();
                 }
