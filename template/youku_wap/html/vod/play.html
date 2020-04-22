@@ -97,7 +97,7 @@
 							<section class="popWin playSource_popWin">
 								<ul class="clearfix">
 									{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<li id="play3_{$key}">
+									<li class="{if condition="$param.sid eq $vo.sid"} cur {/if}">
 										<div class="sSource popWin_sce">
 											<em>{$vo.player_info.show}</em>
 										</div>
@@ -118,7 +118,7 @@
 							<div class="albumSelect" id="play2_{$key}">
 								<ul class="num-tab-main">
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<li id="play2_{$key}{$vo2.name}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$key2}</a></li>
+									<li class="{if condition="$param.nid eq $vo2.nid"} active {/if}"><a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$key2}</a></li>
 									{/maccms:foreach}
 								</ul>
 							</div>
@@ -220,7 +220,7 @@
 				<div class="sTit">请选择播放源</div>
 				<ul class="clearfix">
 					{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-					<li id="play3_{$key}">
+					<li>
 						<div class="sSource popWin_sce"><span class="sSourceico sSource{$vo.player_info.from}"></span><em>{$vo.player_info.show}</em><i></i></div>
 					</li>
 					{/maccms:foreach}
@@ -325,21 +325,6 @@
 						$(".sharebg-active").removeClass("sharebg-active");
 					}, 300);
 				})
-			}
-			$("#play-41").addClass("active");
-			$("#play1_1").addClass("cur");
-			$("#play2_1").addClass("cur");
-			$("#play3_1").addClass("cur");
-			$("#play-44 a").last().after("<span class='player-new'>新</span>");
-			$("#play-43 a").last().after("<span class='player-new'>新</span>");
-			var line = ["http://yun.baiyug.cn/vip/index.php?url=", "https://api.47ks.com/webcloud/?v=",
-				"http://www.82190555.com/index/qqvod.php?url=", "http://www.52jiexi.com/tong.php?url=",
-				"http://api.xfsub.com/index.php?url="
-			];
-			playerSwitch = function(lineIndex) {
-				$(".albumPlayer iframe").attr("src", line[lineIndex] + "http://v.pptv.com/show/IxoEgibtRwf9ia4Eg.html");
-				$(".player_switch #" + lineIndex + "").addClass('cur').attr("onclick", "");
-				$(".player_switch #" + lineIndex + "").siblings().removeClass('cur').attr("onclick", "playerSwitch(this.id)");
 			}
 		</script>
 		<span style="display:none" class="mac_ulog_set" alt="设置视频播放记录" data-type="4" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}"
