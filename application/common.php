@@ -273,7 +273,7 @@ function mac_alert_url($str,$url)
 
 function mac_jump($url,$sec=0)
 {
-    $sec = 2;
+    $sec = 1;
     echo '<script>setTimeout(function (){location.href="'.$url.'";},'.($sec*1000).');</script><span>暂停'.$sec.'秒后继续  >>>  </span><a href="'.$url.'" >如果您的浏览器没有自动跳转，请点击这里</a><br>';
 }
 
