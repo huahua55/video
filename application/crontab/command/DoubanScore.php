@@ -141,7 +141,8 @@ class DoubanScore extends Command
     }
 
     //更新cookie
-    protected function getCookie($url){
+    protected function getCookie($url)
+    {
         return 'll="108288";bid=h4nqLajQEBo';
         $client = new Client();
         $response = $client->get($url);
@@ -149,240 +150,251 @@ class DoubanScore extends Command
         $headers = $response->getHeaders();
         $cookie = "";
         foreach ($headers['Set-Cookie'] as $k) {
-            if(strpos(explode(';', $k)[0],'ll') !==false ){
-                $cookie .= explode(';', $k)[0].';';
+            if (strpos(explode(';', $k)[0], 'll') !== false) {
+                $cookie .= explode(';', $k)[0] . ';';
             }
-            if(strpos(explode(';', $k)[0],'bid') !==false ){
-                $cookie .= explode(';', $k)[0].'';
+            if (strpos(explode(';', $k)[0], 'bid') !== false) {
+                $cookie .= explode(';', $k)[0] . '';
             }
         }
         return $cookie;
     }
-    protected function newCookie($cookies){
-        $cookie = 'll="108288";bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg;  _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; __yadk_uid=HPbvxvJ9JN8yUqI6foqDYbhNLOHg2OMc; __utmc=30149280; push_noty_num=0; push_doumail_num=0; __utmv=30149280.21552; douban-profile-remind=1; __utmz=30149280.1587373187.4.3.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; dbcl2="215524010:bdDl9E8vVTg"; ck=m31b; ap_v=0,6.0; ct=y; _pk_ref.100001.2939=%5B%22%22%2C%22%22%2C1587439340%2C%22https%3A%2F%2Fmovie.douban.com%2F%22%5D; _pk_ses.100001.2939=*; __utma=30149280.1772134204.1587359482.1587432721.1587439341.7; __utmt=1; _pk_id.100001.2939=1deb2b5e8988f44c.1587174800.9.1587439359.1587434637.; __utmb=30149280.9.9.1587439359009';
-        $cookieArray =  explode(';',$cookie);
 
-        $cookieArray[16]='_pk_ref.100001.2939'.urlencode('["","",time(),"https://movie.douban.com/"]');
-        $cookieArray[21]='30149280.9.9.'.time().rand(0,9).rand(1,6).rand(0,6);
-        $cookieArray[3]=str_replace('T=1584933974','T='.time(), $cookieArray[3]);
-        $cookieArray[11]=str_replace('1587373187',time(), $cookieArray[11]);
-        $cookieArray[18]=str_replace('1587439341',time(), $cookieArray[18]);
-        $cookieArray[20]=str_replace('1587439359',time()+11, $cookieArray[20]);
-        $cookieArray[20]=str_replace('1587174800',time()+600, $cookieArray[20]);
-        $cookieArray[0]=$cookies;
+    protected function newCookie($cookies)
+    {
+        $cookie = 'll="108288";bid=h4nqLajQEBo; douban-fav-remind=1; __gads=ID=f547fc5d1024460e:T=1584933974:S=ALNI_MYnz5KEHQFfcZy0gMy6CM04qFHEGg;  _vwo_uuid_v2=DE8FD61CD60225FE96D81709B68421C2D|866f6dabae9a822d17e89ca947c01f78; __yadk_uid=HPbvxvJ9JN8yUqI6foqDYbhNLOHg2OMc; __utmc=30149280; push_noty_num=0; push_doumail_num=0; __utmv=30149280.21552; douban-profile-remind=1; __utmz=30149280.1587373187.4.3.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; dbcl2="215524010:bdDl9E8vVTg"; ck=m31b; ap_v=0,6.0; ct=y; _pk_ref.100001.2939=%5B%22%22%2C%22%22%2C1587439340%2C%22https%3A%2F%2Fmovie.douban.com%2F%22%5D; _pk_ses.100001.2939=*; __utma=30149280.1772134204.1587359482.1587432721.1587439341.7; __utmt=1; _pk_id.100001.2939=1deb2b5e8988f44c.1587174800.9.1587439359.1587434637.; __utmb=30149280.9.9.1587439359009';
+        $cookieArray = explode(';', $cookie);
+
+        $cookieArray[16] = '_pk_ref.100001.2939' . urlencode('["","",time(),"https://movie.douban.com/"]');
+        $cookieArray[21] = '30149280.9.9.' . time() . rand(0, 9) . rand(1, 6) . rand(0, 6);
+        $cookieArray[3] = str_replace('T=1584933974', 'T=' . time(), $cookieArray[3]);
+        $cookieArray[11] = str_replace('1587373187', time(), $cookieArray[11]);
+        $cookieArray[18] = str_replace('1587439341', time(), $cookieArray[18]);
+        $cookieArray[20] = str_replace('1587439359', time() + 11, $cookieArray[20]);
+        $cookieArray[20] = str_replace('1587174800', time() + 600, $cookieArray[20]);
+        $cookieArray[0] = $cookies;
         unset($cookieArray[1]);
-        return implode($cookieArray,';');
+        return implode($cookieArray, ';');
     }
+
     protected function execute(Input $input, Output $output)
     {
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-        //字符串对比算法
-        $lcs = new similarText();
-        //cli模式接受参数
-        $myparme = $input->getArguments();
-        $parameter = $myparme['parameter'];
-        //参数转义解析
-        $param = $this->ParSing($parameter);
-        $type = $param['type'] ?? ''; //从1 开始爬取
-        $x = $param['x'] ?? '';
-        if(!empty($type) && $type == 1){
-            Cache::set('vod_id_list_douban_score', 1);
-        }
-        //选择mac扩展还是 linux 扩展
-        if(!empty($x) && $x == 'mac'){
-            $ph_js_path = ROOT_PATH.'extend/phantomjs_macosx/bin/phantomjs';
-        }else{
-            $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
-        }
-        //使用queryList + PhantomJs
-        $this->ql->use(PhantomJs::class,$ph_js_path);
-        $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
+        try {
+            //字符串对比算法
+            $lcs = new similarText();
+            //cli模式接受参数
+            $myparme = $input->getArguments();
+            $parameter = $myparme['parameter'];
+            //参数转义解析
+            $param = $this->ParSing($parameter);
+            $type = $param['type'] ?? ''; //从1 开始爬取
+            $x = $param['x'] ?? '';
+            if (!empty($type) && $type == 1) {
+                Cache::set('vod_id_list_douban_score', 1);
+            }
+            //选择mac扩展还是 linux 扩展
+            if (!empty($x) && $x == 'mac') {
+                $ph_js_path = ROOT_PATH . 'extend/phantomjs_macosx/bin/phantomjs';
+            } else {
+                $ph_js_path = ROOT_PATH . 'extend/phantomjs_linux/bin/phantomjs';
+            }
+            //使用queryList + PhantomJs
+            $this->ql->use(PhantomJs::class, $ph_js_path);
+            $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
 
-        //开启代理
-        $this->get_port = $this->getDouBan();
+
+            //开启代理
+            $this->get_port = $this->getDouBan();
 //        p($A);
-        //开始cookie
-        $cookies =  $this->getCookie('https://movie.douban.com/');
-        $start = 0;
-        $page = 1;
-        $limit = 20;
-        $is_true = true;
-        $where = [
-            'vod_douban_id' => 0,
-        ];
-        $is_vod_id = Cache::get('vod_id_list_douban_score');
-        if (!empty($is_vod_id)) {
-            $where['vod_id'] = ['gt', $is_vod_id];
-        }
+            //开始cookie
+            $cookies = $this->getCookie('https://movie.douban.com/');
+            $start = 0;
+            $page = 1;
+            $limit = 20;
+            $is_true = true;
+            $where = [
+                'vod_douban_id' => 0,
+            ];
+            $is_vod_id = Cache::get('vod_id_list_douban_score');
+            if (!empty($is_vod_id)) {
+                $where['vod_id'] = ['gt', $is_vod_id];
+            }
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-        $order = 'vod_id asc';
-        $cookie = $this->newCookie($cookies);
-        //进入循环 取出数据
-        while ($is_true) {
-            //取出数据
-            $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+            $order = 'vod_id asc';
+            $cookie = $this->newCookie($cookies);
+            //进入循环 取出数据
+            while ($is_true) {
+                //取出数据
+                $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
 //            print_r( $this->vodDb->getlastsql());die;
-            $pagecount = $douBanScoreData['pagecount'] ?? 0;
-            if ($page > $pagecount) {
-                $is_true = false;
-                log::info('采集豆瓣评分结束...');
-                $output->writeln("结束....");
-                break;
-            }
-
-            foreach ($douBanScoreData['list'] as $k => $v) {
-
-                $error_count = 1;
-                $is_log = false;
-                $mac_curl_get_data = '';
-//               $sleep =  rand(3,10);
-                sleep(1);
-                if(time() > $this->times + (60*3) ){
-                    $this->get_port = $this->getDouBan();
+                $pagecount = $douBanScoreData['pagecount'] ?? 0;
+                if ($page > $pagecount) {
+                    $is_true = false;
+                    log::info('采集豆瓣评分结束...');
+                    $output->writeln("结束....");
+                    break;
                 }
-                $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
+
+                foreach ($douBanScoreData['list'] as $k => $v) {
+
+                    $error_count = 1;
+                    $is_log = false;
+                    $mac_curl_get_data = '';
+//               $sleep =  rand(3,10);
+                    sleep(1);
+                    if (time() > $this->times + (60 * 3)) {
+                        $this->get_port = $this->getDouBan();
+                    }
+                    $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
 //                var_dump($url);
-                try {
-                    $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
-                        $r->setMethod('GET');
-                        $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
+                    try {
+                        $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
+                            $r->setMethod('GET');
+                            $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
 //                        $r->addHeader('Referer', $url);
-                        $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
-                        $r->addHeader('Cookie', $cookie);
+                            $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
+                            $r->addHeader('Cookie', $cookie);
 //                        $r->addHeader('Host', 'search.douban.com');
 //                        $r->addHeader('DNT', 1);
 //                        $r->addHeader('Sec-Fetch-User', '?1');
 //                        $r->addHeader('Upgrade-Insecure-Requests', '1');
-                        $r->setUrl($url);
-                        $r->setTimeout(10000); // 10 seconds
-                        $r->setDelay(3); // 3 seconds
-                        return $r;
-                    },false,[
+                            $r->setUrl($url);
+                            $r->setTimeout(10000); // 10 seconds
+                            $r->setDelay(3); // 3 seconds
+                            return $r;
+                        }, false, [
 //                        '--proxy' => "183.129.244.16:17238",
-                        '--proxy' => $this->proxy_server.":".$this->get_port,
-                        '--proxy-type' => 'http',
+                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+                            '--proxy-type' => 'http',
 //                        '--ssl-protocol' =>'any',
-                        '--load-images'=>'no',
+                            '--load-images' => 'no',
 //                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
-                    ])->rules([
-                        'rating_nums' => ['.rating_nums','text'],
-                        'title' => ['a','text'],
-                        'link' => ['a','href'],
-                        'abstract' => ['.abstract','text'],
-                        'abstract_2' => ['.abstract_2','text'],
-                    ])->range('.item-root')->query()->getData();
-                    Log::info('err--proxy-' . $this->proxy_server.":".$this->get_port);
-                } catch (Exception $e) {
-                    Log::info('err--过滤' . $url);
-                    continue;
-                }
-
-                $getSearchData = objectToArray($mac_curl_get_data);
-
-                if(empty($mac_curl_get_data)){
-                    log::info('采集豆瓣评分-url-err::');
-                    $error_count ++;
-                    if($error_count > 10){
-                        log::info('采集豆瓣评分-url-err1::');
-                        $tmp =  $this->testing($url,$this->get_port);
-                        if($tmp != 200 && $this->times + (50*3)){
-                            $this->get_port = $this->getDouBan(); //重新构成代理端口
-                            echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
-                            file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL,FILE_APPEND);
-                            try {
-                                $close_url = $this->get_close_url($this->get_port);
-                                $r = file_get_contents($close_url);
-                                $result =iconv("gb2312", "utf-8//IGNORE",$r);
-                                echo 'close_url||' .  $result;
-                                file_put_contents('log.txt', 'close_url||' . $result . PHP_EOL,FILE_APPEND);
-                            } catch (Exception $e) {
-                                file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL,FILE_APPEND);
-                            }
-                        }
+                        ])->rules([
+                            'rating_nums' => ['.rating_nums', 'text'],
+                            'title' => ['a', 'text'],
+                            'link' => ['a', 'href'],
+                            'abstract' => ['.abstract', 'text'],
+                            'abstract_2' => ['.abstract_2', 'text'],
+                        ])->range('.item-root')->query()->getData();
+                        Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+                    } catch (Exception $e) {
+                        Log::info('err--过滤' . $url);
+                        continue;
                     }
-                }
-//                print_r($getSearchData);
-                log::info('采集豆瓣评分-url-::' . $url);
-//                log::info('采集豆瓣评分-url-data::' . $getSearchData);
-                if (!empty($getSearchData)){
-                    log::info('采集豆瓣评分-url2-::' );
-                    foreach ($getSearchData as $da_k=>$as_k){
-                        log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
-                        log::info('采集豆瓣评分-title2-::' . $as_k['title']);
-                        $link =  explode('subject',$as_k['link']);
-                        $get_search_id = $link[1] ?? '';
-                        $get_search_id = str_replace('/','',$get_search_id);
-                        $deas_data = $as_k;
-                        $deas_data['douban_id']= $get_search_id;
-                        $deas_data['time']= time();
-                        try {
-                            Db::name('douban_vod_details')->insert($deas_data);
-                        } catch (\Exception $e) {
-                            log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
-                        }
-//                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
-                        $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']),mac_trim_all($as_k['title'])) *100 ;
-                        log::info('采集豆瓣评分-比例::' . $rade);
-                        if($rade> 50){
-                            log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
-                            if(!empty($get_search_id)){
-                                log::info('采集豆瓣评分-ok-id::' . $get_search_id);
-                                $get_url_search_id = $this->get_search_id . $get_search_id;
-                                $get_url_search_id_data = mac_curl_get($get_url_search_id);
-                                $get_url_search_id_data = str_replace('douban(', '', $get_url_search_id_data);
-                                $get_url_search_id_data = str_replace(');', '', $get_url_search_id_data);
-                                $get_url_search_id_data = $this->isJsonBool($get_url_search_id_data, true);
-                                if (!empty($get_url_search_id_data) && $get_url_search_id_data['code'] == 1 && !empty($get_url_search_id_data['data'])) {
-                                    $res = $get_url_search_id_data['data'];
-                                    if(($res['vod_name'] == $v['vod_name'] || $res['vod_name'] == $v['vod_sub']) &&  ($v['vod_director'] == $res['vod_director'])  ){
-                                        $is_log = true;
-                                        $vod_data = $this->getConTent($res);
-                                        if (empty($v['vod_sub']) && $v['vod_name'] != $res['vod_name']) {
-                                            $vod_data['vod_sub'] = $res['vod_name'];
-                                        }
-                                        if (!empty($vod_data)) {
-                                            $whereId = [];
-                                            $whereId['vod_id'] = $v['vod_id'];
-                                            if (isset($vod_data['vod_doucore'])) {
-                                                unset($vod_data['vod_doucore']);
-                                            }
-                                            $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                                            if ($up_res) {
-                                                log::info('采集豆瓣评分-succ::' . $v['vod_name']);
-                                            }
-                                        }
-                                    }
 
+                    $getSearchData = objectToArray($mac_curl_get_data);
+
+                    if (empty($mac_curl_get_data)) {
+                        log::info('采集豆瓣评分-url-err::');
+                        $error_count++;
+                        if ($error_count > 10) {
+                            log::info('采集豆瓣评分-url-err1::');
+                            $tmp = $this->testing($url, $this->get_port);
+                            if ($tmp != 200 && $this->times + (50 * 3)) {
+                                $this->get_port = $this->getDouBan(); //重新构成代理端口
+                                echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
+                                file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL, FILE_APPEND);
+                                try {
+                                    $close_url = $this->get_close_url($this->get_port);
+                                    $r = file_get_contents($close_url);
+                                    $result = iconv("gb2312", "utf-8//IGNORE", $r);
+                                    echo 'close_url||' . $result;
+                                    file_put_contents('log.txt', 'close_url||' . $result . PHP_EOL, FILE_APPEND);
+                                } catch (Exception $e) {
+                                    file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
                                 }
                             }
                         }
+                    }
+//                print_r($getSearchData);
+                    log::info('采集豆瓣评分-url-::' . $url);
+//                log::info('采集豆瓣评分-url-data::' . $getSearchData);
+                    if (!empty($getSearchData)) {
+                        log::info('采集豆瓣评分-url2-::');
+                        foreach ($getSearchData as $da_k => $as_k) {
+                            log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
+                            log::info('采集豆瓣评分-title2-::' . $as_k['title']);
+                            $link = explode('subject', $as_k['link']);
+                            $get_search_id = $link[1] ?? '';
+                            $get_search_id = str_replace('/', '', $get_search_id);
+                            $deas_data = $as_k;
+                            $deas_data['douban_id'] = $get_search_id;
+                            $deas_data['time'] = time();
+                            try {
+                                Db::name('douban_vod_details')->insert($deas_data);
+                            } catch (\Exception $e) {
+                                log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
+                            }
+//                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
+                            $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
+                            log::info('采集豆瓣评分-比例::' . $rade);
+                            if ($rade > 50) {
+                                log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
+                                if (!empty($get_search_id)) {
+                                    log::info('采集豆瓣评分-ok-id::' . $get_search_id);
+                                    $get_url_search_id = $this->get_search_id . $get_search_id;
+                                    $get_url_search_id_data = mac_curl_get($get_url_search_id);
+                                    $get_url_search_id_data = str_replace('douban(', '', $get_url_search_id_data);
+                                    $get_url_search_id_data = str_replace(');', '', $get_url_search_id_data);
+                                    $get_url_search_id_data = $this->isJsonBool($get_url_search_id_data, true);
+                                    if (!empty($get_url_search_id_data) && $get_url_search_id_data['code'] == 1 && !empty($get_url_search_id_data['data'])) {
+                                        $res = $get_url_search_id_data['data'];
+                                        if (($res['vod_name'] == $v['vod_name'] || $res['vod_name'] == $v['vod_sub']) && ($v['vod_director'] == $res['vod_director'])) {
+                                            $is_log = true;
+                                            $vod_data = $this->getConTent($res);
+                                            if (empty($v['vod_sub']) && $v['vod_name'] != $res['vod_name']) {
+                                                $vod_data['vod_sub'] = $res['vod_name'];
+                                            }
+                                            if (!empty($vod_data)) {
+                                                $whereId = [];
+                                                $whereId['vod_id'] = $v['vod_id'];
+                                                if (isset($vod_data['vod_doucore'])) {
+                                                    unset($vod_data['vod_doucore']);
+                                                }
+                                                $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                                if ($up_res) {
+                                                    log::info('采集豆瓣评分-succ::' . $v['vod_name']);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        }
 
                     }
-
-                }
 //                p(1);
-                Cache::set('vod_id_list_douban_score', $v['vod_id']);
-                if ($is_log == false) {
-                    log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
+                    Cache::set('vod_id_list_douban_score', $v['vod_id']);
+                    if ($is_log == false) {
+                        log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
+                    }
                 }
+                $page = $page + 1;
             }
-            $page = $page + 1;
+        } catch (Exception $e) {
+            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
         }
         $output->writeln("end....");
     }
-    function strToUtf8($str){
-        $encode = mb_detect_encoding($str, array("ASCII",'UTF-8',"GB2312","GBK",'BIG5'));
-        if($encode == 'UTF-8'){
+
+    function strToUtf8($str)
+    {
+        $encode = mb_detect_encoding($str, array("ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5'));
+        if ($encode == 'UTF-8') {
             return $str;
-        }else{
+        } else {
             return mb_convert_encoding($str, 'UTF-8', $encode);
         }
     }
+
     protected function isJsonBool($data = '', $assoc = false)
     {
         $data = json_decode($data, $assoc);
@@ -485,7 +497,8 @@ class DoubanScore extends Command
         return $vod_data;
     }
 
-    public function headers(){
+    public function headers()
+    {
         $heads = [
 //                    'Accept'=> '*/*',
             'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -527,7 +540,7 @@ class DoubanScore extends Command
 //            p($open_url);
             $r = file_get_contents($open_url);
             $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            $code = json_decode($result,true);
+            $code = json_decode($result, true);
             echo $result . "\n <br>";
             file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
             $json_arr = json_decode($result, true);
