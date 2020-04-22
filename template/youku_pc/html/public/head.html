@@ -97,9 +97,6 @@
 						// return false
 					});
 					// 清空搜索记录
-					$(".clearSearchRecords").click(function() {
-						window.localStorage.removeItem('searchRecords');
-					})
 					$(".clearSearchRecords").on("click", function() {
 						window.localStorage.removeItem('searchRecords');
 						$("#searchWrap").hide()

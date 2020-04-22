@@ -72,8 +72,8 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .searchPop .searchCon .sSearchInput form{border-radius:1.6rem;-moz-border-radius:1.6rem;-webkit-border-radius:1.6rem;-ms-border-radius:1.6rem;-o-border-radius:1.6rem;background-color:#F5F5F5;width:100%;overflow:hidden;padding:.35rem .75rem;height:1.6rem;line-height:1.6rem}
 .searchPop .searchCon .sSearchInput .searchInput[type="search"]{border:0;width:100%;height:.9rem; min-height:.9rem;line-height:.9rem;font-size:.7rem;background-color:#F5F5F5;-webkit-user-select:text;float:left}
 .searchPop .searchCon .cancelInput{float:left;width:2rem;height:1.6rem;line-height:1.6rem;text-align:center;border:0;background:0 0;color:#333;font-size:.7rem;cursor:pointer;display:block}
-.search-list li{position:relative;width:100%;float:left}
-.search-list li a{font-size:.7rem;height:2rem;line-height:2rem;margin-top:-.4rem;float:left}
+.search-list li{position:relative;width:100%;float:left;margin: .25rem 0;}
+.search-list li a{font-size:.7rem;float:left}
 .search-list li .colred1{background:linear-gradient(to left,#3b9eff 0,#19c3ff 100%);color:#fff}
 .search-list li .colred2{background:linear-gradient(to left,#55d2fd 0,#3b9eff 100%);color:#fff}
 .search-list li .colred3{background:linear-gradient(to left,#76dbfd 0,#55d2fd 100%);color:#fff}
@@ -108,6 +108,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .mode-shaix{position: fixed;background: #FFF;overflow: hidden;width: 100%;z-index: 22;/* margin-top: -.97rem; */}
 .mod-shaix{position: fixed; background: #FFF;overflow: hidden;text-align: center;opacity: 0.85;    width: 100%;}
 .mod-head{position:relative;height:2.5rem;line-height:2.5rem;background-color:#FFF;font-size:.7rem;padding:0 .25rem}
+.clearSearchRecords{float: right;}
 .mod-head .mod-head-title{float:left}
 .mod-head .mod-head-title .mod-head-name{float:left;font-size:.9rem;font-weight:700}
 .mod-head .mod-head-title .mod-head-name.small{
