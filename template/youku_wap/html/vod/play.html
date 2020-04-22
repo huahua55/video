@@ -97,7 +97,8 @@
 							<section class="popWin playSource_popWin">
 								<ul class="clearfix">
 									{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> <div class="sSource popWin_sce">
+									<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> 
+										<div class="sSource popWin_sce">
 										<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}">{$vo.player_info.show}</a>
 										</div>
 									</li>
