@@ -4,12 +4,8 @@ $(function() {
 		var hei = $(this).innerHeight();
 		if (wid > hei) {
 			$(this).addClass("bj2")
-			// $(this).css('background-image', "url(../images/errorLogo-bj1.png)");
-			// $(this).attr('src', "images/errorLogo-bj2.png");
 		} else {
 			$(this).addClass("bj1")
-			// $(this).css('background-image', "url(../images/errorLogo-bj1.png)");
-			// $(this).attr('src', "images/errorLogo-bj1.png");
 		}
 	});
 	/*!
@@ -53,22 +49,6 @@ $(function() {
 	function showPopup() {
 		popup.show(document.getElementById("top-right"))
 	}
-	// $(document).ready(function() {
-	// 	$(".win-xuanji").click(function() {
-	// 		$(".popXuanji").addClass("popWinMask_transition");
-	// 		$(".popXuanji .playSource_popWin").addClass("popWin_transition");
-	// 		$("body").addClass("modal-open");
-	// 	});
-	// });
-	// $(document).ready(function() {
-	// $(".hdwrap").click(function() {
-	// 	var clipBoardContent = this.location.href;
-
-	// 	window.clipboardData.setData("Text", clipBoardContent);
-	// 	// $(".popXianlu").addClass("popWinMask_transition");
-	// 	// $(".popXianlu .playSource_popWin").addClass("popWin_transition");
-	// 	// $("body").addClass("modal-open");
-	// });
 
 	$('.hdwrap').on('click', function() {
 		copyUrl($(this));
@@ -84,14 +64,6 @@ $(function() {
 		document.execCommand("Copy"); //执行浏览器复制命令
 		alert("已复制链接，快去分享吧！")
 	}
-	// });
-	// $(document).ready(function() {
-	// 	$(".hide_popWin").click(function() {
-	// 		// $(".popWinMask").removeClass("popWinMask_transition");
-	// 		$(".playSource_popWin").removeClass("popWin_transition");
-	// 		$("body").removeClass("modal-open");
-	// 	});
-	// });
 	$(".popXuanji li").on("click", function() {
 		var e = $(this).index(),
 			a = $(".num-tab > div");
@@ -106,11 +78,6 @@ $(function() {
 		a.eq(e).addClass("cur").animate({
 			opacity: '1'
 		}, 100);
-		// b.removeClass("cur");
-		// b.eq(e).addClass("cur");
-		// c.removeClass("popWinMask_transition");
-		// d.removeClass("popWin_transition");
-		// h.removeClass("modal-open");
 	})
 	// 
 	$("#drama-nav span").on("click", function() {
@@ -140,10 +107,6 @@ $(function() {
 	for (var i = 0; i < $(".albumSelect .num-tab-main").length; i++) {
 		series($(".albumSelect .num-tab-main").eq(i), 20, 16);
 	}
-	// $(".albumDetailIntroTxt").click(function() {
-	// 	console.log($(this).data("content"))
-	// 	$(this).text($(this).data("content"));
-	// });
 	var num = 0,
 		suolue, xiangq;
 	$("#expand").click(function() {
@@ -239,15 +202,4 @@ $(function() {
 		}
 		return staer
 	}
-	// 加载默认图片
-	// $('img').error(function() {
-	// 	console.log("????")
-	// 	var wid = $(this).innerWidth();
-	// 	var hei = $(this).innerHeight();
-	// 	if (wid > hei) {
-	// 		$(this).attr('src', "images/errorLogo-bj2.png");
-	// 	} else {
-	// 		$(this).attr('src', "images/errorLogo-bj1.png");
-	// 	}
-	// })
 });

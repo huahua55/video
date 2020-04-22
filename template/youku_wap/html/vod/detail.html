@@ -36,11 +36,9 @@
 		<section class="mod">
 			<div class="albumDetailIntro">
 				<p class="albumDetailIntroTxt" data-clamp="3" data-content="{$obj.vod_content}">
-					<!-- <a class="expand" href="javascript:;">(展开)</a> -->
 					<span>{$obj.vod_blurb}....</span>
 					<a href="javascript:;" style="color: #39a1ff;" id="expand">展开</a>
 				</p>
-				<!-- {$obj.vod_content}  详情   缩略   {$obj.vod_blurb}-->
 			</div>
 		</section>
 		<!-- 播放器与剧集以及下载的选项卡 -->
@@ -94,11 +92,6 @@
 						<!-- 下载列表 -->
 						<div class="download-nav nav-main">
 							{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
-							<!-- <li id="play3_{$key}">
-								<div class="sSource popWin_sce">
-									<em>{$vo.player_info.show}</em>
-								</div>
-							</li> -->
 							<span>{$vo.player_info.show}</span>
 							{/maccms:foreach}
 						</div>
@@ -112,7 +105,6 @@
 								{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
 								<li>
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<!-- <span><a href="{:mac_url_vod_down($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" >{$vo2.name}</a></span> -->
 									<div>
 										<input type="text" value="{$vo2.url}">
 										<span style="margin-left: 3%;width: 31%;"><a href="{$vo2.url}" target="_blank" class="ellipsis" style="display: inline-block;width: 100%;">下载{$vo2.name}</a></span>

@@ -38,8 +38,9 @@
 				<!-- Swiper -->
 				<div class="swiper-container">
 					<div class="swiper-wrapper">
+						<!--  style="height: 2rem;" -->
 						{macdiy:notice num="10" type="current" order="desc" by="level"}
-						<div class="swiper-slide" style="height: 2rem;">
+						<div class="swiper-slide">
 							<a href="{:mac_url_art_detail($vo)}">
 								{$vo.art_content}
 							</a>
@@ -100,17 +101,17 @@
 						});
 					}
 				})
-				if ($(".notice-swiper .swiper-slide").length > 1) {
-					var noticeSwiper = new Swiper('.notice-swiper .swiper-container', {
-						direction: 'vertical',
-						slidesPerView: 1, // 每页显示几个slide
-						spaceBetween: 0, // slide的间距px
-						followFinger: false, // 
-						speed: 1000, // 速度
-						loop: true, // 循环
-						autoplay: true
-					});
-				}
+				// if ($(".notice-swiper .swiper-slide").length > 1) {
+				// 	var noticeSwiper = new Swiper('.notice-swiper .swiper-container', {
+				// 		direction: 'vertical',
+				// 		slidesPerView: 1, // 每页显示几个slide
+				// 		spaceBetween: 0, // slide的间距px
+				// 		followFinger: false, // 
+				// 		speed: 1000, // 速度
+				// 		loop: true, // 循环
+				// 		autoplay: true
+				// 	});
+				// }
 			})
 		</script>
 		{include file="public/foot"}
