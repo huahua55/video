@@ -140,7 +140,7 @@ class DoubanScore extends Command
         return $httpCode;
     }
 
-   //更新cookie
+    //更新cookie
     protected function getCookie($url){
         return 'll="108288";bid=h4nqLajQEBo';
         $client = new Client();
@@ -196,13 +196,12 @@ class DoubanScore extends Command
         }else{
             $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
         }
-
         //使用queryList + PhantomJs
         $this->ql->use(PhantomJs::class,$ph_js_path);
         $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
 
         //开启代理
-//         $this->get_port = $this->getDouBan();
+        $this->get_port = $this->getDouBan();
 //        p($A);
         //开始cookie
         $cookies =  $this->getCookie('https://movie.douban.com/');
@@ -241,11 +240,11 @@ class DoubanScore extends Command
                 $is_log = false;
                 $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-//                sleep(1);
-//                if(time() > $this->times + (60*3) ){
-//                    $this->get_port = $this->getDouBan();
-//                }
-                $url = sprintf($this->search_url_re, urlencode('1'));
+                sleep(1);
+                if(time() > $this->times + (60*3) ){
+                    $this->get_port = $this->getDouBan();
+                }
+                $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
 //                var_dump($url);
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
@@ -254,8 +253,8 @@ class DoubanScore extends Command
 //                        $r->addHeader('Referer', $url);
                         $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
-                        $r->addHeader('Host', 'search.douban.com');
-                        $r->addHeader('DNT', 1);
+//                        $r->addHeader('Host', 'search.douban.com');
+//                        $r->addHeader('DNT', 1);
 //                        $r->addHeader('Sec-Fetch-User', '?1');
 //                        $r->addHeader('Upgrade-Insecure-Requests', '1');
                         $r->setUrl($url);
@@ -263,12 +262,12 @@ class DoubanScore extends Command
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:4144",
-////                        '--proxy' => $this->proxy_server.":".$this->get_port,
-//                        '--proxy-type' => 'http',
-////                        '--ssl-protocol' =>'any',
-//                        '--load-images'=>'no',
-////                        '--ignore-ssl-errors' =>true,
+//                        '--proxy' => "183.129.244.16:17238",
+                        '--proxy' => $this->proxy_server.":".$this->get_port,
+                        '--proxy-type' => 'http',
+//                        '--ssl-protocol' =>'any',
+                        '--load-images'=>'no',
+//                        '--ignore-ssl-errors' =>true,
 //                    ])->getHtml();
                     ])->rules([
                         'rating_nums' => ['.rating_nums','text'],
@@ -277,15 +276,14 @@ class DoubanScore extends Command
                         'abstract' => ['.abstract','text'],
                         'abstract_2' => ['.abstract_2','text'],
                     ])->range('.item-root')->query()->getData();
-
+                    Log::info('err--proxy-' . $this->proxy_server.":".$this->get_port);
                 } catch (Exception $e) {
                     Log::info('err--过滤' . $url);
                     continue;
                 }
 
-
                 $getSearchData = objectToArray($mac_curl_get_data);
-                p($getSearchData);
+
                 if(empty($mac_curl_get_data)){
                     log::info('采集豆瓣评分-url-err::');
                     $error_count ++;
@@ -317,9 +315,9 @@ class DoubanScore extends Command
                         log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
                         log::info('采集豆瓣评分-title2-::' . $as_k['title']);
 //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
-                          $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']),mac_trim_all($as_k['title'])) *100 ;
-                         log::info('采集豆瓣评分-比例::' . $rade);
-                          if($rade> 50){
+                        $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']),mac_trim_all($as_k['title'])) *100 ;
+                        log::info('采集豆瓣评分-比例::' . $rade);
+                        if($rade> 50){
                             log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
                             $link =  explode('subject',$as_k['link']);
                             $get_search_id = $link[1] ?? '';
