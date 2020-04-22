@@ -243,8 +243,8 @@ class DoubanScore extends Command
                 if(time() > $this->times + (60*3) ){
                     $this->get_port = $this->getDouBan();
                 }
-                $url = sprintf($this->search_url_re, urlencode('11'));
-                var_dump($url);
+                $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
+//                var_dump($url);
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
