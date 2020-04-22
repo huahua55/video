@@ -97,9 +97,8 @@
 							<section class="popWin playSource_popWin">
 								<ul class="clearfix">
 									{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<li class="{if condition="$param.sid eq $vo.sid"} cur {/if}">
-										<div class="sSource popWin_sce">
-											<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}">{$vo.player_info.show}</a>
+									<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> <div class="sSource popWin_sce">
+										<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}">{$vo.player_info.show}</a>
 										</div>
 									</li>
 									{/maccms:foreach}
@@ -119,8 +118,8 @@
 							<div class="albumSelect cur">
 								<ul class="num-tab-main">
 									{maccms:foreach name="vo.urls" id="vo2" key="key2"}
-									<li class="{if condition="$param.nid eq $vo2.nid"} active {/if}">
-									<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" title="{$vo2.name}">{$vo2.name}</a></li>
+									<li class="{if condition=" $param.nid eq $vo2.nid"} active {/if}"> <a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}"
+									 title="{$vo2.name}">{$vo2.name}</a></li>
 									{/maccms:foreach}
 								</ul>
 							</div>
@@ -132,7 +131,9 @@
 					<li>
 						<!-- 下载列表 -->
 						<div class="download-nav nav-main">
-							<span class="on">迅雷下载</span>
+							{maccms:foreach name="obj.vod_down_list" id="vo" key="key"}
+							<span>{$vo.player_info.show}</span>
+							{/maccms:foreach}
 						</div>
 						<div class="download-main">
 							<div class="mod-head clearfix">
@@ -154,6 +155,7 @@
 								{/maccms:foreach}
 							</ul>
 							<script type="text/javascript">
+								$(".nav-main span").eq(0).addClass("on")
 								$(".download-item li").eq(0).addClass("on")
 							</script>
 						</div>
