@@ -301,6 +301,7 @@ class Index extends Base{
 
         $data = array(
             'name'      => $info["vod_name"],
+            'type_id'   => $info["type_id_1"],
             'img'       => imageDir($info["vod_pic"]),
             'msg'       => $info["vod_remarks"],
             'score'     => $info["vod_score"],
