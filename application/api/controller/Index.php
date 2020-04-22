@@ -51,7 +51,7 @@ class Index extends Base{
             $getSlide[$k]['id']     = $item['id'];
             $getSlide[$k]['name']   = $item['name'];
             $getSlide[$k]['img']    = imageDir($item['img']);
-            $getSlide[$k]['url']    = $item['link'];
+            $getSlide[$k]['url']    = $item['rel_vod'];
             $getSlide[$k]['type']   = 1;
         }
 
@@ -424,7 +424,7 @@ class Index extends Base{
         $nid    = $this->_param['nid'] ??  "" ;
 
         if($mac == "" || $type == "" || $rid == ""){
-            return json_return("参数错误");
+            return json_return("参数错误",0);
         }
 
         $userModel = model("User");
@@ -450,7 +450,7 @@ class Index extends Base{
         ];
         $res = model("Ulog")->saveData($data);
         if($res['code'] != 1){
-            return json_return(['记录日志失败']);
+            return json_return('记录日志失败');
         }
 
         return json_return(['保存成功']);
