@@ -98,6 +98,7 @@ class DoubanTopList extends Command
                     if (!empty($douBanRecommendFindData)) {
                         $vodDouBanFindData['status'] = 0;
                         log::info('采集豆瓣热门-存在过滤-::' . $sub_val['id']);
+//                        continue;
                     }
                     $vodDouBanFindWhere['vod_name'] = mac_trim_all($sub_val['title']);
                     $vodDouBanFindWhere['vod_sub'] = mac_trim_all($sub_val['title']);
