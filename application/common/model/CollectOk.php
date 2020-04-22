@@ -641,9 +641,30 @@ class CollectOk extends Base {
                         $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                         $v['vod_pic'] = (string)$tmp['pic'];
                         $msg = $tmp['msg'];
-                        $res = model('Vod')->insert($v);
-                        if ($res === false) {
+//                        $res = model('Vod')->insert($v);
+//                        if ($res === false) {
+//
+//                        }
+                        if($blend===false){
+                            $infos = model('Vod')->where($where)->find();
+                        }
+                        else{
+                            $infos = model('Vod')->where($where)
+                                ->where(function($query){
+                                    $query->where('vod_director',$GLOBALS['blend']['vod_director'])
+                                        ->whereOr('vod_actor',$GLOBALS['blend']['vod_actor']);
+                                })
+                                ->find();
+                        }
+                        if(empty($infos)){
 
+                            $res = model('Vod')->insert($v);
+                            if ($res === false) {
+                            }
+                            $del_where['vod_name']= $v['vod_name'];
+                            $del_where['vod_down_url']= ['neq',''];
+                            $del_where['vod_play_url']= ['eq',''];
+                            model('Vod')->where($del_where)->delete();
                         }
                         $color = 'green';
                         $des = '新加入库，成功ok。';
