@@ -196,13 +196,13 @@ class DoubanScore extends Command
         }else{
             $ph_js_path = ROOT_PATH.'extend/phantomjs_linux/bin/phantomjs';
         }
-        p($ph_js_path);
+
         //使用queryList + PhantomJs
         $this->ql->use(PhantomJs::class,$ph_js_path);
         $this->ql->use(PhantomJs::class,$ph_js_path,'browser');
 
         //开启代理
-         $this->get_port = $this->getDouBan();
+//         $this->get_port = $this->getDouBan();
 //        p($A);
         //开始cookie
         $cookies =  $this->getCookie('https://movie.douban.com/');
@@ -241,30 +241,30 @@ class DoubanScore extends Command
                 $is_log = false;
                 $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-                sleep(1);
-                if(time() > $this->times + (60*3) ){
-                    $this->get_port = $this->getDouBan();
-                }
+//                sleep(1);
+//                if(time() > $this->times + (60*3) ){
+//                    $this->get_port = $this->getDouBan();
+//                }
                 $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
 //                var_dump($url);
                 try {
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use($url,$cookie){
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
-                        $r->addHeader('Referer', $url);
+//                        $r->addHeader('Referer', $url);
                         $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
                         $r->addHeader('Host', 'search.douban.com');
                         $r->addHeader('DNT', 1);
-                        $r->addHeader('Sec-Fetch-User', '?1');
-                        $r->addHeader('Upgrade-Insecure-Requests', '1');
+//                        $r->addHeader('Sec-Fetch-User', '?1');
+//                        $r->addHeader('Upgrade-Insecure-Requests', '1');
                         $r->setUrl($url);
                         $r->setTimeout(10000); // 10 seconds
                         $r->setDelay(3); // 3 seconds
                         return $r;
                     },false,[
-//                        '--proxy' => "183.129.244.16:17238",
-                        '--proxy' => $this->proxy_server.":".$this->get_port,
+                        '--proxy' => "183.129.244.16:4144",
+//                        '--proxy' => $this->proxy_server.":".$this->get_port,
                         '--proxy-type' => 'http',
 //                        '--ssl-protocol' =>'any',
                         '--load-images'=>'no',
@@ -283,8 +283,9 @@ class DoubanScore extends Command
                     continue;
                 }
 
-                $getSearchData = objectToArray($mac_curl_get_data);
 
+                $getSearchData = objectToArray($mac_curl_get_data);
+                p($getSearchData);
                 if(empty($mac_curl_get_data)){
                     log::info('采集豆瓣评分-url-err::');
                     $error_count ++;
