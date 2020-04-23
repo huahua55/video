@@ -1023,8 +1023,8 @@ CREATE TABLE `douban_vod_details` (
   `text` json DEFAULT NULL,
   `error_count` tinyint(3) DEFAULT '0' COMMENT '错误总数',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `douban_id` (`douban_id`) USING BTREE
-  KEY `name` (`name`,`name_as`) USING HASH
+  UNIQUE KEY `douban_id` (`douban_id`) USING BTREE,
+  KEY `name` (`name`,`name_as`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='爬取豆瓣的数据';
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
