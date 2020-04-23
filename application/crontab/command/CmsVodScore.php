@@ -27,6 +27,7 @@ class CmsVodScore extends Command
 
     protected function configure()
     {
+
         //db
         $this->vodDb = Db::name('vod');
         $this->cmsDb = Db::name('douban_vod_details');
