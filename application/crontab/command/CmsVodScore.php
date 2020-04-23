@@ -129,7 +129,7 @@ class CmsVodScore extends Command
                 }
             }
         } catch (Exception $e) {
-            log::info('合并cmsVodScore-error::');
+            log::info('合并cmsVodScore-error::'.$e);
         }
         $output->writeln("end....");
     }
@@ -229,9 +229,9 @@ class CmsVodScore extends Command
 //            $vod_data['vod_blurb'] = "'$vod_content'";
 //        }
         //时长
-        if (isset($res['vod_duration'])) {
-            $vod_data['vod_duration'] = trim($res['vod_duration']);
-        }
+//        if (isset($res['vod_duration'])) {
+//            $vod_data['vod_duration'] = trim($res['vod_duration']);
+//        }
 
         //豆瓣id
         if (isset($res['vod_douban_id'])) {
