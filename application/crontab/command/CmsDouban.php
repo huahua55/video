@@ -59,6 +59,7 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
+            $where['error_count'] = ['eq', 0];
             if(!empty($ids)){
                 $where['id'] = ['gt', $ids];
             }
