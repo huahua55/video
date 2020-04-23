@@ -95,6 +95,7 @@ class CmsDouban extends Command
                                 log::info('采集豆瓣评分-su-::');
                                 $res = $mac_curl_get_data['data'];
                                 $is_log = true;
+                                $is_error = true;
                                 $whereId['id'] = $v['id'];
                                 $vod_data['name'] = $res['vod_name'];
                                 $vod_data['name_as'] = $res['vod_sub'];
@@ -104,7 +105,6 @@ class CmsDouban extends Command
                                 $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
-                                    $is_error = true;
                                     log::info('采集豆瓣评分-succ::' . $v['name']);
                                 }
                             }
