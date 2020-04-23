@@ -126,7 +126,7 @@
 									</div>
 									<ul class="info-list">
 										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-										<span title="{$vo.vod_actor}">{$vo.vod_actor}</span>
+										<span title="{$vo.vod_actor}">{empty name="$vo.vod_actor"}&nbsp;{else/}{$vo.vod_actor}{/empty}</span>
 									</ul>
 								</li>
 								{/maccms:vod}
