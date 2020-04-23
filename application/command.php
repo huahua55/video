@@ -14,5 +14,6 @@ return [
     'app\crontab\command\DoubanScore',
     'app\crontab\command\CmsDouban',
     'app\crontab\command\CmsVodScore',
+    'app\crontab\command\DoubanScoreCopy',
     'app\crontab\command\DoubanTopList'
 ];
