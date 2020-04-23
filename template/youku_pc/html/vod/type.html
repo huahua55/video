@@ -28,7 +28,7 @@
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box1">
-					<p class="nav_box-title">年代：</p>
+					<p class="nav_box-title">地区：</p>
 					<ul>
 						{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
 						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'area'=>$vo2],'show')}">{$vo2}</a>
@@ -38,7 +38,7 @@
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box2">
-					<p class="nav_box-title">地区：</p>
+					<p class="nav_box-title">年代：</p>
 					<ul>
 						{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
 						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'year'=>$vo2],'show')}">{$vo2}</a>
