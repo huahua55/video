@@ -451,9 +451,9 @@ class DoubanScoreCopy extends Command
 //        if (isset($vod_data['vod_score_num']) && isset($vod_data['vod_score_all'])) {
 
 //        }
-        if (isset($get_url_search_id_data['summary'])) {
-            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
-        }
+//        if (isset($get_url_search_id_data['summary'])) {
+//            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
+//        }
         if (isset($get_url_search_id_data['durations'][0])) {
             $vod_data['vod_duration'] = $get_url_search_id_data['durations'][0];
         }
