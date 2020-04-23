@@ -230,7 +230,7 @@ class DoubanScoreCopy extends Command
                     $is_log = false;
                     $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-                    sleep(1);
+                    sleep(2);
                     if (time() > $this->times + (60 * 3)) {
                         $this->get_port = $this->getDouBan();
                     }
@@ -308,6 +308,7 @@ class DoubanScoreCopy extends Command
                                         log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
                                         $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
                                         try {
+                                            sleep(2);
                                             $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
                                                 // 设置代理
                                              'proxy' => 'http://'. $this->proxy_server . ":" . $this->get_port,
