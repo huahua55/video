@@ -90,8 +90,9 @@ class CmsDouban extends Command
                         }
 //                     print_r($getSearchData);
                         if (!empty($mac_curl_get_data)) {
-                            log::info('采集CmsDouban-try_su:');
+                            log::info('采集CmsDouban-try_su:',$mac_curl_get_data);
                             if (!empty($mac_curl_get_data) && $mac_curl_get_data['code'] == 1 && !empty($mac_curl_get_data['data'])) {
+                                log::info('采集豆瓣评分-su-::');
                                 $res = $mac_curl_get_data['data'];
                                 $is_log = true;
                                 $whereId['id'] = $v['id'];
