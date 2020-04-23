@@ -196,7 +196,7 @@ class CmsDouban extends Command
         }
         //视频标签
         if (isset($res['vod_tag'])) {
-            $vod_data['vod_tag'] = trim(mb_substr($res['vod_tag'], 0, 100));
+            $vod_data['vod_tag'] =mac_format_text(trim($res['vod_class']));
         }
 
         //发行地区
