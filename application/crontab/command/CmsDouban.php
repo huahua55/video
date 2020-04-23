@@ -59,7 +59,7 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
-            $where['error_count'] = ['eq', 0];
+//            $where['error_count'] = ['eq', 0];
             if(!empty($ids)){
                 $where['id'] = ['gt', $ids];
             }
@@ -87,7 +87,7 @@ class CmsDouban extends Command
                         $is_log = false;
                         $is_error = false;
                         $mac_curl_get_data = '';
-                        sleep(1);
+//                        sleep(1);
                         $url = $this->get_search_id . $v['douban_id'];
                         log::info('采集CmsDoubanUrl:', $url);
                         try {
