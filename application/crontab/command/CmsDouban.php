@@ -103,7 +103,7 @@ class CmsDouban extends Command
                         if (!empty($mac_curl_get_data)) {
                             log::info('采集CmsDouban-try_su:',$mac_curl_get_data);
                             if (!empty($mac_curl_get_data) && $mac_curl_get_data['code'] == 1 && !empty($mac_curl_get_data['data'])) {
-                                log::info('采集豆瓣评分-su-::');
+                                log::info('采集CmsDouban-try_-su-::');
                                 $res = $mac_curl_get_data['data'];
                                 $is_log = true;
                                 $is_error = true;
@@ -116,7 +116,7 @@ class CmsDouban extends Command
                                 $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
-                                    log::info('采集豆瓣评分-succ::' . $v['name']);
+                                    log::info('CmsDouban-try-succ::' . $v['name']);
                                 }
                             }
                         }
