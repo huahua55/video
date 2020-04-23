@@ -246,7 +246,7 @@ class DoubanScore extends Command
                     $is_log = false;
                     $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-                    sleep(1);
+//                    sleep(1);
                     if (time() > $this->times + (60 * 3)) {
                         $this->get_port = $this->getDouBan();
                     }
