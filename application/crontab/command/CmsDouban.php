@@ -73,6 +73,7 @@ class CmsDouban extends Command
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
                         $is_log = false;
+                        $is_error = false;
                         $mac_curl_get_data = '';
                         sleep(1);
                         $url = $this->get_search_id . $v['douban_id'];
@@ -102,6 +103,7 @@ class CmsDouban extends Command
                                 $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
+                                    $is_error = true;
                                     log::info('采集豆瓣评分-succ::' . $v['name']);
                                 }
                             }
@@ -109,6 +111,12 @@ class CmsDouban extends Command
                         if ($is_log == false) {
                             log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
                         }
+                        if ($is_error == false) {
+                            $whereErrId['id'] = $v['id'];
+                            $vod_err_data['error_count'] =$v['error_count'] + 1;
+                            $this->vodDb->where($whereErrId)->update($vod_err_data);
+                        }
+
                     }
                     $page = $page + 1;
                 }

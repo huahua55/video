@@ -1021,6 +1021,7 @@ CREATE TABLE `douban_vod_details` (
   `vod_actor` varchar(255) NOT NULL DEFAULT '' COMMENT '主演列表',
     `score` varchar(255) NOT NULL DEFAULT '' COMMENT '评分',
   `text` json DEFAULT NULL,
+  `error_count` tinyint(3) DEFAULT '0' COMMENT '错误总数',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `douban_id` (`douban_id`) USING BTREE
   KEY `name` (`name`,`name_as`) USING HASH
