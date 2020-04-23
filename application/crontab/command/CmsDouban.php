@@ -77,7 +77,7 @@ class CmsDouban extends Command
                         $is_error = false;
                         $mac_curl_get_data = '';
                         sleep(1);
-                        $url = $this->get_search_id . $v['douban_id'];
+                        $url = $this->get_search_id . '26892034';
                         log::info('采集CmsDoubanUrl:', $url);
                         $mac_curl_get_data = mac_curl_get($url);
                         $mac_curl_get_data = str_replace('douban(', '', $mac_curl_get_data);
