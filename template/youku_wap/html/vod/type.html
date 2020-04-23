@@ -89,6 +89,8 @@
 			</div>
 		</section>
 		{/macdiy:vodrecommend}
+
+		{if $obj.childids}
 		{maccms:type ids="current" order="asc" by="sort"}
 		<section class="mod aui-margin-t-0">
 			<div class="mod-head clearfix">
@@ -115,9 +117,36 @@
 					</ul>
 				</div>
 			</div>
+		</section>
+		{/maccms:type}
+		{else}
+		<section class="mod aui-margin-t-0">
+			<div class="mod-head clearfix">
+				<div class="mod-head-title">
+					<span class="mod-head-name">{$obj.type_name}</span>
+				</div>
+				<a class="change" href="{:mac_url_type($obj,[],'show')}">更多</a>
 			</div>
-			{/maccms:type}
-			<!--正在热播-->
-			{include file="public/foot"}
+			<div class="mod-main clearfix">
+				<div class="mod-row">
+					<ul class="m-list clearfix" m-list-skin="film">
+						{maccms:vod num="24" type="current" order="desc" by="time"}
+						<li class="m-item">
+							<a class="thumb" href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">
+								<img class="ff-img" data-original="{:mac_url_img($vo.vod_pic)} " src="{:mac_url_img($vo.vod_pic)}">
+								<i class="mask"></i>
+								<div class="icon-br"><span class="label">{$vo.vod_remarks}</span></div>
+							</a>
+							<div class="text">
+								<h3 class="stitle aui-ellipsis-1"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></h3>
+							</div>
+						</li>
+						{/maccms:vod}
+					</ul>
+				</div>
+			</div>
+		</section>
+		{/if}
+		{include file="public/foot"}
 	</body>
 </html>
