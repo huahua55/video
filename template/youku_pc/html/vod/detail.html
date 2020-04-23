@@ -32,7 +32,7 @@
 										<div class="video_score">
 											<div class="score_v"><span class="score">{$obj.vod_score} </span><span class="f">分</span></div>
 											<div class="score_db" title="豆瓣评分：{$obj.vod_score} ">
-												<span class="db">豆</span><span class="score">{$vo.vod_score} </span></div>
+												<span class="db">豆瓣</span></div>
 										</div>
 									</div>
 									<p class="tag">{$obj.vod_remarks} </p>
@@ -229,7 +229,7 @@
 												</div>
 												<ul class="info-list">
 													<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-													<span>主演：{$vo.vod_actor}</span>
+													<span title="{$vo.vod_actor}">主演：{$vo.vod_actor}</span>
 												</ul>
 											</li>
 											{/maccms:vod} </div>

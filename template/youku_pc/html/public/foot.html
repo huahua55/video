@@ -52,3 +52,15 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$("img").each(function() {
+		console.log("?")
+		var wid = $(this).innerWidth();
+		var hei = $(this).innerHeight();
+		if (wid > hei) {
+			$(this).addClass("bj2")
+		} else {
+			$(this).addClass("bj1")
+		}
+	});
+</script>

@@ -27,7 +27,17 @@ html {
 	/* height: 100%; */
 	min-width: 121px;
 }
-
+img{
+	background: 0 0 no-repeat;
+	background-size: 100% 100%;
+	/* background-image: url(../images/errorLogo-bj1.png); */
+}
+img.bj1{
+	background-image: url(../images/errorLogo-bj1.png);
+}
+img.bj2{
+	background-image: url(../images/errorLogo-bj2.png);
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -343,6 +353,7 @@ hr {
 	width: 130px;
 	height: 40px;
 	overflow: hidden;
+	background: none;
 }
 
 .newhead .newhead-main .hd-logo .national-banner {
@@ -5054,7 +5065,8 @@ i.glyphicon {
 }
 
 .s-top-info-detail .playBtnCon {
-	padding-top: 40px;
+	margin-top: 40px;
+	padding: 0;
 }
 
 .playBtnCon .latestBtn {
@@ -5476,7 +5488,7 @@ i.glyphicon {
 
 .yk-pack {
 	float: left;
-	min-height: 315px;
+	/* min-height: 315px; */
 	width: 190px;
 	position: relative;
 	padding: 5px;
@@ -5765,7 +5777,12 @@ i.glyphicon {
 .index-list-1 .yk-pack .p-thumb {
 	height: 265px;
 }
-
+.index-list-1 .yk-pack .info-list span{
+	display: block;
+	width: 100%;
+	min-height: 17px;
+	overflow: hidden; text-overflow:ellipsis;white-space:nowrap;
+}
 .index-list-1 .yk-pack .info-list .title,
 .index-list-2 .yk-pack .info-list .title,
 .index-list-3 .yk-pack .info-list .title {
@@ -6068,6 +6085,7 @@ i.glyphicon {
 	padding: 7px 0 5px;
 	float: left;
 	width: 140px;
+	overflow: hidden;
 }
 
 .video_score .score_v .score {
@@ -6100,7 +6118,7 @@ i.glyphicon {
 	display: block;
 	position: relative;
 	font-size: 0;
-	width: 70px;
+	width: 76px;
 	height: 20px;
 	border-radius: 10px;
 	border: 1px solid #33b045;
@@ -6109,7 +6127,7 @@ i.glyphicon {
 
 .video_score .score_db .db {
 	display: inline-block;
-	width: 28px;
+	width: 50%;
 	font-size: 12px;
 	line-height: 20px;
 	border-radius: 9px 0 0 9px;

@@ -49,7 +49,7 @@
 										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
 										 class="playshow">{$vo2.vod_remarks}</span></div>
 									<ul class="info-list">
-										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span>{$vo2.vod_actor}</span>
+										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span title="{$vo2.vod_actor}">{$vo2.vod_actor}</span>
 									</ul>
 								</li>
 								{/volist}
