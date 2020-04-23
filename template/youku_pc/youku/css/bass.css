@@ -5780,7 +5780,7 @@ i.glyphicon {
 .index-list-1 .yk-pack .info-list span{
 	display: block;
 	width: 100%;
-	min-height: 17px;
+	height: 18px;
 	overflow: hidden; text-overflow:ellipsis;white-space:nowrap;
 }
 .index-list-1 .yk-pack .info-list .title,
