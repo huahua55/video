@@ -38,7 +38,7 @@
 		<div class="sSearchInput">
 			<form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}">
 				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称" />
-				<input type="submit" id="searchbutton" class="mac_search" value=" "/>
+				<input type="submit" id="searchbutton" class="mac_search" value=" " />
 			</form>
 		</div>
 		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
@@ -71,7 +71,8 @@
 					{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
 					{php}$i=$key+1;{/php}
 					{if condition="$i lt 4"}
-					<li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}"><span class="colred{$i}">{$i}</span>{$vo}<em class="up"></em></a></li>
+					<li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}"><span class="colred{$i}">{$i}</span>{$vo}<em
+							 class="up"></em></a></li>
 					{if condition="$i eq 1"}
 					{/if}
 					{else}
