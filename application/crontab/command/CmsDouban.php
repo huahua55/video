@@ -110,7 +110,7 @@ class CmsDouban extends Command
                                 $is_error = true;
                                 $whereId['id'] = $v['id'];
                                 $vod_data['name'] = $res['vod_name'];
-                                $vod_data['name_as'] = $res['vod_sub'];
+                                $vod_data['name_as'] = mb_substr( trim($res['vod_sub']), 0, 250);
                                 $vod_data['vod_director'] = $res['vod_director'];
                                 $vod_data['vod_actor'] = $res['vod_actor'];
                                 $vod_data['score'] = $res['vod_score'];
