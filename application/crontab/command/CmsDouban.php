@@ -56,7 +56,8 @@ class CmsDouban extends Command
             $is_true = true;
             $where = [];
             $where['name'] = ['eq', ''];
-            $where['name_as'] = ['eq', ''];
+            $where['douban_id'] = ['gt', 0];
+//            $where['name_as'] = ['eq', ''];
             $order = 'id asc';
             //进入循环 取出数据
             while ($is_true) {
@@ -152,9 +153,9 @@ class CmsDouban extends Command
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $c_where['douban_id'] = ['gt', 0];
-        $total = $this->vodDb->where($c_where)->whereOr($where)->count();
-        $list = $this->vodDb->where($c_where)->whereOr($where)->order($order)->limit($limit_str)->select();
+
+        $total = $this->vodDb->where($where)->count();
+        $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
