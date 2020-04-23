@@ -441,11 +441,11 @@ class DoubanScoreCopy extends Command
         if (isset($get_url_search_id_data['ratings_count'])) {
             $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
         }
-        if($vod_data['vod_score_all'] == 0 || empty($vod_data['vod_score_all'])){
-            $vod_data['vod_score'] = intval($vod_data['vod_score_num']) ;
-        }else{
-            $vod_data['vod_score'] = intval($vod_data['vod_score_all']);
-        }
+//        if($vod_data['vod_score_all'] == 0 || empty($vod_data['vod_score_all'])){
+//            $vod_data['vod_score'] = intval($vod_data['vod_score_num']) ;
+//        }else{
+//            $vod_data['vod_score'] = intval($vod_data['vod_score_all']);
+//        }
 //        if (isset($vod_data['vod_score_num']) && isset($vod_data['vod_score_all'])) {
 
 //        }
