@@ -12,5 +12,6 @@
 return [
     'app\crontab\command\Cj',
     'app\crontab\command\DoubanScore',
+    'app\crontab\command\CmsDouban',
     'app\crontab\command\DoubanTopList'
 ];
