@@ -69,11 +69,11 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .searchPop{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:none;background-color:#FAFAFA;overflow:hidden}
 .searchPop .searchCon{height:2.5rem;background-color:#FFF;width:100%;position:relative;padding:.45rem 0}
 .searchPop .searchCon .sSearchInput{display:block;padding-right:0;height:1.6rem;position:relative;padding:0 .5rem;float:left;width:16.25rem}
-.searchPop .searchCon .sSearchInput form{border-radius:1.6rem;-moz-border-radius:1.6rem;-webkit-border-radius:1.6rem;-ms-border-radius:1.6rem;-o-border-radius:1.6rem;background-color:#F5F5F5;width:100%;overflow:hidden;padding:.35rem .75rem;height:1.6rem;line-height:1.6rem}
+.searchPop .searchCon .sSearchInput form{border-radius:1.6rem;-moz-border-radius:1.6rem;-webkit-border-radius:1.6rem;-ms-border-radius:1.6rem;-o-border-radius:1.6rem;background-color:#F5F5F5;width:100%;overflow:hidden;padding:.35rem .75rem;height:1.6rem;line-height:1.6rem;position: relative;}
 .searchPop .searchCon .sSearchInput .searchInput[type="search"]{border:0;width:100%;height:.9rem; min-height:.9rem;line-height:.9rem;font-size:.7rem;background-color:#F5F5F5;-webkit-user-select:text;float:left}
 .searchPop .searchCon .cancelInput{float:left;width:2rem;height:1.6rem;line-height:1.6rem;text-align:center;border:0;background:0 0;color:#333;font-size:.7rem;cursor:pointer;display:block}
 .search-list li{position:relative;width:100%;float:left;margin: .25rem 0;}
-.search-list li a{font-size:.7rem;float:left}
+.search-list li a{font-size:.7rem;display: block;}
 .search-list li .colred1{background:linear-gradient(to left,#3b9eff 0,#19c3ff 100%);color:#fff}
 .search-list li .colred2{background:linear-gradient(to left,#55d2fd 0,#3b9eff 100%);color:#fff}
 .search-list li .colred3{background:linear-gradient(to left,#76dbfd 0,#55d2fd 100%);color:#fff}
@@ -941,7 +941,8 @@ cursor: pointer;
 }
 .fenlei{width:100%;height:1.5rem;line-height:1.5rem;font-size:.75rem;font-weight:400;text-align:center;box-sizing: border-box;-webkit-box-sizing: border-box;color: #2692ff;border: 1px solid #2692ff;-webkit-border-radius: 6px;}
 .footer {margin-top: 1.1rem;}
-.searchPop .searchCon .sSearchInput form input[type="text"]{min-height: 1.7rem;font-size: .65rem; }
+.searchPop .searchCon .sSearchInput form input[type="text"]{min-height: 1.7rem;font-size: .65rem;width: 100%;display: inline-block;}
+.searchPop .searchCon .sSearchInput form input[type="submit"]{position: absolute;right: 1rem;top: 50%;transform: translateY(0%); width: .7rem;height: .7rem;font-size: .65rem;background: url(../images/ss.png);background-size: .8rem .8rem;}
 .autocomplete-suggestions{margin-left: -.2rem;background-color: #f5f5f5;}
 .autocomplete-suggestion{position:relative;height: 1.5rem;line-height: 1.5rem;padding: 0 .7rem;font-size: .65rem;color:#666;vertical-align:middle;list-style:none;overflow:hidden;cursor:pointer;-webkit-font-smoothing:antialiased;}
 .autocomplete-selected{background:#f6f7fb}
