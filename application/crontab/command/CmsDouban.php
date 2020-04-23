@@ -49,6 +49,8 @@ class CmsDouban extends Command
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
+            $type = $param['type']??'';
+            $ids = $param['id']??'';
 
             $start = 0;
             $page = 1;
@@ -57,8 +59,16 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
+            if(!empty($ids)){
+                $where['id'] = ['gt', $ids];
+            }
 //            $where['name_as'] = ['eq', ''];
-            $order = 'id asc';
+            if($type ==1){
+                $order = 'id desc';
+            }else{
+                $order = 'id asc';
+            }
+
             //进入循环 取出数据
             while ($is_true) {
                 //取出数据
