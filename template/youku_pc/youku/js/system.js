@@ -482,7 +482,7 @@ var MAC={
         },
         'Clear': function(){
             window.localStorage.removeItem('mac_history');
-            $('.mac_history_box').html('<li class="hx_clear">已清空观看记录。</li>');
+            $('#bplayer').html('<li class="hx_clear">已清空观看记录。</li>');
         },
     },
 

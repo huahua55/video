@@ -384,7 +384,7 @@ class Index extends Base{
         }
 
         if($type != ""){
-            $where['vod_class']   = ['like','%'.$type.'%'];
+            $where['vod_tag']   = ['like','%'.$type.'%'];
         }
 
         if($area != ""){

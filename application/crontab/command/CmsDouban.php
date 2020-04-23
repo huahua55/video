@@ -59,7 +59,7 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
-//            $where['error_count'] = ['eq', 0];
+            $where['error_count'] = ['eq', 0];
             if(!empty($ids)){
                 $where['id'] = ['gt', $ids];
             }
@@ -110,7 +110,7 @@ class CmsDouban extends Command
                                 $is_error = true;
                                 $whereId['id'] = $v['id'];
                                 $vod_data['name'] = $res['vod_name'];
-                                $vod_data['name_as'] = $res['vod_sub'];
+                                $vod_data['name_as'] = mb_substr( trim($res['vod_sub']), 0, 250);
                                 $vod_data['vod_director'] = $res['vod_director'];
                                 $vod_data['vod_actor'] = $res['vod_actor'];
                                 $vod_data['score'] = $res['vod_score'];
@@ -196,7 +196,7 @@ class CmsDouban extends Command
         }
         //视频标签
         if (isset($res['vod_tag'])) {
-            $vod_data['vod_tag'] = trim(mb_substr($res['vod_tag'], 0, 100));
+            $vod_data['vod_tag'] =mac_format_text(trim($res['vod_class']));
         }
 
         //发行地区
