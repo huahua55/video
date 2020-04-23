@@ -79,6 +79,11 @@ class CmsDouban extends Command
                         sleep(1);
                         $url = $this->get_search_id . $v['douban_id'];
                         log::info('采集CmsDoubanUrl:', $url);
+                        $mac_curl_get_data = mac_curl_get($url);
+                        $mac_curl_get_data = str_replace('douban(', '', $mac_curl_get_data);
+                        $mac_curl_get_data = str_replace(');', '', $mac_curl_get_data);
+                        $mac_curl_get_data = $this->isJsonBool($mac_curl_get_data, true);
+                        print_r($mac_curl_get_data);die;
                         try {
                             $mac_curl_get_data = $this->ql->get($url)->getHtml();
                             $mac_curl_get_data = str_replace('douban(', '', $mac_curl_get_data);
