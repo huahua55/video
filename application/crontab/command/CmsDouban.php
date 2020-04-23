@@ -49,6 +49,8 @@ class CmsDouban extends Command
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
+            $type = $param['type']??'';
+            $ids = $param['id']??'';
 
             $start = 0;
             $page = 1;
@@ -57,8 +59,16 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
+            if(!empty($ids)){
+                $where['id'] = ['gt', $ids];
+            }
 //            $where['name_as'] = ['eq', ''];
-            $order = 'id asc';
+            if($type ==1){
+                $order = 'id desc';
+            }else{
+                $order = 'id asc';
+            }
+
             //进入循环 取出数据
             while ($is_true) {
                 //取出数据
@@ -93,7 +103,7 @@ class CmsDouban extends Command
                         if (!empty($mac_curl_get_data)) {
                             log::info('采集CmsDouban-try_su:',$mac_curl_get_data);
                             if (!empty($mac_curl_get_data) && $mac_curl_get_data['code'] == 1 && !empty($mac_curl_get_data['data'])) {
-                                log::info('采集豆瓣评分-su-::');
+                                log::info('采集CmsDouban-try_-su-::');
                                 $res = $mac_curl_get_data['data'];
                                 $is_log = true;
                                 $is_error = true;
@@ -106,14 +116,14 @@ class CmsDouban extends Command
                                 $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
-                                    log::info('采集豆瓣评分-succ::' . $v['name']);
+                                    log::info('CmsDouban-try-succ::' . $v['name']);
                                 }
                             }
                         }
                         if ($is_log == false) {
                             log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
                         }
-                        if ($is_error == false) {
+                        if ($is_error != true) {
                             $whereErrId['id'] = $v['id'];
                             $vod_err_data['error_count'] =$v['error_count'] + 1;
                             $this->vodDb->where($whereErrId)->update($vod_err_data);

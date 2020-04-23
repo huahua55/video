@@ -192,6 +192,7 @@ class DoubanScore extends Command
             $param = $this->ParSing($parameter);
             $type = $param['type'] ?? ''; //从1 开始爬取
             $x = $param['x'] ?? '';
+            $id = $param['id'] ?? '';
             if (!empty($type) && $type == 1) {
                 Cache::set('vod_id_list_douban_score', 1);
             }
@@ -219,9 +220,14 @@ class DoubanScore extends Command
                 'vod_douban_id' => 0,
             ];
             $is_vod_id = Cache::get('vod_id_list_douban_score');
-            if (!empty($is_vod_id)) {
-                $where['vod_id'] = ['gt', $is_vod_id];
+            if(!empty($id)){
+                $where['vod_id'] = ['gt', $id];
+            }else{
+                if (!empty($is_vod_id)) {
+                    $where['vod_id'] = ['gt', $is_vod_id];
+                }
             }
+
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -246,7 +252,7 @@ class DoubanScore extends Command
                     $is_log = false;
                     $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
-                    sleep(1);
+//                    sleep(1);
                     if (time() > $this->times + (60 * 3)) {
                         $this->get_port = $this->getDouBan();
                     }
@@ -335,7 +341,7 @@ class DoubanScore extends Command
                             $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
                             log::info('采集豆瓣评分-比例::' . $rade);
                             if ($rade > 50) {
-                                log::info('采集豆瓣评分-title-su-::' . $as_k['title']);
+                                log::info('采集豆瓣评分-title-su-::' . $as_k['title'].'---'.$v['vod_id']);
                                 if (!empty($get_search_id)) {
                                     log::info('采集豆瓣评分-ok-id::' . $get_search_id);
                                     $get_url_search_id = $this->get_search_id . $get_search_id;
@@ -359,7 +365,7 @@ class DoubanScore extends Command
                                                 }
                                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                                 if ($up_res) {
-                                                    log::info('采集豆瓣评分-succ::' . $v['vod_name']);
+                                                    log::info('采集豆瓣评分-succ::' . $v['vod_name'].'---'.$v['vod_id']);
                                                 }
                                             }
                                         }
