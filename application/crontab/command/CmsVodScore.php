@@ -23,6 +23,7 @@ use QL\QueryList;
 class CmsVodScore extends Command
 {
     protected $vodDb;//db
+    protected $get_search_id = 'http://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
     protected $cmsDb;//db
 
     protected function configure()
@@ -116,6 +117,32 @@ class CmsVodScore extends Command
                                     $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                     if ($up_res) {
                                         log::info('合并cmsVodScore-succ::' . $v['vod_name']);
+                                    }
+                                }
+                            }
+                        }else{
+                            if($type == 1){
+                                $url = $this->get_search_id . $v['vod_douban_id'];
+                                log::info('采集CmsDoubanUrl:', $url);
+                                try {
+                                    $mac_curl_get_data = mac_curl_get($url);
+                                    $mac_curl_get_data = str_replace('douban(', '', $mac_curl_get_data);
+                                    $mac_curl_get_data = str_replace(');', '', $mac_curl_get_data);
+                                    $mac_curl_get_data = $this->isJsonBool($mac_curl_get_data, true);
+                                    Log::info('采集CmsDouban-try:');
+                                } catch (Exception $e) {
+                                    Log::info('err--过滤' . $url);
+                                    continue;
+                                }
+                                if (!empty($mac_curl_get_data)) {
+                                    if (!empty($mac_curl_get_data) && $mac_curl_get_data['code'] == 1 && !empty($mac_curl_get_data['data'])) {
+                                        $res = $mac_curl_get_data['data'];
+                                        $whereId['vod_id'] = $v['vod_id'];
+                                        $vod_data['vod_tag'] =  mac_format_text(trim($res['vod_class']));
+                                        $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                        if ($up_res) {
+                                            log::info('合集CmsDoubasucc::' );
+                                        }
                                     }
                                 }
                             }
