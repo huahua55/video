@@ -136,7 +136,7 @@ class CmsDouban extends Command
             }
         } catch (Exception $e) {
             $output->writeln("end1111....");
-            log::info('采集CmsDoubanUrl-error::');
+            log::info('采集CmsDoubanUrl-error::'.$e);
         }
         $output->writeln("end....");
     }
