@@ -192,6 +192,7 @@ class DoubanScore extends Command
             $param = $this->ParSing($parameter);
             $type = $param['type'] ?? ''; //从1 开始爬取
             $x = $param['x'] ?? '';
+            $id = $param['id'] ?? '';
             if (!empty($type) && $type == 1) {
                 Cache::set('vod_id_list_douban_score', 1);
             }
@@ -219,9 +220,14 @@ class DoubanScore extends Command
                 'vod_douban_id' => 0,
             ];
             $is_vod_id = Cache::get('vod_id_list_douban_score');
-            if (!empty($is_vod_id)) {
-                $where['vod_id'] = ['gt', $is_vod_id];
+            if(!empty($id)){
+                $where['vod_id'] = ['gt', $id];
+            }else{
+                if (!empty($is_vod_id)) {
+                    $where['vod_id'] = ['gt', $is_vod_id];
+                }
             }
+
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];

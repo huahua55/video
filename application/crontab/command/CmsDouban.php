@@ -59,6 +59,7 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
+            $where['error_count'] = ['eq', 0];
             if(!empty($ids)){
                 $where['id'] = ['gt', $ids];
             }
@@ -123,7 +124,7 @@ class CmsDouban extends Command
                         if ($is_log == false) {
                             log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
                         }
-                        if ($is_error == false) {
+                        if ($is_error != true) {
                             $whereErrId['id'] = $v['id'];
                             $vod_err_data['error_count'] =$v['error_count'] + 1;
                             $this->vodDb->where($whereErrId)->update($vod_err_data);
@@ -135,7 +136,7 @@ class CmsDouban extends Command
             }
         } catch (Exception $e) {
             $output->writeln("end1111....");
-            log::info('采集CmsDoubanUrl-error::');
+            log::info('采集CmsDoubanUrl-error::'.$e);
         }
         $output->writeln("end....");
     }

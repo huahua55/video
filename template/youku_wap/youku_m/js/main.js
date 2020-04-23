@@ -13,9 +13,7 @@ $(function() {
 	 * 网站日志
 	 * =====================================================
 	 */
-	console.log("%c%c本模板使用苹果CMS V10版本,多功能模板，苹果CMS V10全功能模板", "line-height:28px;",
-		"line-height:28px;padding:4px 0px;color:#fff;font-size:16px;background-image:-webkit-gradient(linear,left top,right top,color-stop(0,#ff22ff),color-stop(1,#5500ff));color:transparent;-webkit-background-clip:text;"
-	);
+
 	/*!
 	 * =====================================================
 	 * 监听滚动条高度

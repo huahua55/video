@@ -28,7 +28,7 @@
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box1">
-					<p class="nav_box-title">年代：</p>
+					<p class="nav_box-title">地区：</p>
 					<ul>
 						{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
 						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'area'=>$vo2],'show')}">{$vo2}</a>
@@ -38,7 +38,7 @@
 				</div>
 				<div class="line"></div>
 				<div class="nav_box nav_box2">
-					<p class="nav_box-title">地区：</p>
+					<p class="nav_box-title">年代：</p>
 					<ul>
 						{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
 						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'year'=>$vo2],'show')}">{$vo2}</a>
@@ -75,6 +75,7 @@
 					</div>
 				</div>
 				{/macdiy:vodrecommend}
+
 				{if $obj.childids}
 				{maccms:type ids="current" order="asc" by="sort"}
 				<div class="yk-pannel clearfix">
@@ -116,16 +117,16 @@
 						</div>
 						<div class="yk-pannel_bd clearfix">
 							<ul class="index-list-1 active clearfix">
-								{maccms:vod num="45" type="'.$vo['type_id'].'" order="desc" by="time"}
+								{maccms:vod num="24" type="current" order="desc" by="time"}
 								<li class="yk-pack">
 									<div class="p-thumb">
-										<a href="{:mac_url_vod_detail($vo)}" title="沙海"></a>
+										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
 										<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
 										<span class="playshow">{$vo.vod_remarks}</span>
 									</div>
 									<ul class="info-list">
 										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
-										<span title="{$vo.vod_actor}">{$vo.vod_actor}</span>
+										<span title="{$vo.vod_actor}">{empty name="$vo.vod_actor"}&nbsp;{else/}{$vo.vod_actor}{/empty}</span>
 									</ul>
 								</li>
 								{/maccms:vod}
