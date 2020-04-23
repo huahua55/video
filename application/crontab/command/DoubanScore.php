@@ -340,7 +340,7 @@ class DoubanScore extends Command
                                 log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
                             }
                             if($g == 1){
-
+                                log::info('采集豆瓣评分-title-su-::g'  . $as_k['title'].'---'.$v['vod_id']);
                             }else{
                                 //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
                                 $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
