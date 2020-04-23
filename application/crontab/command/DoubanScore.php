@@ -290,6 +290,7 @@ class DoubanScore extends Command
                         ])->range('.item-root')->query()->getData();
                         Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
                     } catch (Exception $e) {
+
                         Log::info('err--过滤' . $url);
                         continue;
                     }
@@ -386,6 +387,7 @@ class DoubanScore extends Command
                 $page = $page + 1;
             }
         } catch (Exception $e) {
+            $output->writeln("end.3.".$e);
             file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
         }
         $output->writeln("end....");
