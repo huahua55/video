@@ -381,6 +381,7 @@ class DoubanScoreCopy extends Command
             }
         } catch (Exception $e) {
             $output->writeln("end.3." . $e);
+            $output->writeln("end.311." . $this->vodDb->getlastsql());
             file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
         }
         $output->writeln("end....");
