@@ -396,7 +396,7 @@ function mac_convert_encoding($str,$nfate,$ofate){
 
 function mac_get_refer()
 {
-    return trim(urldecode($_SERVER["HTTP_REFERER"]));
+    return trim(urldecode($_SERVER["HTTP_REFERER"]??''));
 }
 
 function mac_send_mail($to, $title, $body,$conf=[]) {
