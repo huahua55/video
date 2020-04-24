@@ -336,7 +336,6 @@ var MAC={
             });
         },
         'Submit':function(){
-			console.log($(".form-controle").val() == '')
             if($(".form-controle").val() == ''){
                 MAC.Pop.Msg(200,50,'请输入您的留言!',1000);
                 return false;

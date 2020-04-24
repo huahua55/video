@@ -11,7 +11,7 @@
 <!--子页顶部-->
 <div class="zy-search zy-tit">
 	<div class="sch-w clearfix">
-		<a class="go-back" href="#"><img src="{$maccms.path_tpl}images/user/go-back.png"></a>
+		<a class="go-back" href="javascript:;"><img src="{$maccms.path_tpl}images/user/go-back.png"></a>
 		<div class="tit">
 			我的收藏
 		</div>
@@ -25,7 +25,7 @@
 		{volist name="list" id="vo"}
 		{if condition="$vo.ulog_mid eq 1"}
 		<div class="item clearfix">
-			<a href="#"><img class="lazy" src="{$maccms.path_tpl}images/nopic.jpg" data-original="{$vo.data.pic}"></a>
+			<a href="javascript:;"><img class="lazy" src="{$maccms.path_tpl}images/nopic.jpg" data-original="{$vo.data.pic}"></a>
 			<div class="info">
 				<p class="tit">
 					{if condition="$vo.ulog_mid eq 1"}
