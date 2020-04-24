@@ -156,6 +156,7 @@ class CmsVodScore extends Command
                 }
             }
         } catch (Exception $e) {
+            $output->writeln("end.".$e);
             log::info('合并cmsVodScore-error::'.$e);
         }
         $output->writeln("end....");
