@@ -188,6 +188,7 @@ class DoubanScoreJs extends Common
             }
         } catch (Exception $e) {
             $output->writeln("end.3." . $e);
+            $output->writeln("end.3." . $this->cmsDb->getlastsql());
             file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
         }
         $output->writeln("end....");
@@ -358,7 +359,7 @@ class DoubanScoreJs extends Common
     {
         $details_data = [];
         $details_data['name'] = $getDetailsData['vod_name'] ?? '';
-        $details_data['name_as'] = $getDetailsData['vod_sub'] ?? '';
+        $details_data['name_as'] =  trim(mb_substr($getDetailsData['vod_sub'] ?? '', 0, 200));
         $details_data['vod_director'] = $getDetailsData['vod_director'] ?? '';
         $details_data['vod_actor'] = $getDetailsData['vod_actor'] ?? '';
         $details_data['score'] = $getDetailsData['vod_douban_score'] ?? '0.0';
