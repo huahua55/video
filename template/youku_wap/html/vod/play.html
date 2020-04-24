@@ -45,11 +45,12 @@
 									<span class="album-txt">{$obj.vod_content}<div style="margin-bottom: 80px;"></div></span>
 								</ul>
 							</div>
+						</div>
 					</section>
+				</div>
+			</div>
 		</section>
-		</div>
 		<!-- 弹出窗 -->
-		</div>
 		<div class="albumPlayerWarp">
 			<div class="albumPInfo">
 				<div class="albumPMain">
@@ -76,7 +77,6 @@
 				</div>
 			</div>
 			<!-- <img src="http://ykimg.alicdn.com/product/DetailImage/2018-08-16/c9c89c887313a7b322dd70489f2cf5fc.png" style="width: 100%;"> -->
-			</a>
 		</div>
 		</section>
 		<!-- 播放器与剧集以及下载的选项卡 -->
@@ -97,8 +97,7 @@
 							<section class="popWin playSource_popWin">
 								<ul class="clearfix">
 									{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-									<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> 
-										<div class="sSource popWin_sce">
+									<li class="{if condition=" $param.sid eq $vo.sid"} cur {/if}"> <div class="sSource popWin_sce">
 										<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$param.nid])}">{$vo.player_info.show}</a>
 										</div>
 									</li>
