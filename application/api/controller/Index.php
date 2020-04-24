@@ -376,11 +376,8 @@ class Index extends Base{
         $year = $year == "年份" ? "" : $year;
 
         $where = [];
-        if($id == 1 || $id == 2 ){
-            // 电影电视剧 有一级分类
+        if($id != 0  ){
             $where['type_id_1']   = ['eq',$id];
-        }else{
-            $where['type_id']   = ['eq',$id];
         }
 
         if($type != ""){
@@ -389,9 +386,9 @@ class Index extends Base{
 
         if($area != ""){
             if($area == "国产" || $area == "大陆" ){
-                $where['vod_area']   = ['in',["中国大陆","大陆","中国"]];
+                $where['vod_area']   = ['like','%大陆%'];
             }else{
-                $where['vod_area']   = ['eq',$area];
+                $where['vod_area']   = ['like','%' . $area .'%'];
             }
         }
 
