@@ -105,7 +105,7 @@ class CmsVodScore extends Command
                                 $res = json_decode($cms_data['text'],true);
                                 $vod_data = $this->getConTent($res);
                                 $is_log = true;
-                                if (empty($v['vod_sub']) && empty($cms_data['name_as'])) {
+                                if (empty($cms_data['vod_sub']) && empty($v['name_as'])) {
                                     $vod_data['vod_sub'] = $res['vod_name'];
                                 }
                                 if (!empty($vod_data)) {
@@ -186,7 +186,7 @@ class CmsVodScore extends Command
     {
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,vod_name,vod_sub,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
