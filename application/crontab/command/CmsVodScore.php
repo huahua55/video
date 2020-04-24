@@ -105,9 +105,6 @@ class CmsVodScore extends Command
                                 $res = json_decode($cms_data['text'],true);
                                 $vod_data = $this->getConTent($res);
                                 $is_log = true;
-                                if (empty($cms_data['vod_sub']) && empty($v['name_as'])) {
-                                    $vod_data['vod_sub'] = $res['vod_name'];
-                                }
                                 if (!empty($vod_data)) {
                                     $whereId = [];
                                     $whereId['vod_id'] = $v['vod_id'];
