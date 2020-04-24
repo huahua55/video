@@ -22,7 +22,7 @@
 		<div class="shadow-ri"></div>
 		<div id="headerTopNav" class="warp">
 			<ul class="swiper-wrapper">
-				<li class="swiper-slide {empty name=" $param['id']"} active {/empty}"> <a class="item" href="/" title="首页">首页</a></li>
+				<li class="swiper-slide"><a class="item" href="/" title="首页">首页</a></li>
 				{maccms:type ids="parent" mid="1" order="asc" by="sort"}
 				<li class="swiper-slide {if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"}
 				 active {/if}"> <a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
@@ -37,7 +37,8 @@
 	<div class="searchCon">
 		<div class="sSearchInput">
 			<form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}">
-				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称" value="{$param.wd}"/>
+				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称"
+				 value="{$param.wd}" />
 				<input type="submit" id="searchbutton" class="mac_search" value=" " />
 			</form>
 		</div>
