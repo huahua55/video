@@ -384,9 +384,12 @@ class Index extends Base{
             $where['vod_tag']   = ['like','%'.$type.'%'];
         }
 
+        $keyWordArrNew = ['美国','法国','英国','意大利','德国'];
         if($area != ""){
             if($area == "国产" || $area == "大陆" ){
                 $where['vod_area']   = ['like','%大陆%'];
+            }else if($area == "欧美" ){
+                $where['vod_area']   = ['in', $keyWordArrNew];
             }else{
                 $where['vod_area']   = ['like','%' . $area .'%'];
             }
