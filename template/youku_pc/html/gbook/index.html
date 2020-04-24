@@ -29,11 +29,11 @@
 						<textarea name="gbook_content" class="form-control" rows="5" placeholder="期待您的宝贵意见！"></textarea>
 					</div>
 					<div class="form-group text-right">
-						<!-- <label> <input type="text" name="verify" class="btn-defauplol input-sm ff-vcode ff-vcode-input mac_verify" placeholder="验证码"> </label>
-     <label>  {if condition="$gbook.verify eq 1"}
-                    验证码：<input type="text" name="verify" class="mac_verify">
-                    {/if}
-                    </label> -->
+						<div class="remaining-w fl">还可输入<span class="gbook_remaining remaining ">200</span></div>
+						<label> {if condition="$gbook.verify eq 1"}
+							验证码：<input type="text" name="verify" class="btn-defauplol input-sm ff-vcode ff-vcode-input mac_verify">
+							{/if}
+						</label>
 						<label>
 							<input type="button" class="gbook_submit btn-defaupl" value="提交留言">
 						</label>
@@ -51,11 +51,11 @@
 			<div class="ff-forum-item">
 				<div class="comment-item">
 					<div class="comment-user-avatar">
-						<a href="#"><img src="/static/images/touxiang.png"></a>
+						<a href="javascript:;"><img src="/static/images/touxiang.png"></a>
 					</div>
 					<div class="media-body comment-section">
 						<div class="comment-user-info">
-							<a href="#" class="redname">{$vo.gbook_name}</a>
+							<a href="javascript:;" class="redname">{$vo.gbook_name}</a>
 							<a href="javascript:;" title="{$vo.gbook_name}">
 								<span class="vip-level-icon level-vip1"></span>
 							</a>
@@ -76,8 +76,7 @@
 							<a class="ff-updown-set comment-handle-btn comment-handle-up" href="javascript:;" data-id="1" data-module="forum"
 							 data-type="up" data-toggle="tooltip" data-placement="top" title="支持"><span class="ff-updown-val">0</span></a>
 							<a class="ff-updown-set comment-handle-btn comment-handle-down" href="javascript:;" data-id="1" data-module="forum"
-							 data-type="down" data-toggle="tooltip" data-placement="top" title="反对"><span class="ff-updown-val">0</span></a></p>
-						<p class="collapse forum-reply" data-id="1"></p>
+							 data-type="down" data-toggle="tooltip" data-placement="top" title="反对"><span class="ff-updown-val">0</span></a>
 						</p>
 					</div>
 				</div>

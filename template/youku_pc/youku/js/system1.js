@@ -139,7 +139,7 @@ var feifei = {
 	},
 	'totop':function($id, $top){ //返回顶部
 		// $id:dc-totop $top:偏移值
-		$('body').append('<a href="#" class="'+$id+'" id="'+$id+'"><i class="glyphicon glyphicon-chevron-up"></i></a>');
+		$('body').append('<a href="javascript:;" class="'+$id+'" id="'+$id+'"><i class="glyphicon glyphicon-chevron-up"></i></a>');
 		$(window).bind('scroll', function(){
 			if($(this).scrollTop() > $top){
 				$('#'+$id).fadeIn("slow");
@@ -194,10 +194,10 @@ var feifei = {
 },
 'alert':{//提示
 	'success':function($id, $tips){
-		$($id).html('<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>成功！</strong>'+$tips+'</div>');
+		$($id).html('<div class="alert alert-success"><a href="javascript:;" class="close" data-dismiss="alert">&times;</a><strong>成功！</strong>'+$tips+'</div>');
 	},
 	'warning':function($id, $tips){
-		$($id).html('<div class="alert alert-warning"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>警告！</strong>'+$tips+'</div>');
+		$($id).html('<div class="alert alert-warning"><a href="javascript:;" class="close" data-dismiss="alert">&times;</a><strong>警告！</strong>'+$tips+'</div>');
 	}
 },
 'image': {//图片
@@ -527,7 +527,7 @@ var feifei = {
 			}else{
 				$id = $(".ff-share");
 			}
-			$($id).html('<div class="bdsharebuttonbox"><span class="bds_shere"></span><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_bdysc" data-cmd="bdysc" title="分享到百度云收藏"></a><a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a><a class="bds_more" data-cmd="more" title="更多"></a></div>');
+			$($id).html('<div class="bdsharebuttonbox"><span class="bds_shere"></span><a href="javascript:;" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="javascript:;" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="javascript:;" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="javascript:;" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="javascript:;" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="javascript:;" class="bds_bdysc" data-cmd="bdysc" title="分享到百度云收藏"></a><a href="javascript:;" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a><a class="bds_more" data-cmd="more" title="更多"></a></div>');
 			window._bd_share_config={common: {bdText: "",bdDesc: "",bdUrl: "",bdPic: ""},share: [{"bdSize": 24,bdCustomStyle: '/template/youku/css/share.css'}]};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
 		}
 	}

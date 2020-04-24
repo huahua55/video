@@ -142,7 +142,7 @@ var MAC={
             });
         },
         'Click': function(){//点击刷新
-            $('body').on('click', 'img.mac_verify_img', function(){
+            $('body').on('click', 'img.ff-vcode-img', function(){
                 $(this).attr('src', maccms.path +'/index.php/verify/index.html?r='+Math.random());
             });
         },
@@ -310,10 +310,10 @@ var MAC={
         'Login':0,
         'Verify':0,
         'Init':function(){
-            $('body').on('keyup', '.gbook_content', function(e){
-                MAC.Remaining($(this),200,'.gbook_remaining')
-            });
-            $('body').on('focus', '.gbook_content', function(e){
+			$('body').on('keyup', '.form-control', function(e){
+			    MAC.Remaining($(this),200,'.gbook_remaining')
+			});
+            $('body').on('focus', '.form-controle', function(e){
                 if(MAC.Gbook.Login==1 && MAC.User.IsLogin!=1){
                     MAC.User.Login();
                 }
@@ -336,7 +336,7 @@ var MAC={
             });
         },
         'Submit':function(){
-            if($(".gbook_content").val() == ''){
+            if($(".form-controle").val() == ''){
                 MAC.Pop.Msg(100,20,'请输入您的留言!',1000);
                 return false;
             }
@@ -761,7 +761,6 @@ var MAC={
         'Login':0,
         'Verify':0,
         'Init':function(){
-
             $('body').on('click', '.comment_face_box img', function(e){
                 var obj = $(this).parent().parent().parent().find('.comment_content');
                 MAC.AddEm(obj,$(this).attr('data-id'));

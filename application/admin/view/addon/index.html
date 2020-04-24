@@ -126,7 +126,7 @@
             url: url,
             success:function($r){
                 $.each($r.rows,function(i,row){
-                    h ='<div class="layui-col-md3"><div class="addon"> <a href="#" target="_blank"> <img src="'+row.image+'" class="add-logo"> </a> <div class="addon-caption"> <h4>'+row.title+'<span class="layui-badge layui-bg-green">推荐</span></h4> <p><b>￥'+row.price+'</b></p> <p>作者: '+row.author+'</p> <p>介绍: '+row.intro+'</p> <p>版本: '+row.version+'</p> <p>添加时间: '+ getDataTime(row.createtime)+'</p>';
+                    h ='<div class="layui-col-md3"><div class="addon"> <a href="javascript:;" target="_blank"> <img src="'+row.image+'" class="add-logo"> </a> <div class="addon-caption"> <h4>'+row.title+'<span class="layui-badge layui-bg-green">推荐</span></h4> <p><b>￥'+row.price+'</b></p> <p>作者: '+row.author+'</p> <p>介绍: '+row.intro+'</p> <p>版本: '+row.version+'</p> <p>添加时间: '+ getDataTime(row.createtime)+'</p>';
                     h+='<div class="operate"><span class="btn-group">';
                     if(row.install =='1'){
                         h+='<a href="javascript:;" class="layui-btn layui-btn-normal layui-btn-sm j-iframe" data-name="'+row.name+'" data-href="{:url('config')}?name='+row.name+'" ><i class="layui-icon">&#xe614;</i>配置</a>';
