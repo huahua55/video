@@ -311,19 +311,23 @@ class DoubanScoreJs extends Common
         $error_where['vod_id'] = $v['vod_id'];
         $error_data = $this->vod_errorDb->where($error_where)->find();
         if(empty($error_where)){
+            log::info('js-addUpError::su--' );
             if ($douban_id > 0) {
                 $deas_data['vod_id'] = $v['vod_id'];
                 $deas_data['title'] = $v['vod_name']??'';
                 $deas_data['douban_id'] = $douban_id;
                 $deas_data['count'] = 0;
                 try {
+                    log::info('js-addUpError::su' );
                     $this->vod_errorDb->insert($deas_data);
                 } catch (\Exception $e) {
                     log::info('js-采集豆瓣评分-err0r数据重复添加::' . $v['vod_id'].$e);
                 }
             }
         }else{
+            log::info('js-addUpError::count' );
             if($e_err == false){
+                log::info('js-addUpError::count-up' );
                 $deas_data['douban_id'] = $douban_id;
                 $deas_data['count'] = $error_data['count'] + 1;
                 $this->vod_errorDb->where($error_where)->update($deas_data);
