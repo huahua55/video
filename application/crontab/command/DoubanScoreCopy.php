@@ -332,13 +332,7 @@ class DoubanScoreCopy extends Command
                                             $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
                                             $vod_director = $vod_data['vod_director']??'';
                                             if (($vod_data['title'] == $v['vod_name'] || $vod_data['title'] == $v['vod_sub']) && ($v['vod_director'] == $vod_director)) {
-                                                $details_data = [];
-                                                $details_data['name'] = $vod_data['title'] ?? '';
-                                                $details_data['name_as'] = $vod_data['vod_sub'] ?? '';
-                                                $details_data['vod_director'] = $vod_data['vod_director'] ?? '';
-                                                $details_data['vod_actor'] = $vod_data['vod_actor'] ?? '';
-                                                $details_data['score'] = $vod_data['vod_douban_score'] ?? '0.0';
-                                                $details_data['text'] = json_encode($vod_data, true);
+
                                                 if (isset($vod_data['title'])) {
                                                     unset($vod_data['title']);
                                                 }
@@ -351,17 +345,25 @@ class DoubanScoreCopy extends Command
                                                         log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
                                                     }
                                                 }
-                                                if (!empty($details_data)) {
-                                                    log::info('vo222d--');
-                                                    $where_id = [];
-//                                                    var_dump(1);die;
-                                                    $where_id['douban_id'] = $as_k['id'];
-                                                    $up_res = $this->cmsDb->where($where_id)->update($details_data);
-                                                    if ($up_res) {
-                                                        log::info('采集豆瓣评分-deteils-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
-                                                    }
-                                                }
 
+
+                                            }
+                                            $details_data = [];
+                                            $details_data['name'] = $vod_data['title'] ?? '';
+                                            $details_data['name_as'] = $vod_data['vod_sub'] ?? '';
+                                            $details_data['vod_director'] = $vod_data['vod_director'] ?? '';
+                                            $details_data['vod_actor'] = $vod_data['vod_actor'] ?? '';
+                                            $details_data['score'] = $vod_data['vod_douban_score'] ?? '0.0';
+                                            $details_data['text'] = json_encode($vod_data, true);
+                                            if (!empty($details_data)) {
+                                                log::info('vo222d--');
+                                                $where_id = [];
+//                                                    var_dump(1);die;
+                                                $where_id['douban_id'] = $as_k['id'];
+                                                $up_res = $this->cmsDb->where($where_id)->update($details_data);
+                                                if ($up_res) {
+                                                    log::info('采集豆瓣评分-deteils-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
+                                                }
                                             }
 
                                         }
