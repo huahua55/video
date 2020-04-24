@@ -82,7 +82,7 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-//            $this->get_port = $this->getDouBan();
+            $this->get_port = $this->getDouBan();
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
