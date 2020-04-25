@@ -311,7 +311,7 @@ class DoubanScoreJs extends Common
         $error_where =[];
         $error_where['vod_id'] = $v['vod_id'];
         $error_data = $this->vod_errorDb->where($error_where)->find();
-        if(empty($error_where)){
+        if(empty($error_data)){
             log::info('js-addUpError::su--' );
             if ($douban_id > 0) {
                 $deas_data['vod_id'] = $v['vod_id'];
