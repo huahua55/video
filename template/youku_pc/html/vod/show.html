@@ -46,11 +46,15 @@
 									<span><a {if condition="$param['area'] eq ''" } class="cur" {/if} href="{:mac_url_type($obj,['year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
 									{empty name="$obj.type_extend.area"}
 									{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)" id="vo2" key="key2"}
+									{notempty name="{$vo2}"}
 									<span><a {if condition="$param['area'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									{/notempty}
 									{/maccms:foreach}
 									{else /}
 									{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
+									{notempty name="{$vo2}"}
 									<span><a {if condition="$param['area'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$vo2,'year'=>$param['year'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									{/notempty}
 									{/maccms:foreach}
 									{/empty}
 								</p>
@@ -61,11 +65,15 @@
 									<span><a {if condition="$param['year'] eq ''" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>'','order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></span>
 									{empty name="$obj.type_extend.year"}
 									{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)" id="vo2" key="key2"}
+									{notempty name="{$vo2}"}
 									<span><a {if condition="$param['year'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									{/notempty}
 									{/maccms:foreach}
 									{else /}
 									{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
+									{notempty name="{$vo2}"}
 									<span><a {if condition="$param['year'] eq $vo2" } class="cur" {/if} href="{:mac_url_type($obj,['area'=>$param['area'],'year'=>$vo2,'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo2}</a></span>
+									{/notempty}
 									{/maccms:foreach}
 									{/empty}</p>
 							</li>
