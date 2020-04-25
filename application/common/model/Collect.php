@@ -472,6 +472,7 @@ class Collect extends Base {
                     }
                 }
 
+
                 $v['vod_isend'] = intval($v['vod_isend']);
                 $v['vod_up'] = intval($v['vod_up']);
                 $v['vod_down'] = intval($v['vod_down']);
