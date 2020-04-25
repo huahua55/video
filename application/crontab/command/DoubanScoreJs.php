@@ -387,7 +387,7 @@ class DoubanScoreJs extends Common
             try {
                 Db::name('douban_vod_details')->insert($deas_data);
             } catch (\Exception $e) {
-                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title']);
+                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
             }
         }
         return $get_search_id;
