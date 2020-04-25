@@ -172,7 +172,9 @@ class DoubanScoreJs extends Common
                             'abstract_2' => ['.abstract_2', 'text'],
                         ])->range('.item-root')->query()->getData();
                         log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+
                         $getSearchData = objectToArray($mac_curl_get_data);
+                        log::info('js-data-' .json_encode($getSearchData,true));
                     } catch (Exception $e) {
                         log::info('js-err--过滤' . $url);
                         continue;
@@ -181,7 +183,7 @@ class DoubanScoreJs extends Common
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
                         $this->update_url_proxy($error_count, $url);
                     }
-//                print_r($getSearchData);
+
                     log::info('js-采集豆瓣评分-url-::' . $url);
                     if (!empty($getSearchData)) {
                         foreach ($getSearchData as $da_k => $as_k) {
