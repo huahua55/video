@@ -293,6 +293,18 @@ function mac_echo($str)
     ob_flush();flush();
 }
 
+function findNum($str=''){
+    $str=trim($str);
+    if(empty($str)){return '';}
+    $temp=array('1','2','3','4','5','6','7','8','9','0');
+    $result='';
+    for($i=0;$i<strlen($str);$i++){
+        if(in_array($str[$i],$temp)){
+            $result.=$str[$i];
+        }
+    }
+    return $result;
+}
 function mac_day($t,$f='',$c='#FF0000')
 {
     if(empty($t)) { return ''; }
