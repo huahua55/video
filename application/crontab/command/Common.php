@@ -207,6 +207,10 @@ class Common extends Command
     public function getPort($a = 0)
     {
         $file = 'log.txt';
+       $times =  Cache::get('vod_times_cj_open_url');
+       if(!empty($times)){
+          $this->times =  Cache::get('vod_times_cj_open_url');
+       }
         $a = $a + 1;
         if ($a > 3) {
             $open_data = mac_curl_get($this->get_open_url());
@@ -214,6 +218,8 @@ class Common extends Command
                 if (!empty($open_data['port'])) {
                     return $open_data['port'][0];
                 }
+            }else{
+                exit('终止');
             }
         }
         $queryData = $this->get_query_url();
