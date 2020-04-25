@@ -71,7 +71,7 @@ class Common extends Command
     public function get_open_url()
     {
         $this->times = time();
-       Cache::set('vod_times_cj_open_url',time());
+        Cache::set('vod_times_cj_open_url',time());
         $time_stamp = $this->get_timestamp();
         $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
         return 'http://' . $this->proxy_server . ':'
@@ -206,20 +206,23 @@ class Common extends Command
 
     public function getPort($a = 0)
     {
+
         $file = 'log.txt';
-       $times =  Cache::get('vod_times_cj_open_url');
+
+
        if(!empty($times)){
           $this->times =  Cache::get('vod_times_cj_open_url');
        }
         $a = $a + 1;
         if ($a > 3) {
             $open_data = mac_curl_get($this->get_open_url());
+            file_put_contents($file, date('Y-m-d H:i:s', time())  . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);
             if (!empty($open_data) && $open_data['code'] == 100 && $open_data['left_ip'] > 1) {
                 if (!empty($open_data['port'])) {
                     return $open_data['port'][0];
                 }
             }else{
-                exit('终止');
+//                exit('终止');
             }
         }
         $queryData = $this->get_query_url();
@@ -228,13 +231,25 @@ class Common extends Command
             $result = iconv("gb2312", "utf-8//IGNORE", $result);
             $queryData = json_decode($result, true);
             echo $result . "\n <br>";
-            file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
+
             $code = $queryData['code'];
             if ($code == 108) {
                 $reset_url = $this->get_reset_url();
                 $r = file_get_contents($reset_url);
             } else if ($code == 100 && $queryData['left_ip'] > 1) {
                 if (!empty($queryData['port'])) {
+                    $handler=fopen($file,"r");
+                    $logs_data = [];
+                    while(!feof($handler)) {
+                        $m = fgets($handler, 4096); //fgets逐行读取，4096最大长度，默认为1024
+                        if (substr_count($m, $queryData['port'][0]) > 0) //查找字符串
+                        {
+                            $logs_data[] =explode('-|',$m)[0]??'';
+                        }
+                    }
+                    $this->times = strtotime(array_pop($logs_data));
+                    var_dump($this->times);
+                    Cache::set('vod_times_cj_open_url',$this->times);
                     return $queryData['port'][0];
                 } else {
                     sleep(1);
