@@ -239,8 +239,7 @@ class DoubanScoreJs extends Common
 
                         var_dump($content);
                         $ex_arr = explode("<br>", ($content));
-
-                        print_r($ex_arr);die;
+                        print_r($ex_arr);
                         $strpos_data = [
                             'vod_director' => '导演:',
                             'vod_actor' => '主演:',
@@ -254,6 +253,7 @@ class DoubanScoreJs extends Common
                             'vod_sub' => '又名:',
                         ];
                         foreach ($ex_arr as $ex_k => $ex_v) {
+                            var_dump(strip_tags($ex_v));die;
                             foreach ($strpos_data as $s_k => $s_v) {
                                 if (strpos($ex_v, $s_v) !== false) {
                                     if ($s_k == 'vod_duration') {
