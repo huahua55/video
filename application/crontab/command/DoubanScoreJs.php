@@ -55,6 +55,19 @@ class DoubanScoreJs extends Common
 
     protected function execute(Input $input, Output $output)
     {
+        $str= '导演: J·C·尚多尔
+        编剧: J·C·尚多尔
+        主演: 奥斯卡·伊萨克 / 杰西卡·查斯坦 / 大卫·奥伊罗 / 亚历桑德罗·尼沃拉 / 艾伯特·布鲁克斯 / 伊莱耶斯·加贝尔 / 卡塔利娜·桑迪诺·莫雷诺 / 克里斯托弗·阿波特 / 阿什利·威廉姆斯 / 杰里·阿德勒 / 大卫尔 / 彼得·格雷蒂 / 约翰·普罗卡奇诺 / 格伦·弗莱施勒 / 安妮·芬克 / 马修·马希尔 / 本·罗森菲尔德 / 帕特里克·比都 / 凯瑟琳·道尔更多...
+        类型: 剧情 / 动作 / 惊悚 / 犯罪
+        
+        制片国家/地区: 阿联酋 / 美国
+        语言: 英语 / 西班牙语
+        上映日期: 2014-11-06(AFI影展) / 2014-12-31(美国)
+        片长: 125分钟
+        又名: 暴力年代(台) / 最暴烈的一年(港)
+        IMDb链接: tt2937898';
+
+
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
         try {
@@ -82,7 +95,7 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-            $this->get_port = $this->getDouBan();
+//            $this->get_port = $this->getDouBan();
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -126,7 +139,7 @@ class DoubanScoreJs extends Common
                     $mac_curl_get_data = '';
 //                    sleep(1);
                     if (time() > $this->times + (60 * 3)) {
-                        $this->get_port = $this->getDouBan();
+//                        $this->get_port = $this->getDouBan();
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     try {
@@ -143,9 +156,9 @@ class DoubanScoreJs extends Common
                             return $r;
                         }, false, [
 //                        '--proxy' => "183.129.244.16:17238",
-                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
-                            '--proxy-type' => 'http',
-                            '--load-images' => 'no',
+//                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+//                            '--proxy-type' => 'http',
+//                            '--load-images' => 'no',
 //                    ])->getHtml();
                         ])->rules([
                             'rating_nums' => ['.rating_nums', 'text'],
@@ -200,7 +213,7 @@ class DoubanScoreJs extends Common
     {
 
         $getDetailsData = [];
-        $link_url = $as_k['link'];
+        $link_url = 'https://movie.douban.com/subject/24742719/';
         if (!empty($get_search_id) && $get_search_id > 0) { //存在id
             log::info('js-采集豆瓣评分-ok-id::' . $get_search_id);
             try {
@@ -216,9 +229,9 @@ class DoubanScoreJs extends Common
                     return $r;
                 }, false, [
 //                        '--proxy' => "183.129.244.16:17238",
-                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
-                            '--proxy-type' => 'http',
-                            '--load-images' => 'no',
+//                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+//                            '--proxy-type' => 'http',
+//                            '--load-images' => 'no',
 //                    ])->getHtml();
                 ])->rules([
                     'vod_name' => ['h1 >span:eq(0)', 'text'],
@@ -232,7 +245,11 @@ class DoubanScoreJs extends Common
 //                    'vod_blurb' => ['#link-report', 'text'],
                     'vod_text' => ['#info', 'text', '', function ($content) {
                         $ex_data = [];
+
+                        var_dump($content);
                         $ex_arr = explode("\n", trim($content));
+
+                        print_r($ex_arr);
                         $strpos_data = [
                             'vod_director' => '导演:',
                             'vod_actor' => '主演:',
@@ -262,9 +279,11 @@ class DoubanScoreJs extends Common
                             }
                             $ex_data['vod_author'] = '豆瓣';
                         }
+                        print_r($ex_data);
                         return $ex_data;
                     }],
                 ])->range('#content')->query()->getData();
+
                 $mac_curl_get_details_data = objectToArray($mac_curl_get_details_data);
                 if (isset($mac_curl_get_details_data[0]) && !empty($mac_curl_get_details_data[0])) {
                     $detailsData = $mac_curl_get_details_data[0];
@@ -273,16 +292,17 @@ class DoubanScoreJs extends Common
                     $getDetailsData = array_merge($detailsData, $detailsDataText);
                     $getDetailsData['vod_douban_id'] = $get_search_id;
                     $getDetailsData['vod_score'] = $getDetailsData['vod_douban_score'];
-                    $getDetailsData['vod_reurl'] = $link_url;
                     if ($getDetailsData['vod_score'] <= 0) {
                         $getDetailsData['vod_score_num'] = 0;
                     } else {
                         $getDetailsData['vod_score_num'] = intval($getDetailsData['vod_score_all'] / $getDetailsData['vod_score']);
                     }
                 }
+                print_r($getDetailsData);die;
             } catch (Exception $e) {
                 log::info('js-err--过滤' . $link_url);
             }
+            p(1);
             if (!empty($getDetailsData)) {
                 //更新详情表
                 $this->vod_details_update($get_search_id, $getDetailsData, $v);
