@@ -15,6 +15,8 @@
 	height: 2.25rem;
 	padding: .425rem 0;
 	background: none !important;
+	position: relative;
+	top: -0.25rem;
 }
 img{
 	background: 0 0 no-repeat;

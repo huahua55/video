@@ -354,6 +354,8 @@ hr {
 	height: 40px;
 	overflow: hidden;
 	background: none;
+	position: relative;
+	top: -9px;
 }
 
 .newhead .newhead-main .hd-logo .national-banner {
