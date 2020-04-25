@@ -260,6 +260,7 @@ class DoubanScoreJs extends Common
                             'vod_lang' => '语言:',
                             'vod_pubdate' => '首播:',
                             'vod_duration' => '片长:',
+                            'vod_total' => '集数:',
                             'vod_sub' => '又名:',
                         ];
                         foreach ($ex_arr as $ex_k => $ex_v) {
@@ -296,6 +297,7 @@ class DoubanScoreJs extends Common
                     $getDetailsData['vod_douban_id'] = $get_search_id;
                     $getDetailsData['vod_score'] = $getDetailsData['vod_douban_score'];
                     $getDetailsData['vod_reurl'] = $link_url;
+                    $getDetailsData['vod_total'] = $detailsDataText['vod_total']??'0';
                     if ($getDetailsData['vod_score'] <= 0) {
                         $getDetailsData['vod_score_num'] = 0;
                     } else {
