@@ -251,6 +251,7 @@ class DoubanScoreJs extends Common
                     'vod_score_all' => ['.rating_people >span', 'text'],
 //                    'vod_blurb' => ['#link-report', 'text'],
                     'vod_text' => ['#info', 'html', '', function ($content) {
+                        log::info('js-datall-content---' .$content);
                         $ex_data = [];
                         $ex_arr = explode("<br>", trim($content));
                         $strpos_data = [
@@ -294,6 +295,8 @@ class DoubanScoreJs extends Common
                         return $ex_data;
                     }],
                 ])->range('#content')->query()->getData();
+
+                log::info('js-err-iiii---proxy-' . $this->proxy_server . ":" . $this->get_port);
                 $mac_curl_get_details_data = objectToArray($mac_curl_get_details_data);
                 if (isset($mac_curl_get_details_data[0]) && !empty($mac_curl_get_details_data[0])) {
                     $detailsData = $mac_curl_get_details_data[0];
@@ -311,8 +314,9 @@ class DoubanScoreJs extends Common
                     }
                 }
             } catch (Exception $e) {
-                log::info('js-err--过滤' . $link_url);
+                log::info('js-err--过滤iii' . $link_url);
             }
+            log::info('js-datall-' .json_encode($getDetailsData,true));
             if (!empty($getDetailsData)) {
                 //更新详情表
                 $this->vod_details_update($get_search_id, $getDetailsData, $v);
@@ -391,7 +395,11 @@ class DoubanScoreJs extends Common
             $deas_data['time'] = time();
             try {
                 log::info('js-采集豆瓣评分suc' );
-                $this->cmsDb->insert($deas_data);
+                $t_data = $this->cmsDb->where(['douban_id'=>$get_search_id])->find();
+                if(empty($t_data)){
+                    $this->cmsDb->insert($deas_data);
+                }
+
             } catch (\Exception $e) {
                 log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
             }
