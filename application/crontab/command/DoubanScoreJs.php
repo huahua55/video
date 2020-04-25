@@ -55,18 +55,9 @@ class DoubanScoreJs extends Common
 
     protected function execute(Input $input, Output $output)
     {
-        $str= '导演: J·C·尚多尔
-        编剧: J·C·尚多尔
-        主演: 奥斯卡·伊萨克 / 杰西卡·查斯坦 / 大卫·奥伊罗 / 亚历桑德罗·尼沃拉 / 艾伯特·布鲁克斯 / 伊莱耶斯·加贝尔 / 卡塔利娜·桑迪诺·莫雷诺 / 克里斯托弗·阿波特 / 阿什利·威廉姆斯 / 杰里·阿德勒 / 大卫尔 / 彼得·格雷蒂 / 约翰·普罗卡奇诺 / 格伦·弗莱施勒 / 安妮·芬克 / 马修·马希尔 / 本·罗森菲尔德 / 帕特里克·比都 / 凯瑟琳·道尔更多...
-        类型: 剧情 / 动作 / 惊悚 / 犯罪
-        
-        制片国家/地区: 阿联酋 / 美国
-        语言: 英语 / 西班牙语
-        上映日期: 2014-11-06(AFI影展) / 2014-12-31(美国)
-        片长: 125分钟
-        又名: 暴力年代(台) / 最暴烈的一年(港)
-        IMDb链接: tt2937898';
-
+//        $str= '导演: J·C·尚多尔编剧: J·C·尚多尔主演: 奥斯卡·伊萨克 / 杰西卡·查斯坦 / 大卫·奥伊罗 / 亚历桑德罗·尼沃拉 / 艾伯特·布鲁克斯 / 伊莱耶斯·加贝尔 / 卡塔利娜·桑迪诺·莫雷诺 / 克里斯托弗·阿波特 / 阿什利·威廉姆斯 / 杰里·阿德勒 / 大卫·马古利斯 / 黛西·塔汉 / 杰森·拉尔夫 / 吉米·帕伦博 / 伊丽莎白·玛维尔 / 罗伯特·克洛赫赛 / 帕特里克·布林 / 苏珊·布莱克威尔 / 彼得·格雷蒂 / 约翰·普罗卡奇诺 / 格伦·弗莱施勒 / 安妮·芬克 / 马修·马希尔 / 本·罗森菲尔德 / 帕特里克·比都 / 凯瑟琳·道尔更多...类型: 剧情 / 动作 / 惊悚 / 犯罪制片国家/地区: 阿联酋 / 美国语言: 英语 / 西班牙语上映日期: 2014-11-06(AFI影展) / 2014-12-31(美国)片长: 125分钟又名: 暴力年代(台) / 最暴烈的一年(港)IMDb链接: tt2937898';
+//        $ex_arr = explode("\r", trim($str));
+//        print_r($ex_arr);die;
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
@@ -243,13 +234,13 @@ class DoubanScoreJs extends Common
                     'vod_douban_score' => ['.rating_num', 'text'],
                     'vod_score_all' => ['.rating_people >span', 'text'],
 //                    'vod_blurb' => ['#link-report', 'text'],
-                    'vod_text' => ['#info', 'text', '', function ($content) {
+                    'vod_text' => ['#info', 'html', '', function ($content) {
                         $ex_data = [];
 
                         var_dump($content);
-                        $ex_arr = explode("\n", trim($content));
+                        $ex_arr = explode("<br>", ($content));
 
-                        print_r($ex_arr);
+                        print_r($ex_arr);die;
                         $strpos_data = [
                             'vod_director' => '导演:',
                             'vod_actor' => '主演:',
