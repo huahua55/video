@@ -63,10 +63,10 @@ class Index extends Base{
             $getListBlock = $this->tuijian();
         }else{
             $fatherRes =  [];
-            if(in_array($id,[3,4])){
-                $fatherRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
-                $fatherRes = $fatherRes['list'] ?? [];
-            }
+//            if(in_array($id,[3,4])){
+//                $fatherRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
+//                $fatherRes = $fatherRes['list'] ?? [];
+//            }
 
             $where = [
                 'type_pid'   => $id
