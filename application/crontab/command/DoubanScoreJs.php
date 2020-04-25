@@ -254,6 +254,9 @@ class DoubanScoreJs extends Common
                                     if ($s_k == 'vod_pubdate') {
                                         $ex_v = explode('(', $ex_v)[0] ?? $ex_v;
                                     }
+                                    if ($s_k == 'vod_actor') {
+                                        $ex_v =  trim(mb_substr($ex_v, 0, 240));
+                                    }
                                     $ex_data[$s_k] = mac_trim_all(str_replace($s_v, '', $ex_v));
                                 }
                             }
@@ -270,6 +273,7 @@ class DoubanScoreJs extends Common
                     $getDetailsData = array_merge($detailsData, $detailsDataText);
                     $getDetailsData['vod_douban_id'] = $get_search_id;
                     $getDetailsData['vod_score'] = $getDetailsData['vod_douban_score'];
+                    $getDetailsData['vod_reurl'] = $link_url;
                     if ($getDetailsData['vod_score'] <= 0) {
                         $getDetailsData['vod_score_num'] = 0;
                     } else {
