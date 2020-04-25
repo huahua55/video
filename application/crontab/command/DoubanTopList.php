@@ -12,7 +12,7 @@ use think\Db;
 use think\Log;
 
 
-class DoubanTopList extends Command
+class DoubanTopList extends Common
 {
     protected $vodDb;//db
     protected $search_url = [
@@ -23,19 +23,6 @@ class DoubanTopList extends Command
     protected $get_tv_tag = ["热门"];//电视剧 热门 ,"日本动画"
     protected $get_movie_tag = ["热门"];//电影 热门
 
-    //代理使用
-    protected $proxy_username = 'zhangshanap1';
-    protected $proxy_passwd = '76836051';
-    protected $proxy_server = '183.129.244.16';
-    protected $proxy_port = '88';
-    protected $pattern = 'json';//API访问返回信息格式：json和text可选
-    protected $num = 1;//获取代理端口数量
-    protected $key_name = 'user_name=';
-    protected $key_timestamp = 'timestamp=';
-    protected $key_md5 = 'md5=';
-    protected $key_pattern = 'pattern=';
-    protected $key_num = 'number=';
-    protected $key_port = 'port=';
 
 
     protected function configure()
@@ -43,7 +30,7 @@ class DoubanTopList extends Command
         //db
         $this->vodDb = Db::name('vod');
         //获取豆瓣id
-        $this->setName('doubanTopList')
+        $this->setName('doubanTopList')->addArgument('parameter')
             ->setDescription('定时计划：采集豆瓣热门');
     }
 
@@ -66,10 +53,12 @@ class DoubanTopList extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
-
-
         $port= $this->getPort();
+        if($port  ==false){
+            log::info('get_port-::' );
+            sleep(3);
+            $port = $this->getPort();
+        }
         $heads = [
             'Accept' => '*/*',
 //                    'Accept'=> 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -145,89 +134,5 @@ class DoubanTopList extends Command
             }
         }
         $output->writeln("开启采集:采集豆瓣热门end:");
-
     }
-
-    public function getPort($a = 0){
-
-        $queryData  = $this->get_query_url();
-        $queryData = json_decode(mac_curl_get($queryData),true);
-        if(!empty($queryData) && isset($queryData['code'])){
-            if($queryData['code'] == 100 && $queryData['left_ip'] > 1){
-                if(!empty($queryData['port'])){
-                    return  $queryData['port'][0];
-                }else{
-                    sleep(1);
-                    $this->getPort($a);
-                }
-            }
-        }
-        $a  = $a+1;
-        if($a >= 3){
-            $open_data = mac_curl_get($this->get_open_url());
-            if(!empty($open_data) && $open_data['code'] == 100 && $open_data['left_ip'] > 1){
-                    if(!empty($open_data['port'])){
-                        return  $open_data['port'][0];
-                }
-            }
-        }
-        return false;
-    }
-    protected  function get_query_url(){
-        $time_stamp = $this->get_timestamp();
-        $md5_str =  $this->get_md5_str($this->proxy_username . $this->proxy_passwd. strval($time_stamp));
-        return 'http://' . $this->proxy_server . ':'
-            . $this->proxy_port . '/open?' . $this->key_name. $this->proxy_username .
-            '&' . $this->key_timestamp . strval($time_stamp) .
-            '&' . $this->key_md5 . $md5_str .
-            '&' . $this->key_pattern . $this->pattern;
-    }
-    //返回当前时间戳（单位为 ms）
-    protected function get_timestamp()
-    {
-        list($s1, $s2) = explode(' ', microtime());
-        return (float)sprintf('%.0f', (floatval($s1) + floatval($s2)) * 1000);
-    }
-
-    //进行md5加密
-    protected function get_md5_str($str)
-    {
-        return md5($str);
-    }
-    protected function testing($url, $auth_port)
-    {
-        $ch = curl_init();
-        $timeout = 30;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
-        curl_setopt($ch, CURLOPT_PROXY, $this->proxy_server); //代理服务器地址
-        curl_setopt($ch, CURLOPT_PROXYPORT, $auth_port); //代理服务器端口
-        curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
-        //如果访问为https协议
-        if (substr($url, 0, 5) == "https") {
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // 对认证证书来源的检查
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); // 从证书中检查SSL加密算法是否存在
-        }
-
-        $file_contents = curl_exec($ch);
-//        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        return $file_contents;
-    }
-    //返回请求分配代理端口URL链接
-    public function get_open_url()
-    {
-        $this->times = time();
-        $time_stamp = $this->get_timestamp();
-        $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
-        return 'http://' . $this->proxy_server . ':'
-            . $this->proxy_port . '/open?' . $this->key_name . $this->proxy_username .
-            '&' . $this->key_timestamp . strval($time_stamp) .
-            '&' . $this->key_md5 . $md5_str .
-            '&' . $this->key_pattern . $this->pattern .
-            '&' . $this->key_num . strval($this->num);
-    }
-
 }

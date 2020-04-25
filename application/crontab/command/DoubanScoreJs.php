@@ -55,6 +55,8 @@ class DoubanScoreJs extends Common
 
     protected function execute(Input $input, Output $output)
     {
+
+
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
         try {
@@ -69,6 +71,7 @@ class DoubanScoreJs extends Common
             $x = $param['x'] ?? '';
             $id = $param['id'] ?? '';
             $g = $param['g'] ?? '';
+            $q = $param['q'] ?? '';
             if (!empty($type) && $type == 1) {
                 Cache::set('vod_id_list_douban_id', 1);
             }
@@ -82,7 +85,12 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-//            $this->get_port = $this->getDouBan();
+            $this->get_port =   $this->getPort();
+            if($this->get_port  == false){
+                sleep(3);
+                $this->get_port =   $this->getPort();
+                log::info('get_port-::' );
+            }
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -102,6 +110,13 @@ class DoubanScoreJs extends Common
                     Cache::set('vod_id_list_douban_id', 1);
                     $where['a.vod_id'] = ['gt', $is_vod_id];
                 }
+            }
+            if(!empty($q)){
+                $q_vod_id = $this->vod_errorDb->field('vod_id')->order('id desc')->find();
+                if(isset($q_vod_id) && !empty($q_vod_id_data['vod_id'])){
+                    $where['a.vod_id'] = ['gt',$q_vod_id_data['vod_id']];
+                }
+
             }
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
@@ -126,8 +141,9 @@ class DoubanScoreJs extends Common
                     $is_log = false;
                     $mac_curl_get_data = '';
 //                    sleep(1);
+                    $this->times = Cache::get('vod_times_cj_open_url');
                     if (time() > $this->times + (60 * 3)) {
-                        $this->get_port = $this->getDouBan();
+                        $this->get_port = $this->getPort();
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     try {
@@ -143,8 +159,8 @@ class DoubanScoreJs extends Common
                             $r->setDelay(3); // 3 seconds
                             return $r;
                         }, false, [
-//                        '--proxy' => "183.129.244.16:17238",
-                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+                        '--proxy' => "183.129.244.16:51134",
+//                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
                             '--proxy-type' => 'http',
                             '--load-images' => 'no',
 //                    ])->getHtml();
@@ -322,8 +338,8 @@ class DoubanScoreJs extends Common
         $error_where['vod_id'] = $v['vod_id'];
         $error_data = $this->vod_errorDb->where($error_where)->find();
         if(empty($error_data)){
-            log::info('js-addUpError::su--' );
-            if ($douban_id > 0) {
+            log::info('js-addUpError::su--' .$douban_id);
+//            if ($douban_id > 0) {
                 $deas_data['vod_id'] = $v['vod_id'];
                 $deas_data['title'] = $v['vod_name']??'';
                 $deas_data['douban_id'] = $douban_id;
@@ -333,12 +349,12 @@ class DoubanScoreJs extends Common
                     $deas_data['count'] = 0;
                 }
                 try {
-                    log::info('js-addUpError::su' );
+                    log::info('js-addUpError::su??' );
                     $this->vod_errorDb->insert($deas_data);
                 } catch (\Exception $e) {
                     log::info('js-采集豆瓣评分-err0r数据重复添加::' . $v['vod_id'].$e);
                 }
-            }
+//            }
         }else{
             log::info('js-addUpError::count' );
             if($e_err == false){
@@ -346,6 +362,7 @@ class DoubanScoreJs extends Common
             }else{
                 $deas_data['count'] = 0;
             }
+            $deas_data['douban_id'] = $douban_id;
             log::info('js-addUpError::count-up' );
             $deas_data['douban_id'] = $douban_id;
 
