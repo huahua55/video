@@ -47,14 +47,14 @@
 								 href="{:mac_url_type($obj,['lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
 							{empty name="$obj.type_extend.area"}
 							{maccms:foreach name=":explode(',',$obj.parent.type_extend.area)"}
-							{notempty name="{$vo2}"}
+							{notempty name="$vo2"}
 							<li class="swiper-slide {if condition=" $param['area'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a
 								 href="{:mac_url_type($obj,['area'=>$vo,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
 							{/notempty}
 							{/maccms:foreach}
 							{else /}
 							{maccms:foreach name=":explode(',',$obj.type_extend.area)"}
-							{notempty name="{$vo2}"}
+							{notempty name="$vo2"}
 							<li class="swiper-slide {if condition=" $param['area'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a
 								 href="{:mac_url_type($obj,['area'=>$vo,'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
 							{/notempty}
@@ -69,14 +69,14 @@
 								 href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">全部</a></li>
 							{empty name="$obj.type_extend.year"}
 							{maccms:foreach name=":explode(',',$obj.parent.type_extend.year)"}
-							{notempty name="{$vo2}"}
+							{notempty name="$vo2"}
 							<li class="swiper-slide {if condition=" $param['year'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a
 								 href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
 							{/notempty}
 							{/maccms:foreach}
 							{else /}
 							{maccms:foreach name=":explode(',',$obj.type_extend.year)"}
-							{notempty name="{$vo2}"}
+							{notempty name="$vo2"}
 							<li class="swiper-slide {if condition=" $param['year'] eq $vo"}active{/if}" tapmode onclick="showDefault('loading')"><a
 								 href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$vo,'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>$param['by'] ],'show')}">{$vo}</a></li>
 							{/notempty}
