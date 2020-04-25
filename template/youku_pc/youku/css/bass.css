@@ -891,7 +891,7 @@ hr {
 .v5_footer {
 	width: 100%;
 	font-family: 'Microsoft YaHei', 黑体;
-	padding: 20px 50px 0;
+	padding: 20px 50px;
 	background: #efefef;
 	border-top: 2px solid #e7e6e6;
 	box-sizing: border-box;
@@ -949,10 +949,11 @@ hr {
 
 .v5_footer_inner .copyright {
 	/* margin: 20px 0 0 20px; */
-	line-height: 26px;
+	line-height: 30px;
 	color: #666;
-	width: 560px;
-	padding-left: 15px;
+	min-width: 700px;
+	margin: 0 auto;
+	text-align: center;
 }
 
 .v5_footer_inner .copyright a {
