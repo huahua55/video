@@ -57,7 +57,7 @@ class DoubanTopList extends Common
         if($port  ==false){
             log::info('get_port-::' );
             sleep(3);
-            $port = $this->getPort(0);
+            $port = $this->getPort(4);
         }
         $heads = [
             'Accept' => '*/*',

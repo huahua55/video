@@ -85,7 +85,7 @@ class DoubanScoreJs extends Common
             $this->get_port =   $this->getPort();
             if($this->get_port  == false){
                 sleep(3);
-                $this->get_port =   $this->getPort();
+                $this->get_port =   $this->getPort(4);
                 log::info('get_port-::' );
             }
 //        p($A);

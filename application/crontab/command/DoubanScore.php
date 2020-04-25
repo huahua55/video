@@ -134,7 +134,7 @@ class DoubanScore extends Common
                     if (time() > $this->times + (60 * 3)) {
                         if($this->get_port  == false){
                             sleep(3);
-                            $this->get_port =   $this->getPort();
+                            $this->get_port =   $this->getPort(4);
                             log::info('get_port-::' );
                         }
                     }
