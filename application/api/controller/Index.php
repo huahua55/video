@@ -13,6 +13,17 @@ class Index extends Base{
         $this->_param = input();
     }
 
+    // 电视剧 备注
+    public function vodRemark($data){
+        $remark = $data['vod_remarks'];
+        if($data['type_id'] == 2 || $data['type_id_1'] == 2){
+            if($data['vod_serial'] != 0){
+                $remark = "更新至" . intval($data['vod_serial']) . "集";
+            }
+        }
+        return $remark;
+    }
+
     // 首页导航
     public function home_nav(){
         $lp = [
@@ -83,7 +94,7 @@ class Index extends Base{
                 array_push($getListBlock,$d);
             }
 
-            // 电影、电视剧 加上精品推荐
+            // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
                 $where = [
@@ -95,7 +106,7 @@ class Index extends Base{
                 $doubanList  = model("douban_recommend")->field('vod_id')->where($where)->order('id asc')->limit(6)->select();
                 $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
                 $doubanRecomData[] = [
-                    'name'  => "精品推荐",
+                    'name'  => "最近热播",
                     'data'  => $this->vodStrData($doubanIds),
                 ];
 
@@ -202,7 +213,7 @@ class Index extends Base{
             'type'  => 4,
             'id'    => 0,
             'msg'   => "",
-            'name'  => "精品推荐",
+            'name'  => "最近热播",
             'data'  => $this->vodStrData($doubanIds),
         ];
 
@@ -222,7 +233,7 @@ class Index extends Base{
 
         $list  = model("douban_recommend")
             ->alias('r')
-            ->field('r.vod_id,r.name,v.vod_pic,v.vod_score,v.vod_douban_score,v.vod_remarks')
+            ->field('r.vod_id,r.name,v.vod_pic,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
             ->join('vod v','r.vod_id = v.vod_id','left')
             ->where($where)
             ->order('id asc')
@@ -237,7 +248,7 @@ class Index extends Base{
                 'id'    => $item['vod_id'],
                 'name'  => $item['name'],
                 'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
-                'msg'   => $item['vod_remarks'],
+                'msg'   => $this->vodRemark($item),
             ];
         }
 
@@ -259,7 +270,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -283,7 +294,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -304,7 +315,7 @@ class Index extends Base{
             'name'      => $info["vod_name"],
             'type_id'   => $info["type_id_1"],
             'img'       => imageDir($info["vod_pic"]),
-            'msg'       => $info["vod_remarks"],
+            'msg'       => $this->vodRemark($info),
             'score'     => $info['vod_douban_score'] > 0 ? $info['vod_douban_score'] : $info['vod_score'],
             'type'      => $info["vod_area"] ,
             'info'      => $info["vod_content"],
@@ -331,7 +342,7 @@ class Index extends Base{
             $d = array(
                 'img'   => imageDir($r['vod_pic']),
                 'name'  => $r['vod_name'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
                 'text'  => $r['vod_content'],
                 'url'   => $r['vod_id'],
             );
@@ -355,10 +366,6 @@ class Index extends Base{
             $list = objectToArray($list);
             $data = array_merge(array_column($list,'name'),$data);
         }
-
-//        $config = config('maccms.app');
-//        $search_hot = $config['search_hot'] ?? [];
-//        $list = explode(",",$search_hot);
 
         return json_return($data);
     }
@@ -409,7 +416,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -488,7 +495,7 @@ class Index extends Base{
         // 获取去重ids
         $rids = array_unique(array_column($userLog,"ulog_rid"));
 
-        $field = "vod_id,vod_name,vod_pic,vod_score,vod_douban_score,vod_remarks";
+        $field = "vod_id,vod_name,type_id,type_id_1,vod_pic,vod_score,vod_douban_score,vod_remarks,vod_total,vod_serial";
         $vodList = model("Vod")->field($field)->where(['vod_id'=>['in',$rids]])->order("vod_time_add desc")->select();
         $vodList = objectToArray($vodList);
 
@@ -500,7 +507,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -523,7 +530,7 @@ class Index extends Base{
 
         $actor = explode(',',$info['vod_actor']) ?? "";
         $actor = $actor[0] != "" ? $actor[0] : "";
-        $field = "vod_id,vod_name,vod_pic,vod_score,vod_douban_score,vod_remarks";
+        $field = "vod_id,vod_name,vod_pic,vod_score,vod_douban_score,vod_remarks,type_id,type_id_1,vod_total,vod_serial";
 
         $where = [
             'vod_id'    => ['neq',$id],
@@ -558,7 +565,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $r['vod_remarks'],
+                'msg'   => $this->vodRemark($r),
             );
             array_push($array,$d);
         }
