@@ -177,7 +177,7 @@ class DoubanScoreJs extends Common
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
-                    if (empty($mac_curl_get_data)) {
+                    if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
                         $this->update_url_proxy($error_count, $url);
                     }
