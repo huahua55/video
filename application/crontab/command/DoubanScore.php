@@ -130,11 +130,11 @@ class DoubanScore extends Common
                     $mac_curl_get_data = '';
 //               $sleep =  rand(3,10);
 //                    sleep(1);
-                    $this->times = Cache::get('vod_times_cj_open_url');
+
                     if (time() > $this->times + (60 * 3)) {
                         if($this->get_port  == false){
                             sleep(3);
-                            $this->get_port =   $this->getPort(4);
+                            $this->get_port =   $this->getPort();
                             log::info('get_port-::' );
                         }
                     }

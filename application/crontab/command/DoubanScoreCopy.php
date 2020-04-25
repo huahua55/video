@@ -101,7 +101,7 @@ class DoubanScoreCopy extends Common
             $this->get_port =   $this->getPort();
             if($this->get_port  == false){
                 sleep(3);
-                $this->get_port =   $this->getPort(4);
+                $this->get_port =   $this->getPort();
                 log::info('get_port-::' );
             }
 //        p($A);
