@@ -248,7 +248,6 @@ class Common extends Command
                         }
                     }
                     $this->times = strtotime(array_pop($logs_data));
-                    var_dump($this->times);
                     Cache::set('vod_times_cj_open_url',$this->times);
                     return $queryData['port'][0];
                 } else {
