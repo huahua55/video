@@ -383,6 +383,7 @@ class DoubanScoreJs extends Common
         $deas_data = $as_k;
         $deas_data['douban_id'] = $get_search_id;
         log::info('js-采集豆瓣评分add-.id'.$get_search_id );
+        log::info('js-采集豆瓣评分add-.url -id'.$as_k['link'] );
         if ($get_search_id > 0) {
             $deas_data['time'] = time();
             try {
