@@ -121,7 +121,7 @@ class DoubanScoreJs extends Common
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-            log::info('js-采集豆瓣评分where...'.$where);
+            log::info('js-采集豆瓣评分where...'.json_encode($where,true));
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
