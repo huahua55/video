@@ -338,7 +338,7 @@ class DoubanScoreJs extends Common
         $error_where['vod_id'] = $v['vod_id'];
         $error_data = $this->vod_errorDb->where($error_where)->find();
         if(empty($error_data)){
-            log::info('js-addUpError::su--' );
+            log::info('js-addUpError::su--' .$douban_id);
             if ($douban_id > 0) {
                 $deas_data['vod_id'] = $v['vod_id'];
                 $deas_data['title'] = $v['vod_name']??'';
@@ -349,7 +349,7 @@ class DoubanScoreJs extends Common
                     $deas_data['count'] = 0;
                 }
                 try {
-                    log::info('js-addUpError::su' );
+                    log::info('js-addUpError::su??' );
                     $this->vod_errorDb->insert($deas_data);
                 } catch (\Exception $e) {
                     log::info('js-采集豆瓣评分-err0r数据重复添加::' . $v['vod_id'].$e);
