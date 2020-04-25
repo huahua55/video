@@ -93,7 +93,7 @@
 		if (SearchRecords != null) {
 			SearchRecordsArray = SearchRecords.split("_")
 			for (var i = 0; i < SearchRecordsArray.length; i++) {
-				searchHtmls += '<li class="aui-ellipsis-1"><a href="/index.php/vod/search/wd/' + SearchRecordsArray[i] +
+				searchHtmls += '<li><a href="/index.php/vod/search/wd/' + SearchRecordsArray[i] +
 					'.html">' + SearchRecordsArray[i] + '<em class="up"></em></a></li>'
 				// <li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}">变形</a><em class="up"></em></li>
 			}

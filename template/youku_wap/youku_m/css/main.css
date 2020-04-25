@@ -73,7 +73,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .searchPop .searchCon .sSearchInput .searchInput[type="search"]{border:0;width:100%;height:.9rem; min-height:.9rem;line-height:.9rem;font-size:.7rem;background-color:#F5F5F5;-webkit-user-select:text;float:left}
 .searchPop .searchCon .cancelInput{float:left;width:2rem;height:1.6rem;line-height:1.6rem;text-align:center;border:0;background:0 0;color:#333;font-size:.7rem;cursor:pointer;display:block}
 .search-list li{position:relative;width:100%;float:left;margin: .25rem 0;}
-.search-list li a{font-size:.7rem;display: block;}
+.search-list li a{font-size:.7rem;display: block;padding-right: 30px;position: relative;overflow: hidden; text-overflow:ellipsis;white-space:nowrap;}
 .search-list li .colred1{background:linear-gradient(to left,#3b9eff 0,#19c3ff 100%);color:#fff}
 .search-list li .colred2{background:linear-gradient(to left,#55d2fd 0,#3b9eff 100%);color:#fff}
 .search-list li .colred3{background:linear-gradient(to left,#76dbfd 0,#55d2fd 100%);color:#fff}
@@ -81,7 +81,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .search-list li em.top{background:url(../images/top.png);background-size: .8rem .8rem;}
 .search-list li em.up{background:url(../images/icon-right.png);background-size: .8rem .8rem;}
 .search-list li em.down{background:url(../images/down.png);background-size: .8rem .8rem;}
-.search-list li em{float:right;display:block;width:.8rem;height:.8rem;margin-right: .3rem;}
+.search-list li em{display:block;width:.8rem;height:.8rem;margin-right: .3rem;position: absolute;top: 50%;right: 0;transform: translateY(-50%);}
 /*幻灯片*/
 .banners{width:100%;height: 9.9rem;overflow:hidden;background:#FFF;position:relative;}
 .banners .swiper-slidee{text-align:center;font-size:.9rem;background:#fff;width: 100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-right:.25rem;}
@@ -983,6 +983,12 @@ cursor: pointer;
 	background: #FFF;
 	border-top: .01rem solid #e2e2e2;
 	text-align: center;
+}
+.history-item span:nth-child(1){
+	display: inline-block;
+	overflow: hidden; text-overflow:ellipsis;white-space:nowrap;
+	width: 60%;
+	text-align: left;
 }
 /* 首页公告 */
 .notice-swiper{
