@@ -362,6 +362,7 @@ class DoubanScoreJs extends Common
             }else{
                 $deas_data['count'] = 0;
             }
+            $deas_data['douban_id'] = $douban_id;
             log::info('js-addUpError::count-up' );
             $deas_data['douban_id'] = $douban_id;
 
