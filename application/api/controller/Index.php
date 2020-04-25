@@ -61,7 +61,7 @@ class Index extends Base{
         foreach($bannel as $k=>$item){
             $getSlide[$k]['id']     = $item['id'];
             $getSlide[$k]['name']   = $item['name'];
-            $getSlide[$k]['img']    = imageDir($item['img']);
+            $getSlide[$k]['img']    = mac_url_img($item['img']);
             $getSlide[$k]['url']    = $item['rel_vod'];
             $getSlide[$k]['type']   = 1;
         }
@@ -244,7 +244,7 @@ class Index extends Base{
         $data = [];
         foreach($list as &$item){
             $data[] = [
-                'img'   => imageDir($item['vod_pic']),
+                'img'   => mac_url_img($item['vod_pic']),
                 'id'    => $item['vod_id'],
                 'name'  => $item['name'],
                 'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
@@ -266,7 +266,7 @@ class Index extends Base{
         $array = array();
         foreach($info as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
@@ -290,7 +290,7 @@ class Index extends Base{
         $array = array();
         foreach($info as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
@@ -314,7 +314,7 @@ class Index extends Base{
         $data = array(
             'name'      => $info["vod_name"],
             'type_id'   => $info["type_id_1"],
-            'img'       => imageDir($info["vod_pic"]),
+            'img'       => mac_url_img($info["vod_pic"]),
             'msg'       => $this->vodRemark($info),
             'score'     => $info['vod_douban_score'] > 0 ? $info['vod_douban_score'] : $info['vod_score'],
             'type'      => $info["vod_area"] ,
@@ -340,7 +340,7 @@ class Index extends Base{
         $data = [];
         foreach($res as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'name'  => $r['vod_name'],
                 'msg'   => $this->vodRemark($r),
                 'text'  => $r['vod_content'],
@@ -412,7 +412,7 @@ class Index extends Base{
         $array = array();
         foreach($info as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
@@ -503,7 +503,7 @@ class Index extends Base{
         $array = [];
         foreach($vodList as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
@@ -561,7 +561,7 @@ class Index extends Base{
         $array = [];
         foreach($res as $r){
             $d = array(
-                'img'   => imageDir($r['vod_pic']),
+                'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
