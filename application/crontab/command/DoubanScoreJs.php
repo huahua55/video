@@ -55,6 +55,8 @@ class DoubanScoreJs extends Common
 
     protected function execute(Input $input, Output $output)
     {
+
+
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
         try {
@@ -69,6 +71,7 @@ class DoubanScoreJs extends Common
             $x = $param['x'] ?? '';
             $id = $param['id'] ?? '';
             $g = $param['g'] ?? '';
+            $q = $param['q'] ?? '';
             if (!empty($type) && $type == 1) {
                 Cache::set('vod_id_list_douban_id', 1);
             }
@@ -107,6 +110,13 @@ class DoubanScoreJs extends Common
                     Cache::set('vod_id_list_douban_id', 1);
                     $where['a.vod_id'] = ['gt', $is_vod_id];
                 }
+            }
+            if(!empty($q)){
+                $q_vod_id = $this->vod_errorDb->field('vod_id')->order('id desc')->find();
+                if(isset($q_vod_id) && !empty($q_vod_id_data['vod_id'])){
+                    $where['a.vod_id'] = ['gt',$q_vod_id_data['vod_id']];
+                }
+
             }
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
