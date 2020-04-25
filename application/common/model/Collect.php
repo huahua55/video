@@ -451,6 +451,27 @@ class Collect extends Base {
 
                 $v['vod_total'] = intval($v['vod_total']);
                 $v['vod_serial'] = intval($v['vod_serial']);
+
+                $tid = intval($type_list[$v['type_id']]['type_pid']);
+                if($tid == 2){
+                    if(strpos($v['vod_remarks'],'完结') !== false){
+                        $v['vod_serial'] = $v['vod_total'];
+                    }elseif (strpos($v['vod_remarks'],'集全') !== false){
+                        $v['vod_serial'] = $v['vod_total'];
+                    }elseif (strpos($v['vod_remarks'],'集(全)') !== false){
+                        $v['vod_serial'] = $v['vod_total'];
+                    }elseif (strpos($v['vod_remarks'],'全集') !== false){
+                        $v['vod_serial'] = $v['vod_total'];
+                    }
+                    elseif (strpos($v['vod_remarks'],'大结局') !== false){
+                        $v['vod_serial'] = $v['vod_total'];
+                    }else{
+                        $vod_serial =findNum($v['vod_remarks']);
+                        $vod_serial = empty($vod_serial)?0:$vod_serial;
+                        $v['vod_serial'] = $vod_serial =   max($vod_serial,$v['vod_serial']);
+                    }
+                }
+
                 $v['vod_isend'] = intval($v['vod_isend']);
                 $v['vod_up'] = intval($v['vod_up']);
                 $v['vod_down'] = intval($v['vod_down']);
