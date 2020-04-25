@@ -80,7 +80,7 @@ class Index extends Base{
             $where = [
                 'type_pid'   => $id
             ];
-            $sonRes =  model("Type")->listData($where,"type_sort desc");
+            $sonRes =  model("Type")->listData($where,"type_sort asc");
             $sonRes = $sonRes['list'] ?? [];
 
             $res = array_merge($sonRes,$fatherRes);
