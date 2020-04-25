@@ -217,6 +217,7 @@ class DoubanScoreJs extends Common
     //采集详情页面
     public function vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err)
     {
+        log::info('js-采集豆瓣评vod_douBan_details:' . $get_search_id);
 
         $getDetailsData = [];
         $link_url = $as_k['link'];
