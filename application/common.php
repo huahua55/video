@@ -56,6 +56,16 @@ function getScreen($id){
     );
 }
 
+// 电视剧 备注
+function vodRemark($data){
+    $remark = $data['vod_remarks'];
+    if($data['type_id'] == 2 || $data['type_id_1'] == 2){
+        if($data['vod_serial'] != 0){
+            $remark = "更新至" . intval($data['vod_serial']) . "集";
+        }
+    }
+    return $remark;
+}
 /**
  * 多维对象转换为数组
  */

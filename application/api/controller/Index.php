@@ -13,16 +13,7 @@ class Index extends Base{
         $this->_param = input();
     }
 
-    // 电视剧 备注
-    public function vodRemark($data){
-        $remark = $data['vod_remarks'];
-        if($data['type_id'] == 2 || $data['type_id_1'] == 2){
-            if($data['vod_serial'] != 0){
-                $remark = "更新至" . intval($data['vod_serial']) . "集";
-            }
-        }
-        return $remark;
-    }
+
 
     // 首页导航
     public function home_nav(){
@@ -155,6 +146,13 @@ class Index extends Base{
             ];
         }
 
+        $model = model("douban_recommend");
+        $where = [
+            'r.status'    => ['eq','1'],
+            'r.vod_id'    => ['neq','0'],
+        ];
+        $apiListData  = $model->apiListData(array_merge($where,['r.type_id'=>['eq',1]]), 3, "id asc", 6);
+        $apiListData2 = $model->apiListData(array_merge($where,['r.type_id'=>['eq',2]]), 3, "id asc", 6);
         // 本地热门
         $data = [
             [
@@ -162,14 +160,14 @@ class Index extends Base{
                 'id'    => 1,
                 'msg'   => json_encode(getScreen(1),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播电影',
-                'data'  => $this->getVodList(1,6,1),
+                'data'  => $apiListData,
             ],
             [
                 'type'  => 1,
                 'id'    => 2,
                 'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播剧',
-                'data'  => $this->getVodList(2,6,1),
+                'data'  => $apiListData2,
             ],
             [
                 'type'  => 1,
@@ -220,39 +218,20 @@ class Index extends Base{
         return $doubanData;
     }
 
-    // 豆瓣推荐列表
+    // 豆瓣推荐列表 接口
     public function recomData(){
         $page  = $this->_param['page'] ?? 1;
-        $limit = 18;
-        $pageSize = ($page - 1) * $limit;
-
+        $limit = $this->_param['page'] ?? 18;
+        $pageSize = ( $page - 1 ) * $limit;
         $where = [
             'r.status'    => ['eq','1'],
             'r.vod_id'    => ['neq','0'],
         ];
 
-        $list  = model("douban_recommend")
-            ->alias('r')
-            ->field('r.vod_id,r.name,v.vod_pic,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
-            ->join('vod v','r.vod_id = v.vod_id','left')
-            ->where($where)
-            ->order('id asc')
-            ->limit($pageSize,$limit)
-            ->select();
-        $list  = objectToArray($list);
+        $model = model("douban_recommend");
+        $list = $model->apiListData($where, $pageSize);
 
-        $data = [];
-        foreach($list as &$item){
-            $data[] = [
-                'img'   => mac_url_img($item['vod_pic']),
-                'id'    => $item['vod_id'],
-                'name'  => $item['name'],
-                'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
-                'msg'   => $this->vodRemark($item),
-            ];
-        }
-
-        return json_return($data);
+        return json_return($list);
     }
 
     // 分类视频
@@ -270,7 +249,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -294,7 +273,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -315,7 +294,7 @@ class Index extends Base{
             'name'      => $info["vod_name"],
             'type_id'   => $info["type_id_1"],
             'img'       => mac_url_img($info["vod_pic"]),
-            'msg'       => $this->vodRemark($info),
+            'msg'       => vodRemark($info),
             'score'     => $info['vod_douban_score'] > 0 ? $info['vod_douban_score'] : $info['vod_score'],
             'type'      => $info["vod_area"] ,
             'info'      => $info["vod_content"],
@@ -342,7 +321,7 @@ class Index extends Base{
             $d = array(
                 'img'   => mac_url_img($r['vod_pic']),
                 'name'  => $r['vod_name'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
                 'text'  => $r['vod_content'],
                 'url'   => $r['vod_id'],
             );
@@ -416,7 +395,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -507,7 +486,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
             );
             array_push($array,$d);
         }
@@ -565,7 +544,7 @@ class Index extends Base{
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
                 'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
-                'msg'   => $this->vodRemark($r),
+                'msg'   => vodRemark($r),
             );
             array_push($array,$d);
         }
