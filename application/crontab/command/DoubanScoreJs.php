@@ -388,7 +388,7 @@ class DoubanScoreJs extends Common
             $deas_data['time'] = time();
             try {
                 log::info('js-采集豆瓣评分suc' );
-                Db::name('douban_vod_details')->insert($deas_data);
+                $this->cmsDb->insert($deas_data);
             } catch (\Exception $e) {
                 log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
             }
