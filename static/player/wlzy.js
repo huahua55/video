@@ -1,2 +1,2 @@
-MacPlayer.Html = &#39;&lt;iframe width="100%" height="&#39; + MacPlayer.Height + &#39;" class="embed-responsive-item" src="&#39; + MacPlayer.PlayUrl + &#39;" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="no"&gt;&lt;/iframe&gt;&#39;;
+MacPlayer.Html = '<iframe width="100%" height="' + MacPlayer.Height + '" class="embed-responsive-item" src="' + MacPlayer.PlayUrl + '" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>';
 MacPlayer.Show();
