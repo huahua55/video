@@ -82,7 +82,7 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-            $this->get_port = $this->getDouBan();
+//            $this->get_port = $this->getDouBan();
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -106,6 +106,7 @@ class DoubanScoreJs extends Common
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
+            log::info('js-采集豆瓣评分where...'.$where);
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
@@ -326,7 +327,11 @@ class DoubanScoreJs extends Common
                 $deas_data['vod_id'] = $v['vod_id'];
                 $deas_data['title'] = $v['vod_name']??'';
                 $deas_data['douban_id'] = $douban_id;
-                $deas_data['count'] = 0;
+                if($e_err == false){
+                    $deas_data['count'] = 1;
+                }else{
+                    $deas_data['count'] = 0;
+                }
                 try {
                     log::info('js-addUpError::su' );
                     $this->vod_errorDb->insert($deas_data);
@@ -337,11 +342,14 @@ class DoubanScoreJs extends Common
         }else{
             log::info('js-addUpError::count' );
             if($e_err == false){
-                log::info('js-addUpError::count-up' );
-                $deas_data['douban_id'] = $douban_id;
                 $deas_data['count'] = $error_data['count'] + 1;
-                $this->vod_errorDb->where($error_where)->update($deas_data);
+            }else{
+                $deas_data['count'] = 0;
             }
+            log::info('js-addUpError::count-up' );
+            $deas_data['douban_id'] = $douban_id;
+
+            $this->vod_errorDb->where($error_where)->update($deas_data);
         }
     }
     //插入详情数据
