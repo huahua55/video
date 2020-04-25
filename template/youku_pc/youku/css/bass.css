@@ -6969,6 +6969,7 @@ i.glyphicon {
 	font-size: 0;
 	overflow: hidden;
 	display: block;
+	overflow: hidden; text-overflow:ellipsis;white-space:nowrap;
 }
 
 .hot-wrap li a span {
