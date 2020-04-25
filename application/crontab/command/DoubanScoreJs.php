@@ -382,9 +382,11 @@ class DoubanScoreJs extends Common
         $get_search_id = str_replace('/', '', $get_search_id);
         $deas_data = $as_k;
         $deas_data['douban_id'] = $get_search_id;
+        log::info('js-采集豆瓣评分add-.id'.$get_search_id );
         if ($get_search_id > 0) {
             $deas_data['time'] = time();
             try {
+                log::info('js-采集豆瓣评分suc' );
                 Db::name('douban_vod_details')->insert($deas_data);
             } catch (\Exception $e) {
                 log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
