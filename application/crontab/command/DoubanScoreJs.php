@@ -280,6 +280,9 @@ class DoubanScoreJs extends Common
                                     if ($s_k == 'vod_actor') {
                                         $ex_v =  trim(mb_substr($ex_v, 0, 240));
                                     }
+                                    if ($s_k == 'vod_total') {
+                                        $ex_v =  trim(findNum($ex_v));
+                                    }
                                     $ex_data[$s_k] = mac_trim_all(str_replace($s_v, '', $ex_v));
                                 }
                             }

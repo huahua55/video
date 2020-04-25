@@ -74,16 +74,6 @@ function objectToArray($object){
     return json_decode(json_encode($object), true);
 }
 
-// 补全图片路径
-function imageDir($pic){
-    $hostStr = strpos($pic, "http");
-    $host = config('api_host');
-    if($hostStr === false){
-        $pic = $host . "/" . $pic;
-    }
-    return $pic;
-}
-
 // 应用公共文件
 function json_return($msg,$code=1,$data=''){
     if(is_array($msg)){
