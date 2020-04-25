@@ -82,7 +82,12 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-//            $this->get_port = $this->getDouBan();
+            $this->get_port =   $this->getPort();
+            if($this->get_port  == false){
+                sleep(3);
+                $this->get_port =   $this->getPort();
+                log::info('get_port-::' );
+            }
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -126,8 +131,9 @@ class DoubanScoreJs extends Common
                     $is_log = false;
                     $mac_curl_get_data = '';
 //                    sleep(1);
+                    $this->times = Cache::get('vod_times_cj_open_url');
                     if (time() > $this->times + (60 * 3)) {
-                        $this->get_port = $this->getDouBan();
+                        $this->get_port = $this->getPort();
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     try {
@@ -143,8 +149,8 @@ class DoubanScoreJs extends Common
                             $r->setDelay(3); // 3 seconds
                             return $r;
                         }, false, [
-//                        '--proxy' => "183.129.244.16:17238",
-                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+                        '--proxy' => "183.129.244.16:51134",
+//                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
                             '--proxy-type' => 'http',
                             '--load-images' => 'no',
 //                    ])->getHtml();

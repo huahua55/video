@@ -47,7 +47,7 @@ class Common extends Command
         $arry = explode('#', $parameter);
         foreach ($arry as $key => $value) {
             $zzz = explode('=', $value);
-            $parameter_array[$zzz[0]] = $zzz[1];
+            $parameter_array[$zzz[0]] = $zzz[1]??'';
 
         }
         return $parameter_array;
@@ -71,6 +71,7 @@ class Common extends Command
     public function get_open_url()
     {
         $this->times = time();
+       Cache::set('vod_times_cj_open_url',time());
         $time_stamp = $this->get_timestamp();
         $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
         return 'http://' . $this->proxy_server . ':'
@@ -131,11 +132,11 @@ class Common extends Command
     }
 
     //更新cookie
-    protected function getCookie($url,$is = false)
+    protected function getCookie($url, $is = false)
     {
-        if($is != true){
+        if ($is != true) {
             return 'll="108288";bid=h4nqLajQEBo';
-        }else{
+        } else {
             $client = new Client();
             $response = $client->get($url);
             // 获取响应头部信息
@@ -170,12 +171,13 @@ class Common extends Command
         return implode($cookieArray, ';');
     }
 
-    public function update_url_proxy($error_count,$url){
+    public function update_url_proxy($error_count, $url)
+    {
         $error_count++;
         if ($error_count > 10) {
             $tmp = $this->testing($url, $this->get_port);
             if ($tmp != 200 && $this->times + (50 * 3)) {
-                $this->get_port = $this->getDouBan(); //重新构成代理端口
+                $this->get_port = $this->getPort(); //重新构成代理端口
                 echo 'test_proxy|| httpCode:' . $tmp . "\n <br>";
                 file_put_contents('log.txt', 'test_proxy|| httpCode:' . $tmp . PHP_EOL, FILE_APPEND);
                 try {
@@ -190,34 +192,59 @@ class Common extends Command
             }
         }
     }
-    //获取代理端口
-    public function getDouBan()
+
+    protected function get_query_url()
     {
-        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
+        $time_stamp = $this->get_timestamp();
+        $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
+        return 'http://' . $this->proxy_server . ':'
+            . $this->proxy_port . '/query?' . $this->key_name . $this->proxy_username .
+            '&' . $this->key_timestamp . strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern;
+    }
+
+    public function getPort($a = 0)
+    {
         $file = 'log.txt';
-        $port = '';//代理端口变量
+        $a = $a + 1;
+        if ($a > 3) {
+            $open_data = mac_curl_get($this->get_open_url());
+            if (!empty($open_data) && $open_data['code'] == 100 && $open_data['left_ip'] > 1) {
+                if (!empty($open_data['port'])) {
+                    return $open_data['port'][0];
+                }
+            }
+        }
+        $queryData = $this->get_query_url();
         try {
-            $open_url = $this->get_open_url();
-//            p($open_url);
-            $r = file_get_contents($open_url);
-            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            $code = json_decode($result, true);
+            $result = mac_curl_get($queryData);
+            $result = iconv("gb2312", "utf-8//IGNORE", $result);
+            $queryData = json_decode($result, true);
             echo $result . "\n <br>";
             file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
-            $json_arr = json_decode($result, true);
-            $code = $json_arr['code'];
+            $code = $queryData['code'];
             if ($code == 108) {
                 $reset_url = $this->get_reset_url();
                 $r = file_get_contents($reset_url);
-            } else if ($code == 100) {
-                $port = strval($json_arr['port'][0]);
+            } else if ($code == 100 && $queryData['left_ip'] > 1) {
+                if (!empty($queryData['port'])) {
+                    return $queryData['port'][0];
+                } else {
+                    sleep(1);
+                    $this->getPort($a);
+                }
+                return strval($queryData['port'][0]);
             }
 
         } catch (\Exception $e) {
             file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
         }
-        return $port;
+        return false;
     }
+
+
+
     protected function isJsonBool($data = '', $assoc = false)
     {
         $data = json_decode($data, $assoc);
@@ -227,7 +254,7 @@ class Common extends Command
         return false;
     }
 
-    public  function strToUtf8($str)
+    public function strToUtf8($str)
     {
         $encode = mb_detect_encoding($str, array("ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5'));
         if ($encode == 'UTF-8') {
