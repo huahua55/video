@@ -174,7 +174,7 @@ class DoubanScoreJs extends Common
                         log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
 
                         $getSearchData = objectToArray($mac_curl_get_data);
-                        log::info('js-data-' .json_encode($getSearchData,true));
+//                        log::info('js-data-' .json_encode($getSearchData,true));
                     } catch (Exception $e) {
                         log::info('js-err--过滤' . $url);
                         continue;
@@ -316,7 +316,7 @@ class DoubanScoreJs extends Common
             } catch (Exception $e) {
                 log::info('js-err--过滤iii' . $link_url);
             }
-            log::info('js-datall-' .json_encode($getDetailsData,true));
+//            log::info('js-datall-' .json_encode($getDetailsData,true));
             if (!empty($getDetailsData)) {
                 //更新详情表
                 $this->vod_details_update($get_search_id, $getDetailsData, $v);
