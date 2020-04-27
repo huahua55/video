@@ -64,6 +64,15 @@ class Index extends Base{
         }else{
             $fatherRes =  [];
 
+            // 单独查询 纪录片
+            if($id == 33){
+                $where = [
+                    'type_id'   => $id
+                ];
+                $fatherRes =  model("Type")->listData($where,"type_sort asc");
+                $fatherRes = $fatherRes['list'] ?? [];
+            }
+
             $where = [
                 'type_pid'   => $id
             ];
@@ -71,6 +80,7 @@ class Index extends Base{
             $sonRes = $sonRes['list'] ?? [];
 
             $res = array_merge($sonRes,$fatherRes);
+
             foreach($res as $item){
                 $r = $item["type_id"];
                 $d = array(
@@ -382,7 +392,13 @@ class Index extends Base{
 
         $where = [];
         if($id != 0  ){
-            $where['type_id_1']   = ['eq',$id];
+            // 纪录片 单独查询
+            if($id == 33){
+                $where['type_id']   = ['eq',$id];
+            }else{
+                $where['type_id_1']   = ['eq',$id];
+            }
+
         }
 
         if($type != ""){
