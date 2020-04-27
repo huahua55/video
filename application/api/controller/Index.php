@@ -5,7 +5,10 @@ use think\Cache;
 
 class Index extends Base{
 
-    private $sort = "vod_douban_score desc,vod_time_add desc";
+    private $sort = [
+        1 => "vod_douban_score desc",   // 评分最高
+        2 => "vod_time_add desc"        // 最近更新
+    ];
 
     public function __construct()
     {
@@ -267,7 +270,7 @@ class Index extends Base{
             'type_id'         => ['eq',$id],
             'vod_play_from'     => ['like','%3u8%'],
         ];
-        $info = model("Vod")->listData($lp, $this->sort, $page, $limit);
+        $info = model("Vod")->listData($lp, $this->sort[1] . ',' . $this->sort[2], $page, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -291,7 +294,7 @@ class Index extends Base{
         $lp = [
             'vod_id'   => ['in',$vodIds],
         ];
-        $info = model("Vod")->listData($lp,  $this->sort, 1, $limit);
+        $info = model("Vod")->listData($lp,  $this->sort[1] . ',' . $this->sort[2], 1, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -342,7 +345,7 @@ class Index extends Base{
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
         ];
-        $res = model("Vod")->listData($where, $this->sort, $page, 18);
+        $res = model("Vod")->listData($where, $this->sort[1] . ',' . $this->sort[2], $page, 18);
         $res = $res['list'] ?? [];
 
         $data = [];
@@ -385,6 +388,7 @@ class Index extends Base{
         $type   = $this->_param['type'] ?? "";
         $area   = $this->_param['area'] ?? "";
         $year   = $this->_param['year'] ?? "";
+        $sort   = $this->_param['sort'] ?? 1;
 
         $type = $type == "类型" ? "" : $type;
         $area = $area == "地区" ? "" : $area;
@@ -422,7 +426,10 @@ class Index extends Base{
 
         $where['vod_play_from']   = ['like', '%3u8%'];
 
-        $info = model("Vod")->listData($where, $this->sort, $page, 18);
+        // 排序
+        $sort = $this->sort[$sort];
+
+        $info = model("Vod")->listData($where, $sort, $page, 18);
         $info = $info['list'] ?? [];
 
         $array = array();
