@@ -43,7 +43,7 @@
 								<div class="player-aside-list-main">
 									<div class="u-listbox d-play-list num-tab">
 										{maccms:foreach name="obj.vod_play_list" id="vo" key="key"}
-										<div class="looplist aside-tabbox num-tab-main " id="{$key}play">
+										<div class="looplist aside-tabbox num-tab-main {if condition=" $param.sid eq $vo.sid"} cur {/if}" id="{$key}play">
 											{maccms:foreach name="vo.urls" id="vo2" key="key2"}
 											<a href="{:mac_url_vod_play($obj,['sid'=>$vo.sid,'nid'=>$vo2.nid])}" id="{$key}{$key}{$vo.player_info.from}"
 											 class="{if condition=" $param.nid eq $vo2.nid"} current {/if}">{$key2} </a> {/maccms:foreach} </div> {/maccms:foreach}
