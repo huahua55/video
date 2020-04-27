@@ -181,7 +181,7 @@ class DoubanScoreJs extends Common
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
-                    log::info('js-采集豆瓣评分-搜索性能' . microtime(TRUE)-$startTime);
+                    log::info('js-搜索性能' . microtime(TRUE)-$startTime);
                     unset($startTime);
                     if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
@@ -199,7 +199,7 @@ class DoubanScoreJs extends Common
                             } else {
                                 $__startT = microtime(TRUE);
                                 $e_err = $this->vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err); //采集详情页面数据
-                                log::info('js-采集豆瓣评分-详情页性能' . microtime(TRUE)-$__startT);
+                                log::info('js--详情页性能' . microtime(TRUE)-$__startT);
                                 unset($__startT);
                             }
                         }
