@@ -534,7 +534,7 @@
 {include file="../../../application/admin/view/public/foot" /}
 
 <script type="text/javascript">
-    ue = editor_getEditor('vod_content');
+    //ue = editor_getEditor('vod_content');
     var player_select='{volist name="player_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var downer_select='{volist name="downer_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var server_select='{volist name="server_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
