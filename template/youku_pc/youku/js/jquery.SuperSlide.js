@@ -90,9 +90,6 @@ window.onload = function() {
 			Fadetext.offsetinx.push(o);
 		})
 		window.scroll(0, $(document).scrollTop() + 1);
-		// $(window).resize(function() {
-		// 	window.location.reload();
-		// });
 		var beforeScrollTop = document.body.scrollTop,
 			fn = fn || function() {},
 			fx = true;
@@ -134,7 +131,6 @@ window.onload = function() {
 			// 			}
 			// 		}
 			// 	}
-
 			// }
 			for (var j = 0; j < Fadetext.offsetinx.length; j++) {
 				var vala = Fadetext.offsetinx[j];
@@ -189,111 +185,6 @@ window.onload = function() {
 	var init = function() {};
 	Fadetext.init();
 }
-
-$(document).ready(function() {
-	// function e(a) {
-	// 	f = a;
-	// 	b.eq(a)
-	// 		.addClass('current')
-	// 		.siblings()
-	// 		.removeClass();
-	// 	c.eq(a)
-	// 		.siblings()
-	// 		.stop()
-	// 		.hide()
-	// 		.animate({
-	// 				opacity: 0
-	// 			},
-	// 			600
-	// 		);
-	// 	c.eq(a)
-	// 		.stop()
-	// 		.show()
-	// 		.animate({
-	// 				opacity: 1
-	// 			},
-	// 			600
-	// 		);
-	// 	d.eq(a)
-	// 		.stop()
-	// 		.animate({
-	// 				opacity: 1,
-	// 				top: -10
-	// 			},
-	// 			600
-	// 		)
-	// 		.siblings('b')
-	// 		.stop()
-	// 		.animate({
-	// 				opacity: 0,
-	// 				top: -40
-	// 			},
-	// 			600
-	// 		);
-	// }
-
-	// function a() {
-	// 	f++;
-	// 	f == b.length && (f = 0);
-	// 	e(f);
-	// }
-	// var b = $('#lunbonum a'),
-	// 	c = $('#lunhuanback a'),
-	// 	d = $('.lunhuancenter b'),
-	// 	f = 0;
-	// b.each(function(a) {
-	// 	$(this).mouseover(function() {
-	// 		e(a);
-	// 	});
-	// });
-	// var k = setInterval(a, 4e3);
-	// b.hover(
-	// 	function() {
-	// 		clearInterval(k);
-	// 	},
-	// 	function() {
-	// 		k = setInterval(a, 4e3);
-	// 	}
-	// );
-});
-
-$(document).ready(function() {
-	// $('#js-list1 li').bind('click', function() {
-	// 	var e = $(this).index(),
-	// 		a = $('#num-tab1 > div');
-	// 	$(this)
-	// 		.removeClass()
-	// 		.addClass('cur')
-	// 		.siblings()
-	// 		.removeClass();
-	// 	a.removeClass('cur').animate({
-	// 		opacity: '0'
-	// 	}, 100);
-	// 	a.eq(e)
-	// 		.addClass('cur')
-	// 		.animate({
-	// 			opacity: '1'
-	// 		}, 100);
-	// });
-	// $('#js-list2 li').bind('click', function() {
-	// 	var e = $(this).index(),
-	// 		a = $('#num-tab2 > div');
-	// 	$(this)
-	// 		.removeClass()
-	// 		.addClass('cur')
-	// 		.siblings()
-	// 		.removeClass();
-	// 	a.removeClass('cur').animate({
-	// 		opacity: '0'
-	// 	}, 100);
-	// 	a.eq(e)
-	// 		.addClass('cur')
-	// 		.animate({
-	// 			opacity: '1'
-	// 		}, 100);
-	// });
-});
-
 $(function() {
 	$('#main-bg').addClass('main-bg');
 	for (var i = 0; i < $('.num-tab .num-tab-main').length; i++) {
@@ -442,21 +333,13 @@ $(function() {
 			$('.top-main').addClass('topmain-fixed');
 			$('.autocomplete-suggestions').addClass('topmain-fixed');
 		} else {
-  			console.log()
 			if ($(".swiper-pagination .swiper-pagination-bullet").length == 0) {
 				$('.top-main').addClass('topmain-fixed');
 				$('.autocomplete-suggestions').addClass('topmain-fixed');
-			} else{
+			} else {
 				$('.top-main').removeClass('topmain-fixed');
 				$('.autocomplete-suggestions').removeClass('topmain-fixed');
 			}
-		}
-		if ($(".swiper-pagination .swiper-pagination-bullet").length == 0) {
-			$('.top-main').addClass('topmain-fixed');
-			$('.autocomplete-suggestions').addClass('topmain-fixed');
-		} else{
-			$('.top-main').removeClass('topmain-fixed');
-			$('.autocomplete-suggestions').removeClass('topmain-fixed');
 		}
 	});
 });
@@ -616,20 +499,16 @@ function addFavorite(obj, opts) {
 		}
 	}
 }
-
-/*
- var OriginTitile = document.title;
-    var titleTime;
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            document.title = '(つェ⊂) 我藏好了哦~ ' + OriginTitile;
-            clearTimeout(titleTime);
-        }
-        else {
-            document.title = '(*´∇｀*) 被你发现啦~ ' + OriginTitile;
-            titleTime = setTimeout(function() {
-                document.title = OriginTitile;
-            }, 1000);
-        }
-    });
- */
+var OriginTitile = document.title;
+var titleTime;
+document.addEventListener('visibilitychange', function() {
+	if (document.hidden) {
+		document.title = '(つェ⊂) 我藏好了哦~ ' + OriginTitile;
+		clearTimeout(titleTime);
+	} else {
+		document.title = '(*´∇｀*) 被你发现啦~ ' + OriginTitile;
+		titleTime = setTimeout(function() {
+			document.title = OriginTitile;
+		}, 1000);
+	}
+});
