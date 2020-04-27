@@ -116,7 +116,7 @@ a:hover {
 
 .wqd-section-three {
 	width: 100%;
-	height: 580px;
+	max-height: 580px;
 	overflow: hidden;
 	position: relative;
 	box-sizing: border-box;
