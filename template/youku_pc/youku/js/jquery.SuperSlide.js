@@ -442,6 +442,19 @@ $(function() {
 			$('.top-main').addClass('topmain-fixed');
 			$('.autocomplete-suggestions').addClass('topmain-fixed');
 		} else {
+  			console.log()
+			if ($(".swiper-pagination .swiper-pagination-bullet").length == 0) {
+				$('.top-main').addClass('topmain-fixed');
+				$('.autocomplete-suggestions').addClass('topmain-fixed');
+			} else{
+				$('.top-main').removeClass('topmain-fixed');
+				$('.autocomplete-suggestions').removeClass('topmain-fixed');
+			}
+		}
+		if ($(".swiper-pagination .swiper-pagination-bullet").length == 0) {
+			$('.top-main').addClass('topmain-fixed');
+			$('.autocomplete-suggestions').addClass('topmain-fixed');
+		} else{
 			$('.top-main').removeClass('topmain-fixed');
 			$('.autocomplete-suggestions').removeClass('topmain-fixed');
 		}
