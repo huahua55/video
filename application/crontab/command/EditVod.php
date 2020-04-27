@@ -126,7 +126,12 @@ class EditVod extends Command
                         }
                         if(!empty($update)){
                             log::info('修改update::-'.$v['vod_id'].'-'.$v['vod_name'].'-'.json_encode($update,true));
-                            $this->vodDb->where(['vod_id'=>$v['vod_id']])->update($update);
+                            $res =$this->vodDb->where(['vod_id'=>$v['vod_id']])->update($update);
+                            if($res){
+                                log::info('修改成功');
+                            }else{
+                                log::info('error');
+                            }
                         }
                     }
                     $page = $page + 1;
