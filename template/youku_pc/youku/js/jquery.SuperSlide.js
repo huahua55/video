@@ -103,39 +103,39 @@ window.onload = function() {
 				delta = afterScrollTop - beforeScrollTop;
 			fx = (delta > 0 ? false : true);
 			beforeScrollTop = afterScrollTop;
-			for (var i = 0; i < Fadetext.offsetdom.length; i++) {
-				var vala = Fadetext.offsetdom[i];
-				//到元素位置显示动画
-				if ((Fadetext.viewHeight + p) >= parseInt(vala.index)) {
-					var valb = vala.doma;
-					for (var j = 0; j < vala.doma.length; j++) {
-						if ($(vala.doma[j]).attr('data-lazy') === 'lazy') {
-							if (Fadetext.Flag && (Fadetext.viewHeight + p) >= parseInt(vala.index) + 3070) {
-								$(vala.doma[j]).addClass('animate-position');
-							} else if (!Fadetext.Flag) {
-								$(vala.doma[j]).addClass('animate-position');
-							}
-						} else {
-							$(vala.doma[j]).addClass('animate-position');
-						}
-						//到位置数字滚动效果
-						if ($(vala.doma[j]).attr('data-type') === 'num') {
-							if (Fadetext.Flag && (Fadetext.viewHeight + p) >= parseInt(vala.index) + 3070) {
-								Fadetext.numRun1.resetData('1000000');
-								Fadetext.numRun2.resetData('15000');
-								Fadetext.numRun3.resetData('1000');
-								Fadetext.numRun4.resetData('100');
-							} else if (!Fadetext.Flag) {
-								Fadetext.numRun1.resetData('1000000');
-								Fadetext.numRun2.resetData('15000');
-								Fadetext.numRun3.resetData('1000');
-								Fadetext.numRun4.resetData('100');
-							}
-						}
-					}
-				}
+			// for (var i = 0; i < Fadetext.offsetdom.length; i++) {
+			// 	var vala = Fadetext.offsetdom[i];
+			// 	//到元素位置显示动画
+			// 	if ((Fadetext.viewHeight + p) >= parseInt(vala.index)) {
+			// 		var valb = vala.doma;
+			// 		for (var j = 0; j < vala.doma.length; j++) {
+			// 			if ($(vala.doma[j]).attr('data-lazy') === 'lazy') {
+			// 				if (Fadetext.Flag && (Fadetext.viewHeight + p) >= parseInt(vala.index) + 3070) {
+			// 					$(vala.doma[j]).addClass('animate-position');
+			// 				} else if (!Fadetext.Flag) {
+			// 					$(vala.doma[j]).addClass('animate-position');
+			// 				}
+			// 			} else {
+			// 				$(vala.doma[j]).addClass('animate-position');
+			// 			}
+			// 			//到位置数字滚动效果
+			// 			if ($(vala.doma[j]).attr('data-type') === 'num') {
+			// 				if (Fadetext.Flag && (Fadetext.viewHeight + p) >= parseInt(vala.index) + 3070) {
+			// 					Fadetext.numRun1.resetData('1000000');
+			// 					Fadetext.numRun2.resetData('15000');
+			// 					Fadetext.numRun3.resetData('1000');
+			// 					Fadetext.numRun4.resetData('100');
+			// 				} else if (!Fadetext.Flag) {
+			// 					Fadetext.numRun1.resetData('1000000');
+			// 					Fadetext.numRun2.resetData('15000');
+			// 					Fadetext.numRun3.resetData('1000');
+			// 					Fadetext.numRun4.resetData('100');
+			// 				}
+			// 			}
+			// 		}
+			// 	}
 
-			}
+			// }
 			for (var j = 0; j < Fadetext.offsetinx.length; j++) {
 				var vala = Fadetext.offsetinx[j];
 				//图片视差滚动 1

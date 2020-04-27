@@ -11,7 +11,9 @@
 	</head>
 	<body>
 		{include file="public/head"}
-		<script type="text/javascript">$("#nav-index").addClass("cur")</script>
+		<script type="text/javascript">
+			$("#nav-index").addClass("cur")
+		</script>
 		{include file="public/slide"}
 		<div class="yk-container">
 			<div class="yk-row">
@@ -19,17 +21,11 @@
 				<section class="mod yk-notice">
 					<div class="mod-main notice-swiper">
 						<!-- Swiper -->
-						<div class="swiper-container">
-							<div class="swiper-wrapper">
-								{macdiy:notice num="10" type="current" order="asc" by="level"}
-								<div class="swiper-slide" style="height: 2rem;">
-									<a href="{:mac_url_art_detail($vo)}">
-										{$vo.art_content}
-									</a>
-								</div>
-								{/macdiy:notice}
-							</div>
-						</div>
+						{macdiy:notice num="10" type="current" order="asc" by="level"}
+						<a href="{:mac_url_art_detail($vo)}">
+							{$vo.art_content}
+						</a>
+						{/macdiy:notice}
 					</div>
 				</section>
 				<!-- 公告-------------over------- -->
