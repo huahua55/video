@@ -89,11 +89,7 @@ class DoubanTopList extends Common
             }else{
                 $heads['Referer'] = 'https://movie.douban.com/explore';
             }
-            if($port != false){
-                $mac_curl_get_data = $this->testing($v,$port);
-            }else{
-                $mac_curl_get_data = mac_curl_get($v, $heads, $cookie);
-            }
+            $mac_curl_get_data = mac_curl_get($v, $heads, $cookie);
 
             $getSearchData = json_decode($mac_curl_get_data, true);
             log::info('采集豆瓣热门-url-::' . $v);
