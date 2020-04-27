@@ -500,7 +500,7 @@ class All extends Controller
         }
         else {
             $this->assign('player_data', '<script type="text/javascript">var player_data=' . json_encode($player_info) . '</script>');
-            $this->assign('player_js', '<script type="text/javascript" src="' . MAC_PATH . 'static/js/playerconfig.js?t='.$this->_tsp.'"></script><script type="text/javascript" src="' . MAC_PATH . 'static/js/player.js?t='.$this->_tsp.'"></script>');
+            $this->assign('player_js', '<script type="text/javascript" src="' . asset(MAC_PATH . 'static/js/playerconfig.js').'"></script><script type="text/javascript" src="' . asset(MAC_PATH . 'static/js/player.js').'"></script>');
         }
         $this->label_comment();
         return $info;
