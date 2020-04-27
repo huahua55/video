@@ -2378,7 +2378,8 @@ function asset($url, $param = [])
             $param['_v'] = time();
         }
     }
-    $url = mac_url_img($url);
+
+    $url = mac_url_img(substr($url, 1));
     if($param){
         if(strpos($url, '?')){
             $url .= '&';
@@ -2391,7 +2392,7 @@ function asset($url, $param = [])
 }
 
 function is_static_resource($url){
-    static $exts = array('js', 'css');
+    static $exts = ['js', 'css', 'jpg', 'png', 'gif'];
     $ps = explode('?', $url);
     $url = $ps[0];
     $ps = explode('#', $url);
@@ -2402,7 +2403,7 @@ function is_static_resource($url){
 }
 
 function build_url_query($param, $static=false){
-    $arr = array();
+    $arr = [];
     foreach($param as $k=>$v){
         if($static && !is_array($v)){
             // 路径中不能包含%2F
@@ -2426,4 +2427,3 @@ function build_url_query($param, $static=false){
     }
     return $query;
 }
-

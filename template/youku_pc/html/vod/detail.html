@@ -280,12 +280,11 @@
 									<span class="playicon"></span><span class="playshow"><span class="p-num">{$vo.vod_score} </span></span>
 								</a>
 							</span>
-							<span class="title"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name}</a></span>
-							<span class="play"><em>年代：</em>{$vo.vod_year} </span>
-							<span class="play"><em>地区：</em>{$vo.vod_area} </span>
-							<span class="name"><em>导演：</em>{$vo.vod_director} </span>
-							<span class="name"><em>主演：</em>{$vo.vod_actor}</span>
-							<span class="tent" title="{$vo.vod_content}"><em>简介：</em>{$vo.vod_content}</span>
+							<span class="title"><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}">{$vo.vod_name|htmlspecialchars}</a></span>
+							<span class="play"><em>年代：</em>{$vo.vod_year|htmlspecialchars} </span>
+							<span class="play"><em>地区：</em>{$vo.vod_area|htmlspecialchars} </span>
+							<span class="name"><em>导演：</em>{$vo.vod_director|htmlspecialchars} </span>
+							<span class="name"><em>主演：</em>{$vo.vod_actor|htmlspecialchars}</span>
 						</p>
 					</li>
 					{/if}
