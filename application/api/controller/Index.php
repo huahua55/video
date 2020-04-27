@@ -134,7 +134,7 @@ class Index extends Base{
 
         // 后台推荐配置
         $tuijianData = [];
-        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort desc" );
+        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort asc" );
         $tuijian = $tuijian['list'] ?? [];
         foreach($tuijian as $item){
             $tuijianData[] = [
