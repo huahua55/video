@@ -58,8 +58,17 @@ class EditVod extends Command
             }else{
                 $order = 'vod_id asc';
             }
-            $where['vod_name'] = array(['like', "%[%"],['like',"%]%"],['like',"%【%"],['like',"%】%"],['like',"%（%"],['like',"%）%"],['like',"%(%"],['like',"%)%"],'or');
-
+            $where['vod_name'] = array(
+                ['like', "%[%"],
+                ['like',"%]%"],
+                ['like',"%【%"],
+                ['like',"%】%"],
+                ['like',"%（%"],
+                ['like',"%）%"],
+                ['like',"%(%"],
+                ['like',"%)%"],
+                ['like',"% %"]
+            ,'or');
 
             //进入循环 取出数据
             while ($is_true) {
