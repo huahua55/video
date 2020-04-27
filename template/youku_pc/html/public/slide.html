@@ -1,13 +1,39 @@
-<div class="lunhuan" id="carousel1">
+<!-- <div class="lunhuan" id="carousel1">
 	<div id="lunhuanback">
-		{macdiy:banner num="10" type="current" order="asc" by="sort"}
-		<a style="background-image:url({$vo.img});opacity: 1;display: block;background-color:rgb({$vo.vod_version});" href="{$vo.link}"
-		 title="{$vo.name}">
-			<div class="slider-item">
-				<p>{$vo.name}</p>
-			</div>
-		</a>
-		{/macdiy:banner}
+		<ul>
+			{macdiy:banner num="10" type="current" order="asc" by="sort"}
+			<a style="background-image:url({$vo.img});opacity: 1;display: block;background-color:rgb({$vo.vod_version});" href="{$vo.link}"
+			 title="{$vo.name}">
+				<div class="slider-item">
+					<p>{$vo.name}</p>
+				</div>
+			</a>
+			{/macdiy:banner}
+		</ul>
 	</div>
 </div>
+</div> -->
+<div class="wqd-section-three lunhuan">
+	<div class="slipe-box">
+		<div class="bannar">
+			<div class="slipe-left"><img src="{$maccms.path_tpl}youku/images/banner-arow.png" alt="" /></div>
+			<div class="slipe-right"><img src="{$maccms.path_tpl}youku/images/banner-arow.png" alt="" /></div>
+			<div class="swiper-container slider-two">
+				<div class="swiper-wrapper">
+					{macdiy:banner num="10" type="current" order="asc" by="sort"}
+					<div class="swiper-slide">
+						<a href="{$vo.link}">
+							<div class="section-three-item">
+								<p class="animate-text" data-lazy="lazy">{$vo.name}</p>
+								<!-- <h6 class="animate-text" data-lazy="lazy">{$vo.actor}</h6> -->
+							</div>
+							<img src="{$vo.img}" alt="" />
+						</a>
+					</div>
+					{/macdiy:banner}
+				</div>
+				<div class="swiper-pagination swiper-pagination-two"></div>
+			</div>
+		</div>
+	</div>
 </div>
