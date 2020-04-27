@@ -653,8 +653,8 @@ var MAC = {
 			if (jsondata != undefined) {
 				this.Json = eval(jsondata);
 				for ($i = 0; $i < this.Json.length; $i++) {
-					if (this.Json[$i].link == link) {
-						return false;
+					if (this.Json[$i].name == name) {
+						this.Json.splice($i, 1)
 					}
 				}
 				jsonstr = '{log:[{"name":"' + name + '","link":"' + link + '","pic":"' + pic + '"},';
