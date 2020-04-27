@@ -6,5 +6,5 @@ cd /data/www/video/
 
 #001 更新 豆瓣分
 ps -ef | grep doubanScoreJs | grep -v grep | awk '{print $2}' | xargs kill -9
-
+sleep 3
 php think doubanScoreJs
