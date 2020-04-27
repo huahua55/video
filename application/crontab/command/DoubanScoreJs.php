@@ -251,7 +251,7 @@ class DoubanScoreJs extends Common
                     'vod_score_all' => ['.rating_people >span', 'text'],
 //                    'vod_blurb' => ['#link-report', 'text'],
                     'vod_text' => ['#info', 'html', '', function ($content) {
-                        log::info('js-datall-content---' .$content);
+//                        log::info('js-datall-content---' .$content);
                         $ex_data = [];
                         $ex_arr = explode("<br>", trim($content));
                         $strpos_data = [
