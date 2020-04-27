@@ -89,11 +89,7 @@ class DoubanTopList extends Common
             }else{
                 $heads['Referer'] = 'https://movie.douban.com/explore';
             }
-            if($port != false){
-                $mac_curl_get_data = $this->testing($v,$port);
-            }else{
-                $mac_curl_get_data = mac_curl_get($v, $heads, $cookie);
-            }
+            $mac_curl_get_data = mac_curl_get($v, $heads, $cookie);
 
             $getSearchData = json_decode($mac_curl_get_data, true);
             log::info('采集豆瓣热门-url-::' . $v);
@@ -114,17 +110,17 @@ class DoubanTopList extends Common
                     $vodDouBanFindWhere['vod_sub'] = mac_trim_all($sub_val['title']);
                     $vodDouBanFindWhere['id'] = $sub_val['id'];
                     $vodDouBanFindData = $this->getVodDouBanFindData($vodDouBanFindWhere);
+                    $vodDouBanFindData['douban_id'] = $sub_val['id'];
+                    $vodDouBanFindData['time'] = date("Y-m-d", time());
                     if (empty($vodDouBanFindData)) {
                         $vodDouBanFindData['status'] = 0;
                         $vodDouBanFindData['name'] = $sub_val['title'];
+                        $res = Db::name('douban_recommend')->insert($vodDouBanFindData);
                         log::info('采集豆瓣热门-vod不存在过滤-::' . $sub_val['title']);
                     } else {
                         $vodDouBanFindData['status'] = 1;
+                        $res = Db::name('douban_recommend')->where(['douban_id'=>$sub_val['id']])->update($vodDouBanFindData);
                     }
-                    $vodDouBanFindData['douban_id'] = $sub_val['id'];
-                    $vodDouBanFindData['time'] = date("Y-m-d", time());
-
-                    $res = Db::name('douban_recommend')->insert($vodDouBanFindData);
                     if ($res) {
                         log::info('采集豆瓣热门-succ' . $sub_val['title']);
                     } else {

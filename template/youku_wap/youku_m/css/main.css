@@ -101,7 +101,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .focus_banner .focus_banner_point .swiper-pagination-bullet.swiper-pagination-bullet-active{background:#78b8f9}
 .focus_banner .focus_banner_item{text-align:center}
 .focus_banner .focus_banner_item .v_pic{width:100%;display:block;position:relative;overflow:hidden}
-.focus_banner .focus_banner_item .v_pic img{width:100%;height:9rem;display:block;vertical-align:top}
+.focus_banner .focus_banner_item .v_pic img{width:100%;display:block;vertical-align:top}
 .focus_banner .focus_banner_item .v_pic .s_tit{position:absolute;bottom:0;left:0;width:100%;text-align:left;background-image:-webkit-gradient(180deg,from(rgba(255,255,255,0)),to(rgba(0,0,0,.5)));background-image:-webkit-linear-gradient(180deg,rgba(255,255,255,0),rgba(0,0,0,.5));background-image:-moz-linear-gradient(180deg,rgba(255,255,255,0),rgba(0,0,0,.5));background-image:-o-linear-gradient(180deg,rgba(255,255,255,0),rgba(0,0,0,.5));background-image:linear-gradient(180deg,rgba(255,255,255,0),rgba(0,0,0,.5));line-height:2rem;height:2rem;overflow:hidden;font-size:.65rem;padding:0 .8rem;color:#fff;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 .focus_banner .special{width:100%;display:block;position:relative;overflow:hidden;background-image: url(../images/theme.png);background-size: 100% 100%;height: 8rem;}
 /*模块*/
@@ -252,7 +252,7 @@ header .search .icon .aui-iconfont{font-size:.6rem;height:1.4rem;line-height:1.4
 .userCard .userCard-cont .c-des{line-height:1.1rem;color:#999;font-size:.6rem}
 .userCard .logout-link{margin-top:.75rem;width:4rem;height:1.5rem;display:inline-block;text-align:center;line-height:.8rem;padding:.35rem 0;box-sizing:border-box;font-size:.65rem;color:#FF443F;background-color:#F5F5F5;border-radius:1rem}
 .isVip{color:#FF443F!important}
-.footer-copyright{text-align:center;color:#aaa;padding:.25rem 0;margin-bottom:.25rem}
+.footer-copyright{text-align:center;color:#aaa;line-height: 1rem;}
 .varietyScreen{background:#F8F8F8;position:relative;overflow:hidden;width:100%;height:4.4rem}
 .varietyScreen .varietyScreenBox{position:relative}
 .varietyScreen .varietyScreenBox.year:after{background-color:#FFF}

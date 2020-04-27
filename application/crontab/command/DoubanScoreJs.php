@@ -118,10 +118,11 @@ class DoubanScoreJs extends Common
                 }
 
             }
+            $where['b.count'] =['EXP',Db::raw('IS NULL')];
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-            log::info('js-采集豆瓣评分where...'.$where);
+            log::info('js-采集豆瓣评分where...'.json_encode($where,true));
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
@@ -159,8 +160,8 @@ class DoubanScoreJs extends Common
                             $r->setDelay(3); // 3 seconds
                             return $r;
                         }, false, [
-                        '--proxy' => "183.129.244.16:51134",
-//                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
+//                        '--proxy' => "183.129.244.16:51134",
+                            '--proxy' => $this->proxy_server . ":" . $this->get_port,
                             '--proxy-type' => 'http',
                             '--load-images' => 'no',
 //                    ])->getHtml();
@@ -172,16 +173,18 @@ class DoubanScoreJs extends Common
                             'abstract_2' => ['.abstract_2', 'text'],
                         ])->range('.item-root')->query()->getData();
                         log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+
                         $getSearchData = objectToArray($mac_curl_get_data);
+//                        log::info('js-data-' .json_encode($getSearchData,true));
                     } catch (Exception $e) {
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
-                    if (empty($mac_curl_get_data)) {
+                    if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
                         $this->update_url_proxy($error_count, $url);
                     }
-//                print_r($getSearchData);
+
                     log::info('js-采集豆瓣评分-url-::' . $url);
                     if (!empty($getSearchData)) {
                         foreach ($getSearchData as $da_k => $as_k) {
@@ -215,6 +218,7 @@ class DoubanScoreJs extends Common
     //采集详情页面
     public function vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err)
     {
+        log::info('js-采集豆瓣评vod_douBan_details:' . $get_search_id);
 
         $getDetailsData = [];
         $link_url = $as_k['link'];
@@ -248,6 +252,7 @@ class DoubanScoreJs extends Common
                     'vod_score_all' => ['.rating_people >span', 'text'],
 //                    'vod_blurb' => ['#link-report', 'text'],
                     'vod_text' => ['#info', 'html', '', function ($content) {
+                        log::info('js-datall-content---' .$content);
                         $ex_data = [];
                         $ex_arr = explode("<br>", trim($content));
                         $strpos_data = [
@@ -291,6 +296,8 @@ class DoubanScoreJs extends Common
                         return $ex_data;
                     }],
                 ])->range('#content')->query()->getData();
+
+                log::info('js-err-iiii---proxy-' . $this->proxy_server . ":" . $this->get_port);
                 $mac_curl_get_details_data = objectToArray($mac_curl_get_details_data);
                 if (isset($mac_curl_get_details_data[0]) && !empty($mac_curl_get_details_data[0])) {
                     $detailsData = $mac_curl_get_details_data[0];
@@ -308,8 +315,9 @@ class DoubanScoreJs extends Common
                     }
                 }
             } catch (Exception $e) {
-                log::info('js-err--过滤' . $link_url);
+                log::info('js-err--过滤iii' . $link_url);
             }
+//            log::info('js-datall-' .json_encode($getDetailsData,true));
             if (!empty($getDetailsData)) {
                 //更新详情表
                 $this->vod_details_update($get_search_id, $getDetailsData, $v);
@@ -382,12 +390,19 @@ class DoubanScoreJs extends Common
         $get_search_id = str_replace('/', '', $get_search_id);
         $deas_data = $as_k;
         $deas_data['douban_id'] = $get_search_id;
+        log::info('js-采集豆瓣评分add-.id'.$get_search_id );
+        log::info('js-采集豆瓣评分add-.url -id'.$as_k['link'] );
         if ($get_search_id > 0) {
             $deas_data['time'] = time();
             try {
-                Db::name('douban_vod_details')->insert($deas_data);
+                log::info('js-采集豆瓣评分suc' );
+                $t_data = $this->cmsDb->where(['douban_id'=>$get_search_id])->find();
+                if(empty($t_data)){
+                    $this->cmsDb->insert($deas_data);
+                }
+
             } catch (\Exception $e) {
-                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title']);
+                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
             }
         }
         return $get_search_id;

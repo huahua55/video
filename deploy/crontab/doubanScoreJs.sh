@@ -5,4 +5,6 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 cd /data/www/video/
 
 #001 更新 豆瓣分
-php think doubanScoreJs q=1
+ps -ef | grep doubanScoreJs | grep -v grep | awk '{print $2}' | xargs kill -9
+sleep 3
+php think doubanScoreJs

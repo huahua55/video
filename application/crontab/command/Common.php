@@ -217,7 +217,9 @@ class Common extends Command
         if ($a > 3) {
             $open_data = mac_curl_get($this->get_open_url());
             file_put_contents($file, date('Y-m-d H:i:s', time())  . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);
-            if (!empty($open_data) && $open_data['code'] == 100 && $open_data['left_ip'] > 1) {
+            $code =  $open_data['code'] ??'';
+            $left_ip =  $open_data['left_ip'] ??'';
+            if (!empty($open_data) && $code == 100 && $left_ip > 1) {
                 if (!empty($open_data['port'])) {
                     return $open_data['port'][0];
                 }
