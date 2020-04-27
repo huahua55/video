@@ -32,10 +32,12 @@ function type_extend($extend){
     $type = explode(',','类型,'.$extend['class']);
     $area = explode(',','地区,'.$extend['area']);
     $year = explode(',','年份,'.$extend['year']);
+    $sort = ['评分最高','最近更新'];
     return json_encode([
         ['name'=>'type',"data"=>$type],
         ['name'=>'area',"data"=>$area],
         ['name'=>'year',"data"=>$year],
+        ['name'=>'sort',"data"=>$sort],
     ],JSON_UNESCAPED_UNICODE);
 }
 

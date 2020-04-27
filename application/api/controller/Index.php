@@ -388,7 +388,10 @@ class Index extends Base{
         $type   = $this->_param['type'] ?? "";
         $area   = $this->_param['area'] ?? "";
         $year   = $this->_param['year'] ?? "";
-        $sort   = $this->_param['sort'] ?? 1;
+        $sort   = $this->_param['sort'] ?? "评分最高";
+
+        $sortArray = ["评分最高" => 1, "最近更新" => 2 ];
+        $sort = $sortArray[$sort] ?? 1;
 
         $type = $type == "类型" ? "" : $type;
         $area = $area == "地区" ? "" : $area;
