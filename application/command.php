@@ -18,5 +18,5 @@ return [
     'app\crontab\command\DoubanScoreJs',//采集数据js  目前在使用
     'app\crontab\command\DoubanTopList',//推荐定时脚本
     'app\crontab\command\VodCode',
-    'app\crontab\command\editVod',//修改视频表数据
+    'app\crontab\command\EditVod',//修改视频表数据
 ];
