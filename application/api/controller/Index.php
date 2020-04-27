@@ -547,7 +547,7 @@ class Index extends Base{
         $symbol = strpos($info['vod_actor'],',') ?  ',' : '/';
         $actor = explode($symbol,$info['vod_actor']) ?? "";
         $actor = $actor[0] != "" ? $actor[0] : "";
-        
+
         $field = "vod_id,vod_name,vod_pic,vod_score,vod_douban_score,vod_remarks,type_id,type_id_1,vod_total,vod_serial";
 
         $where = [
@@ -556,11 +556,9 @@ class Index extends Base{
             'vod_play_from' => ['like', "%3u8%"],
         ];
 
-        if($info['type_id'] == 1 || $info['type_id'] == 2   ) {
+        if($info['type_id'] <= 4 || $info['type_id'] == 33) {
             $where['type_id|type_id_1'] = ['eq',$info['type_id']];
-        }else if($info['type_id'] == 3 || $info['type_id'] == 4   ){
-            $where['type_id'] = ['eq',$info['type_id']];
-        }else if($info['type_id'] > 4){
+        }else if($info['type_id'] > 4 && $info['type_id'] < 33 ){
             $where['type_id_1'] = ['eq',$info['type_id_1']];
         }
 
