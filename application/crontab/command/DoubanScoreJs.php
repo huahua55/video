@@ -87,7 +87,6 @@ class DoubanScoreJs extends Common
             //开启代理
             $this->get_port =   $this->getPort();
             if($this->get_port  == false){
-                sleep(3);
                 $this->get_port =   $this->getPort();
                 log::info('get_port-::' );
             }
@@ -143,7 +142,7 @@ class DoubanScoreJs extends Common
                     $mac_curl_get_data = '';
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > $this->times + (60 * 3)) {
+                    if (time() > $this->times + (60 * 3) || empty($this->get_port)) {
                         $this->get_port = $this->getPort();
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
