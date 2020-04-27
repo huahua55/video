@@ -146,6 +146,7 @@ class DoubanScoreJs extends Common
                         $this->get_port = $this->getPort();
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
+                    $startTime = microtime(TRUE);
                     try {
                         libxml_use_internal_errors(true);
                         $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
@@ -174,11 +175,14 @@ class DoubanScoreJs extends Common
                         log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
 
                         $getSearchData = objectToArray($mac_curl_get_data);
+                        unset($mac_curl_get_data);
 //                        log::info('js-data-' .json_encode($getSearchData,true));
                     } catch (Exception $e) {
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
+                    log::info('js-采集豆瓣评分-搜索性能' . microtime(TRUE)-$startTime);
+                    unset($startTime);
                     if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
                         $this->update_url_proxy($error_count, $url);
@@ -193,10 +197,14 @@ class DoubanScoreJs extends Common
                             if ($g == 1) {  //不爬取详情页面数据
                                 log::info('js-采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
                             } else {
+                                $__startT = microtime(TRUE);
                                 $e_err = $this->vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err); //采集详情页面数据
+                                log::info('js-采集豆瓣评分-详情页性能' . microtime(TRUE)-$__startT);
+                                unset($__startT);
                             }
                         }
                     }
+                    unset($mac_curl_get_data);
                     Cache::set('vod_id_list_douban_id', $v['vod_id']);
                     if ($is_log == false) {
                         log::info('js-采集豆瓣评分-过滤::' . $v['vod_name']);
@@ -312,10 +320,13 @@ class DoubanScoreJs extends Common
                     } else {
                         $getDetailsData['vod_score_num'] = intval($getDetailsData['vod_score_all'] / $getDetailsData['vod_score']);
                     }
+                    unset($detailsData);
+                    unset($detailsDataText);
                 }
             } catch (Exception $e) {
                 log::info('js-err--过滤iii' . $link_url);
             }
+
 //            log::info('js-datall-' .json_encode($getDetailsData,true));
             if (!empty($getDetailsData)) {
                 //更新详情表
@@ -336,10 +347,13 @@ class DoubanScoreJs extends Common
                             $e_err = true;
                             log::info('js-采集豆瓣评分-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
                         }
+                        unset($whereId);
                     }
                 }
             }
         }
+        unset($getDetailsData);
+        unset($mac_curl_get_details_data);
         return $e_err;
     }
 
