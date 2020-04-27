@@ -528,8 +528,10 @@ class Index extends Base{
         $info = $model->field("vod_id,type_id,type_id_1,vod_actor")->where($lp)->find();
         $info = objectToArray($info);
 
-        $actor = explode(',',$info['vod_actor']) ?? "";
+        $symbol = strpos($info['vod_actor'],',') ?  ',' : '/';
+        $actor = explode($symbol,$info['vod_actor']) ?? "";
         $actor = $actor[0] != "" ? $actor[0] : "";
+        
         $field = "vod_id,vod_name,vod_pic,vod_score,vod_douban_score,vod_remarks,type_id,type_id_1,vod_total,vod_serial";
 
         $where = [

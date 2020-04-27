@@ -47,8 +47,8 @@ class DoubanScoreJs extends Common
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodDb->alias('a')->join('vod_douban_error b','a.vod_id=b.vod_id','LEFT')->where($where)->count();
-        $list = $this->vodDb->field('a.vod_id,a.vod_sub,a.vod_name,a.vod_class,a.vod_actor,a.vod_director,a.vod_douban_id,a.vod_douban_score')->alias('a')->join('vod_douban_error b','a.vod_id=b.vod_id','LEFT')->where($where)->order($order)->limit($limit_str)->select();
+        $total = $this->vodDb->alias('a')->join('vod_douban_error b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->count();
+        $list = $this->vodDb->field('a.vod_id,a.vod_sub,a.vod_name,a.vod_class,a.vod_actor,a.vod_director,a.vod_douban_id,a.vod_douban_score')->alias('a')->join('vod_douban_error b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
@@ -85,10 +85,10 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-            $this->get_port =   $this->getPort();
-            if($this->get_port  == false){
-                $this->get_port =   $this->getPort();
-                log::info('get_port-::' );
+            $this->get_port = $this->getPort();
+            if ($this->get_port == false) {
+                $this->get_port = $this->getPort();
+                log::info('get_port-::');
             }
 //        p($A);
             //开始cookie
@@ -105,23 +105,23 @@ class DoubanScoreJs extends Common
             } else {
                 if (!empty($is_vod_id)) {
                     $where['a.vod_id'] = ['gt', $is_vod_id];
-                }else{
+                } else {
                     Cache::set('vod_id_list_douban_id', 1);
                     $where['a.vod_id'] = ['gt', $is_vod_id];
                 }
             }
-            if(!empty($q)){
+            if (!empty($q)) {
                 $q_vod_id = $this->vod_errorDb->field('vod_id')->order('id desc')->find();
-                if(isset($q_vod_id) && !empty($q_vod_id_data['vod_id'])){
-                    $where['a.vod_id'] = ['gt',$q_vod_id_data['vod_id']];
+                if (isset($q_vod_id) && !empty($q_vod_id_data['vod_id'])) {
+                    $where['a.vod_id'] = ['gt', $q_vod_id_data['vod_id']];
                 }
 
             }
-            $where['b.count'] =['EXP',Db::raw('IS NULL')];
+            $where['b.count'] = ['EXP', Db::raw('IS NULL')];
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-            log::info('js-采集豆瓣评分where...'.json_encode($where,true));
+            log::info('js-采集豆瓣评分where...' . json_encode($where, true));
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
@@ -181,7 +181,7 @@ class DoubanScoreJs extends Common
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
-                    $b_time = microtime(TRUE)-$startTime;
+                    $b_time = microtime(TRUE) - $startTime;
                     log::info('js-xn-' . $b_time);
                     unset($b_time);
                     unset($startTime);
@@ -193,18 +193,20 @@ class DoubanScoreJs extends Common
                     log::info('js-采集豆瓣评分-url-::' . $url);
                     if (!empty($getSearchData)) {
                         foreach ($getSearchData as $da_k => $as_k) {
-                            log::info('js-采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
-                            log::info('js-采集豆瓣评分-title2-::' . $as_k['title']);
-                            $get_search_id = $this->vod_details_install($as_k);    //添加 详情表数据
-                            if ($g == 1) {  //不爬取详情页面数据
-                                log::info('js-采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
-                            } else {
-                                $__startT = microtime(TRUE);
-                                $e_err = $this->vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err); //采集详情页面数据
-                                $c_time= microtime(TRUE)-$__startT;
-                                log::info('js--xnd-' . $c_time);
-                                unset($c_time);
-                                unset($__startT);
+                            if ($da_k == 0 || $da_k == 1 || $da_k == 2) {
+                                log::info('js-采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
+                                log::info('js-采集豆瓣评分-title2-::' . $as_k['title']);
+                                $get_search_id = $this->vod_details_install($as_k);    //添加 详情表数据
+                                if ($g == 1) {  //不爬取详情页面数据
+                                    log::info('js-采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
+                                } else {
+                                    $__startT = microtime(TRUE);
+                                    $e_err = $this->vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id, $e_err); //采集详情页面数据
+                                    $c_time = microtime(TRUE) - $__startT;
+                                    log::info('js--xnd-' . $c_time);
+                                    unset($c_time);
+                                    unset($__startT);
+                                }
                             }
                         }
                     }
@@ -213,7 +215,7 @@ class DoubanScoreJs extends Common
                     if ($is_log == false) {
                         log::info('js-采集豆瓣评分-过滤::' . $v['vod_name']);
                     }
-                    $this->addUpError($v,$get_search_id,$e_err);
+                    $this->addUpError($v, $get_search_id, $e_err);
                 }
                 $page = $page + 1;
             }
@@ -227,7 +229,7 @@ class DoubanScoreJs extends Common
 
 
     //采集详情页面
-    public function vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id,$e_err)
+    public function vod_douBan_details($lcs, $v, $as_k, $cookie, $get_search_id, $e_err)
     {
         log::info('js-采集豆瓣评vod_douBan_details:' . $get_search_id);
 
@@ -280,11 +282,11 @@ class DoubanScoreJs extends Common
                             'vod_sub' => '又名:',
                         ];
                         foreach ($ex_arr as $ex_k => $ex_v) {
-                            if(empty($ex_v)){
+                            if (empty($ex_v)) {
                                 continue;
                             }
                             //去掉html 标记
-                            $ex_v =   strip_tags($ex_v);
+                            $ex_v = strip_tags($ex_v);
                             foreach ($strpos_data as $s_k => $s_v) {
                                 if (strpos($ex_v, $s_v) !== false) {
                                     if ($s_k == 'vod_duration') {
@@ -294,10 +296,10 @@ class DoubanScoreJs extends Common
                                         $ex_v = explode('(', $ex_v)[0] ?? $ex_v;
                                     }
                                     if ($s_k == 'vod_actor') {
-                                        $ex_v =  trim(mb_substr($ex_v, 0, 240));
+                                        $ex_v = trim(mb_substr($ex_v, 0, 240));
                                     }
                                     if ($s_k == 'vod_total') {
-                                        $ex_v =  trim(findNum($ex_v));
+                                        $ex_v = trim(findNum($ex_v));
                                     }
                                     $ex_data[$s_k] = mac_trim_all(str_replace($s_v, '', $ex_v));
                                 }
@@ -318,7 +320,7 @@ class DoubanScoreJs extends Common
                     $getDetailsData['vod_douban_id'] = $get_search_id;
                     $getDetailsData['vod_score'] = $getDetailsData['vod_douban_score'];
                     $getDetailsData['vod_reurl'] = $link_url;
-                    $getDetailsData['vod_total'] = $detailsDataText['vod_total']??'0';
+                    $getDetailsData['vod_total'] = $detailsDataText['vod_total'] ?? '0';
                     if ($getDetailsData['vod_score'] <= 0) {
                         $getDetailsData['vod_score_num'] = 0;
                     } else {
@@ -339,10 +341,10 @@ class DoubanScoreJs extends Common
                 log::info('js-采集豆瓣评分-比例::' . $rade);
                 if ($rade > 40) {
                     //名字或者别名 和导演相等
-                    $getDetailsData['vod_sub'] = $getDetailsData['vod_sub']??'';
-                    $getDetailsData['vod_director'] = $getDetailsData['vod_director']??'';
-                    $v['vod_sub'] = $v['vod_sub']??'';
-                    $v['vod_director'] = $v['vod_director']??'';
+                    $getDetailsData['vod_sub'] = $getDetailsData['vod_sub'] ?? '';
+                    $getDetailsData['vod_director'] = $getDetailsData['vod_director'] ?? '';
+                    $v['vod_sub'] = $v['vod_sub'] ?? '';
+                    $v['vod_director'] = $v['vod_director'] ?? '';
                     if ((mac_trim_all($getDetailsData['vod_name']) == mac_trim_all($v['vod_name']) || (mac_trim_all($getDetailsData['vod_sub']) == mac_trim_all($v['vod_sub'])) || (mac_trim_all($getDetailsData['vod_sub']) == mac_trim_all($v['vod_name']))) && mac_trim_all($getDetailsData['vod_director']) == mac_trim_all($v['vod_director'])) {
                         $whereId = [];
                         $whereId['vod_id'] = $v['vod_id'];
@@ -362,43 +364,45 @@ class DoubanScoreJs extends Common
     }
 
 
-    public function addUpError($v,$douban_id,$e_err){
-        log::info('js-addUpError::' );
-        $error_where =[];
+    public function addUpError($v, $douban_id, $e_err)
+    {
+        log::info('js-addUpError::');
+        $error_where = [];
         $error_where['vod_id'] = $v['vod_id'];
         $error_data = $this->vod_errorDb->where($error_where)->find();
-        if(empty($error_data)){
-            log::info('js-addUpError::su--' .$douban_id);
+        if (empty($error_data)) {
+            log::info('js-addUpError::su--' . $douban_id);
 //            if ($douban_id > 0) {
-                $deas_data['vod_id'] = $v['vod_id'];
-                $deas_data['title'] = $v['vod_name']??'';
-                $deas_data['douban_id'] = $douban_id;
-                if($e_err == false){
-                    $deas_data['count'] = 1;
-                }else{
-                    $deas_data['count'] = 0;
-                }
-                try {
-                    log::info('js-addUpError::su??' );
-                    $this->vod_errorDb->insert($deas_data);
-                } catch (\Exception $e) {
-                    log::info('js-采集豆瓣评分-err0r数据重复添加::' . $v['vod_id'].$e);
-                }
+            $deas_data['vod_id'] = $v['vod_id'];
+            $deas_data['title'] = $v['vod_name'] ?? '';
+            $deas_data['douban_id'] = $douban_id;
+            if ($e_err == false) {
+                $deas_data['count'] = 1;
+            } else {
+                $deas_data['count'] = 0;
+            }
+            try {
+                log::info('js-addUpError::su??');
+                $this->vod_errorDb->insert($deas_data);
+            } catch (\Exception $e) {
+                log::info('js-采集豆瓣评分-err0r数据重复添加::' . $v['vod_id'] . $e);
+            }
 //            }
-        }else{
-            log::info('js-addUpError::count' );
-            if($e_err == false){
+        } else {
+            log::info('js-addUpError::count');
+            if ($e_err == false) {
                 $deas_data['count'] = $error_data['count'] + 1;
-            }else{
+            } else {
                 $deas_data['count'] = 0;
             }
             $deas_data['douban_id'] = $douban_id;
-            log::info('js-addUpError::count-up' );
+            log::info('js-addUpError::count-up');
             $deas_data['douban_id'] = $douban_id;
 
             $this->vod_errorDb->where($error_where)->update($deas_data);
         }
     }
+
     //插入详情数据
     protected function vod_details_install($as_k)
     {
@@ -407,19 +411,19 @@ class DoubanScoreJs extends Common
         $get_search_id = str_replace('/', '', $get_search_id);
         $deas_data = $as_k;
         $deas_data['douban_id'] = $get_search_id;
-        log::info('js-采集豆瓣评分add-.id'.$get_search_id );
-        log::info('js-采集豆瓣评分add-.url -id'.$as_k['link'] );
+        log::info('js-采集豆瓣评分add-.id' . $get_search_id);
+        log::info('js-采集豆瓣评分add-.url -id' . $as_k['link']);
         if ($get_search_id > 0) {
             $deas_data['time'] = time();
             try {
-                log::info('js-采集豆瓣评分suc' );
-                $t_data = $this->cmsDb->where(['douban_id'=>$get_search_id])->find();
-                if(empty($t_data)){
+                log::info('js-采集豆瓣评分suc');
+                $t_data = $this->cmsDb->where(['douban_id' => $get_search_id])->find();
+                if (empty($t_data)) {
                     $this->cmsDb->insert($deas_data);
                 }
 
             } catch (\Exception $e) {
-                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'].$e);
+                log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'] . $e);
             }
         }
         return $get_search_id;
@@ -430,7 +434,7 @@ class DoubanScoreJs extends Common
     {
         $details_data = [];
         $details_data['name'] = $getDetailsData['vod_name'] ?? '';
-        $details_data['name_as'] =  trim(mb_substr($getDetailsData['vod_sub'] ?? '', 0, 200));
+        $details_data['name_as'] = trim(mb_substr($getDetailsData['vod_sub'] ?? '', 0, 200));
         $details_data['vod_director'] = $getDetailsData['vod_director'] ?? '';
         $details_data['vod_actor'] = $getDetailsData['vod_actor'] ?? '';
         $details_data['score'] = $getDetailsData['vod_douban_score'] ?? '0.0';
