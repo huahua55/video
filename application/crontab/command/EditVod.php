@@ -58,6 +58,8 @@ class EditVod extends Command
             }else{
                 $order = 'vod_id asc';
             }
+            $where['vod_name'] = array(['like', "%[%"],['like',"%]%"],['like',"%【%"],['like',"%】%"],['like',"%（%"],['like',"%）%"],['like',"%(%"],['like',"%)%"],'or');
+
 
             //进入循环 取出数据
             while ($is_true) {
@@ -141,7 +143,6 @@ class EditVod extends Command
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-
         $total = $this->vodDb->where($where)->count();
         $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
