@@ -63,10 +63,6 @@ class Index extends Base{
             $getListBlock = $this->tuijian();
         }else{
             $fatherRes =  [];
-//            if(in_array($id,[3,4])){
-//                $fatherRes =  model("Type")->listData(['type_id' => $id],"type_sort desc");
-//                $fatherRes = $fatherRes['list'] ?? [];
-//            }
 
             $where = [
                 'type_pid'   => $id
@@ -89,12 +85,17 @@ class Index extends Base{
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
                 $where = [
-                    'type_id'   => ['eq',$id],
-                    'status'    => ['eq','1'],
-                    'vod_id'    => ['neq','0'],
+                    'd.type_id'   => ['eq',$id],
+                    'd.status'    => ['eq','1'],
+                    'd.vod_id'    => ['neq','0'],
+                    'v.vod_play_from'    => ['like','%3u8%'],
                 ];
                 // 电影取三条
-                $doubanList  = model("douban_recommend")->field('vod_id')->where($where)->order('id asc')->limit(6)->select();
+                $doubanList  = model("douban_recommend")
+                    ->alias('d')
+                    ->field('d.vod_id')
+                    ->join('vod v','d.vod_id = v.vod_id','left')
+                    ->where($where)->order('d.id asc')->limit(6)->select();
                 $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
                 $doubanRecomData[] = [
                     'name'  => "最近热播",
@@ -195,12 +196,27 @@ class Index extends Base{
         $doubanData = [];
         $model = model("douban_recommend");
         $where = [
-            'status'    => ['eq','1'],
-            'vod_id'    => ['neq','0'],
+            'd.status'    => ['eq','1'],
+            'd.vod_id'    => ['neq','0'],
+            'v.vod_play_from'    => ['like','%3u8%'],
         ];
         // 电影取三条
-        $ids  = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',1]]))->order('id asc')->limit($limit)->select();
-        $ids2 = $model->field('vod_id')->where(array_merge($where,['type_id'=>['eq',2]]))->order('id asc')->limit($limit)->select();
+        $ids  = $model
+            ->alias('d')
+            ->field('d.vod_id')
+            ->join('vod v','d.vod_id = v.vod_id','left')
+            ->where(array_merge($where,['d.type_id'=>['eq',1]]))
+            ->order('d.id asc')
+            ->limit($limit)
+            ->select();
+        $ids2 = $model
+            ->alias('d')
+            ->field('d.vod_id')
+            ->join('vod v','d.vod_id = v.vod_id','left')
+            ->where(array_merge($where,['d.type_id'=>['eq',2]]))
+            ->order('d.id asc')
+            ->limit($limit)
+            ->select();
         $ids  = objectToArray($ids);
         $ids2 = objectToArray($ids2);
 
@@ -226,6 +242,7 @@ class Index extends Base{
         $where = [
             'r.status'    => ['eq','1'],
             'r.vod_id'    => ['neq','0'],
+            'v.vod_play_from'   => ['like','%3u8%'],
         ];
 
         $model = model("douban_recommend");
@@ -237,7 +254,8 @@ class Index extends Base{
     // 分类视频
     public function getVodList($id,$limit,$page){
         $lp = [
-            'type_id'   => $id,
+            'type_id'         => ['eq',$id],
+            'vod_play_from'     => ['like','%3u8%'],
         ];
         $info = model("Vod")->listData($lp, $this->sort, $page, $limit);
 
@@ -256,7 +274,7 @@ class Index extends Base{
         return $array;
     }
 
-    // 分类视频
+    // 后台配置 推荐视频
     public function vodStrData($vodIds,$limit = 6){
         $vodIds = explode(",",$vodIds);
 
@@ -312,6 +330,7 @@ class Index extends Base{
         $page = $this->_param['page'] ?? 1;
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
+            "vod_play_from" => ["like", '%3u8%']
         ];
         $res = model("Vod")->listData($where, $this->sort, $page, 18);
         $res = $res['list'] ?? [];
@@ -384,6 +403,8 @@ class Index extends Base{
         if($year != ""){
             $where['vod_year']   = ['eq',$year];
         }
+
+        $where['vod_play_from']   = ['like', '%3u8%'];
 
         $info = model("Vod")->listData($where, $this->sort, $page, 18);
         $info = $info['list'] ?? [];
@@ -514,6 +535,7 @@ class Index extends Base{
         $where = [
             'vod_id'    => ['neq',$id],
             'vod_actor' => ['like', "%".$actor."%"],
+            'vod_play_from' => ['like', "%3u8%"],
         ];
 
         if($info['type_id'] == 1 || $info['type_id'] == 2   ) {
