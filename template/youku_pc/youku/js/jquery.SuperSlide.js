@@ -90,9 +90,9 @@ window.onload = function() {
 			Fadetext.offsetinx.push(o);
 		})
 		window.scroll(0, $(document).scrollTop() + 1);
-		$(window).resize(function() {
-			window.location.reload();
-		});
+		// $(window).resize(function() {
+		// 	window.location.reload();
+		// });
 		var beforeScrollTop = document.body.scrollTop,
 			fn = fn || function() {},
 			fx = true;
