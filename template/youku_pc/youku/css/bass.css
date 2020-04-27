@@ -299,7 +299,7 @@ a:hover {
 .slipe-box .swiper-pagination {
 	text-align: center;
 	position: absolute;
-	bottom: 64px !important;
+	bottom: 30px !important;
 	left: 50% !important;
 	z-index: 10;
 	width: auto !important;
