@@ -60,6 +60,18 @@ function getScreen($id){
     );
 }
 
+function selectOption($id, $type_name){
+    $where = [
+        'type_id'   => $id
+    ];
+    $res =  model("Type")->infoData($where);
+    $res = $res['info'] ?? [];
+
+    $class = explode(',','全部类型,'.$res["type_extend"]["class"]);
+    $classKey = array_search($type_name,$class) ?? 0;
+    return [$classKey , 0, 0, 1];
+}
+
 // 电视剧 备注
 function vodRemark($data){
     $remark = $data['vod_remarks'];
