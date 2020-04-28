@@ -19,6 +19,7 @@ class EditVod extends Command
 {
     protected $vodDb;//db
     protected $ql;//querylist
+    protected $type;//day
 
     protected function configure()
     {
@@ -31,9 +32,6 @@ class EditVod extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
-
-
         // 输出到日志文件
         $output->writeln("定时计划：修改视频表");
         try {
@@ -42,7 +40,7 @@ class EditVod extends Command
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
-            $type = $param['type']??'';
+            $this->type = $param['type']??'';
             $ids = $param['id']??'';
 
             $start = 0;
@@ -55,6 +53,8 @@ class EditVod extends Command
             if(!empty($ids)){
                 $where['vod_id'] = ['gt', $ids];
             }
+
+
             if($type ==1){
                 $order = 'vod_id desc';
             }else{
@@ -168,8 +168,13 @@ class EditVod extends Command
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
+        if( $this->type == 1){ //
+            $total = $this->vodDb->where($where)->whereTime('vod_time','today')->count();
+            $list = $this->vodDb->where($where)->whereTime('vod_time','today')->order($order)->limit($limit_str)->select();
+        }else{
+            $total = $this->vodDb->where($where)->count();
+            $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
+        }
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
@@ -180,7 +185,7 @@ class EditVod extends Command
         $arry = explode('#', $parameter);
         foreach ($arry as $key => $value) {
             $zzz = explode('=', $value);
-            $parameter_array[$zzz[0]] = $zzz[1];
+            $parameter_array[$zzz[0]] = $zzz[1]??'';
 
         }
         return $parameter_array;

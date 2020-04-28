@@ -4,5 +4,5 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 # 当天
 cd /data/www/video/
 
-#更新 视频表中的名称或者连载数
-php think editVod
+#更新 遍历今天的数据 去掉type 遍历所有
+php think editVod type=1
