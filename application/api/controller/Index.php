@@ -87,13 +87,14 @@ class Index extends Base{
             foreach($res as $item){
                 $r = $item["type_id"];
                 $d = array(
-                    'name' => $item['type_name'],
-                    'data' => $this->getVodList($r,6,1),
+                    'name'  => $item['type_name'],
+                    'type'  => 1,
+                    'data'  => $this->getVodList($r,6,1),
+                    'extend'=> selectOption($id,$item['type_name']),
                 );
 
                 array_push($getListBlock,$d);
             }
-
             // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
@@ -112,7 +113,9 @@ class Index extends Base{
                 $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
                 $doubanRecomData[] = [
                     'name'  => "最近热播",
+                    'type'  => 2,
                     'data'  => $this->vodStrData($doubanIds),
+                    'extend'=> [],
                 ];
 
                 $getListBlock = array_merge($doubanRecomData,$getListBlock);
@@ -274,7 +277,7 @@ class Index extends Base{
             'type_id'         => ['eq',$id],
             'vod_play_from'     => ['like','%3u8%'],
         ];
-        $info = model("Vod")->listData($lp, $this->sort[1] . ',' . $this->sort[2], $page, $limit);
+        $info = model("Vod")->listData($lp, $this->sort[2], $page, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -298,7 +301,7 @@ class Index extends Base{
         $lp = [
             'vod_id'   => ['in',$vodIds],
         ];
-        $info = model("Vod")->listData($lp,  $this->sort[1] . ',' . $this->sort[2], 1, $limit);
+        $info = model("Vod")->listData($lp,  $this->sort[2], 1, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -349,7 +352,7 @@ class Index extends Base{
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
         ];
-        $res = model("Vod")->listData($where, $this->sort[1] . ',' . $this->sort[2], $page, 18);
+        $res = model("Vod")->listData($where, $this->sort[2], $page, 18);
         $res = $res['list'] ?? [];
 
         $data = [];
@@ -450,6 +453,7 @@ class Index extends Base{
             );
             array_push($array,$d);
         }
+
         return json_return($array);
     }
 
@@ -625,7 +629,6 @@ class Index extends Base{
         return $list;
     }
 
-
     // recommend
     public function recommendMore($id){
         // 后台推荐配置
@@ -633,5 +636,35 @@ class Index extends Base{
         $recommend = objectToArray($recommend);
 
         return $this->vodStrData($recommend['rel_ids']);
+    }
+
+    // 筛选项 返回 选中状态
+    public function selectOption(){
+        $id     = $this->_param['id'] ?? 0;
+        $type   = $this->_param['type'] ?? "";
+        $area   = $this->_param['area'] ?? "";
+        $year   = $this->_param['year'] ?? "";
+        $sort   = $this->_param['sort'] ?? "评分最高";
+        if($id == 0){
+            return [];
+        }
+        $data = [];
+
+        $model = model('Type');
+        $typeInfo = $model->where(['type_id'=>$id])->find();
+        if($typeInfo){
+            $typeExtend = json_decode($typeInfo['type_extend'],'true');
+            $typeKey = array_search($type, explode(',',$typeExtend['class']));
+            $areaKey = array_search($area, explode(',',$typeExtend['area']));
+            $yearKey = array_search($year, explode(',',$typeExtend['year']));
+            $sortKey = array_search($sort, ['综合排序','评分最高','最近更新']);
+            $typeKey = $typeKey ? $typeKey + 1 : 0;
+            $areaKey = $areaKey ? $areaKey + 1 : 0;
+            $yearKey = $yearKey ? $yearKey + 1 : 0;
+            $sortKey = $sortKey ??  0;
+
+            $data = [$typeKey,$areaKey,$yearKey,$sortKey];
+        }
+        return $data;
     }
 }
