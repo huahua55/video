@@ -317,7 +317,7 @@ function mac_echo($str)
 
 function findNum($str=''){
     $str=trim($str);
-    if(empty($str)){return '';}
+    if(empty($str)){return 0;}
     $temp=array('1','2','3','4','5','6','7','8','9','0');
     $result='';
     for($i=0;$i<strlen($str);$i++){
