@@ -92,7 +92,7 @@ class Index extends Base{
 
                 array_push($getListBlock,$d);
             }
-            p($getListBlock);
+           
             // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
