@@ -1,4 +1,4 @@
-CREATE TABLE `vod_douban_error` (
+CREATE TABLE IF NOT EXISTS `vod_douban_error` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT '' COMMENT 'title',
   `vod_id` int(11) NOT NULL DEFAULT '0' COMMENT '视频表id',
@@ -8,7 +8,7 @@ CREATE TABLE `vod_douban_error` (
   UNIQUE KEY `vod_id` (`vod_id`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频错误次数';
 
-CREATE TABLE `vod_resolving_power` (
+CREATE TABLE IF NOT EXISTS `vod_resolving_power` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vod_id` int(11) NOT NULL COMMENT '视频表id',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '视频名称',

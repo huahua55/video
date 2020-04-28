@@ -25,6 +25,7 @@ class VodCode extends Common
 {
     protected $vodDb;//vodDb
     protected $powerDb;//vodDb
+    protected $ffmpeg;//ffmpeg
 
     protected function configure()
     {
@@ -46,6 +47,13 @@ class VodCode extends Common
         $param = $this->ParSing($parameter);
         $type = $param['type'] ?? ''; //从1 开始爬取
         $id = $param['id'] ?? ''; //从1 开始爬取
+        $f = $param['f'] ?? ''; //从1 开始爬取
+        if($f == 'mac'){
+            $this->ffmpeg = '/usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg';
+        }else{
+            $this->ffmpeg = '/usr/bin/ffmpeg';
+        }
+
         //编辑
         $vod_id = $this->powerDb->field('vod_id')->order('vod_id desc')->find();
         if (!empty($type) && $type == 1) {
@@ -321,7 +329,10 @@ class VodCode extends Common
     //new ts 转换存储地址
     public function getFFmpegData($index_last_m3u8_path, $ts_new_path)
     {
-        $ffmpeg_path = '/usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i %s -c copy %s 2>&1';
+        ///usr/bin/ffmpeg
+        //usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg
+        $ffmpeg_path =   $this->ffmpeg.' -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i %s -c copy %s 2>&1';
+//        print_r($ffmpeg_path);die;
         $ffmpeg_str_shell = sprintf($ffmpeg_path, $index_last_m3u8_path, $ts_new_path);
         //调用php的exec方法去执行脚本
         exec($ffmpeg_str_shell, $output, $return_val);
@@ -334,7 +345,8 @@ class VodCode extends Common
         if (!empty($is_data)) {
             $info = implode(',', $is_data);
         } else {
-            $ffmpeg_path = '/usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg -i "%s" 2>&1';
+            $ffmpeg_path =   $this->ffmpeg.' -i "%s" 2>&1';
+//            print_r($ffmpeg_path);die;
             $command = sprintf($ffmpeg_path, $file);
             ob_start();
             passthru($command);
