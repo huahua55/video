@@ -522,24 +522,22 @@ class Index extends Base{
 
         // 查询用户 最近日志信息
         $logWhere = [
-            'user_id'   => ['eq',$userId],
-            'ulog_mid'  => ['eq',1],
-            'ulog_type' => ['in',[2,3,4,5]],
+            'u.user_id'   => ['eq',$userId],
+            'u.ulog_mid'  => ['eq',1],
+            'u.ulog_type' => ['in',[2,3,4,5]],
         ];
+
+        $field = "v.vod_id,v.vod_name,v.type_id,v.type_id_1,v.vod_pic,v.vod_score,v.vod_douban_score,v.vod_remarks,v.vod_total,v.vod_serial";
         $userLog = model("Ulog")
-            ->field("ulog_rid")
+            ->alias('u')
+            ->field($field)
+            ->join('vod v', 'u.ulog_rid = v.vod_id','left')
             ->where($logWhere)
-            ->group('ulog_rid')
-            ->order('ulog_time desc')
+            ->group('u.ulog_rid')
+            ->order('u.ulog_time desc')
             ->limit($pageSize,$limit)
             ->select();
-        $userLog = objectToArray($userLog);
-        // 获取去重ids
-        $rids = array_unique(array_column($userLog,"ulog_rid"));
-
-        $field = "vod_id,vod_name,type_id,type_id_1,vod_pic,vod_score,vod_douban_score,vod_remarks,vod_total,vod_serial";
-        $vodList = model("Vod")->field($field)->where(['vod_id'=>['in',$rids]])->order("vod_time_add desc")->select();
-        $vodList = objectToArray($vodList);
+        $vodList = objectToArray($userLog);
 
         // 获取相应 影视数据
         $array = [];
