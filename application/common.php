@@ -85,7 +85,7 @@ function selectOption($id, $type_name){
         $areaKey = array_search($type_name, $class) ?? 0;
     }
 
-    return [$classKey , $areaKey, 0, 2];
+    return [$classKey , $areaKey, 0, 0];
 }
 
 // 电视剧 备注
