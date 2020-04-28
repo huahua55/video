@@ -352,7 +352,7 @@ class Index extends Base{
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
         ];
-        $res = model("Vod")->listData($where, $this->sort[2], $page, 18);
+        $res = model("Vod")->listData($where, $this->sort[2], $page, 10);
         $res = $res['list'] ?? [];
 
         $data = [];
