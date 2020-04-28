@@ -277,7 +277,7 @@ class Index extends Base{
             'type_id'         => ['eq',$id],
             'vod_play_from'     => ['like','%3u8%'],
         ];
-        $info = model("Vod")->listData($lp, $this->sort[1] . ',' . $this->sort[2], $page, $limit);
+        $info = model("Vod")->listData($lp, $this->sort[2], $page, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -301,7 +301,7 @@ class Index extends Base{
         $lp = [
             'vod_id'   => ['in',$vodIds],
         ];
-        $info = model("Vod")->listData($lp,  $this->sort[1] . ',' . $this->sort[2], 1, $limit);
+        $info = model("Vod")->listData($lp,  $this->sort[2], 1, $limit);
 
         $info = $info['list'] ?? [];
         $array = array();
@@ -352,7 +352,7 @@ class Index extends Base{
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
         ];
-        $res = model("Vod")->listData($where, $this->sort[1] . ',' . $this->sort[2], $page, 18);
+        $res = model("Vod")->listData($where, $this->sort[2], $page, 18);
         $res = $res['list'] ?? [];
 
         $data = [];
