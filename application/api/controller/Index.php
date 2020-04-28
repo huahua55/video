@@ -395,7 +395,7 @@ class Index extends Base{
         $sort   = $this->_param['sort'] ?? "最近更新";
 
         $sortArray = ["评分最高" => 1, "最近更新" => 2 ];
-        $sort = $sortArray[$sort] ?? 1;
+        $sort = $sortArray[$sort] ?? 2;
 
         $type = $type == "全部类型" ? "" : $type;
         $area = $area == "全部地区" ? "" : $area;
