@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no," />
+		<title>留言板 - {$maccms.site_name}</title>
+		{include file="public/include"}
+		<script>
+			$(function(){
+            MAC.Gbook.Login = {$gbook.login};
+            MAC.Gbook.Verify = {$gbook.verify};
+            MAC.Gbook.Init();
+        });
+    </script>
+	</head>
+	<body>
+		{include file="public/heada"}
+		<div class="menu-box"></div>
+		<div class="youku-wrap ff-forum">
+			<div class="youku-header">
+				<h2>
+					<span>网站留言</span><!-- <small>共<span class="ff-text">4</span>篇</small> -->
+				</h2>
+			</div>
+			<!--发表评论后刷新网页 -->
+			<div class="ff-forum-reload">
+				<form class="gbook_form form-forum ff-forum-post">
+					<div class="form-group">
+						<textarea name="gbook_content" class="form-control" rows="5" placeholder="期待您的宝贵意见！"></textarea>
+					</div>
+					<div class="form-group text-right">
+						<div class="remaining-w fl">还可输入<span class="gbook_remaining remaining ">200</span></div>
+						<label> {if condition="$gbook.verify eq 1"}
+							验证码：<input type="text" name="verify" class="btn-defauplol input-sm ff-vcode ff-vcode-input mac_verify">
+							{/if}
+						</label>
+						<label>
+							<input type="button" class="gbook_submit btn-defaupl" value="提交留言">
+						</label>
+					</div>
+					<div class="form-group ff-alert clearfix">
+					</div>
+				</form>
+				<div class="comment-tab">
+					<ul class="comment-tab-left">
+						<li class="current comment-show">全部评论</li>
+					</ul>
+				</div>
+			</div>
+			{maccms:gbook num="10" paging="no" order="desc" by="time"}
+			<div class="ff-forum-item">
+				<div class="comment-item">
+					<div class="comment-user-avatar">
+						<a href="javascript:;"><img src="/static/images/touxiang.png"></a>
+					</div>
+					<div class="media-body comment-section">
+						<div class="comment-user-info">
+							<a href="javascript:;" class="redname">{$vo.gbook_name}</a>
+							<a href="javascript:;" title="{$vo.gbook_name}">
+								<span class="vip-level-icon level-vip1"></span>
+							</a>
+
+							<a href="javascript:;" title="最新用户等级：Lv1" class="user-grade-icon user-grade-lv1"></a>
+							<span class="comment-timestamp">{$vo.gbook_time|date='Y-m-d H:i:s',###}</span>
+						</div>
+						<p class="comment-text"> {$vo.gbook_content}</p>
+						{if condition="$vo.gbook_reply_time gt 0"}
+						<div class="reply_answer" style="border: 1px solid #2692ff; border-radius: 6px;">
+							<p class="msg_title"><strong style="color: #2692ff">站长回复：</strong>
+								<span class="time">{$vo.gbook_reply_time|date='Y-m-d H:i:s',###}</span></p>
+							<div class="msg_cont">{$vo.gbook_reply}
+							</div>
+						</div>
+						{/if}
+						<p class="comment-handle">
+							<a class="ff-updown-set comment-handle-btn comment-handle-up" href="javascript:;" data-id="1" data-module="forum"
+							 data-type="up" data-toggle="tooltip" data-placement="top" title="支持"><span class="ff-updown-val">0</span></a>
+							<a class="ff-updown-set comment-handle-btn comment-handle-down" href="javascript:;" data-id="1" data-module="forum"
+							 data-type="down" data-toggle="tooltip" data-placement="top" title="反对"><span class="ff-updown-val">0</span></a>
+						</p>
+					</div>
+				</div>
+				{/maccms:gbook}
+			</div>
+			{include file="public/paging"}
+		</div>
+		{include file="public/foot"}
+	</body>
+</html>

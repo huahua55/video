@@ -1,0 +1,27 @@
+<link href="{$maccms.path_tpl}youku_m/css/aui.css?3.9.180725" rel="stylesheet"/>
+<link href="{$maccms.path_tpl}youku_m/css/main.css?3.9.180725" rel="stylesheet"/>
+<script>var maccms={"path":"__ROOT__","mid":"{$maccms['mid']}","url":"{$maccms['site_url']}","wapurl":"{$maccms['site_wapurl']}","mob_status":"{$maccms['mob_status']}"};</script>
+
+<script type="text/javascript" src="{$maccms.path_tpl}jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="{$maccms.path_tpl}youku_m/js/common.js?3.9.180725" ></script>
+<script type="text/javascript" src="{$maccms.path_tpl}youku_m/js/main.js?3.9.180725"></script>
+<script type="text/javascript" src="{$maccms.path_tpl}youku_m/js/aui-popup.js?3.9.180725"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/flickity/2.0.9/flickity.pkgd.min.js"></script> 
+ 
+<script type="text/javascript" src="{$maccms.path_tpl}bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	(function (designW) {
+		var docEl = document.documentElement,
+			resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+			recalc = function () {
+				var clientWidth = docEl.clientWidth;
+				if (!clientWidth) return;
+				docEl.style.fontSize = 40 * (clientWidth / designW) + 'px';
+			};
+		if (!document.addEventListener) return;
+	        recalc();
+		window.addEventListener(resizeEvt, recalc, false);
+		document.addEventListener('DOMContentLoaded', recalc, false);
+	})(750);
+</script>
+ 

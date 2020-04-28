@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>我的点播 - {$maccms.site_name}</title>
+	{include file="user/include" /}
+</head>
+
+
+<body class="user-center">
+<!--头部 -->
+ <div id="topTips"></div>  
+<header class="header">
+	<div class="aui-bar aui-bar-nav">
+		<a href="/" class="logo aui-pull-left"></a>
+		<div class="search">
+			<div class="text" onclick="openSearch()">请输入影片名称</div>
+			<div class="icon"><i class="aui-iconfont aui-icon-search"></i></div>
+		</div>
+	    <div id="member_info">
+					<a class="aui-pull-right aui-btn ff-user" href="/user/login.html" data-href="/user/index.html" data-toggle="tooltip" data-placement="bottom">
+		 <span class="aui-iconfont aui-icon-my" style="background-image: url({$maccms.path_tpl}youku_m/images/usre1.png);"></span>
+	</a>
+</div>
+</div>
+</header>
+
+<section class="headerTopNav">
+	<div class="navWrap">
+		<div class="shadow-le"></div>
+		<div class="shadow-ri"></div>
+		<div id="headerTopNav" class="warp">
+			<ul class="swiper-wrapper">
+	  <li class="swiper-slide"><a href="/">首页</a></li>
+      <li class="swiper-slide"><a href="{:url('user/index')}">会员中心</a></li>
+	  <li class="swiper-slide"><a href="{:url('user/info')}">账号设置</a></li>
+	  <li class="swiper-slide"><a href="{:url('user/buy')}">充值中心</a></li>
+      <li class="swiper-slide active"><a href="{:url('user/plays')}">观看记录</a></li>
+      <li class="swiper-slide"><a href="{:url('user/orders')}">订单管理</a></li> 
+			</ul>
+		</div>
+	</div>
+</section>
+<!--搜索框-->
+<section class="searchPop">
+	<div class="searchCon">
+		<div class="sSearchInput">
+		    <form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}" onSubmit="return qrsearch();">
+			 <input type="text" id="wd" name="wd" class="searchInput ff-wd" value="请输入影片名或演员名称" onfocus="if(this.value=='请输入影片名或演员名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入影片名或演员名称';};" />
+                <input type="submit" id="searchbutton"  style="display: none;" value="搜索" />
+				 
+			</form>
+		</div>
+		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
+	</div>
+	<div class="aui-search"></div>
+
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">热门搜索</span>
+		</div>
+		
+	</div>
+	<div class="mod-main clearfix">
+				<div class="mod-row">
+			<ul class="search-list clearfix">
+	  {maccms:vod order="desc" by="level" num="20" type="all" level="all" }
+                  {if condition="$key lt 4"}
+	<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+               {if condition="$key eq 1"}
+              {/if}
+				  {else}
+		 
+	<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+                   {/if}
+				  
+				{/maccms:vod} 							</ul>
+		</div>
+			</div>
+</section>  
+</section>
+<script type="text/javascript">
+	$("#headerTopNav li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto',initialSlide:index});
+       	}else{
+       		var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto'});
+       	}
+	});
+
+</script>
+<!--个人中心-->
+<section class="mod aui-margin-t-0">
+    <div class="aui-list aui-media-list">
+        <a class="aui-list-item aui-list-item-middle" href="javascript:;">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" class="aui-img-round img-circle face">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-14"></div>
+                    </div>
+                    <div class="aui-list-item-text"><span class="cmt-vip-span">{$obj.user_name}<img src="{$maccms.path_tpl}youku_m/images/vip1.png" class="cmt-vip-icon"></span></div>
+					<div class="aui-list-item-text">我的积分：{$obj.user_points}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+<!--用户信息-->
+
+<section class="mod aui-margin-t-0">
+	<div class="aui-content">
+	    <div class="aui-list aui-list-in">
+	        <div class="aui-list-item">
+	            <div class="aui-list-item-inner">
+	                <div class="aui-list-item-title">观看记录</div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</section>
+<section class="mod">
+		<div class="mod-main clearfix">
+			<div class="m-a-list mod-vod-list">
+							
+			{volist name="list" id="vo"}
+			
+			<article class="news-card card-type-news">
+					<a href="/video/20.html" title="{$vo.data.name}">
+						<div class="news-pic">
+							<img class="ff-img" data-original="{$vo.data.pic}" src="{$vo.data.pic}">
+							
+						<i class="mask"></i>
+						<div class="icon-br"><span class="label">{$vo.remarks} 1</span></div>
+						</div>
+
+						<div class="news-info">
+							<h3 class="title">{$vo.data.name}</h3>
+							<div class="detail">
+								<span>{$vo.data.actor}</span>
+
+							</div>
+							<div class="detail">
+								<span> </span>
+								<span>{$vo.ulog_rid}播放</span>
+								<span>{$vo.data.type.type_name}</span>
+							</div>
+							<div class="detail">
+								<span> </span>
+							</div>
+						</div>
+					</a>
+				</article>	
+				
+		
+		{/volist}
+			
+			
+			</div>
+		</div>
+	</section>	
+
+<!--用户信息-->
+<section class="mod aui-margin-t-0">
+	<div class="aui-content">
+	    <div class="aui-list aui-list-in">
+	         <a class="aui-list-item" href="{:url('user/logout')}">
+	            <div class="aui-list-item-inner">
+	                <div class="aui-list-item-title aui-list-item-exit">退出登录</div>
+	            </div>
+	        </a>
+	    </div>
+	</div>
+</section>
+
+ 
+
+
+<!--loading start-->
+<div class="loading_box"></div>
+<!--loading end-->
+
+<script>
+
+	$(".go-back").click(function () {
+		var ref = document.referrer;
+		location.href=ref;
+	});
+
+	$('.btn-del').click(function(){
+		var that=$(this);
+		if(confirm('确定要删除吗')) {
+			$.ajax({
+				url: "{:url('user/ulog_del')}",
+				type: "post",
+				dataType: "json",
+				data: {ids: that.attr('data-id'), 'type': 2},
+				beforeSend: function () {
+				},
+				success: function (r) {
+					alert(r.msg);
+					if (r.code == 1) {
+						that.parent().parent().remove();
+					}
+				},
+				complete: function () {
+
+				}
+			});
+		}
+	});
+
+</script>
+</body>
+</html>

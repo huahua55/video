@@ -1,0 +1,144 @@
+<!DOCTYPE html
+          PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>{$obj.type_title}</title>
+		<meta name="keywords" content="{$obj.type_key}" />
+		<meta name="description" content="{$obj.type_des}" />
+		{include file="public/include"}
+	</head>
+	<body>
+		{include file="public/head"}
+		{include file="public/slide"}
+		<!-- 搜索条件 -->
+		<div class="column yk-container">
+			<div class="le_screen">
+				<div class="nav_box nav_box1">
+					<p class="nav_box-title">分类：</p>
+					<ul>
+						{maccms:type ids="child" parent="current" by="sort" order="asc"}
+						<li>
+							<a href="{:mac_url_type($vo,[],'show')}">{$vo.type_name}</a>
+						</li>
+						{/maccms:type}
+					</ul>
+				</div>
+				<div class="line"></div>
+				<div class="nav_box nav_box1">
+					<p class="nav_box-title">地区：</p>
+					<ul>
+						{maccms:foreach name=":explode(',',$obj.type_extend.area)" id="vo2" key="key2"}
+						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'area'=>$vo2],'show')}">{$vo2}</a>
+						</li>
+						{/maccms:foreach}
+					</ul>
+				</div>
+				<div class="line"></div>
+				<div class="nav_box nav_box2">
+					<p class="nav_box-title">年代：</p>
+					<ul>
+						{maccms:foreach name=":explode(',',$obj.type_extend.year)" id="vo2" key="key2"}
+						<li><a href="{:mac_url_type($obj,['id'=>$param['id'], 'year'=>$vo2],'show')}">{$vo2}</a>
+						</li>
+						{/maccms:foreach}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="yk-container">
+			<div class="yk-row">
+				{macdiy:vodrecommend num="10" type="current" order="asc" by="sort"}
+				<div class="yk-pannel clearfix">
+					<div class="yk-pannel-box">
+						<div class="yk-pannel_hd">
+							<div class="yk-pannel_head clearfix">
+								<h3 class="title"><a href="{:mac_url_type($vo)}">{$vo.name} </a></h3>
+							</div>
+						</div>
+						<div class="yk-pannel_bd statetab clearfix">
+							<ul class="index-list-1 tabcon clearfix active">
+								{volist name="$vo.rel_vod" id="vo2"}
+								<li class="yk-pack">
+									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}"></a><img class="quic ff-img"
+										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
+										 class="playshow">{$vo2.vod_remarks}</span></div>
+									<ul class="info-list">
+										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span title="{$vo2.vod_actor}">{$vo2.vod_actor} </span>
+									</ul>
+								</li>
+								{/volist}
+							</ul>
+						</div>
+					</div>
+				</div>
+				{/macdiy:vodrecommend}
+
+				{if $obj.childids}
+				{maccms:type ids="current" order="asc" by="sort"}
+				<div class="yk-pannel clearfix">
+					<div class="yk-pannel-box">
+						<div class="yk-pannel_hd">
+							<div class="yk-pannel_head clearfix">
+								<a class="more text-muted pull-right" href="{:mac_url_type($vo,[],'show')}">更多{$vo.type_name}</a>
+								<h3 class="title">{$vo.type_name}</h3>
+							</div>
+						</div>
+						<div class="yk-pannel_bd clearfix">
+							<ul class="index-list-1 active clearfix">
+								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc, desc" by="level, time"}
+								<li class="yk-pack">
+									<div class="p-thumb">
+										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
+										<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
+										<span class="playshow">{$vo.vod_remarks}</span>
+									</div>
+									<ul class="info-list">
+										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
+										<span title="{$vo.vod_actor}">{$vo.vod_actor}</span>
+									</ul>
+								</li>
+								{/maccms:vod}
+							</ul>
+						</div>
+					</div>
+				</div>
+				{/maccms:type}
+				{else}
+				<div class="yk-pannel clearfix">
+					<div class="yk-pannel-box">
+						<div class="yk-pannel_hd">
+							<div class="yk-pannel_head clearfix">
+								<a class="more text-muted pull-right" href="{:mac_url_type($obj,[],'show')}">更多{$obj.type_name}</a>
+								<h3 class="title">{$obj.type_name}</h3>
+							</div>
+						</div>
+						<div class="yk-pannel_bd clearfix">
+							<ul class="index-list-1 active clearfix">
+								{maccms:vod num="24" type="current" order="desc" by="time"}
+								<li class="yk-pack">
+									<div class="p-thumb">
+										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
+										<img class="quic ff-img" data-original="{:mac_url_img($vo.vod_pic)}" src="{:mac_url_img($vo.vod_pic)}" alt="{$vo.vod_name}">
+										<span class="playshow">{$vo.vod_remarks}</span>
+									</div>
+									<ul class="info-list">
+										<li class="title"><a href="{:mac_url_vod_detail($vo)}">{$vo.vod_name}</a></li>
+										<span title="{$vo.vod_actor}">{empty name="$vo.vod_actor"}&nbsp;{else/}{$vo.vod_actor}{/empty}</span>
+									</ul>
+								</li>
+								{/maccms:vod}
+							</ul>
+						</div>
+					</div>
+				</div>
+				{/if}
+			</div>
+		</div>
+		<!-- 条件搜索 -->
+		{include file="public/foot"}
+	</body>
+
+</html>

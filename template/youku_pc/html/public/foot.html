@@ -1,0 +1,24 @@
+<script type="text/javascript" src="{$maccms.path_tpl}youku/js/jquery.cookie.js"></script>
+<div class="v5_footer">
+	<div class="v5_footer_inner">
+		<div class="copyright">
+			<p>本站所有资源均系互联网收集,仅提供页面服务,不提供影片资源存储,录制,上传,所有言论及信息不代表本站立场！</p>
+			<p>产生不良后果和法律责任与本站无关,如果侵犯了您的版权,请来信告知 {$maccms.site_email} 将及时更正和删除！</p>
+			<p>Copyright © {:date('Y')} {$maccms.site_name} All Rights Reserved {$maccms.site_icp} {$maccms.site_tj}</p>
+		</div>
+	</div>
+	<div class="side-bar">
+		<div id="goTop"><i></i></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$("img").each(function() {
+		var wid = $(this).innerWidth();
+		var hei = $(this).innerHeight();
+		if (wid > hei) {
+			$(this).addClass("bj2")
+		} else {
+			$(this).addClass("bj1")
+		}
+	});
+</script>

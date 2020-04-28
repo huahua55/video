@@ -1,0 +1,174 @@
+<!--头部 -->
+<div id="topTips"></div>
+<header class="header">
+	<div class="aui-bar aui-bar-nav">
+		<a href="/" class="logo">
+			<img src="{$maccms.site_logo|mac_url_img}">
+		</a>
+		<div class="search">
+			<div class="text mac_wd " onclick="openSearch()">{empty name="$param.wd"}请在此处输入影片名或演员名称{else/}{$param.wd}{/empty}</div>
+			<div class="icon mac_search"><i class="aui-iconfont aui-icon-search"></i></div>
+		</div>
+		<div id="member_info">
+			<a class="aui-pull-right aui-btn ff-user history-btn">
+				<span class="aui-iconfont aui-icon-my" style="background-image: url({$maccms.path_tpl}youku_m/images/icon-history.png);"></span>
+			</a>
+		</div>
+	</div>
+</header>
+<section class="headerTopNav">
+	<div class="navWrap">
+		<div class="shadow-le"></div>
+		<div class="shadow-ri"></div>
+		<div id="headerTopNav" class="warp">
+			<ul class="swiper-wrapper">
+				<li class="swiper-slide"><a class="item" href="/" title="首页">首页</a></li>
+				{maccms:type ids="parent" mid="1" order="asc" by="sort"}
+				<li class="swiper-slide {if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"}
+				 active {/if}"> <a class="item" href="{:mac_url_type($vo)}" title="{$vo.type_name}">{$vo.type_name}</a></li>
+				{/maccms:type}
+				<li class="swiper-slide {if condition=" ($maccms.aid==4)"} active {/if}"> <a class="item" href="/gbook.html" title="求片/留言">求片/留言</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+<!--搜索框-->
+<section class="searchPop">
+	<div class="searchCon">
+		<div class="sSearchInput">
+			<form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}">
+				<input type="text" name="wd" id="wd" class="searchInput mac_wd" autocomplete="off" placeholder="请在此处输入影片名或演员名称"
+				 value="{$param.wd}" />
+				<input type="submit" id="searchbutton" class="mac_search" value=" " />
+			</form>
+		</div>
+		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
+	</div>
+	<div class="aui-search"></div>
+	<section class="mod aui-margin-t-0" id="searchWrap">
+		<div class="mod-head clearfix" style="padding: 0 .5rem;">
+			<div class="mod-head-title">
+				<span class="mod-head-name">历史记录</span>
+			</div>
+			<div class="clearSearchRecords">清空</div>
+		</div>
+		<div class="mod-main clearfix" style="padding: 0 .5rem;">
+			<div class="mod-row">
+				<ul class="search-list clearfix">
+					<li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}">变形<em class="up"></em></a></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<section class="mod aui-margin-t-0">
+		<div class="mod-head clearfix" style="padding: 0 .5rem;">
+			<div class="mod-head-title">
+				<span class="mod-head-name">热门搜索</span>
+			</div>
+		</div>
+		<div class="mod-main clearfix" style="padding: 0 .5rem;">
+			<div class="mod-row">
+				<ul class="search-list clearfix">
+					{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
+					{php}$i=$key+1;{/php}
+					{if condition="$i lt 4"}
+					<li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}"><span class="colred{$i}">{$i}</span>{$vo}<em
+							 class="up"></em></a></li>
+					{if condition="$i eq 1"}
+					{/if}
+					{else}
+					<li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}"><span>{$i}</span>{$vo}<em class="up"></em></a></li>
+					{/if}
+					{/maccms:foreach}
+				</ul>
+			</div>
+		</div>
+	</section>
+	<script type="text/javascript">
+		// /index.php/vod/search/wd/mac_wd.html
+		var SearchRecords = window.localStorage.getItem('searchRecords'),
+			SearchRecordsArray = [],
+			searchHtmls = "";
+		// 渲染搜索记录
+		if (SearchRecords != null) {
+			SearchRecordsArray = SearchRecords.split("_")
+			for (var i = 0; i < SearchRecordsArray.length; i++) {
+				searchHtmls += '<li><a href="/index.php/vod/search/wd/' + SearchRecordsArray[i] +
+					'.html">' + SearchRecordsArray[i] + '<em class="up"></em></a></li>'
+				// <li class="aui-ellipsis-1"><a href="{:mac_url('vod/search',['wd'=>$vo])}">变形</a><em class="up"></em></li>
+			}
+			$("#searchWrap ul").html(searchHtmls)
+		} else {
+			$("#searchWrap").hide()
+		}
+		// -----存搜索记录-----
+		$("#search").submit(function(event) {
+			console.log($("#wd").val())
+			var vals = $("#wd").val(),
+				SearchRecordsArray = [],
+				booleanTag = true;
+			if (vals != "") {
+				if (SearchRecords != null) {
+					SearchRecordsArray = SearchRecords.split("_")
+					// 替换
+					for (i = 0; i < SearchRecordsArray.length; i++) {
+						if (SearchRecordsArray[i] == vals) {
+							SearchRecordsArray.splice(i, 1)
+							SearchRecordsArray.unshift(vals)
+							booleanTag = false
+						}
+					}
+					if (booleanTag) {
+						SearchRecordsArray.unshift(vals)
+					}
+				} else {
+					// 存
+					SearchRecordsArray.unshift(vals)
+				}
+				SearchRecordsArray = SearchRecordsArray.join("_")
+				window.localStorage.setItem('searchRecords', SearchRecordsArray);
+			}
+			// window.localStorage.setItem("searchRecords")
+			// return false
+		});
+		// 清空搜索记录
+		$(".clearSearchRecords").on("click", function() {
+			window.localStorage.removeItem('searchRecords');
+			$("#searchWrap").hide()
+		})
+	</script>
+</section>
+<!-- 历史记录 -->
+<section class="historyWarp">
+	<div class="history-main">
+		<div class="history-head history-item">
+			<div>观看记录</div>
+			<a href="javascript:;" class="claerWap">清空</a>
+		</div>
+	</div>
+	<div class="history-items">
+		<!-- <a href="" class="history-item">
+			<span>飒飒飒飒飒飒飒飒</span>
+			<span>啊啊啊</span>
+		</a>	 -->
+	</div>
+</section>
+<script type="text/javascript">
+	$("#headerTopNav li").each(function(index) {
+		if ($(this).hasClass("active")) {
+			var videoSelectWrap = new Swiper('#headerTopNav', {
+				freeMode: true,
+				slidesPerView: 'auto',
+				initialSlide: index
+			});
+		} else {
+			var videoSelectWrap = new Swiper('#headerTopNav', {
+				freeMode: true,
+				slidesPerView: 'auto'
+			});
+		}
+	});
+	$(".history-btn").on("click", function() {
+		$(".historyWarp").toggleClass("on")
+	})
+</script>

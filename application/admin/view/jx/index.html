@@ -1,0 +1,104 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container p10">
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频播放地址：</label>
+            <div class="layui-input-inline w500">
+                <input type="text" class="layui-input" placeholder="https://v.youku.com/v_show/id_XNDUyMDA3ODE0NA==.html" name="play_url">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">解析地址：</label>
+            <div class="layui-input-inline w500">
+                <select name="method">
+                    {volist name="jx_list" id="vo"}
+                    <option value="{$vo}">{$key}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" id="submit-btn" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">解 析</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+    <blockquote id="result" class="layui-elem-quote layui-quote-nm" style="margin-top: 20px;">
+
+    </blockquote>
+
+    <div class="layui-btn-container">
+        <a class="layui-btn" href="https://v.qq.com/" target="_blank">腾讯</a>
+        <a class="layui-btn" href="https://www.youku.com/" target="_blank">优酷</a>
+        <a class="layui-btn" href="https://www.iqiyi.com/" target="_blank">爱奇艺</a>
+        <a class="layui-btn" href="https://www.mgtv.com/" target="_blank">芒果</a>
+    </div>
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+
+    layui.use(['form','upload', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            play_url: function (value) {
+                if (value == "") {
+                    return "请输入链接";
+                }
+            }
+        });
+        var is_load=0;
+        form.on('submit(formSubmit)', function(data){
+            var that=$(data.elem);
+            that.text('解析中...');
+            if(is_load==1){
+                return false;
+            }
+            is_load=1;
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                data: data.field,
+                timeout: 30000,
+                url: "{:url('jx/index')}",
+                error: function(){
+                    alert('请求解析服务器失败');
+                },
+                complete:function(){
+                    is_load=0;
+                    that.text('解 析');
+                },
+                success:function(r){
+                    if(r.code != 1){
+                        alert(r.msg);
+                    }
+                    else{
+                        var html = '';
+                        for(var i in r.data) {
+                            html += r.data[i]['flag']+"<br/>";
+                            for(var j in r.data[i]['video']) {
+                                html += r.data[i]['video'][j]+"<br/>";
+                            }
+                            html += '<br\>';
+                        }
+                        $('#result').html(html);
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+</script>
+
+</body>
+</html>

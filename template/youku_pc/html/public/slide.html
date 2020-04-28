@@ -1,0 +1,20 @@
+<div class="wqd-section-three lunhuan">
+	<div class="slipe-box">
+		<div class="bannar">
+			<div class="slipe-left"><img src="{$maccms.path_tpl}youku/images/banner-arow.png" alt="" /></div>
+			<div class="slipe-right"><img src="{$maccms.path_tpl}youku/images/banner-arow.png" alt="" /></div>
+			<div class="swiper-container slider-two">
+				<div class="swiper-wrapper">
+					{macdiy:banner num="10" type="current" order="asc" by="sort"}
+					<div class="swiper-slide">
+						<a href="{$vo.link}">
+							<img src="{$vo.img}" alt="" />
+						</a>
+					</div>
+					{/macdiy:banner}
+				</div>
+				<div class="swiper-pagination swiper-pagination-two"></div>
+			</div>
+		</div>
+	</div>
+</div>

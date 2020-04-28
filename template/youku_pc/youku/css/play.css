@@ -1,0 +1,202 @@
+.summary-expenb .play-left-list {
+  display: none;
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+  -o-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear;
+}
+.summary-expenb .play-actor .active {
+  display: block;
+  opacity: 1;
+}
+.summary-expenb .module-tit {
+  border-bottom: 1px solid #e6e6e6;
+}
+#myTab1 .active:after {
+  position: absolute;
+  top: 63px;
+  bottom: -10px;
+  left: 50%;
+  margin-left: -6px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid #2692ff;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: '';
+}
+#play-actor {
+  margin-top: 20px;
+}
+#myTab1 .active {
+  position: relative;
+  border-bottom: 3px solid #2692ff;
+  opacity: 1;
+}
+#myTab1 li {
+  float: left;
+  margin-right: 10px;
+  width: 124px;
+  height: 60px;
+  opacity: 0.6;
+}
+#myTab1 {
+  float: left;
+  margin: 0 0 20px;
+  width: 100%;
+}
+
+#myTab1 .item {
+  width: 100%;
+  height: 50px;
+}
+#myTab1 .item img {
+  float: left;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+#myTab1 .item .name {
+  float: left;
+  overflow: hidden;
+  margin-left: 6px;
+  width: 68px;
+  height: 30px;
+  color: #222;
+  font-size: 14px;
+  line-height: 40px;
+  margin-top: -5px;
+}
+#myTab1 .item .zhiye {
+  color: #898989;
+  font-size: 14px;
+  margin-left: 6px;
+}
+.play-actor .mbtn {
+  position: absolute;
+  top: 110px;
+  z-index: 9;
+  width: 32px;
+  height: 64px;
+  opacity: 0.5;
+}
+.play-actor .btnprev {
+  left: 0;
+  display: none;
+}
+.play-actor .btnnext {
+  right: 0;
+}
+.play-actor .btnnext:hover,
+.play-actor .btnprev:hover {
+  opacity: 1;
+}
+.chevron-left {
+  display: block;
+  overflow: hidden;
+  width: 32px;
+  height: 67px;
+  background: url(../images/playfont.png) 0 0 no-repeat;
+  background-position: -35px 0;
+  text-indent: -999px;
+}
+.chevron-right {
+  display: block;
+  overflow: hidden;
+  width: 32px;
+  height: 67px;
+  background: url(../images/playfont.png) 0 0 no-repeat;
+  background-position: 1px 0;
+  text-indent: -999px;
+}
+#myCarousel {
+  position: relative;
+  width: 100%;
+}
+
+.myTab-actor {
+  margin-bottom: 20px;
+  padding: 0;
+  height: 60px;
+  line-height: 26px;
+  border-bottom: 4px solid #f0f0f0;
+}
+
+.drama-list {
+  padding-left: 15px;
+  height: 30px;
+  border-radius: 15px;
+  background: #18181e;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.drama-lists {
+  height: 100%;
+}
+.c-player-episode .drama-list a {
+  height: 30px;
+  line-height: 30px;
+  float: left;
+  padding: 0 9px;
+  white-space: nowrap;
+  color: #d0d0d6;
+  font-size: 14px;
+  width: 30px;
+}
+.drama-list a.current-tab,
+.drama-list a:hover {
+  color: #2692ff;
+}
+
+.drama-list .tab-more:hover:after {
+  background-position: -258px -12px;
+}
+.drama-lists .tab-more:after {
+  background-position: -258px 0px;
+}
+.drama-lists .tab-more:hover:after {
+  background-position: -258px 0px;
+}
+.c-player-episode .drama-list a {
+  width: 18%;
+}
+
+.drama-yes {
+  position: absolute;
+  right: 0;
+  width: 80px;
+  height: 30px;
+  line-height: 32px;
+  padding: 0 7px;
+  margin-top: -30px;
+  font-size: 14px;
+  cursor: pointer;
+  top: 34px;
+  color: #d0d0d6;
+  margin-right: 15px;
+}
+.drama-yes i {
+  background: url(../images/icon.png) no-repeat;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 0;
+  background-position: -238px 7px;
+  top: 5px;
+  margin-right: 10px;
+}
+
+.drama-yes.drama-yess i {
+  background-position: -238px -12px;
+  top: 15px;
+}
+.drama-yes.drama-yess:hover i {
+  background-position: -258px -12px;
+}
+.drama-yes:hover i {
+  background-position: -258px 7px;
+}
+
+.drama-yes:hover {
+  color: #2692ff;
+}

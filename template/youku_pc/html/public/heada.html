@@ -1,0 +1,137 @@
+<!-- 页头 -->
+<div class="top-main channel-top-main" id="main-bg">
+	<div class="newhead">
+		<div class="newhead-main">
+			<div class="head-left" style="font-size: 0;">
+				<!-- <div class="hd-logo"><a title="{$maccms.site_name}" href="{$maccms.path}" target="_self" rel="nofollow"></a></div> -->
+				<div class="hd-logo">
+					<a href="/">
+						<img src="{$maccms.site_logo|mac_url_img}">
+					</a>
+				</div>
+				<div class="newhead-small-nav">
+					<li><a href="/" target="_self">首页</a></li>
+					{maccms:type ids="parent" mid="1" order="asc" by="sort"}
+					<li class="{if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"}
+					 cur {/if}"> <a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
+					{/maccms:type}
+					<li class="{if condition=" ($maccms.aid==4)"} cur {/if}"> <a href="{:mac_url('gbook/index')}"
+					 target="_self" >求片/留言</a></li>
+				</div>
+			</div>
+			<div id="searchbar" class="search-main" tabindex="0">
+				<div class="head-search">
+					<div id="_js_search_form" class="head-search-box ">
+						<form class="search-form ff-search" id="search" name="search" action="{:mac_url('vod/search')}" method="post"
+						 autocomplete="off">
+							<input type="text" name="wd" class="form-control ff-wd mac_wd" value="{$param.wd}" placeholder="请输入关键字">
+							<a class="head-search-top" href="javascript:;"></a>
+							<button type="submit" id="searchbutton" class="search-button mac_search">搜剧</button>
+						</form>
+					</div>
+				</div>
+				<!-- 热搜 -->
+				<div class="hot-search">
+					<div id="searchWrap">
+						<p class="hot-title">搜索记录 <a href="javascript:;" class="clearSearchRecords">清空</a></p>
+						<ul class="hot-wrap">
+							<li><a href="javascript:;"><span>aaaSearch</span></a></li>
+							<li><a href="javascript:;"><span>aaaSearch</span></a></li>
+						</ul>
+					</div>
+					<p class="hot-title">热门搜索</p>
+					<ul class="hot-wrap">
+						{maccms:foreach name=":explode(',',$maccms.search_hot)" id="vo" key="key"}
+						{php}$i=$key+1;{/php}
+						<li>
+							<a href="{:mac_url('vod/search',['wd'=>$vo])}">
+								<span class="num">{$i}</span>
+								<span title="{$vo}">{$vo}</span>
+							</a>
+						</li>
+						{/maccms:foreach}
+					</ul>
+				</div>
+				<script type="text/javascript">
+					// /index.php/vod/search/wd/mac_wd.html
+					var SearchRecords = window.localStorage.getItem('searchRecords'),
+						SearchRecordsArray = [],
+						searchHtmls = "";
+					// 渲染搜索记录
+					if (SearchRecords != null) {
+						SearchRecordsArray = SearchRecords.split("_")
+						for (var i = 0; i < SearchRecordsArray.length; i++) {
+							searchHtmls += '<li><a href="/index.php/vod/search/wd/' + SearchRecordsArray[i] +
+								'.html"><span class="ellipsis">' + SearchRecordsArray[i] + '</span></a></li>'
+						}
+						$("#searchWrap ul").html(searchHtmls)
+					} else {
+						$("#searchWrap").hide()
+					}
+					// -----存搜索记录-----
+					$("#search").submit(function(event) {
+						var vals = $(".mac_wd").val(),
+							SearchRecordsArray = [],
+							booleanTag = true;
+						if (vals != "") {
+							if (SearchRecords != null) {
+								SearchRecordsArray = SearchRecords.split("_")
+								// 替换
+								for (i = 0; i < SearchRecordsArray.length; i++) {
+									if (SearchRecordsArray[i] == vals) {
+										SearchRecordsArray.splice(i, 1)
+										SearchRecordsArray.unshift(vals)
+										booleanTag = false
+									}
+								}
+								if (booleanTag) {
+									SearchRecordsArray.unshift(vals)
+								}
+							} else {
+								// 存
+								SearchRecordsArray.unshift(vals)
+							}
+							SearchRecordsArray = SearchRecordsArray.join("_")
+							window.localStorage.setItem('searchRecords', SearchRecordsArray);
+						}
+						// window.localStorage.setItem("searchRecords")
+						// return false
+					});
+					// 清空搜索记录
+					$(".clearSearchRecords").on("click", function() {
+						window.localStorage.removeItem('searchRecords');
+						$("#searchWrap").hide()
+					})
+					// 获取焦点且没内容时显示热搜
+					$(".mac_wd").on("focus", function() {
+						if ($(this).val() == "") {
+							$(".hot-search").show()
+						}
+					})
+					//  监听input
+					$(".mac_wd").bind("input propertychange", function(event) {
+						if ($(this).val() == "") {
+							$(".hot-search").show()
+						} else {
+							$(".hot-search").hide()
+						}
+					});
+					// 失去焦点隐藏热搜
+					$(".mac_wd").on("blur", function() {
+						setTimeout(function() {
+							$(".hot-search").hide()
+						}, 400)
+					})
+				</script>
+			</div>
+			<div class="g-ucenter" id="uerCenter">
+				<div class="u-record">
+					<div class="dropdown" id="u-record">
+						<div class="handle  mac_history"> <a class="ff-record-get" href="javascript:;"> <i class="ico-urecord"></i>记录</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--顶部结束-->

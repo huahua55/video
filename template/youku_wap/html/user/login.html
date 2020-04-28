@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>用户登录 - {$maccms.site_name}</title>
+	{include file="public/include" /}
+</head>
+<body>
+ 
+<header class="aui-bar aui-bar-nav aui-bar-light">
+    <a class="aui-pull-lefta aui-btn" href="javascript:window.history.back(-1);">
+        <span class="aui-iconfonta aui-icon-lefta"></span>
+    </a>
+    <div class="aui-title">登录</div>
+    <a class="aui-pull-right aui-btn" href="{:url('user/findpass')}"><small>忘记密码？</small></a>
+</header>
+<section class="mod aui-margin-t-0"><span class="ff-alert"></span></section>
+<section class="mod aui-margin-t-5">
+	<div class="mod-main">
+
+	<form method="post" action="">
+		<ul class="mod-form-list">
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input  class="input mod-login-phone" type="text" name="user_name" placeholder="请输入账号">
+			</li>
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-lock"></i>
+				<input class="input mod-login-phone"  type="password" name="user_pwd"placeholder="请输入密码">
+			</li>
+			
+			 
+			<li class="form-list-item clearfix">
+				<i class="aui-iconfont aui-icon-info"></i>
+				<input class="input input-check" type="text" name="verify" placeholder="请输入验证码" > 
+			<div class="code-img"> <img id="verify_img" src="{:url('verify/index')}" onClick="this.src=this.src+'?'+Math.random()" /></div>
+			<span class="Validform_checktip"></span></li>
+
+			
+			<li class="form-list-item aui-margin-t-30">
+        <button type="button" id="btn_submit" class="button button-ture" >登录</button>
+ 
+	</form>
+	
+			</li>
+			<li class="form-list-item aui-margin-t-15">
+
+		<a class="aui-btn button button-false" href="{:url('user/reg')}">免费注册</a>
+			</li>
+          	<li class="form-list-item aui-margin-t-15">
+				<a class="aui-btn button button-false" href="/">返回首页</a>
+			</li>
+</ul>
+	
+	</div>
+</section>
+ 
+
+
+<!--loading start-->
+<div class="loading_box"></div>
+<!--loading end-->
+
+<script>
+
+	$("input[name='login_name']").focus();
+
+	$('#btn_submit').click(function(){
+		var user_name = $('input[name="user_name"]').val();
+		var user_pwd = $('input[name="user_pwd"]').val();
+		var verify = $('input[name="verify"]').val();
+
+		if(user_name==''){
+			alert('账号不能为空');
+			$('input[name="user_name"]').focus();
+			return;
+		}
+
+		if(user_pwd==''){
+			alert('密码不能为空');
+			$('input[name="user_pass"]').focus();
+			return;
+		}
+
+		if(verify==''){
+			alert('验证码不能为空');
+			$('input[name="verify"]').focus();
+			return;
+		}
+
+		var data = {user_name:user_name, user_pwd:user_pwd, verify:verify };
+		$.ajax({
+			url: "{:url('user/login')}",
+			type: "post",
+			dataType: "json",
+			data: data,
+			beforeSend: function () {
+				//开启loading
+				//$(".loading_box").css("display","block");
+				$("#btn_submit").css("background","#fd6a6a").val("loading...");
+			},
+			success: function (r) {
+				if(r.code==1){
+					location.href="{:url('user/index')}";
+				}
+				else{
+					alert(r.msg);
+					$('#verify_img').click();
+				}
+			},
+			complete: function () {
+				//结束loading
+				//$(".loading_box").css("display","none");
+				$("#btn_submit").css("background","#fa4646").val("提交");
+			}
+		});
+
+	});
+</script>
+
+{include file="user/foot" /}
+</body>
+</html>

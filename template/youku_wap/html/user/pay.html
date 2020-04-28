@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>在线支付 - {$maccms.site_name}</title>
+	{include file="user/include" /}
+</head>
+
+<body class="user-center">
+<!--头部 -->
+ <div id="topTips"></div>  
+<header class="header">
+	<div class="aui-bar aui-bar-nav">
+		<a href="/" class="logo aui-pull-left"></a>
+		<div class="search">
+			<div class="text" onclick="openSearch()">请输入影片名称</div>
+			<div class="icon"><i class="aui-iconfont aui-icon-search"></i></div>
+		</div>
+	    <div id="member_info">
+					<a class="aui-pull-right aui-btn ff-user" href="/user/login.html" data-href="/user/index.html" data-toggle="tooltip" data-placement="bottom">
+		 <span class="aui-iconfont aui-icon-my" style="background-image: url({$maccms.path_tpl}youku_m/images/usre1.png);"></span>
+	</a>
+</div>
+</div>
+</header>
+
+<section class="headerTopNav">
+	<div class="navWrap">
+		<div class="shadow-le"></div>
+		<div class="shadow-ri"></div>
+		<div id="headerTopNav" class="warp">
+			<ul class="swiper-wrapper">
+	  <li class="swiper-slide"><a href="/">首页</a></li>
+      <li class="swiper-slide"><a href="{:url('user/index')}">会员中心</a></li>
+	  <li class="swiper-slide"><a href="{:url('user/info')}">账号设置</a></li>
+	  <li class="swiper-slide"><a href="{:url('user/buy')}">充值中心</a></li>
+      <li class="swiper-slide active"><a href="{:url('user/plays')}">观看记录</a></li>
+      <li class="swiper-slide"><a href="{:url('user/orders')}">订单管理</a></li> 
+			</ul>
+		</div>
+	</div>
+</section>
+<!--搜索框-->
+<section class="searchPop">
+	<div class="searchCon">
+		<div class="sSearchInput">
+		    <form class="search-form  ff-search" id="search" name="search" method="get" action="{:mac_url('vod/search')}" onSubmit="return qrsearch();">
+			 <input type="text" id="wd" name="wd" class="searchInput ff-wd" value="请输入影片名或演员名称" onfocus="if(this.value=='请输入影片名或演员名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入影片名或演员名称';};" />
+                <input type="submit" id="searchbutton"  style="display: none;" value="搜索" />
+				 
+			</form>
+		</div>
+		<a href="javascript:;" onclick="closeSearch()" class="cancelInput">取消</a>
+	</div>
+	<div class="aui-search"></div>
+
+<section class="mod aui-margin-t-0">
+	<div class="mod-head clearfix">
+		<div class="mod-head-title">
+			<span class="mod-head-name">热门搜索</span>
+		</div>
+		
+	</div>
+	<div class="mod-main clearfix">
+				<div class="mod-row">
+			<ul class="search-list clearfix">
+	  {maccms:vod order="desc" by="level" num="20" type="all" level="all" }
+                  {if condition="$key lt 4"}
+	<li class="aui-ellipsis-1"> <span class="colred{$key}">{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+               {if condition="$key eq 1"}
+              {/if}
+				  {else}
+		 
+	<li class="aui-ellipsis-1"><span>{$key}</span><a href="/search/-------------.html?wd={$vo.vod_name}">{$vo.vod_name}</a><em class="up"></em></li>
+                   {/if}
+				  
+				{/maccms:vod} 					</ul>
+		</div>
+			</div>
+</section>  
+</section>
+<script type="text/javascript">
+	$("#headerTopNav li").each(function(index){
+		if($(this).hasClass("active")){
+        	var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto',initialSlide:index});
+       	}else{
+       		var videoSelectWrap = new Swiper('#headerTopNav',{freeMode : true,slidesPerView : 'auto'});
+       	}
+	});
+
+</script>
+<!--个人中心-->
+<section class="mod aui-margin-t-0">
+    <div class="aui-list aui-media-list">
+        <a class="aui-list-item aui-list-item-middle" href="javascript:;">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="{$obj.user_portrait|mac_default='static/images/touxiang.png'|mac_url_img}" class="aui-img-round img-circle face">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-14"></div>
+                    </div>
+                    <div class="aui-list-item-text"><span class="cmt-vip-span">{$obj.user_name}<img src="{$maccms.path_tpl}youku_m/images/vip1.png" class="cmt-vip-icon"></span></div>
+					<div class="aui-list-item-text">我的积分：{$obj.user_points}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+<!--用户信息--><div class="mod aui-margin-t-15">
+	<div class="mod-main">
+<form method="post" target="_blank" action="{:url('user/gopay')}">
+	<input type="hidden" name="order_id" value="{$info.order_id}">
+	<input type="hidden" name="order_code" value="{$info.order_code}">
+<ul class="mod-form-list">
+				<li class="form-list-item aui-margin-t-0">
+				<span class="user-repwd-alert"></span></li>  
+				<li class="form-list-item">
+					<i class="aui-iconfont aui-icon-unlock"></i> 
+                 <input class="input mod-login-phone" value="订单编号:{$info.order_code}" >	 
+				<span class="Validform_checktip"></span></li>
+
+		<li class="form-list-item aui-margin-t-0">
+				<span class="user-repwd-alert"></span></li>  
+				<li class="form-list-item">
+					<i class="aui-iconfont aui-icon-unlock"></i> 
+                 <input class="input mod-login-phone" value="订单金额：{$info.order_price}" >
+				<span class="Validform_checktip"></span></li>
+
+		<li class="form-list-item aui-margin-t-0">
+				<span class="user-repwd-alert"></span></li>
+				<label for="user_email" class="control-label"for="">  <li class="form-list-item">
+					<i class="aui-iconfont aui-icon-unlock"></i>
+					<select name="payment" id="payment"class="input mod-login-phone">
+				<option value ="">请选择支付方式...           </option>
+				{if condition="$config['alipay']['appid'] neq ''"}
+				<option value ="alipay">支付宝支付</option>
+				{/if}
+				{if condition="$config['weixin']['appid'] neq ''"}
+				<option value="weixin">微信支付</option>
+				{/if}
+				{if condition="$config['codepay']['appid'] neq ''"}
+				<option value="codepay">码支付</option>
+				{/if}
+				{if condition="$config['zhapay']['appid'] neq ''"}
+				<option value="zhapay">幻兮支付</option>
+				{/if}
+			</select>
+			
+			
+			<li class="form-list-item aui-margin-t-0">
+				<span class="user-repwd-alert"></span></li>
+		    <div class="radio-box" id="paytype_box" style="display:none;"> 
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-unlock"></i>
+ 			
+				<select  id="paytype" name="paytype" class="input mod-login-phone">
+				 
+				</select>
+				
+				 </div>
+
+ 
+				<span class="Validform_checktip"></span></li>
+
+             <li class="form-list-item aui-margin-t-5"> 
+			 
+	<button class="button button-ture" type="submit" name="do" value="确认付款" id="btn_submit" >确认付款</button>
+	</li>
+	<div class="total cf-total " style="margin-top: 1em;">
+		支付金额：<span class="price">￥<span id="cart_price_total">{$info.order_price}</span></span>
+	</div>
+</div>
+</form>
+
+<!--loading start-->
+<div class="loading_box"></div>
+<!--loading end-->
+
+<script>
+	var codepay_type = '{maccms:foreach name=":explode(',',$config.codepay.type)"}<option value ="{$vo}">{if condition="$vo==1"}支付宝二维码{elseif condition="$vo==2"/}QQ钱包二维{elseif condition="$vo==3"/}微信二维码{/if}</option>{/maccms:foreach}';
+	var zhapay_type ='{maccms:foreach name=":explode(',',$config.zhapay.type)"}<option value ="{$vo}">{if condition="$vo==1"}微信{elseif condition="$vo==2"/}支付宝{/if}</option> {/maccms:foreach}';
+
+	$("#payment").change(function() {
+		$('#paytype').html('');
+		if($("#payment").val()=="codepay" || $("#payment").val()=="zhapay"){
+			if($("#payment").val()=="codepay") {
+				$('#paytype').html(codepay_type);
+			}
+			if($("#payment").val()=="zhapay") {
+				$('#paytype').html(zhapay_type);
+			}
+
+			$("#paytype_box").slideDown();
+		}
+		else{
+			$("#paytype_box").slideUp();
+		}
+	});
+
+	$(".paytype").change(function() {
+		$('#paytype').val( $(this).val() );
+	});
+</script>
+</body>
+</html>

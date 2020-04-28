@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width ,initial-scale = 1,minimum-scale = 1,maximum-scale = 1,user-scalable =no,"/>
+	<title>会员注册 - {$maccms.site_name}</title>
+	{include file="public/include" /}
+</head>
+<body>
+<!--子页顶部-->
+<header class="aui-bar aui-bar-nav aui-bar-light">
+    <a class="aui-pull-lefta aui-btn" href="javascript:window.history.back(-1);">
+        <span class="aui-iconfonta aui-icon-lefta"></span>
+    </a>
+    <div class="aui-title">注册账号</div>
+    <a class="aui-pull-right aui-btn" href="{:url('user/findpass')}"><small>忘记密码？</small></a>
+</header>
+<section class="mod aui-margin-t-0"><span class="ff-alert"></span></section>
+<section class="mod aui-margin-t-5">
+	<div class="mod-main">
+
+		<form method="post" id="fm" action="" class="loginForm form-user-register">
+			<ul class="mod-form-list">
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-user"></i>
+				<input class="input mod-login-phone" type="text" name="user_name" placeholder="请输入用户名">
+			
+			</li>
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-mail"></i>
+				<input class="input" type="password" id="pass1" name="user_pwd" placeholder="请输入密码">
+			</li>
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-lock"></i>
+				<input class="input" type="password" id="pass2" name="user_pwd2" placeholder="请再次输入密码">
+			</li>
+			<li class="form-list-item">
+				<i class="aui-iconfont aui-icon-lock"></i>
+				<input class="input" type="text" name="user_email" placeholder="请输入email">
+			</li>
+			<li class="form-list-item clearfix">
+				<i class="aui-iconfont aui-icon-info"></i>
+				<input class="input input-check" type="text" name="verify" placeholder="请输入验证码">
+				<div class="pwd_img"><img id="verify_img" src="{:url('verify/index')}" onClick="this.src=this.src+'?'" /></div>
+			</li>
+			<li class="form-list-item aui-margin-t-30">
+            <button type="button" class="button button-ture" id="btn_submit">立即注册</button> 
+			<li class="form-list-item aui-margin-t-15">
+				<a class="aui-btn button button-false" href="{:url('user/login')}">登录</a>
+			</li>
+          	<li class="form-list-item aui-margin-t-15">
+				<a class="aui-btn button button-false" href="/">返回首页</a>
+			</li>
+		</ul>
+
+		</form>
+	</div>
+</div>
+
+<script>
+	$(".go-back").click(function () {
+		var ref = document.referrer;
+		location.href=ref;
+	});
+
+	$("#btn_submit").click(function() {
+		var data = $('#fm').serialize();
+		var input = $("#fm").serializeArray();
+		var pass1 = $("#pass1").val();
+		var pass2 = $("#pass2").val();
+		var inputName = new Array();
+		inputName['user_name'] = '账号';
+		inputName['user_pwd'] = '密码';
+		inputName['user_pwd2'] = '确认密码';
+		inputName['user_email'] = '邮箱';
+		inputName['verify'] = '验证码';
+
+		var is = false;
+		var err = '';
+		$.each(input,function(name,field) {
+			if (field.value == '' && field.name!='verify') {
+				is = true;
+				err = inputName[field.name] + '不能为空';
+				return false;
+			}
+		});
+		if (is) {
+			alert(err);
+			return false;
+		}
+		if (pass1 != pass2) {
+			alert('两次密码不一致');
+			return false;
+		}
+
+		$.ajax({
+			url: "{:url('user/reg')}",
+			type: "post",
+			dataType: "json",
+			data: data,
+			beforeSend: function () {
+				//开启loading
+				//$(".loading_box").css("display","block");
+				$("#btn_submit").css("background","#fd6a6a").val("loading...");
+			},
+			success: function (r) {
+				alert(r.msg);
+				if(r.code==1){
+					location.href="{:url('user/login')}";
+				}
+				else{
+					$('#verify_img').click();
+				}
+			},
+			complete: function () {
+				//结束loading
+				//$(".loading_box").css("display","none");
+				$("#btn_submit").css("background","#fa4646").val("提交");
+			}
+		});
+	})
+</script>
+{include file="user/foot" /}
+</body>
+</html>
