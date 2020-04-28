@@ -94,6 +94,11 @@ class Init
             config('cache.port',$config['app']['cache_port']);
             config('cache.username',$config['app']['cache_username']);
             config('cache.password',$config['app']['cache_password']);
+
+            config('session.type', $config['app']['cache_type']);
+            config('session.host',$config['app']['cache_host']);
+            config('session.port',$config['app']['cache_port']);
+            config('session.password',$config['app']['cache_password']);
         }
 
         if(ENTRANCE == 'fapi') {
