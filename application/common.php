@@ -48,13 +48,15 @@ function getScreen($id){
     $res =  model("Type")->infoData($where);
     $res = $res['info'] ?? [];
 
-    $type = explode(',','类型,'.$res["type_extend"]["class"]);
-    $area = explode(',','地区,'.$res["type_extend"]["area"]);
-    $year = explode(',','年份,'.$res["type_extend"]["year"]);
+    $type = explode(',','全部类型,'.$res["type_extend"]["class"]);
+    $area = explode(',','全部地区,'.$res["type_extend"]["area"]);
+    $year = explode(',','全部年份,'.$res["type_extend"]["year"]);
+    $sort = ['综合排序','评分最高','最近更新'];
     return array(
         array('name'=>'type',"data"=>$type),
         array('name'=>'area',"data"=>$area),
         array('name'=>'year',"data"=>$year),
+        array('name'=>'sort',"data"=>$sort),
     );
 }
 
