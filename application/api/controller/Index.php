@@ -135,7 +135,7 @@ class Index extends Base{
     public function tuijian(){
         // 猜你在追
         $guessDatas = [];
-        $guessData = $this->guessUserMovies();
+        $guessData = $this->guessUserMovies(6);
         if($guessData){
             $guessDatas[] = [
                 'type'  => 3,
@@ -500,10 +500,9 @@ class Index extends Base{
     }
 
     // 猜你在追电视剧
-    public function guessUserMovies(){
+    public function guessUserMovies($limit = 18){
         $mac    = $this->_param['mac'] ??  "" ;
         $page   = $this->_param['page'] ?? 1;
-        $limit  = 18;
         $pageSize = ( $page - 1 ) * 18;
         if($mac == ""){
             return [];
