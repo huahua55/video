@@ -153,7 +153,7 @@ class Index extends Base{
         foreach($tuijian as $item){
             $tuijianData[] = [
                 'type'  => 2,
-                'id'    => 0,
+                'id'    => $item['id'],
                 'msg'   => "",
                 'name'  => $item['name'],
                 'data'  => $this->vodStrData($item['rel_ids']),
@@ -247,20 +247,24 @@ class Index extends Base{
         return $doubanData;
     }
 
-    // 豆瓣推荐列表 接口
+    // 查看更多
     public function recomData(){
+        $type  = $this->_param['type'] ?? 2;    // 2热播后台配置banner  3猜你在追  4 最近热播-豆瓣列表
+        $id    = $this->_param['id'] ?? 0;      // type 类型为 2 获取banner id  其他传0
         $page  = $this->_param['page'] ?? 1;
-        $limit = $this->_param['page'] ?? 18;
-        $pageSize = ( $page - 1 ) * $limit;
-        $where = [
-            'r.status'    => ['eq','1'],
-            'r.vod_id'    => ['neq','0'],
-            'v.vod_play_from'   => ['like','%3u8%'],
-        ];
 
-        $model = model("douban_recommend");
-        $list = $model->apiListData($where, $pageSize);
-
+        $list = [];
+        switch($type){
+            case 2;
+                $list = $this->recommendMore($id);
+                break;
+            case 3;
+                $list = $this->guessUserMovies();
+                break;
+            case 4;
+                $list = $this->doubanMore($page);
+                break;
+        }
         return json_return($list);
     }
 
@@ -494,6 +498,9 @@ class Index extends Base{
     // 猜你在追电视剧
     public function guessUserMovies(){
         $mac    = $this->_param['mac'] ??  "" ;
+        $page   = $this->_param['page'] ?? 1;
+        $limit  = 18;
+        $pageSize = ( $page - 1 ) * 18;
         if($mac == ""){
             return [];
         }
@@ -515,9 +522,14 @@ class Index extends Base{
             'ulog_mid'  => ['eq',1],
             'ulog_type' => ['in',[2,3,4,5]],
         ];
-        $userLog = model("Ulog")->field("ulog_rid")->where($logWhere)->order("ulog_time desc")->select();
+        $userLog = model("Ulog")
+            ->field("ulog_rid")
+            ->where($logWhere)
+            ->group('ulog_rid')
+            ->order('ulog_time desc')
+            ->limit($pageSize,$limit)
+            ->select();
         $userLog = objectToArray($userLog);
-
         // 获取去重ids
         $rids = array_unique(array_column($userLog,"ulog_rid"));
 
@@ -599,4 +611,27 @@ class Index extends Base{
         return json_return($array);
     }
 
+    // 豆瓣推荐列表
+    public function doubanMore($page){
+        $pageSize = ( $page - 1 ) * 18;
+        $where = [
+            'r.status'    => ['eq','1'],
+            'r.vod_id'    => ['neq','0'],
+            'v.vod_play_from'   => ['like','%3u8%'],
+        ];
+
+        $model = model("douban_recommend");
+        $list = $model->apiListData($where, $pageSize);
+        return $list;
+    }
+
+
+    // recommend
+    public function recommendMore($id){
+        // 后台推荐配置
+        $recommend = model("VodRecommend")->where(['id'=>$id])->find();
+        $recommend = objectToArray($recommend);
+
+        return $this->vodStrData($recommend['rel_ids']);
+    }
 }

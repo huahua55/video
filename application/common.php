@@ -29,10 +29,10 @@ function v($array, $ext = 0){
 }
 
 function type_extend($extend){
-    $type = explode(',','类型,'.$extend['class']);
-    $area = explode(',','地区,'.$extend['area']);
-    $year = explode(',','年份,'.$extend['year']);
-    $sort = ['评分最高','最近更新'];
+    $type = explode(',','全部类型,'.$extend['class']);
+    $area = explode(',','全部地区,'.$extend['area']);
+    $year = explode(',','全部年份,'.$extend['year']);
+    $sort = ['综合排序','评分最高','最近更新'];
     return json_encode([
         ['name'=>'type',"data"=>$type],
         ['name'=>'area',"data"=>$area],
