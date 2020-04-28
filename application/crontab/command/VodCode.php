@@ -225,10 +225,6 @@ class VodCode extends Common
                                             $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
                                             if ($is_encryption == true) { //解码视频
                                                 $path = $ts_new_path;
-                                                if (file_exists($path)) { //先删除ts
-                                                    log::info('视频编码开启存在--先删除ts');
-                                                    unlink($path);
-                                                }
                                                 //new ts 转换存储地址 + 视频信息
                                                 $resolution_data = $this->getFFmpegData($index_last_m3u8_path, $path);
                                                 if (empty($resolution_data)) {
@@ -244,14 +240,17 @@ class VodCode extends Common
                                         }
                                         $res = $this->getAdd($d_val['vod_id'], $d_val['vod_name'],$vod_play_from_val, $collection, $resolution, $ts_new_path, 1, $resolution_data);
                                         if ($res) {
-                                            if (file_exists($ts_path)) { //先删除ts
-                                                log::info('视频编码--先删除---视频');
-                                                unlink($ts_path);
+                                            if(!empty($resolution_data['code_name'])){
+                                                if (file_exists($ts_path)) { //先删除ts
+                                                    log::info('视频编码--先删除---视频');
+                                                    unlink($ts_path);
+                                                }
+                                                if (file_exists($ts_new_path)) { //先删除ts
+                                                    log::info('视频编码--先删除--new-视频');
+                                                    unlink($ts_new_path);
+                                                }
                                             }
-                                            if (file_exists($ts_new_path)) { //先删除ts
-                                                log::info('视频编码--先删除--new-视频');
-                                                unlink($ts_new_path);
-                                            }
+
                                             log::info('视频编码开启存在--添加入库' . $d_val['vod_id']);
                                         }
                                     }
