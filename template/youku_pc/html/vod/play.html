@@ -69,7 +69,10 @@
 																		<div class="fn-panel-header"><span class="fn-panel-title">分享给朋友</span></div>
 																		<div class="fn-panel-body">
 																			<div class="ff-share">
-																				<div class="bdsharebuttonbox bdshare-button-style0-24" data-bd-bind="1535373142450">
+																				<div class="social-share" data-sites="wechat,weibo,qq,qzone,facebook,twitter"></div>
+																				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+																				<script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+																				<!-- <div class="bdsharebuttonbox bdshare-button-style0-24" data-bd-bind="1535373142450">
 																					<a href="javascript:;" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
 																					<a href="javascript:;" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
 																					<a href="javascript:;" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
@@ -86,22 +89,27 @@
 																							"common": {
 																								"bdSnsKey": {},
 																								"bdText": "",
-																								"bdMini": "1",
-																								"bdMiniList": false,
+																								"bdMini": "2",
 																								"bdPic": "",
-																								"bdStyle": "1",
-																								"bdSize": "32"
+																								"bdStyle": "0",
+																								"bdSize": "16"
 																							},
-																							"share": [{
-																								"bdSize": 32,
-																								bdCustomStyle: '{$maccms.path_tpl}youku/css/share.css'
-																							}]
+																							"share": {},
+																							"image": {
+																								"viewList": ["qzone", "tsina", "tqq", "renren", "weixin"],
+																								"viewText": "分享到：",
+																								"viewSize": "16"
+																							},
+																							"selectShare": {
+																								"bdContainerClass": null,
+																								"bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]
+																							}
 																						};
 																						with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src =
 																							'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() /
 																								36e5)];
 																					</script>
-																				</div>
+																				</div> -->
 																			</div>
 																		</div>
 																	</div>
@@ -113,12 +121,9 @@
 																				 width="100%" data-bd-imgshare-binded="1"></div>
 																</li>
 																<li class="fn-info">
-																	<a href="">
+																	<a href="javascript:;">
 																		<i class="icon-player info"></i><a class="text" href="{:mac_url_vod_detail($obj)}">下载</a>
 																	</a>
-																	<!-- <div class="fn-panel">
-																			<div class="fn-panel-header"><span class="fn-panel-title">由于版权限制，该影片暂时无法下载</div>
-																		</div> -->
 																</li>
 															</ul>
 														</div>
@@ -182,67 +187,68 @@
 											<div class="summary-wrap">{$obj.vod_content} </div>
 										</div>
 									</div>
-									<!--
-  <div class="summary-expenb">
-	  <div class="module-title"><h2>相关明星</h2>
-	  <div class="myTab-actor" id="statetab"> 
-	<ul id="myTab1"> 
-             <li class="active"> 
-			  <div class="item g-clear">
-							<img src="{$user.user_id|mac_get_user_portrait}">
-							<p class="name">{$obj.vod_director} </p>
-							<em class="zhiye">导演</em>
-						</div>
-      </li>
-      {maccms:role order="asc" name="'.$obj[vod_actor].'" id="vo1" key="key1"}
-{$vo1.actor_name}
-{/maccms:role}
-    <li > 
-			  <div class="item g-clear">
-							<img src="{$user.user_id|mac_get_user_portrait}">
-							<p class="name">{$obj.vod_actor}</p>
-							<em class="zhiye">演员</em>
-						</div> </li>
-						</ul>  
-		</div>
-		</div>
-		<div class="play-actor statetab">
- {maccms:vod num="1" rel="'.$obj['vod_director'].'" order="desc" by="time"}
-<ul class="index-list-1 tabcon active">
-{maccms:vod order="asc" by="time" num="5" type="'.$obj['vod_director'].'"}
-<li class="yk-pack">
-<div class="p-thumb">
-<a href="{:mac_url_vod_detail($vo)} " title="{$obj.vod_name} "  ></a>
-<img class="quic ff-img" src="{:mac_url_img($vo.vod_pic)}" alt="{$obj.vod_name} ">
-<span class="playshow"><span class="p-num"><em>6.</em>0</span></span>
-</div>
-<ul class="info-list">
-<li class="title"><a href="{:mac_url_vod_detail($vo)} "  >{$vo.vod_name} </a></li>
-<span>主演：{$vo.vod_actor}</span>
-</ul>
-</li>
- {/maccms:vod} 
-          </ul>	
-{/maccms:vod}
-	 {maccms:vod num="6" rel="'.$obj['vod_actor'].'" order="desc" by="time"} 
-<ul class="index-list-1 tabcon">
-  {maccms:vod order="asc" by="time" num="5"  type="'.$vo['vod_actor'].'" } 
-<li class="yk-pack">
-<div class="p-thumb">
-<a href="{:mac_url_vod_play($vo)}" title="{$obj.vod_name} "  ></a>
-<img class="quic ff-img" src="{:mac_url_img($vo.vod_pic)}" alt="{$obj.vod_name} ">
-<span class="playshow"><span class="p-num"><em>6.</em>0</span></span>
-</div>
-<ul class="info-list">
-<li class="title"><a href="{:mac_url_vod_play($vo)}"  >{$vo.vod_name} </a></li>
-<span>主演：{$vo.actor_name}</span>
-</ul>
-</li>
-{/maccms:vod}       
-</ul>	
-{/maccms:vod}
- 	</div> 
-		</div> -->
+									<!-- <div class="summary-expenb">
+										<div class="module-title">
+											<h2>相关明星</h2>
+											<div class="myTab-actor" id="statetab">
+												<ul id="myTab1">
+													<li class="active">
+														<div class="item g-clear">
+															<img src="{$user.user_id|mac_get_user_portrait}">
+															<p class="name">{$obj.vod_director} </p>
+															<em class="zhiye">导演</em>
+														</div>
+													</li>
+													{maccms:role order="asc" name="'.$obj[vod_actor].'" id="vo1" key="key1"}
+													{$vo1.actor_name}
+													{/maccms:role}
+													<li>
+														<div class="item g-clear">
+															<img src="{$user.user_id|mac_get_user_portrait}">
+															<p class="name">{$obj.vod_actor}</p>
+															<em class="zhiye">演员</em>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div class="play-actor statetab">
+											{maccms:vod num="1" rel="'.$obj['vod_director'].'" order="desc" by="time"}
+											<ul class="index-list-1 tabcon active">
+												{maccms:vod order="asc" by="time" num="5" type="'.$obj['vod_director'].'"}
+												<li class="yk-pack">
+													<div class="p-thumb">
+														<a href="{:mac_url_vod_detail($vo)} " title="{$obj.vod_name} "></a>
+														<img class="quic ff-img" src="{:mac_url_img($vo.vod_pic)}" alt="{$obj.vod_name} ">
+														<span class="playshow"><span class="p-num"><em>6.</em>0</span></span>
+													</div>
+													<ul class="info-list">
+														<li class="title"><a href="{:mac_url_vod_detail($vo)} ">{$vo.vod_name} </a></li>
+														<span>主演：{$vo.vod_actor}</span>
+													</ul>
+												</li>
+												{/maccms:vod}
+											</ul>
+											{/maccms:vod}
+											{maccms:vod num="6" rel="'.$obj['vod_actor'].'" order="desc" by="time"}
+											<ul class="index-list-1 tabcon">
+												{maccms:vod order="asc" by="time" num="5" type="'.$vo['vod_actor'].'" }
+												<li class="yk-pack">
+													<div class="p-thumb">
+														<a href="{:mac_url_vod_play($vo)}" title="{$obj.vod_name} "></a>
+														<img class="quic ff-img" src="{:mac_url_img($vo.vod_pic)}" alt="{$obj.vod_name} ">
+														<span class="playshow"><span class="p-num"><em>6.</em>0</span></span>
+													</div>
+													<ul class="info-list">
+														<li class="title"><a href="{:mac_url_vod_play($vo)}">{$vo.vod_name} </a></li>
+														<span>主演：{$vo.actor_name}</span>
+													</ul>
+												</li>
+												{/maccms:vod}
+											</ul>
+											{/maccms:vod}
+										</div>
+									</div> -->
 									<div class="summary-expend">
 										<div class="module-title">
 											<h2>相关推荐</h2>

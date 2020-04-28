@@ -397,9 +397,9 @@ class Index extends Base{
         $sortArray = ["评分最高" => 1, "最近更新" => 2 ];
         $sort = $sortArray[$sort] ?? 1;
 
-        $type = $type == "类型" ? "" : $type;
-        $area = $area == "地区" ? "" : $area;
-        $year = $year == "年份" ? "" : $year;
+        $type = $type == "全部类型" ? "" : $type;
+        $area = $area == "全部地区" ? "" : $area;
+        $year = $year == "全部年份" ? "" : $year;
 
         $where = [];
         if($id != 0  ){
