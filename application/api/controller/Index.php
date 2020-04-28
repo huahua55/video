@@ -92,7 +92,7 @@ class Index extends Base{
 
                 array_push($getListBlock,$d);
             }
-           
+
             // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
@@ -392,7 +392,7 @@ class Index extends Base{
         $type   = $this->_param['type'] ?? "";
         $area   = $this->_param['area'] ?? "";
         $year   = $this->_param['year'] ?? "";
-        $sort   = $this->_param['sort'] ?? "评分最高";
+        $sort   = $this->_param['sort'] ?? "最近更新";
 
         $sortArray = ["评分最高" => 1, "最近更新" => 2 ];
         $sort = $sortArray[$sort] ?? 1;
