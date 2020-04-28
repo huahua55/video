@@ -72,7 +72,11 @@ class Vod extends Base
         }
         if(!empty($param['wd'])){
             $param['wd'] = htmlspecialchars(urldecode($param['wd']));
-            $where['vod_name|vod_actor'] = ['like','%'.$param['wd'].'%'];
+            if (is_numeric($param['wd'])) {
+                $where['vod_id'] = ['eq', intval($param['wd'])];
+            } else {
+                $where['vod_name|vod_actor'] = ['like','%'.$param['wd'].'%'];
+            }
         }
         if(!empty($param['player'])){
             if($param['player']=='no'){
@@ -96,6 +100,15 @@ class Vod extends Base
         $order='vod_time desc';
         if(in_array($param['order'],['vod_id','vod_hits','vod_hits_month','vod_hits_week','vod_hits_day'])){
             $order = $param['order'] .' desc';
+        } else {
+            $by_arr = explode(',', $param['order']);
+            if (count($by_arr) == 2) {
+                $order = '';
+                foreach ($by_arr as $k => $v) {
+                    $order .= trim($v) .' desc,';
+                }
+                $order = rtrim($order, ',');
+            }
         }
 
         if(!empty($param['repeat'])){

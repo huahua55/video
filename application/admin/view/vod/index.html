@@ -151,6 +151,7 @@
                 <div class="layui-input-inline w150">
                     <select name="order">
                         <option value="">选择排序</option>
+                        <option value="vod_level,vod_time" {if condition="$param['order'] eq 'vod_level,vod_time'"}selected{/if}>权重+更新时间</option>
                         <option value="vod_time" {if condition="$param['order'] eq 'vod_time'"}selected{/if}>更新时间</option>
                         <option value="vod_id" {if condition="$param['order'] eq 'vod_id'"}selected{/if}>编号</option>
                         <option value="vod_hits" {if condition="$param['order'] eq 'vod_hits'"}selected{/if}>总人气</option>
@@ -162,7 +163,7 @@
 
 
                 <div class="layui-input-inline">
-                    <input type="text" autocomplete="off" placeholder="请输入搜索条件" class="layui-input" name="wd" value="{$param['wd']}">
+                    <input type="text" autocomplete="off" placeholder="请输入ID或影片" class="layui-input" name="wd" value="{$param['wd']}">
                 </div>
                 <input type="hidden" name="repeat" value="{$param['repeat']}" />
                 <button class="layui-btn mgl-20 j-search" >查询</button>
