@@ -32,6 +32,8 @@ class EditVod extends Command
     protected function execute(Input $input, Output $output)
     {
 
+
+
         // 输出到日志文件
         $output->writeln("定时计划：修改视频表");
         try {
@@ -130,12 +132,15 @@ class EditVod extends Command
                             if($res){
                                 log::info('修改成功');
                             }else{
-                                $isWhere['vod_name'] = $update['vod_name'];
 //                                $isWhere['vod_director'] = $update['vod_director'];
-                                $findData =  $this->vodDb->where($isWhere)->find();
-                                if(!empty($findData)){
-                                    $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
-                                    log::info('修改删除update::-'.$v['vod_id']);
+                                $isWhere['vod_name'] =  [['eq', $update['vod_name']],['eq', $v['vod_name']],'or'];
+                                $findData =  $this->vodDb->field('vod_id')->where($isWhere)->select();
+                                $findData = array_flip(array_unique(array_column($findData,'vod_id')));
+                                if(count($findData) >= 2){
+                                    if(isset($findData[$v['vod_id']])){
+                                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
+                                        log::info('修改删除update::-'.$v['vod_id']);
+                                    }
                                 }
                             }
                         }
