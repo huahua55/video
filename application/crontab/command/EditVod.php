@@ -54,12 +54,7 @@ class EditVod extends Command
                 $where['vod_id'] = ['gt', $ids];
             }
 
-
-            if($type ==1){
-                $order = 'vod_id desc';
-            }else{
-                $order = 'vod_id asc';
-            }
+            $order = 'vod_id asc';
 //            $where['vod_name'] = array(
 //                ['like', "%[%"],
 //                ['like',"%]%"],
