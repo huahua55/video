@@ -61,22 +61,24 @@ class VodCode extends Common
         }
         $is_vod_id = Cache::get('vod_id_list_douban_score');
         if(!empty($id)){
-            $where['vod_id'] = ['gt', $id];
+            $where['a.vod_id'] = ['gt', $id];
         }else{
             if (!empty($is_vod_id)) {
-                $where['vod_id'] = ['gt', $is_vod_id];
+                $where['a.vod_id'] = ['gt', $is_vod_id];
             }
         }
         if(!empty($vod_id)){
             $vod_id =  $vod_id['vod_id']??1;
-            $where['vod_id'] = ['gt', $vod_id];
+            $where['a.vod_id'] = ['gt', $vod_id];
         }
+
         $start = 0;
         $page = 1;
         $limit = 20;
         $is_true = true;
-        $order = 'vod_id asc';
-        $where['vod_id'] = ['gt', 1];
+        $order = 'a.vod_id asc';
+        $where['a.vod_id'] = ['gt', 1];
+        $where['b.vod_id'] = ['EXP', Db::raw('IS NULL')];
         while ($is_true) {//进入循环 取出数据
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
             foreach ($douBanScoreData['list'] as $d_key => $d_val) {
@@ -105,6 +107,7 @@ class VodCode extends Common
 //                                if ($vod_play_from_val == 'mbckm3u8' || $vod_play_from_val == '135m3u8' || $vod_play_from_val == 'wlm3u8' || $vod_play_from_val == 'ckm3u8' || $vod_play_from_val == 'zuidam3u8') {
 //                                    continue;
 //                                }
+
                                 $vod_play_url_key_url_val_text_url = '';
                                 $get_vod_ts = '';
                                 $home = '';
@@ -172,6 +175,7 @@ class VodCode extends Common
                                             }
                                         }
                                     }
+
                                     if (!empty($t_url_str)) {
                                         log::info('视频编码开启存在--' . $t_url_str . '-存在ts');
                                         if($vod_play_from_val == 'zkm3u8'){
@@ -214,12 +218,12 @@ class VodCode extends Common
                                         //是否存在分辨率
                                         $vod_play_url_key_url_val_text_p1 = $vod_play_url_key_url_val_text[1] ?? '';
 //
-                                        if (strpos($vod_play_url_key_url_val_text_p1, 'RESOLUTION=') !== false) {
-                                            log::info('视频编码开启-RESOLUTION-存在--');
-                                            $resolution = explode('RESOLUTION=', $vod_play_url_key_url_val_text_p1)[1] ?? '';
-                                            $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
-                                            $resolution_data = $this->getVideoInfo($ts_path);
-                                        } else {
+//                                        if (strpos($vod_play_url_key_url_val_text_p1, 'RESOLUTION=') !== false) {
+//                                            log::info('视频编码开启-RESOLUTION-存在--');
+//                                            $resolution = explode('RESOLUTION=', $vod_play_url_key_url_val_text_p1)[1] ?? '';
+//                                            $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
+//                                            $resolution_data = $this->getVideoInfo($ts_path);
+//                                        } else {
                                             //下载ts
 //                                            var_dump($vod_play_url_key_url_val_text_ts_url);
                                             $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
@@ -237,7 +241,7 @@ class VodCode extends Common
                                             }
                                             //入库data
                                             $resolution = $resolution_data['resolution'] ?? '';
-                                        }
+//                                        }
                                         $res = $this->getAdd($d_val['vod_id'], $d_val['vod_name'],$vod_play_from_val, $collection, $resolution, $ts_new_path, 1, $resolution_data);
                                         if ($res) {
                                             if(!empty($resolution_data['code_name'])){
@@ -250,7 +254,6 @@ class VodCode extends Common
                                                     unlink($ts_new_path);
                                                 }
                                             }
-
                                             log::info('视频编码开启存在--添加入库' . $d_val['vod_id']);
                                         }
                                     }
@@ -320,9 +323,9 @@ class VodCode extends Common
         // `vod_play_note`   '播放备注',
         //`vod_play_url`     播放地址',
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name,vod_play_from,vod_play_server,vod_play_note,vod_play_url')->where($where)->order($order)->limit($limit_str)->select();
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        $total = $this->vodDb->alias('a')->join('vod_resolving_power b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->count();
+        $list = $this->vodDb->field('a.vod_id,a.type_id_1,a.type_id,a.vod_name,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.vod_play_url')->alias('a')->join('vod_resolving_power b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
+         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
     //new ts 转换存储地址
@@ -331,7 +334,7 @@ class VodCode extends Common
         ///usr/bin/ffmpeg
         //usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg
         $ffmpeg_path =   $this->ffmpeg.' -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i %s -c copy %s 2>&1';
-//        print_r($ffmpeg_path);die;
+//        var_dump($ffmpeg_path);die;
         $ffmpeg_str_shell = sprintf($ffmpeg_path, $index_last_m3u8_path, $ts_new_path);
         //调用php的exec方法去执行脚本
         exec($ffmpeg_str_shell, $output, $return_val);
