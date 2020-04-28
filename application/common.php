@@ -67,9 +67,25 @@ function selectOption($id, $type_name){
     $res =  model("Type")->infoData($where);
     $res = $res['info'] ?? [];
 
-    $class = explode(',','全部类型,'.$res["type_extend"]["class"]);
-    $classKey = array_search($type_name,$class) ?? 0;
-    return [$classKey , 0, 0, 1];
+    $classKey = 0;  // 类型
+    $areaKey  = 0;  // 地区
+
+    if($id == 1){
+        $class = explode(',','全部类型,'.$res["type_extend"]["class"]);
+        $classKey = array_search($type_name,$class) ?? 0;
+    }else{
+        $typeNameArray = [
+            2 => ['国产剧' => '大陆','港台剧' => '香港','日韩剧' => '日本','欧美剧' => '美国','泰剧'=> '泰国'],
+            3 => ['内地综艺' => '大陆','港台综艺' => '香港','日韩综艺' => '日本','欧美综艺' => '欧美'],
+            4 => ['国产动漫' => '大陆','日韩动漫' => '日本','港台动漫' => '其他','欧美动漫' => '欧美'],
+        ];
+
+        $type_name = $typeNameArray[$id][$type_name] ?? "";
+        $class   = explode(',','全部地区,'.$res["type_extend"]["area"]);
+        $areaKey = array_search($type_name, $class) ?? 0;
+    }
+
+    return [$classKey , $areaKey, 0, 1];
 }
 
 // 电视剧 备注
