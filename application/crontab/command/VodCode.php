@@ -142,7 +142,7 @@ class VodCode extends Common
                                 }
 //                                var_dump($get_vod_ts);die;
                                 if (strpos($get_vod_ts, 'ts') !== false) {
-                                    log::info('视频编码开启--' . $vod_play_from_val . '-存在ts');
+                                    log::info('视频编码开启--' . $vod_play_from_val . '-存在ts'.$d_val['vod_id']);
                                     $vod_ts = explode("\n", $get_vod_ts);
                                     $t_url_str = '';
                                     $FfmpegEncryptionText = '';
@@ -371,23 +371,22 @@ class VodCode extends Common
             $data['height'] = $arr_resolution[1];
             if($data['height']<480 && $data['width'] < 640){
                 $data['code'] = 1;//省流量
-                $data['code_name'] = '省流量';//省流量
-            }
-            if(($data['height']<608 && $data['width'] < 1080 )  && ($data['height']>480 && $data['width'] >640)){
+                $data['code_name'] = '省流';//省流量
+            }else if(($data['height']<608 && $data['width'] < 1080 )  && ($data['height']>480 && $data['width'] >640)){
                 $data['code'] = 2;//
                 $data['code_name'] = '高清480P';
-            }
-            if(($data['height']<1080  && $data['width'] < 1920) && ($data['height']>608 && $data['width'] > 1080)){
+            }else if(($data['height']<1080  && $data['width'] < 1920) && ($data['height']>608 && $data['width'] > 1080)){
                 $data['code'] = 3;
                 $data['code_name'] = '超清720P';
-            }
-            if(($data['height']< 2160 && $data['width'] < 3840) && ($data['height']>1080 && $data['width'] > 1920)){
+            }else if(($data['height']< 2160 && $data['width'] < 3840) && ($data['height']>1080 && $data['width'] > 1920)){
                 $data['code'] = 4;
                 $data['code_name'] = '蓝光';
-            }
-            if($data['height']>= 2160 && $data['width'] >= 3840){
+            }else if($data['height']>= 2160 && $data['width'] >= 3840){
                 $data['code'] = 5;
                 $data['code_name'] = '4K';
+            }else{
+                $data['code'] = 2;//省流量
+                $data['code_name'] = '高清480P';//省流量
             }
         }
         if (preg_match("/Audio: (\w*), (\d*) Hz/", $info, $match)) {
