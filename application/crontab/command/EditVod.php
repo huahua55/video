@@ -133,7 +133,7 @@ class EditVod extends Command
                                 $findData = array_flip(array_unique(array_column($findData,'vod_id')));
                                 if(count($findData) >= 2){
                                     if(isset($findData[$v['vod_id']])){
-                                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
+//                                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
                                         log::info('修改删除update::-'.$v['vod_id']);
                                     }
                                 }
