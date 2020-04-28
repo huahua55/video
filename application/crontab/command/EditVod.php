@@ -131,7 +131,7 @@ class EditVod extends Command
                                 log::info('修改成功');
                             }else{
                                 $isWhere['vod_name'] = $update['vod_name'];
-                                $isWhere['vod_director'] = $update['vod_director'];
+//                                $isWhere['vod_director'] = $update['vod_director'];
                                 $findData =  $this->vodDb->where($isWhere)->find();
                                 if(!empty($findData)){
                                     $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
