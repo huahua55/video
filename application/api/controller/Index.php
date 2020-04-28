@@ -10,13 +10,9 @@ class Index extends Base{
         2 => "vod_time_add desc"        // 最近更新
     ];
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
-        $this->_param = input();
     }
-
-
 
     // 首页导航
     public function home_nav(){
@@ -77,7 +73,8 @@ class Index extends Base{
             }
 
             $where = [
-                'type_pid'   => $id
+                'type_pid'   => $id,
+                'type_status' => 1,
             ];
             $sonRes =  model("Type")->listData($where,"type_sort asc");
             $sonRes = $sonRes['list'] ?? [];
@@ -95,6 +92,7 @@ class Index extends Base{
 
                 array_push($getListBlock,$d);
             }
+            
             // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
@@ -327,7 +325,6 @@ class Index extends Base{
         $info = model("Vod")->infoData($where);
         $info = $info['info'] ?? [];
 
-        
         $data = array(
             'name'      => $info["vod_name"],
             'type_id'   => $info["type_id_1"],
@@ -635,33 +632,4 @@ class Index extends Base{
         return $this->vodStrData($recommend['rel_ids']);
     }
 
-    // 筛选项 返回 选中状态
-    public function selectOption(){
-        $id     = $this->_param['id'] ?? 0;
-        $type   = $this->_param['type'] ?? "";
-        $area   = $this->_param['area'] ?? "";
-        $year   = $this->_param['year'] ?? "";
-        $sort   = $this->_param['sort'] ?? "评分最高";
-        if($id == 0){
-            return [];
-        }
-        $data = [];
-
-        $model = model('Type');
-        $typeInfo = $model->where(['type_id'=>$id])->find();
-        if($typeInfo){
-            $typeExtend = json_decode($typeInfo['type_extend'],'true');
-            $typeKey = array_search($type, explode(',',$typeExtend['class']));
-            $areaKey = array_search($area, explode(',',$typeExtend['area']));
-            $yearKey = array_search($year, explode(',',$typeExtend['year']));
-            $sortKey = array_search($sort, ['综合排序','评分最高','最近更新']);
-            $typeKey = $typeKey ? $typeKey + 1 : 0;
-            $areaKey = $areaKey ? $areaKey + 1 : 0;
-            $yearKey = $yearKey ? $yearKey + 1 : 0;
-            $sortKey = $sortKey ??  0;
-
-            $data = [$typeKey,$areaKey,$yearKey,$sortKey];
-        }
-        return $data;
-    }
 }
