@@ -153,7 +153,7 @@ class Index extends Base{
         foreach($tuijian as $item){
             $tuijianData[] = [
                 'type'  => 2,
-                'id'    => 0,
+                'id'    => $item['id'],
                 'msg'   => "",
                 'name'  => $item['name'],
                 'data'  => $this->vodStrData($item['rel_ids']),
