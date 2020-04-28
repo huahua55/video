@@ -92,7 +92,7 @@ class Index extends Base{
 
                 array_push($getListBlock,$d);
             }
-
+            p($getListBlock);
             // 电影、电视剧 加上最近热播
             if(in_array($id,[1,2])){
                 $doubanRecomData = [];
@@ -527,7 +527,7 @@ class Index extends Base{
         $userLog = model("Ulog")
             ->alias('u')
             ->field($field)
-            ->join('vod v', 'u.ulog_rid = v.vod_id','left')
+            ->join('vod v', 'u.ulog_rid = v.vod_id')
             ->where($logWhere)
             ->group('u.ulog_rid')
             ->order('u.ulog_time desc')

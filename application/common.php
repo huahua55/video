@@ -75,17 +75,18 @@ function selectOption($id, $type_name){
         $classKey = array_search($type_name,$class) ?? 0;
     }else{
         $typeNameArray = [
-            2 => ['国产剧' => '大陆','港台剧' => '香港','日韩剧' => '日本','欧美剧' => '美国','泰剧'=> '泰国'],
-            3 => ['内地综艺' => '大陆','港台综艺' => '香港','日韩综艺' => '日本','欧美综艺' => '欧美'],
-            4 => ['国产动漫' => '大陆','日韩动漫' => '日本','港台动漫' => '其他','欧美动漫' => '欧美'],
+            2 => ['国产剧' => '大陆','港台剧' => '香港','日韩剧' => '韩国','欧美剧' => '美国','泰剧'=> '泰国'],
+            3 => ['内地综艺' => '大陆','港台综艺' => '台湾','日韩综艺' => '韩国','欧美综艺' => '欧美'],
+            4 => ['国产动漫' => '国产','日韩动漫' => '日本','港台动漫' => '其他','欧美动漫' => '欧美'],
+            33 => []
         ];
 
         $type_name = $typeNameArray[$id][$type_name] ?? "";
         $class   = explode(',','全部地区,'.$res["type_extend"]["area"]);
-        $areaKey = array_search($type_name, $class) ?? 0;
+        $areaKey = array_search($type_name, $class) ?? "0";
     }
 
-    return [$classKey , $areaKey, 0, 0];
+    return [intval($classKey) , intval($areaKey), 0, 0];
 }
 
 // 电视剧 备注
