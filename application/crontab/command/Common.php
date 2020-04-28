@@ -27,8 +27,8 @@ class Common extends Command
     protected $get_port;//port
 
     //代理使用
-    protected $proxy_username = 'zhangshanap2';
-    protected $proxy_passwd = '25731385';
+    protected $proxy_username = 'zhangshanap3';
+    protected $proxy_passwd = '64343975';
     protected $proxy_server = '183.129.244.16';
     protected $proxy_port = '88';
     protected $pattern = 'json';//API访问返回信息格式：json和text可选
