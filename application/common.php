@@ -29,9 +29,9 @@ function v($array, $ext = 0){
 }
 
 function type_extend($extend){
-    $type = explode(',','全部类型,'.$extend['class']);
-    $area = explode(',','全部地区,'.$extend['area']);
-    $year = explode(',','全部年份,'.$extend['year']);
+    $type = explode(',','全部,'.$extend['class']);
+    $area = explode(',','全部,'.$extend['area']);
+    $year = explode(',','全部,'.$extend['year']);
     $sort = ['综合排序','评分最高','最近更新'];
     return json_encode([
         ['name'=>'type',"data"=>$type],
@@ -48,9 +48,9 @@ function getScreen($id){
     $res =  model("Type")->infoData($where);
     $res = $res['info'] ?? [];
 
-    $type = explode(',','全部类型,'.$res["type_extend"]["class"]);
-    $area = explode(',','全部地区,'.$res["type_extend"]["area"]);
-    $year = explode(',','全部年份,'.$res["type_extend"]["year"]);
+    $type = explode(',','全部,'.$res["type_extend"]["class"]);
+    $area = explode(',','全部,'.$res["type_extend"]["area"]);
+    $year = explode(',','全部,'.$res["type_extend"]["year"]);
     $sort = ['综合排序','评分最高','最近更新'];
     return array(
         array('name'=>'type',"data"=>$type),
@@ -71,7 +71,7 @@ function selectOption($id, $type_name){
     $areaKey  = 0;  // 地区
 
     if($id == 1){
-        $class = explode(',','全部类型,'.$res["type_extend"]["class"]);
+        $class = explode(',','全部,'.$res["type_extend"]["class"]);
         $classKey = array_search($type_name,$class) ?? 0;
     }else{
         $typeNameArray = [
@@ -82,7 +82,7 @@ function selectOption($id, $type_name){
         ];
 
         $type_name = $typeNameArray[$id][$type_name] ?? "";
-        $class   = explode(',','全部地区,'.$res["type_extend"]["area"]);
+        $class   = explode(',','全部,'.$res["type_extend"]["area"]);
         $areaKey = array_search($type_name, $class) ?? "0";
     }
 
