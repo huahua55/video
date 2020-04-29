@@ -135,7 +135,7 @@ class Index extends Base{
     public function tuijian(){
         // 猜你在追
         $guessDatas = [];
-        $guessData = $this->guessUserMovies(6);
+        $guessData = $this->guessUserMovies(3);
         if($guessData){
             $guessDatas[] = [
                 'type'  => 3,
