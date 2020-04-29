@@ -10,8 +10,6 @@ class Base extends All
     public function __construct()
     {
         parent::__construct();
-        $config = $GLOBALS['config']['site'];
-        $this->assign($config);
 
         $this->_param = input();
     }
