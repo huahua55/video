@@ -171,7 +171,7 @@ class Index extends Base{
             'r.vod_id'    => ['neq','0'],
         ];
         $apiListData  = $model->apiListData(array_merge($where,['r.type_id'=>['eq',1]]), 3, "id asc", 6);
-        $apiListData2 = $model->apiListData(array_merge($where,['r.type_id'=>['eq',2]]), 3, "id asc", 6);
+        $apiListData2 = $model->apiListData(array_merge($where,['r.type_id'=>['eq',2]]), 3, "vod_time asc", 6);
         // 本地热门
         $data = [
             [
@@ -280,13 +280,24 @@ class Index extends Base{
 
     // 分类视频
     public function getVodList($id,$limit,$page){
+        $order = $this->sort[2];
+        if($id == 2){
+            $order = "vod_time desc";
+        }
+        $pageSize = ($page - 1) * $limit;
+
         $lp = [
             'type_id'         => ['eq',$id],
-            'vod_play_from'     => ['like','%3u8%'],
+            'vod_play_from'   => ['like','%3u8%'],
         ];
-        $info = model("Vod")->listData($lp, $this->sort[2], $page, $limit);
+        $info = model("Vod")
+            ->field('vod_id,vod_name,vod_pic,vod_douban_score,vod_score,vod_remarks,type_id,type_id_1,vod_serial')
+            ->where($lp)
+            ->order($order)
+            ->limit($pageSize,$limit)
+            ->select();
+        $info = objectToArray($info);
 
-        $info = $info['list'] ?? [];
         $array = array();
         foreach($info as $r){
             $d = array(
