@@ -7,7 +7,7 @@ class Index extends Base{
 
     private $sort = [
         1 => "vod_douban_score desc",   // 评分最高
-        2 => "vod_time_add desc"        // 最近更新
+        2 => "vod_pubdate desc"        // 最近更新
     ];
 
     public function __construct(){
