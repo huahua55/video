@@ -429,7 +429,7 @@ class CollectOk extends Base {
                         $v[$k2] = strip_tags($v2);
                     }
                 }
-                $v['vod_name'] = trim($v['vod_name']);
+                $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
                 $v['type_id_1'] = intval($type_list[$v['type_id']]['type_pid']);
                 $v['vod_en'] = Pinyin::get($v['vod_name']);
                 $v['vod_letter'] = strtoupper(substr($v['vod_en'],0,1));
@@ -455,25 +455,8 @@ class CollectOk extends Base {
 
                 $tid = intval($type_list[$v['type_id']]['type_pid']);
                 if($tid == 2){
-                    if(strpos($v['vod_remarks'],'完结') !== false){
-                        $v['vod_serial'] = $v['vod_total'];
-                    }elseif (strpos($v['vod_remarks'],'集全') !== false){
-                        $v['vod_serial'] = $v['vod_total'];
-                    }elseif (strpos($v['vod_remarks'],'集(全)') !== false){
-                        $v['vod_serial'] = $v['vod_total'];
-                    }elseif (strpos($v['vod_remarks'],'全集') !== false){
-                        $v['vod_serial'] = $v['vod_total'];
-                    }
-                    elseif (strpos($v['vod_remarks'],'大结局') !== false){
-                        $v['vod_serial'] = $v['vod_total'];
-                    }else{
-                        $vod_serial =findNum($v['vod_remarks']);
-                        $vod_serial = empty($vod_serial)?0:$vod_serial;
-                        $v['vod_serial'] = $vod_serial =   max($vod_serial,$v['vod_serial']);
-                    }
+                    $v['vod_serial']  = mac_vod_remarks($v['vod_remarks'], $v['vod_total']);
                 }
-
-
                 $v['vod_isend'] = intval($v['vod_isend']);
                 $v['vod_up'] = intval($v['vod_up']);
                 $v['vod_down'] = intval($v['vod_down']);

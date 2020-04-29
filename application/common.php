@@ -684,6 +684,48 @@ function mac_trim_all($str)//删除空格
     return str_replace($qian,$hou,$str);
 }
 
+//名字过滤
+function mac_characters_format($vod_name){
+    $vod_name = mac_trim_all($vod_name);
+    $vod_name =str_replace('[','',$vod_name);
+    $vod_name =str_replace(']','',$vod_name);
+    $vod_name =str_replace('【','',$vod_name);
+    $vod_name =str_replace('】','',$vod_name);
+    $vod_name =str_replace('（','',$vod_name);
+    $vod_name =str_replace('）','',$vod_name);
+    $vod_name =str_replace('(','',$vod_name);
+    $vod_name =str_replace(')','',$vod_name);
+    preg_match_all('/[\x7f-\xff]+[ ]/',$vod_name,$matches);
+    if(!empty($matches) && isset($matches[0])){
+        foreach ($matches[0] as $m_k => $m_v) {
+            $vod_name = str_replace($m_v,str_replace(' ','',$m_v),$vod_name);
+
+        }
+    }
+    return $vod_name;
+}
+
+//备注过滤
+function mac_vod_remarks($vod_remarks,$vod_total){
+    $update['vod_serial'] = '';
+    if(strpos($vod_remarks,'完结') !== false){
+        $update['vod_serial'] = $vod_total;
+    }elseif (strpos($vod_remarks,'集全') !== false){
+        $update['vod_serial'] =$vod_total;
+    }elseif (strpos($vod_remarks,'集(全)') !== false){
+        $update['vod_serial'] = $vod_total;
+    }elseif (strpos($vod_remarks,'全集') !== false){
+        $update['vod_serial'] = $vod_total;
+    }
+    elseif (strpos($vod_remarks,'大结局') !== false){
+        $update['vod_serial'] = $vod_total;
+    }else{
+        $vod_serial_str =findNum($vod_remarks);
+        $vod_serial_str = empty($vod_serial_str)?0:$vod_serial_str;
+        $update['vod_serial'] = $vod_serial =   max($vod_serial_str,$vod_total);
+    }
+    return $update['vod_serial'];
+}
 //ua大全
 function mac_ua_all($type = 17){
      $ua_all = [

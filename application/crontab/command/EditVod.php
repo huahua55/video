@@ -32,6 +32,7 @@ class EditVod extends Command
 
     protected function execute(Input $input, Output $output)
     {
+
         // 输出到日志文件
         $output->writeln("定时计划：修改视频表");
         try {
@@ -45,7 +46,7 @@ class EditVod extends Command
 
             $start = 0;
             $page = 1;
-            $limit = 20;
+            $limit = 40;
             $is_true = true;
             $where = [];
 
@@ -85,65 +86,41 @@ class EditVod extends Command
                         $tid = intval($v['type_id_1']);
                         $update=[];
                         if($tid == 2){
-                            if(strpos($v['vod_remarks'],'完结') !== false){
-                                $update['vod_serial'] = $v['vod_total'];
-                            }elseif (strpos($v['vod_remarks'],'集全') !== false){
-                                $update['vod_serial'] = $v['vod_total'];
-                            }elseif (strpos($v['vod_remarks'],'集(全)') !== false){
-                                $update['vod_serial'] = $v['vod_total'];
-                            }elseif (strpos($v['vod_remarks'],'全集') !== false){
-                                $update['vod_serial'] = $v['vod_total'];
-                            }
-                            elseif (strpos($v['vod_remarks'],'大结局') !== false){
-                                $update['vod_serial'] = $v['vod_total'];
-                            }else{
-                                $vod_serial =findNum($v['vod_remarks']);
-                                $vod_serial = empty($vod_serial)?0:$vod_serial;
-                                $update['vod_serial'] = $vod_serial =   max($vod_serial,$v['vod_serial']);
+                            //获取集数
+                            $vod_serial =   mac_vod_remarks($v['vod_remarks'], $v['vod_total']);
+                            if($vod_serial > $v['vod_serial']){
+                                $update['vod_serial'] =  $vod_serial;
                             }
                         }
-                        if(strpos($v['vod_name'],'[') !== false || strpos($v['vod_name'],'【') !== false || strpos($v['vod_name'],'（') !== false || strpos($v['vod_name'],'(') !== false || strpos($v['vod_name'],' ') !== false){
-                             $vod_name = $v['vod_name'];
-                             $vod_name =str_replace('[','',$vod_name);
-                             $vod_name =str_replace(']','',$vod_name);
-                             $vod_name =str_replace('【','',$vod_name);
-                             $vod_name =str_replace('】','',$vod_name);
-                             $vod_name =str_replace('（','',$vod_name);
-                             $vod_name =str_replace('）','',$vod_name);
-                             $vod_name =str_replace('(','',$vod_name);
-                             $vod_name =str_replace(')','',$vod_name);
-                             preg_match_all('/[\x7f-\xff]+[ ]/',$vod_name,$matches);
-                             if(!empty($matches) && isset($matches[0])){
-                                foreach ($matches[0] as $m_k => $m_v) {
-                                    $vod_name = str_replace($m_v,str_replace(' ','',$m_v),$vod_name);
-
-                                }
-                            }
-                             $update['vod_name'] = $vod_name;
+                        $name = mac_characters_format($v['vod_name']);
+                        if((strpos($v['vod_name'],'[') !== false || strpos($v['vod_name'],'【') !== false || strpos($v['vod_name'],'（') !== false || strpos($v['vod_name'],'(') !== false || strpos($v['vod_name'],' ') !== false) || ($name !=$v['vod_name'])  ){
+                            $update['vod_name']  =$name;
                         }
                         if(!empty($update)){
                             log::info('修改update::-'.$v['vod_id'].'-'.$v['vod_name'].'-'.json_encode($update,true));
                             $res =$this->vodDb->where(['vod_id'=>$v['vod_id']])->update($update);
-                            if($res){
+                            if ($res > 1){
                                 log::info('修改成功');
                             }else{
+                                log::info('修改err----'.$v['vod_id']);
+//                                $this->vodDb->where(['vod_id'=>$v['vod_id']])->save(['vod_status'=>0]);
 //                                $isWhere['vod_director'] = $update['vod_director'];
-                                $isWhere['vod_name'] =  [['eq', $update['vod_name']],['eq', $v['vod_name']],'or'];
-                                $findData =  $this->vodDb->field('vod_id')->where($isWhere)->select();
-                                $findData = array_flip(array_unique(array_column($findData,'vod_id')));
-                                if(count($findData) >= 2){
-                                    if(isset($findData[$v['vod_id']])){
-//                                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
-                                        log::info('修改删除update::-'.$v['vod_id']);
-                                    }
-                                }
+//                                $isWhere['vod_name'] =  [['eq', $update['vod_name']],['eq', $v['vod_name']],'or'];
+//                                $findData =  $this->vodDb->field('vod_id')->where($isWhere)->select();
+//                                $findData = array_flip(array_unique(array_column($findData,'vod_id')));
+//                                if(count($findData) >= 2){
+//                                    if(isset($findData[$v['vod_id']])){
+////                                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->delete();
+//                                        log::info('修改删除update::-'.$v['vod_id']);
+//                                    }
+//                                }
                             }
                         }
                     }
                     $page = $page + 1;
                 }
             }
-            $sql ='DELETE FROM vod WHERE vod_id IN (SELECT vid FROM ( SELECT MAX( vod_id ) AS vid FROM vod WHERE vod_id > 0 GROUP BY vod_name, vod_director HAVING count( vod_id ) > 1 ) a)';
+            $sql ='DELETE FROM vod WHERE vod_id IN (SELECT vid FROM ( SELECT MAX( vod_id ) AS vid FROM vod WHERE vod_id > 0 GROUP BY vod_name,vod_director HAVING count( vod_id ) > 1 ) a)';
             $res = Db::execute($sql);
             if($res){
                 log::info('delete');

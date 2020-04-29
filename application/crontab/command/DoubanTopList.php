@@ -10,6 +10,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 use think\Log;
+use function GuzzleHttp\Psr7\_caseless_remove;
 
 
 class DoubanTopList extends Common
@@ -20,6 +21,7 @@ class DoubanTopList extends Common
 //        'tv_dm' => 'https://movie.douban.com/j/search_subjects?type=tv&tag=%E6%97%A5%E6%9C%AC%E5%8A%A8%E7%94%BB&sort=recommend&page_limit=20&page_start=0',
         'movie' => 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0',
     ];
+    protected $get_search_id = 'https://api.daicuo.cc/douban/feifeicms/?id=';//cms 通过id获取内容
     protected $get_tv_tag = ["热门"];//电视剧 热门 ,"日本动画"
     protected $get_movie_tag = ["热门"];//电影 热门
 
@@ -37,13 +39,13 @@ class DoubanTopList extends Common
     // 取出数据豆瓣id数据
     protected function getVodDouBanFindData($where)
     {
-        return  $this->vodDb->field('vod_id,type_id_1 as type_id, vod_name as name')->whereOr(function($query) use($where){
-            $query->whereOr("replace(`vod_name`,' ','') = '".$where['vod_name']."' ");
-            $query->whereOr("replace(`vod_sub`,' ','') = '".$where['vod_sub']."' ");
-            $query->whereOr("vod_douban_id = '".$where['id']."' ");
-        })->find();
+        return  $this->vodDb->field('vod_id,type_id_1 as type_id, vod_name as name')->where($where)->find();
     }
-
+    // 取出数据豆瓣id数据
+    protected function getVodDouBanFindORData($where,$whereOr)
+    {
+        return  $this->vodDb->field('vod_id,type_id_1 as type_id, vod_name as name')->where($where)->where($whereOr)->find();
+    }
     // 取出数据爬取豆瓣的推荐的数据
     protected function getDouBanRecommendFindData($where)
     {
@@ -90,32 +92,11 @@ class DoubanTopList extends Common
             log::info('采集豆瓣热门-url-data::' . $mac_curl_get_data);
             if (isset($getSearchData['subjects']) && !empty($getSearchData['subjects'])) {
                 foreach ($getSearchData['subjects'] as $sub_key => $sub_val) {
-
-                    $vodDouBanFindWhere['vod_name'] = mac_trim_all($sub_val['title']);
-                    $vodDouBanFindWhere['vod_sub'] = mac_trim_all($sub_val['title']);
-                    $vodDouBanFindWhere['id'] = $sub_val['id'];
+                    $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
                     $vodDouBanFindData = $this->getVodDouBanFindData($vodDouBanFindWhere);
-                    if (empty($vodDouBanFindData)) {
-                        log::info('采集豆瓣热门-install');
+                    if(!empty($vodDouBanFindData)){ //不为空添加数据
                         $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
                         $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
-                        if (!empty($douBanRecommendFindData)) {
-                            $vodDouBanFindData['status'] = 0;
-                            log::info('采集豆瓣热门-存在过滤-::' . $sub_val['id']);
-                            $vodDouBanFindData['time'] = date("Y-m-d",time());
-                            $res =   Db::name('douban_recommend')->where($getDouBanRecommendFindWhere)->update($vodDouBanFindData);
-                        }else{
-                            $vodDouBanFindData['douban_id'] = $sub_val['id'];
-                            $vodDouBanFindData['status'] = 0;
-                            $vodDouBanFindData['name'] = $sub_val['title'];
-                            $vodDouBanFindData['time'] = date("Y-m-d", time());
-                            $res = Db::name('douban_recommend')->insert($vodDouBanFindData);
-                        }
-                        log::info('采集豆瓣热门-vod不存在过滤-::' . $sub_val['title']);
-                    } else {
-                        $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
-                        $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
-
                         if (!empty($douBanRecommendFindData)) {
                             $vodDouBanFindData['status'] = 1;
                             $vodDouBanFindData['time'] = date("Y-m-d",time());
@@ -127,15 +108,61 @@ class DoubanTopList extends Common
                             $res = Db::name('douban_recommend')->insert($vodDouBanFindData);
                         }
                         log::info('采集豆瓣热门-update');
-                    }
-                    if ($res) {
-                        log::info('采集豆瓣热门-succ' . $sub_val['title']);
-                    } else {
-                        log::info('采集豆瓣热门-error' . $sub_val['title']);
+                    }else{//数据为空
+
+                        $empty_where =[];
+                        $install_data = [];
+                        $mac_url = $this->get_search_id.$sub_val['id'];//获取mac Cms信息
+                        $getCmsData = $this->getCmsData($mac_url);
+                        if(!empty($getCmsData)){
+                            if(isset($getCmsData['status']) && $getCmsData['status'] == 200  && !empty($getCmsData['data'])){
+                                $getData = $getCmsData['data'];
+                                $empty_where['vod_director'] = $getData['vod_director'];
+                                if(!empty($getData['vod_title'])){
+                                    $empty_where_or['vod_name'] =  mac_characters_format($getData['vod_name']) ;
+                                    $sql = "vod_name = '".mac_characters_format($getData['vod_name'])."' or vod_sub= '".$getData['vod_title']."' or vod_douban_id= '".$sub_val['id']."'";
+                                    $res = $this->getVodDouBanFindORData($empty_where,$sql);
+                                }else{
+                                    $empty_where['vod_name'] = mac_characters_format($getData['vod_name']);
+                                    $res = $this->getVodDouBanFindData($empty_where);
+                                }
+                                if(!empty($res)){
+                                    $install_data = $res;
+                                    //添加淘豆id和评分
+                                    $getDataCms = $this->getFFConTent($getData);
+                                    $getDataCms['vod_douban_id'] = $sub_val['id'];
+                                    $this->vodDb->where(['vod_id'=>$res['vod_id']])->update($getDataCms);;
+                                }
+                            }
+                        }
+                        $install_data['time'] = date("Y-m-d",time());
+                        $install_data['douban_id'] = $sub_val['id'];
+                        $install_data['name'] = $sub_val['title'];
+                        $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
+                        $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
+                        if (!empty($douBanRecommendFindData)) {
+                            $vodDouBanFindData['status'] = 1;
+                            $vodDouBanFindData['time'] = date("Y-m-d",time());
+                            $result = Db::name('douban_recommend')->where($getDouBanRecommendFindWhere)->update($vodDouBanFindData);
+                        }else{
+                            if(empty($install_data)){
+                                $install_data['vod_id'] = 0;
+                                $install_data['type_id'] = 0;
+                                $install_data['status'] = 0;
+                            }
+                            $result = Db::name('douban_recommend')->insert($install_data);
+                        }
+                        if ($result) {
+                            log::info('采集豆瓣热门-succ' . $sub_val['title']);
+                        } else {
+                            log::info('采集豆瓣热门-error' . $sub_val['title']);
+                        }
+
                     }
                 }
             }
         }
         $output->writeln("开启采集:采集豆瓣热门end:");
     }
+
 }

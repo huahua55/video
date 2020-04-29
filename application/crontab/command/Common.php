@@ -265,7 +265,11 @@ class Common extends Command
     }
 
 
-
+    //获取cms data
+    public function getCmsData($url){
+        $get_url_search_id_data = mac_curl_get($url);
+        return $this->isJsonBool($get_url_search_id_data, true);
+    }
     protected function isJsonBool($data = '', $assoc = false)
     {
         $data = json_decode($data, $assoc);
@@ -283,6 +287,106 @@ class Common extends Command
         } else {
             return mb_convert_encoding($str, 'UTF-8', $encode);
         }
+    }
+    protected function getFFConTent($res)
+    {
+        $vod_data = [];
+        //总集数
+        if (isset($res['vod_total'])) {
+            $vod_data['vod_total'] = $res['vod_total'];
+        }
+        //连载数
+        if (isset($res['vod_continu']) && !empty($res['vod_continu'])) {
+            $vod_data['vod_serial'] = mac_vod_remarks($res['vod_continu'],$res['vod_total']);
+        }
+        // $vod_data['vod_name'] = $res['vod_name'];
+        //  $vod_data['vod_pic'] = $res['vod_pic'];
+        //对白语言
+        if (isset($res['vod_language']) && !empty($res['vod_language'])) {
+            $vod_data['vod_lang'] = $res['vod_language'];
+        }
+        //资源类别
+        if (isset($res['vod_state']) && !empty($res['vod_state'])) {
+            $vod_data['vod_state'] = $res['vod_state'];
+        }
+        //视频标签
+        if (isset($res['vod_type']) && !empty($res['vod_type'])) {
+            $vod_data['vod_tag'] = mac_format_text(trim($res['vod_type']));
+        }
+        //发行地区
+        if (isset($res['vod_area']) && !empty($res['vod_area'])) {
+            $vod_data['vod_area'] = trim($res['vod_area']);
+        }
+        //主演列表
+        if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
+            $vod_data['vod_actor'] = $res['vod_actor'];
+        }
+        //导演
+        if (isset($res['vod_director'])  && !empty($res['vod_director'])) {
+            $vod_data['vod_director'] = trim($res['vod_director']);
+        }
+        //上映日期
+        if (isset($res['vod_filmtime'])  && !empty($res['vod_filmtime'])) {
+            $vod_pubdate = mac_format_text(trim($res['vod_filmtime']));
+            if(strpos($vod_pubdate,'(')){
+                $vod_pubdate = explode('(',$vod_pubdate)[0]??'';
+            }
+            $vod_data['vod_pubdate'] = $vod_pubdate;
+        }
+        //编剧
+        if (isset($res['vod_writer']) && !empty($res['vod_writer'])) {
+            $vod_data['vod_writer'] = mac_format_text($res['vod_writer']);
+        }
+        //平均分
+        if (isset($res['vod_gold']) && !empty($res['vod_gold'])) {
+            $vod_data['vod_score'] = trim($res['vod_gold']);
+        }
+        //评分次数
+        if (isset($res['vod_score_num']) && !empty($res['vod_score_num'])) {
+            $vod_data['vod_score_num'] = $res['vod_score_num'];
+        }
+        //总评分
+        if (isset($res['vod_score_all']) && !empty($res['vod_score_all'])) {
+            $vod_data['vod_score_all'] = $res['vod_score_all'];
+        }
+//        //简介
+//        if (isset($res['vod_content'])){
+//            $vod_content = trim($res['vod_content']);
+//            $vod_data['vod_blurb'] = "'$vod_content'";
+//        }
+        //时长
+        if (isset($res['vod_length'])  && !empty($res['vod_length'])) {
+            $vod_data['vod_duration'] = trim($res['vod_length']);
+        }
+//        //豆瓣id
+//        if (isset($res['vod_douban_id']) && !empty($res['vod_douban_id'])) {
+//            $vod_data['vod_douban_id'] = $res['vod_douban_id'];
+//        }
+        //豆瓣评分
+        if (isset($res['vod_douban_score']) && !empty($res['vod_douban_score'])) {
+            $vod_data['vod_douban_score'] = $res['vod_douban_score'];
+        }
+        //扩展分类
+        if (isset($res['vod_type']) && !empty($res['vod_type'])) {
+            $vod_data['vod_class'] = mac_format_text(trim($res['vod_type']));
+        }
+        //来源地址
+        if (isset($res['vod_reurl']) && !empty($res['vod_reurl'])) {
+            $vod_data['vod_reurl'] = trim($res['vod_reurl']);
+        }
+        //编辑人
+        if (isset($res['vod_inputer']) && !empty($res['vod_inputer'])) {
+            if($res['vod_inputer'] == 'douban'){
+                $vod_data['vod_author'] = '豆瓣';
+            }else{
+                $vod_data['vod_author'] = $res['vod_inputer'];
+            }
+        }
+        //副本名称
+        if (isset($res['vod_title']) && !empty($res['vod_title'])) {
+            $vod_data['vod_sub'] = $res['vod_title'];
+        }
+        return $vod_data;
     }
 
 }
