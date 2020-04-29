@@ -29,16 +29,21 @@ function v($array, $ext = 0){
 }
 
 function type_extend($extend){
-    $type = explode(',','全部,'.$extend['class']);
-    $area = explode(',','全部,'.$extend['area']);
-    $year = explode(',','全部,'.$extend['year']);
+    $type = isset($extend['class']) ? explode(',','全部,'.$extend['class']) : "";
+    $area = isset($extend['area']) ? explode(',','全部,'.$extend['area']) : "";
+    $year = isset($extend['year']) ? explode(',','全部,'.$extend['year']) : "";
     $sort = ['排序','评分最高','最近更新'];
-    return json_encode([
+
+    $data = [
         ['name'=>'type',"data"=>$type],
         ['name'=>'area',"data"=>$area],
         ['name'=>'year',"data"=>$year],
         ['name'=>'sort',"data"=>$sort],
-    ],JSON_UNESCAPED_UNICODE);
+    ];
+    if($type == ""){
+        unset($data[0]);
+    }
+    return json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
 function getScreen($id){
