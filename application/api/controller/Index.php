@@ -85,7 +85,8 @@ class Index extends Base{
                 $r = $item["type_id"];
                 $d = array(
                     'name'  => $item['type_name'],
-                    'class' => 1,
+                    'nav'   => 1,
+                    'type'  => 1,
                     'data'  => $this->getVodList($r,6,1),
                     'extend'=> selectOption($id,$item['type_name']),
                 );
@@ -111,7 +112,8 @@ class Index extends Base{
                 $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
                 $doubanRecomData[] = [
                     'name'  => "最近热播",
-                    'class' => 2,
+                    'nav'   => 0,
+                    'type'  => 4,
                     'data'  => $this->vodStrData($doubanIds),
                     'extend'=> [],
                 ];
@@ -137,6 +139,7 @@ class Index extends Base{
         if($guessData){
             $guessDatas[] = [
                 'type'  => 3,
+                'nav'   => 0,
                 'id'    => 0,
                 'msg'   => "",
                 'name'  => "猜你在追",
@@ -154,6 +157,7 @@ class Index extends Base{
         foreach($tuijian as $item){
             $tuijianData[] = [
                 'type'  => 2,
+                'nav'   => 0,
                 'id'    => $item['id'],
                 'msg'   => "",
                 'name'  => $item['name'],
@@ -172,6 +176,7 @@ class Index extends Base{
         $data = [
             [
                 'type'  => 1,
+                'nav'   => 1,
                 'id'    => 1,
                 'msg'   => json_encode(getScreen(1),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播电影',
@@ -179,6 +184,7 @@ class Index extends Base{
             ],
             [
                 'type'  => 1,
+                'nav'   => 1,
                 'id'    => 2,
                 'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播剧',
@@ -186,6 +192,7 @@ class Index extends Base{
             ],
             [
                 'type'  => 1,
+                'nav'   => 1,
                 'id'    => 3,
                 'msg'   => json_encode(getScreen(3),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播综艺',
@@ -193,6 +200,7 @@ class Index extends Base{
             ],
             [
                 'type'  => 1,
+                'nav'   => 1,
                 'id'    => 4,
                 'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
                 'name'  => '热播动漫',
@@ -239,6 +247,7 @@ class Index extends Base{
 
         $doubanData[] = [
             'type'  => 4,
+            'nav'   => 0,
             'id'    => 0,
             'msg'   => "",
             'name'  => "最近热播",
