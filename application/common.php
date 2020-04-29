@@ -32,7 +32,7 @@ function type_extend($extend){
     $type = explode(',','全部,'.$extend['class']);
     $area = explode(',','全部,'.$extend['area']);
     $year = explode(',','全部,'.$extend['year']);
-    $sort = ['综合排序','评分最高','最近更新'];
+    $sort = ['排序','评分最高','最近更新'];
     return json_encode([
         ['name'=>'type',"data"=>$type],
         ['name'=>'area',"data"=>$area],
@@ -51,7 +51,7 @@ function getScreen($id){
     $type = explode(',','全部,'.$res["type_extend"]["class"]);
     $area = explode(',','全部,'.$res["type_extend"]["area"]);
     $year = explode(',','全部,'.$res["type_extend"]["year"]);
-    $sort = ['综合排序','评分最高','最近更新'];
+    $sort = ['排序','评分最高','最近更新'];
     return array(
         array('name'=>'type',"data"=>$type),
         array('name'=>'area',"data"=>$area),
