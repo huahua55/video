@@ -20,10 +20,11 @@ use Exception;
 use QL\Ext\PhantomJs;
 use QL\QueryList;
 
-class CmsDouban extends Command
+class CmsDouban extends Common
 {
     protected $vodDb;//db
-    protected $get_search_id = 'http://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
+//    protected $get_search_id = 'http://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
+    protected $get_search_id = 'https://api.daicuo.cc/douban/feifeicms/?id=';//cms 通过id获取内容
     protected $ql;//querylist
 
     protected function configure()
@@ -59,11 +60,10 @@ class CmsDouban extends Command
             $where = [];
             $where['name'] = ['eq', ''];
             $where['douban_id'] = ['gt', 0];
-            $where['error_count'] = ['eq', 0];
+            $where['error_count'] = ['lt', 10];
             if(!empty($ids)){
                 $where['id'] = ['gt', $ids];
             }
-//            $where['name_as'] = ['eq', ''];
             if($type ==1){
                 $order = 'id desc';
             }else{
@@ -74,6 +74,7 @@ class CmsDouban extends Command
             while ($is_true) {
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+//                print_r($douBanScoreData);die;
                 if (!empty($douBanScoreData)) {
                     log::info('采集CmsDouban进入foreach');
                     $pagecount = $douBanScoreData['pagecount'] ?? 0;
@@ -91,10 +92,8 @@ class CmsDouban extends Command
                         $url = $this->get_search_id . $v['douban_id'];
                         log::info('采集CmsDoubanUrl:', $url);
                         try {
-                            $mac_curl_get_data = mac_curl_get($url);
-                            $mac_curl_get_data = str_replace('douban(', '', $mac_curl_get_data);
-                            $mac_curl_get_data = str_replace(');', '', $mac_curl_get_data);
-                            $mac_curl_get_data = $this->isJsonBool($mac_curl_get_data, true);
+
+                            $mac_curl_get_data = $this->getCmsData($url);
                             Log::info('采集CmsDouban-try:');
                         } catch (Exception $e) {
                             Log::info('err--过滤' . $url);
@@ -103,17 +102,18 @@ class CmsDouban extends Command
 //                     print_r($getSearchData);
                         if (!empty($mac_curl_get_data)) {
                             log::info('采集CmsDouban-try_su:',$mac_curl_get_data);
-                            if (!empty($mac_curl_get_data) && $mac_curl_get_data['code'] == 1 && !empty($mac_curl_get_data['data'])) {
+                            if(isset($mac_curl_get_data['status']) && $mac_curl_get_data['status'] == 200  && !empty($mac_curl_get_data['data'])){
                                 log::info('采集CmsDouban-try_-su-::');
-                                $res = $mac_curl_get_data['data'];
+                                $resdata = $mac_curl_get_data['data'];
+                                $res = $this->getFFConTent($resdata);
                                 $is_log = true;
                                 $is_error = true;
                                 $whereId['id'] = $v['id'];
-                                $vod_data['name'] = $res['vod_name'];
-                                $vod_data['name_as'] = mb_substr( trim($res['vod_sub']), 0, 250);
-                                $vod_data['vod_director'] = $res['vod_director'];
-                                $vod_data['vod_actor'] = $res['vod_actor'];
-                                $vod_data['score'] = $res['vod_score'];
+                                $vod_data['name'] = mac_characters_format($resdata['vod_name']);
+                                $vod_data['name_as'] = $res['vod_sub']??'';
+                                $vod_data['vod_director'] = $res['vod_director']??'';
+                                $vod_data['vod_actor'] = $res['vod_actor']??'';
+                                $vod_data['score'] = $res['vod_score']??'';
                                 $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
@@ -129,7 +129,6 @@ class CmsDouban extends Command
                             $vod_err_data['error_count'] =$v['error_count'] + 1;
                             $this->vodDb->where($whereErrId)->update($vod_err_data);
                         }
-
                     }
                     $page = $page + 1;
                 }
@@ -325,18 +324,6 @@ class CmsDouban extends Command
         return $port;
     }
 
-    protected function ParSing($parameter)
-    {
-        $parameter_array = array();
-        $arry = explode('#', $parameter);
-        foreach ($arry as $key => $value) {
-            $zzz = explode('=', $value);
-            $parameter_array[$zzz[0]] = $zzz[1];
-
-        }
-        return $parameter_array;
-
-    }
 
 
 }
