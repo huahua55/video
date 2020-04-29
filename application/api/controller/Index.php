@@ -85,7 +85,7 @@ class Index extends Base{
                 $r = $item["type_id"];
                 $d = array(
                     'name'  => $item['type_name'],
-                    'type'  => 1,
+                    'class' => 1,
                     'data'  => $this->getVodList($r,6,1),
                     'extend'=> selectOption($id,$item['type_name']),
                 );
@@ -111,7 +111,7 @@ class Index extends Base{
                 $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
                 $doubanRecomData[] = [
                     'name'  => "最近热播",
-                    'type'  => 2,
+                    'class' => 2,
                     'data'  => $this->vodStrData($doubanIds),
                     'extend'=> [],
                 ];
