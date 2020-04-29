@@ -44,6 +44,7 @@ function deploy_dev()
 	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
+	ln -sf $prj_dir/deploy/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
 }
 
 function deploy_online()
@@ -58,6 +59,7 @@ function deploy_online()
 	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
+	ln -sf $prj_dir/deploy/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
 }
 
 # update assets.json
