@@ -280,36 +280,6 @@ class CmsVodScore extends Command
         }
         return $vod_data;
     }
-
-    //获取代理端口
-    public function getDouBan()
-    {
-        //实例简单演示如何正确获取代理端口，使用代理服务测试访问https://ip.cn，验证后释放代理端口
-        $file = 'log.txt';
-        $port = '';//代理端口变量
-        try {
-            $open_url = $this->get_open_url();
-//            p($open_url);
-            $r = file_get_contents($open_url);
-            $result = iconv("gb2312", "utf-8//IGNORE", $r);
-            $code = json_decode($result, true);
-            echo $result . "\n <br>";
-            file_put_contents($file, date('Y-m-d H:i:s', time()) . PHP_EOL . 'open_url||' . $result . PHP_EOL, FILE_APPEND);
-            $json_arr = json_decode($result, true);
-            $code = $json_arr['code'];
-            if ($code == 108) {
-                $reset_url = $this->get_reset_url();
-                $r = file_get_contents($reset_url);
-            } else if ($code == 100) {
-                $port = strval($json_arr['port'][0]);
-            }
-
-        } catch (\Exception $e) {
-            file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
-        }
-        return $port;
-    }
-
     protected function ParSing($parameter)
     {
         $parameter_array = array();
