@@ -35,13 +35,13 @@ function type_extend($extend){
     $sort = ['排序','评分最高','最近更新'];
 
     $data = [
-        ['name'=>'type',"data"=>$type],
         ['name'=>'area',"data"=>$area],
         ['name'=>'year',"data"=>$year],
         ['name'=>'sort',"data"=>$sort],
     ];
-    if($type == ""){
-        unset($data[0]);
+
+    if($type != ""){
+        $data[] = ['name'=>'type',"data"=>$type];
     }
     return json_encode($data,JSON_UNESCAPED_UNICODE);
 }
