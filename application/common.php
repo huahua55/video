@@ -36,13 +36,12 @@ function type_extend($extend){
 
     $data = [];
     if($type != ""){
-        $data[] = ['name'=>'type',"data"=>$type];
+        array_push($data,['name'=>'type',"data"=>$type]);
     }
-    $data[] = [
-        ['name'=>'area',"data"=>$area],
-        ['name'=>'year',"data"=>$year],
-        ['name'=>'sort',"data"=>$sort],
-    ];
+    $data[] = ['name'=>'area',"data"=>$area];
+    $data[] = ['name'=>'year',"data"=>$year];
+    $data[] = ['name'=>'sort',"data"=>$sort];
+
     return json_encode($data,JSON_UNESCAPED_UNICODE);
 }
 
