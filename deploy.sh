@@ -41,10 +41,12 @@ function deploy_dev()
 	ln -sf $prj_dir/test.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
-	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
-	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
-	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
-	ln -sf $prj_dir/deploy/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/m.video.conf /usr/local/nginx/conf/vhost/m.video.conf
+	ln -sf $prj_dir/deploy/conf/dev/utcc.video.conf /usr/local/nginx/conf/vhost/utcc.video.conf
 }
 
 function deploy_online()
@@ -56,10 +58,11 @@ function deploy_online()
 	ln -sf $prj_dir/online.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
-	ln -sf $prj_dir/deploy/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
-	ln -sf $prj_dir/deploy/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
-	ln -sf $prj_dir/deploy/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
-	ln -sf $prj_dir/deploy/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
+	ln -sf $prj_dir/deploy/conf/online/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
+	ln -sf $prj_dir/deploy/conf/online/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
+	ln -sf $prj_dir/deploy/conf/online/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
+	ln -sf $prj_dir/deploy/conf/online/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
+	ln -sf $prj_dir/deploy/conf/online/m.video.conf /usr/local/nginx/conf/vhost/m.video.conf
 }
 
 # update assets.json
