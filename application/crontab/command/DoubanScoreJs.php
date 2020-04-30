@@ -85,11 +85,11 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-            $this->get_port = $this->getPort();
-            if ($this->get_port == false) {
-                $this->get_port = $this->getPort();
-                log::info('get_port-::');
-            }
+//            $this->get_port = $this->getPort();
+//            if ($this->get_port == false) {
+//                $this->get_port = $this->getPort();
+//                log::info('get_port-::');
+//            }
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -141,20 +141,16 @@ class DoubanScoreJs extends Common
                     $error_count = 1;
                     $is_log = false;
                     $mac_curl_get_data = '';
+
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (empty($this->get_port)) {
-                        $this->get_port = $this->getPort($c);
-                        $c ++;
-                    }
+//                    if (empty($this->get_port)) {
+//                        $this->get_port = $this->getPort($c);
+//                        $c ++;
+//                    }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
-
-                    $url = 'https://www.baidu.com/';
-                    var_dump($this->testing($url,$this->get_port,2));die;
-
-
-
+var_dump($url);
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
@@ -162,14 +158,14 @@ class DoubanScoreJs extends Common
                         $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
                         $r->addHeader('Cookie', $cookie);
                         $r->setUrl($url);
-                        $r->setTimeout(10000); // 10 seconds
-                        $r->setDelay(3); // 3 seconds
+//                        $r->setTimeout(10000); // 10 seconds
+//                        $r->setDelay(3); // 3 seconds
                         return $r;
-                    }, true, [
-//                        '--proxy' => "183.129.244.16:51134",
+                    }, false, [
+                        '--proxy' => "183.165.28.207:4276",
 //                        '--proxy' => $this->proxy_server . ":" . $this->get_port,
-//                        '--proxy-type' => 'http',
-//                        '--load-images' => 'no',
+                        '--proxy-type' => 'http',
+                        '--load-images' => 'no',
                     ])->getHtml();
 //                    ])->rules([
 //                        'rating_nums' => ['.rating_nums', 'text'],
