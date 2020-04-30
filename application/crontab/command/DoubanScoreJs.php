@@ -59,7 +59,7 @@ class DoubanScoreJs extends Common
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-//        try {
+        try {
             //字符串对比算法
             $lcs = new similarText();
             //cli模式接受参数
@@ -85,11 +85,11 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-//            $this->get_port = $this->getPort();
-//            if ($this->get_port == false) {
-//                $this->get_port = $this->getPort();
-//                log::info('get_port-::');
-//            }
+            $this->get_port = $this->getPort();
+            if ($this->get_port == false) {
+                $this->get_port = $this->getPort();
+                log::info('get_port-::');
+            }
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -141,41 +141,14 @@ class DoubanScoreJs extends Common
                     $error_count = 1;
                     $is_log = false;
                     $mac_curl_get_data = '';
-
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-//                    if (empty($this->get_port)) {
-//                        $this->get_port = $this->getPort($c);
-//                        $c ++;
-//                    }
+                    if (empty($this->get_port)) {
+                        $this->get_port = $this->getPort($c);
+                        $c ++;
+                    }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
-var_dump($url);
-                    $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
-                        $r->setMethod('GET');
-                        $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
-//                          $r->addHeader('Referer', $url);
-                        $r->addHeader('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36');
-                        $r->addHeader('Cookie', $cookie);
-                        $r->setUrl($url);
-//                        $r->setTimeout(10000); // 10 seconds
-//                        $r->setDelay(3); // 3 seconds
-                        return $r;
-                    }, false, [
-                        '--proxy' => "183.165.28.207:4276",
-//                        '--proxy' => $this->proxy_server . ":" . $this->get_port,
-                        '--proxy-type' => 'http',
-                        '--load-images' => 'no',
-                    ])->getHtml();
-//                    ])->rules([
-//                        'rating_nums' => ['.rating_nums', 'text'],
-//                        'title' => ['a', 'text'],
-//                        'link' => ['a', 'href'],
-//                        'abstract' => ['.abstract', 'text'],
-//                        'abstract_2' => ['.abstract_2', 'text'],
-//                    ])->range('.item-root')->query()->getData();
-                   var_dump('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
-                    print_r($mac_curl_get_data);die;
                     try {
                         libxml_use_internal_errors(true);
                         $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
@@ -210,7 +183,6 @@ var_dump($url);
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
-                    print_r($getSearchData);
                     $b_time = microtime(TRUE) - $startTime;
                     log::info('js-xn-' . $b_time);
                     unset($b_time);
@@ -249,11 +221,11 @@ var_dump($url);
                 }
                 $page = $page + 1;
             }
-//        } catch (Exception $e) {
-//            $output->writeln("end.3." . $e);
-//            $output->writeln("end.3." . $this->cmsDb->getlastsql());
-//            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-//        }
+        } catch (Exception $e) {
+            $output->writeln("end.3." . $e);
+            $output->writeln("end.3." . $this->cmsDb->getlastsql());
+            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+        }
         $output->writeln("end....");
     }
 
