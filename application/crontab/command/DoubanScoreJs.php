@@ -174,7 +174,7 @@ class DoubanScoreJs extends Common
                         'abstract' => ['.abstract', 'text'],
                         'abstract_2' => ['.abstract_2', 'text'],
                     ])->range('.item-root')->query()->getData();
-                    log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+                   var_dump('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
                     print_r($mac_curl_get_data);die;
                     try {
                         libxml_use_internal_errors(true);
