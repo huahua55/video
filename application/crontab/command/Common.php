@@ -108,7 +108,7 @@ class Common extends Command
     }
 
 //使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
-    public function testing($url, $auth_port)
+    public function testing($url, $auth_port,$s =1 )
     {
         $ch = curl_init();
         $timeout = 30;
@@ -128,7 +128,12 @@ class Common extends Command
 
         $file_contents = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        return $httpCode;
+        if($s = 1){
+            return $httpCode;
+        }else{
+            return $file_contents;
+        }
+
     }
 
     //更新cookie
