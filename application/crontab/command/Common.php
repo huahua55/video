@@ -128,7 +128,7 @@ class Common extends Command
 
         $file_contents = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        return $httpCode;
+        return $file_contents;
     }
 
     //更新cookie
