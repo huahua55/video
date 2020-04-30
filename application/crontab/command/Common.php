@@ -203,10 +203,20 @@ class Common extends Command
             '&' . $this->key_md5 . $md5_str .
             '&' . $this->key_pattern . $this->pattern;
     }
-
+    //返回请求分配代理端口URL链接
+    public function add_whitelist($ip=0)
+    {
+        $time_stamp = $this->get_timestamp();
+        $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
+        return 'http://' . $this->proxy_server . ':'
+            . $this->proxy_port . '/add_whitelist?' . $this->key_name . $this->proxy_username .
+            '&' . $this->key_timestamp . strval($time_stamp) .
+            '&' . $this->key_md5 . $md5_str .
+            '&' . $this->key_pattern . $this->pattern .
+            '&' .'user_ip=' . $ip;
+    }
     public function getPort($a = 0)
     {
-
         $file = 'log.txt';
        if(!empty($times)){
           $this->times =  Cache::get('vod_times_cj_open_url');
