@@ -154,6 +154,7 @@ class DoubanScoreJs extends Common
                     var_dump(mac_curl_get($url));die;
 
 
+
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
