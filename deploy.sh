@@ -37,7 +37,7 @@ function deploy_dev()
 	mkdir -p /data/applogs/$prj
 	chmod ugo+rwx /data/applogs /data/applogs/$prj
 
-  rm .env
+  rm -rf $prj_dir/.env
 	ln -sf $prj_dir/test.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
