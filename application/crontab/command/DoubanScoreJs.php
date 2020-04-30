@@ -150,6 +150,7 @@ class DoubanScoreJs extends Common
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
 
+                    $url = 'https://www.baidu.com/';
                     var_dump($url);
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
                         $r->setMethod('GET');
