@@ -164,7 +164,7 @@ class DoubanScoreJs extends Common
                         return $r;
                     }, true, [
 //                        '--proxy' => "183.129.244.16:51134",
-                        '--proxy' => $this->proxy_server . ":" . $this->get_port,
+//                        '--proxy' => $this->proxy_server . ":" . $this->get_port,
                         '--proxy-type' => 'http',
                         '--load-images' => 'no',
                     ])->getHtml();
