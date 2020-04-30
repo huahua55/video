@@ -1,6 +1,6 @@
 <?php
 
-
+print_r(phpinfo());die;
 $mysql_server_name = '127.0.0.1'; //改成自己的mysql数据库服务器
 
 $mysql_username = 'uservide'; //改成自己的mysql数据库用户名
