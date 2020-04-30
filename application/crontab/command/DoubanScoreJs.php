@@ -150,6 +150,7 @@ class DoubanScoreJs extends Common
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
 
+                    var_dump($url);
                     $mac_curl_get_data = $this->ql->browser(function (\JonnyW\PhantomJs\Http\RequestInterface $r) use ($url, $cookie) {
                         $r->setMethod('GET');
                         $r->addHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9');
@@ -173,6 +174,7 @@ class DoubanScoreJs extends Common
                         'abstract' => ['.abstract', 'text'],
                         'abstract_2' => ['.abstract_2', 'text'],
                     ])->range('.item-root')->query()->getData();
+                    log::info('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
                     print_r($mac_curl_get_data);die;
                     try {
                         libxml_use_internal_errors(true);
