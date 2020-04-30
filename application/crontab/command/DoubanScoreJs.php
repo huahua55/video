@@ -150,7 +150,7 @@ class DoubanScoreJs extends Common
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
 
-                    $url = 'https://www.baidu.com/';
+//                    $url = 'https://www.baidu.com/';
                     var_dump(mac_curl_get($url));die;
 
 
