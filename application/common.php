@@ -28,6 +28,14 @@ function v($array, $ext = 0){
     }
 }
 
+
+function randomFloat($min = 0, $max = 10)
+{
+    $num = $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    return sprintf("%.1f", $num);
+
+}
+
 function type_extend($extend){
     $type = isset($extend['class']) && $extend['class'] != "" ? explode(',','全部,'.$extend['class']) : "";
     $area = isset($extend['area']) ? explode(',','全部,'.$extend['area']) : "";

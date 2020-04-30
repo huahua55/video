@@ -304,7 +304,7 @@ class Index extends Base{
                 'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
+                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
                 'msg'   => vodRemark($r),
             );
             array_push($array,$d);
@@ -328,7 +328,7 @@ class Index extends Base{
                 'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
+                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
                 'msg'   => vodRemark($r),
             );
             array_push($array,$d);
@@ -350,7 +350,7 @@ class Index extends Base{
             'type_id'   => $info["type_id_1"],
             'img'       => mac_url_img($info["vod_pic"]),
             'msg'       => vodRemark($info),
-            'score'     => $info['vod_douban_score'] > 0 ? $info['vod_douban_score'] : $info['vod_score'],
+            'score'     => $info['vod_douban_score'] == 0 ? randomFloat(5,8) : $info['vod_douban_score'],
             'type'      => $info["vod_area"] ,
             'info'      => $info["vod_content"],
             'playcode'  => $info["vod_play_from"],
@@ -465,7 +465,7 @@ class Index extends Base{
                 'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
+                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
                 'msg'   => vodRemark($r),
             );
             array_push($array,$d);
@@ -562,7 +562,7 @@ class Index extends Base{
                 'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
+                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
                 'msg'   => vodRemark($r),
             );
             array_push($array,$d);
@@ -621,7 +621,7 @@ class Index extends Base{
                 'img'   => mac_url_img($r['vod_pic']),
                 'id'    => $r['vod_id'],
                 'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] > 0 ? $r['vod_douban_score'] : $r['vod_score'],
+                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
                 'msg'   => vodRemark($r),
             );
             array_push($array,$d);
