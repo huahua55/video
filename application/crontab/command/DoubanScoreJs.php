@@ -135,6 +135,7 @@ class DoubanScoreJs extends Common
                     break;
                 }
                 foreach ($douBanScoreData['list'] as $k => $v) {
+                    $c = 0;
                     $get_search_id = 0;
                     $e_err = false;
                     $error_count = 1;
@@ -142,8 +143,9 @@ class DoubanScoreJs extends Common
                     $mac_curl_get_data = '';
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > $this->times + (60 * 3) || empty($this->get_port)) {
-                        $this->get_port = $this->getPort();
+                    if (empty($this->get_port)) {
+                        $this->get_port = $this->getPort($c);
+                        $c ++;
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
@@ -181,6 +183,7 @@ class DoubanScoreJs extends Common
                         log::info('js-err--过滤' . $url);
                         continue;
                     }
+                    print_r($getSearchData);
                     $b_time = microtime(TRUE) - $startTime;
                     log::info('js-xn-' . $b_time);
                     unset($b_time);

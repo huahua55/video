@@ -208,12 +208,9 @@ class Common extends Command
     {
 
         $file = 'log.txt';
-
-
        if(!empty($times)){
           $this->times =  Cache::get('vod_times_cj_open_url');
        }
-        $a = $a + 1;
         if ($a > 3) {
             $open_data = mac_curl_get($this->get_open_url());
             file_put_contents($file, date('Y-m-d H:i:s', time())  . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);

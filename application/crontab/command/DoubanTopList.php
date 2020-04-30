@@ -32,7 +32,7 @@ class DoubanTopList extends Common
         //db
         $this->vodDb = Db::name('vod');
         //获取豆瓣id
-        $this->setName('doubanTopList')->addArgument('parameter')
+        $this->setName('dbTopList')->addArgument('parameter')
             ->setDescription('定时计划：采集豆瓣热门');
     }
 
