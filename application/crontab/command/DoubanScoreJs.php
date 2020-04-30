@@ -59,7 +59,7 @@ class DoubanScoreJs extends Common
 
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-        try {
+//        try {
             //字符串对比算法
             $lcs = new similarText();
             //cli模式接受参数
@@ -161,7 +161,7 @@ class DoubanScoreJs extends Common
                         $r->setTimeout(10000); // 10 seconds
                         $r->setDelay(3); // 3 seconds
                         return $r;
-                    }, false, [
+                    }, true, [
 //                        '--proxy' => "183.129.244.16:51134",
                         '--proxy' => $this->proxy_server . ":" . $this->get_port,
                         '--proxy-type' => 'http',
@@ -249,11 +249,11 @@ class DoubanScoreJs extends Common
                 }
                 $page = $page + 1;
             }
-        } catch (Exception $e) {
-            $output->writeln("end.3." . $e);
-            $output->writeln("end.3." . $this->cmsDb->getlastsql());
-            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-        }
+//        } catch (Exception $e) {
+//            $output->writeln("end.3." . $e);
+//            $output->writeln("end.3." . $this->cmsDb->getlastsql());
+//            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+//        }
         $output->writeln("end....");
     }
 
