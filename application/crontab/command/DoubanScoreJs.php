@@ -151,7 +151,7 @@ class DoubanScoreJs extends Common
                     $startTime = microtime(TRUE);
 
                     $url = 'https://www.baidu.com/';
-                    var_dump($this->testing($url,$this->get_port));die;
+                    var_dump($this->testing($url,$this->get_port,2));die;
 
 
 
