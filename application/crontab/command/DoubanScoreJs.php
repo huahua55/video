@@ -166,14 +166,14 @@ class DoubanScoreJs extends Common
                         '--proxy' => $this->proxy_server . ":" . $this->get_port,
                         '--proxy-type' => 'http',
                         '--load-images' => 'no',
-//                    ])->getHtml();
-                    ])->rules([
-                        'rating_nums' => ['.rating_nums', 'text'],
-                        'title' => ['a', 'text'],
-                        'link' => ['a', 'href'],
-                        'abstract' => ['.abstract', 'text'],
-                        'abstract_2' => ['.abstract_2', 'text'],
-                    ])->range('.item-root')->query()->getData();
+                    ])->getHtml();
+//                    ])->rules([
+//                        'rating_nums' => ['.rating_nums', 'text'],
+//                        'title' => ['a', 'text'],
+//                        'link' => ['a', 'href'],
+//                        'abstract' => ['.abstract', 'text'],
+//                        'abstract_2' => ['.abstract_2', 'text'],
+//                    ])->range('.item-root')->query()->getData();
                    var_dump('js-err--proxy-' . $this->proxy_server . ":" . $this->get_port);
                     print_r($mac_curl_get_data);die;
                     try {
