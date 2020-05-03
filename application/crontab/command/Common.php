@@ -266,6 +266,7 @@ class Common extends Command
                     return $queryData['port'][0];
                 } else {
                     sleep(3);
+                    $a++;
                     $this->getPort($a);
                 }
                 return strval($queryData['port'][0]);
