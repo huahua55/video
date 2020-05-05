@@ -105,6 +105,9 @@ class EditVod extends Command
                         if(strpos($v['vod_class'],'/') !== false ){
                             $update['vod_class']  =str_replace('/',',',$v['vod_class']);
                         }
+                        if(strpos($v['vod_sub'],'/') !== false ){
+                            $update['vod_sub']  =str_replace('/',',',$v['vod_sub']);
+                        }
                         if(strpos($v['vod_writer'],'/') !== false ){
                             $update['vod_writer']  =str_replace('/',',',$v['vod_writer']);
                         }
