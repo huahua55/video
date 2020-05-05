@@ -68,9 +68,9 @@ class CmsDouban extends Common
             } else {
                 $where['name'] = ['eq', ''];
                 $where['douban_id'] = ['gt', 0];
-                if (!empty($ids)) {
-                    $where['id'] = ['gt', $ids];
-                }
+            }
+            if (!empty($ids)) {
+                $where['id'] = ['gt', $ids];
             }
             $where['error_count'] = ['lt', 10];
             if ($type == 1) {
