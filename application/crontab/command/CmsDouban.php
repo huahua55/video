@@ -59,7 +59,7 @@ class CmsDouban extends Common
             $limit = 20;
             $is_true = true;
             $where = [];
-            if ($d_type == 1 || $d_type == 2) {
+            if ($d_type == 1) {
                 $is_vod_id = Cache::get('vod_cms_details_id');
                 $where['name'] = ['neq', ''];
                 if (!empty($is_vod_id)) {
