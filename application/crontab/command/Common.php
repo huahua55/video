@@ -325,6 +325,7 @@ class Common extends Command
         //视频标签
         if (isset($res['vod_type']) && !empty($res['vod_type'])) {
             $vod_data['vod_tag'] = mac_format_text(trim($res['vod_type']));
+            $vod_data['vod_tag']   =str_replace('/',',', $vod_data['vod_tag']);
         }
         //发行地区
         if (isset($res['vod_area']) && !empty($res['vod_area'])) {
@@ -333,10 +334,12 @@ class Common extends Command
         //主演列表
         if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
             $vod_data['vod_actor'] = $res['vod_actor'];
+            $vod_data['vod_actor']   =str_replace('/',',', $vod_data['vod_actor']);
         }
         //导演
         if (isset($res['vod_director'])  && !empty($res['vod_director'])) {
             $vod_data['vod_director'] = trim($res['vod_director']);
+            $vod_data['vod_director']   =str_replace('/',',', $vod_data['vod_director']);
         }
         //上映日期
         if (isset($res['vod_filmtime'])  && !empty($res['vod_filmtime'])) {
@@ -349,6 +352,7 @@ class Common extends Command
         //编剧
         if (isset($res['vod_writer']) && !empty($res['vod_writer'])) {
             $vod_data['vod_writer'] = mac_format_text($res['vod_writer']);
+            $vod_data['vod_writer']   =str_replace('/',',', $vod_data['vod_writer']);
         }
         //平均分
         if (isset($res['vod_gold']) && !empty($res['vod_gold'])) {
@@ -382,6 +386,7 @@ class Common extends Command
         //扩展分类
         if (isset($res['vod_type']) && !empty($res['vod_type'])) {
             $vod_data['vod_class'] = mac_format_text(trim($res['vod_type']));
+            $vod_data['vod_class']   =str_replace('/',',', $vod_data['vod_class']);
         }
         //来源地址
         if (isset($res['vod_reurl']) && !empty($res['vod_reurl'])) {
@@ -398,6 +403,7 @@ class Common extends Command
         //副本名称
         if (isset($res['vod_title']) && !empty($res['vod_title'])) {
             $vod_data['vod_sub'] = $res['vod_title'];
+            $vod_data['vod_sub']   =str_replace('/',',', $vod_data['vod_sub']);
         }
         return $vod_data;
     }
