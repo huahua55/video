@@ -100,7 +100,6 @@ class DoubanScoreCopy extends Common
             //开启代理
             $this->get_port =   $this->getPort();
             if($this->get_port  == false){
-                sleep(3);
                 $this->get_port =   $this->getPort();
                 log::info('get_port-::' );
             }
@@ -145,7 +144,7 @@ class DoubanScoreCopy extends Common
                     $error_count = 1;
                     $is_log = false;
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > $this->times + (60 * 3)) {
+                    if (time() > ($this->times + 180)) {
                         $this->get_port =   $this->getPort();
                     }
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
