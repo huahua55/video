@@ -145,7 +145,7 @@ class DoubanScoreJs extends Common
                     $this->times = Cache::get('vod_times_cj_open_url');
                     if (time() > ($this->times + 180) || empty($this->get_port)) {
                         $this->get_port = $this->getPort($c);
-                        $c ++;
+                        $c++;
                     }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
@@ -292,6 +292,14 @@ class DoubanScoreJs extends Common
                             foreach ($strpos_data as $s_k => $s_v) {
                                 if (strpos($ex_v, $s_v) !== false) {
                                     if ($s_k == 'vod_duration') {
+                                        if (strpos($ex_v, '/') !== false) {
+                                            $ex_arr=explode('/',$ex_v);
+                                            $ex_v = $ex_arr[0]??'';
+                                            if (strpos($ex_v, ':') !== false) {
+                                                $ex_arr=explode(':',$ex_v);
+                                                $ex_v = $ex_arr[1]??'';
+                                            }
+                                        }
                                         $ex_v = mac_trim_all(str_replace('单集', '', $ex_v));
                                     }
                                     if ($s_k == 'vod_pubdate') {
