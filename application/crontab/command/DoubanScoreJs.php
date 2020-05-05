@@ -143,7 +143,7 @@ class DoubanScoreJs extends Common
                     $mac_curl_get_data = '';
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (empty($this->get_port)) {
+                    if (time() > $this->times + (60 * 3) || empty($this->get_port)) {
                         $this->get_port = $this->getPort($c);
                         $c ++;
                     }
@@ -159,7 +159,7 @@ class DoubanScoreJs extends Common
                             $r->addHeader('Cookie', $cookie);
                             $r->setUrl($url);
                             $r->setTimeout(10000); // 10 seconds
-                            $r->setDelay(3); // 3 seconds
+                            $r->setDelay(2); // 3 seconds
                             return $r;
                         }, false, [
 //                        '--proxy' => "183.129.244.16:51134",
@@ -248,7 +248,7 @@ class DoubanScoreJs extends Common
                     $r->addHeader('Cookie', $cookie);
                     $r->setUrl($link_url);
                     $r->setTimeout(10000); // 10 seconds
-                    $r->setDelay(3); // 3 seconds
+                    $r->setDelay(2); // 3 seconds
                     return $r;
                 }, false, [
 //                        '--proxy' => "183.129.244.16:17238",
