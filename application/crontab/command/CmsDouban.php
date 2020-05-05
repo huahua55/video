@@ -51,6 +51,7 @@ class CmsDouban extends Common
             //参数转义解析
             $param = $this->ParSing($parameter);
             $type = $param['type']??'';
+            $d_type = $param['d_type']??'';
             $ids = $param['id']??'';
 
             $start = 0;
@@ -58,23 +59,29 @@ class CmsDouban extends Common
             $limit = 20;
             $is_true = true;
             $where = [];
-            $where['name'] = ['eq', ''];
-            $where['douban_id'] = ['gt', 0];
-            $where['error_count'] = ['lt', 10];
-            if(!empty($ids)){
-                $where['id'] = ['gt', $ids];
+            if($d_type == 1){
+                $is_vod_id = Cache::get('vod_cms_details_id');
+                $where['douban_id'] = ['neq', 0];
+                if(!empty($is_vod_id)){
+                    $where['id'] = ['gt', $is_vod_id];
+                }
+            }else{
+                $where['name'] = ['eq', ''];
+                $where['douban_id'] = ['gt', 0];
+                if(!empty($ids)){
+                    $where['id'] = ['gt', $ids];
+                }
             }
+            $where['error_count'] = ['lt', 10];
             if($type ==1){
                 $order = 'id desc';
             }else{
                 $order = 'id asc';
             }
-
             //进入循环 取出数据
             while ($is_true) {
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
-//                print_r($douBanScoreData);die;
                 if (!empty($douBanScoreData)) {
                     log::info('采集CmsDouban进入foreach');
                     $pagecount = $douBanScoreData['pagecount'] ?? 0;
@@ -85,6 +92,8 @@ class CmsDouban extends Common
                         break;
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
+
+                        Cache::set('vod_cms_details_id', $v['id']);
                         $is_log = false;
                         $is_error = false;
                         $mac_curl_get_data = '';
@@ -109,12 +118,14 @@ class CmsDouban extends Common
                                 $is_log = true;
                                 $is_error = true;
                                 $whereId['id'] = $v['id'];
+                                if(empty($d_type) && $d_type != 1){
+                                    $vod_data['name_as'] = $res['vod_sub']??'';
+                                    $vod_data['vod_director'] = $res['vod_director']??'';
+                                    $vod_data['vod_actor'] = $res['vod_actor']??'';
+                                    $vod_data['score'] = $res['vod_score']??'';
+                                    $vod_data['text'] = json_encode($res,true);
+                                }
                                 $vod_data['name'] = mac_characters_format($resdata['vod_name']);
-                                $vod_data['name_as'] = $res['vod_sub']??'';
-                                $vod_data['vod_director'] = $res['vod_director']??'';
-                                $vod_data['vod_actor'] = $res['vod_actor']??'';
-                                $vod_data['score'] = $res['vod_score']??'';
-                                $vod_data['text'] = json_encode($res,true);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
                                     log::info('CmsDouban-try-succ::' . $v['name']);

@@ -143,7 +143,7 @@ class DoubanScoreJs extends Common
                     $mac_curl_get_data = '';
 //                    sleep(1);
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > $this->times + (60 * 3) || empty($this->get_port)) {
+                    if (time() > ($this->times + 180) || empty($this->get_port)) {
                         $this->get_port = $this->getPort($c);
                         $c ++;
                     }
