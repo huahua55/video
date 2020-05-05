@@ -265,7 +265,6 @@ class Common extends Command
                     Cache::set('vod_times_cj_open_url',$this->times);
                     return $queryData['port'][0];
                 } else {
-                    sleep(3);
                     $a++;
                     $this->getPort($a);
                 }
