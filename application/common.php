@@ -687,6 +687,7 @@ function mac_curl_get($url,$heads=array(),$cookie='')
 //删除空格
 function mac_trim_all($str)//删除空格
 {
+    $str = mac_format_text($str);
     $qian=array(" ","　","\t","\n","\r");
     $hou=array("","","","","");
     return str_replace($qian,$hou,$str);
