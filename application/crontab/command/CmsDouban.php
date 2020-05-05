@@ -102,14 +102,15 @@ class CmsDouban extends Common
                         log::info('采集CmsDoubanUrl:', $url);
                         if ($d_type == 2) {
                             $whereId['id'] = $v['id'];
+                            if(empty($v['name'])){
+                                continue;
+                            }
                             $vod_data['name'] = mac_characters_format($v['name']);
                             $up_res = $this->vodDb->where($whereId)->update($vod_data);
                             if ($up_res) {
                                 log::info('CmsDouban-try-succ::' . $v['name']);
                             }
                         } else {
-
-
                             try {
                                 $mac_curl_get_data = $this->getCmsData($url);
                                 Log::info('采集CmsDouban-try:');

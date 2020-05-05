@@ -135,6 +135,8 @@ class DoubanScoreJs extends Common
                     break;
                 }
                 foreach ($douBanScoreData['list'] as $k => $v) {
+                    $del_sql = 'DELETE FROM vod_douban_error where douban_id = 0';
+                     Db::execute($del_sql);
                     $c = 0;
                     $get_search_id = 0;
                     $e_err = false;
