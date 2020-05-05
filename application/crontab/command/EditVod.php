@@ -96,6 +96,18 @@ class EditVod extends Command
                         if((strpos($v['vod_name'],'[') !== false || strpos($v['vod_name'],'【') !== false || strpos($v['vod_name'],'（') !== false || strpos($v['vod_name'],'(') !== false || strpos($v['vod_name'],' ') !== false) || ($name !=$v['vod_name'])  ){
                             $update['vod_name']  =$name;
                         }
+                        if(strpos($v['vod_director'],'/') !== false ){
+                            $update['vod_director']  =str_replace('/',',',$v['vod_director']);
+                        }
+                        if(strpos($v['vod_actor'],'/') !== false ){
+                            $update['vod_actor']  =str_replace('/',',',$v['vod_actor']);
+                        }
+                        if(strpos($v['vod_class'],'/') !== false ){
+                            $update['vod_class']  =str_replace('/',',',$v['vod_class']);
+                        }
+                        if(strpos($v['vod_writer'],'/') !== false ){
+                            $update['vod_writer']  =str_replace('/',',',$v['vod_writer']);
+                        }
                         if(!empty($update)){
                             log::info('修改update::-'.$v['vod_id'].'-'.$v['vod_name'].'-'.json_encode($update,true));
                             $res =$this->vodDb->where(['vod_id'=>$v['vod_id']])->update($update);
