@@ -216,10 +216,10 @@ class EditVod extends Common
                     break;
                 }
                 foreach ($douBanScoreData['list'] as $k => $v) {
-                    $name = mac_characters_format($v['name']);
-                    if((strpos($v['name'],'[') !== false || strpos($v['name'],'【') !== false || strpos($v['name'],'（') !== false || strpos($v['name'],'(') !== false || strpos($v['name'],' ') !== false) || ($name !=$v['name'])  ){
-                        $update['name']  =$name;
-                    }
+//                    $name = mac_characters_format($v['name']);
+//                    if((strpos($v['name'],'[') !== false || strpos($v['name'],'【') !== false || strpos($v['name'],'（') !== false || strpos($v['name'],'(') !== false || strpos($v['name'],' ') !== false) || ($name !=$v['name'])  ){
+//                        $update['name']  =$name;
+//                    }
                     if(strpos($v['vod_director'],'/') !== false ){
                         $update['vod_director']  =str_replace('/',',',$v['vod_director']);
                     }
