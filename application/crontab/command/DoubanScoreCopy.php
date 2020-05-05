@@ -52,7 +52,6 @@ class DoubanScoreCopy extends Common
     }
 
 
-
 //使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
     public function testing($url, $auth_port)
     {
@@ -98,10 +97,10 @@ class DoubanScoreCopy extends Common
             }
 
             //开启代理
-            $this->get_port =   $this->getPort();
-            if($this->get_port  == false){
-                $this->get_port =   $this->getPort();
-                log::info('get_port-::' );
+            $this->get_port = $this->getPort();
+            if ($this->get_port == false) {
+                $this->get_port = $this->getPort();
+                log::info('get_port-::');
             }
 //        p($A);
             //开始cookie
@@ -145,7 +144,7 @@ class DoubanScoreCopy extends Common
                     $is_log = false;
                     $this->times = Cache::get('vod_times_cj_open_url');
                     if (time() > ($this->times + 180)) {
-                        $this->get_port =   $this->getPort();
+                        $this->get_port = $this->getPort();
                     }
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
                     try {
@@ -153,7 +152,7 @@ class DoubanScoreCopy extends Common
                         $mac_curl_get_data = $this->ql->get($url, null, [
                             // 设置代理
 //                            'proxy' => 'http://183.129.244.16:55466',
-                            'proxy' => 'http://'. $this->proxy_server . ":" . $this->get_port,
+                            'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
                             //设置超时时间，单位：秒
                             'timeout' => 30,
                             'headers' => [
@@ -172,10 +171,9 @@ class DoubanScoreCopy extends Common
                         log::info('采集豆瓣评分-url-err::');
                         $error_count++;
                         if ($error_count > 10) {
-                            if($this->get_port  == false){
-                                sleep(3);
-                                $this->get_port =   $this->getPort();
-                                log::info('get_port-::' );
+                            if ($this->get_port == false) {
+                                $this->get_port = $this->getPort();
+                                log::info('get_port-::');
                             }
                         }
                         if ($error_count > 15) {
@@ -187,93 +185,93 @@ class DoubanScoreCopy extends Common
                     if (!empty($mac_curl_get_data)) {
                         log::info('采集豆瓣评分-url2-::');
                         foreach ($mac_curl_get_data as $da_k => $as_k) {
-                            log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
-                            log::info('采集豆瓣评分-title2-::' . $as_k['title']);
-                            $deas_data['title'] = $as_k['title'];
-                            $deas_data['link'] = $as_k['url'];
-                            $deas_data['douban_id'] = $as_k['id'];
-                            $deas_data['abstract'] = '';
-                            $deas_data['abstract_2'] = '';
-                            $deas_data['rating_nums'] = '0.0';
-                            $deas_data['time'] = time();
-                            try {
-                                Db::name('douban_vod_details')->insert($deas_data);
-                            } catch (\Exception $e) {
-                                log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
-                            }
-                            if ($g == 1) {
-                                log::info('采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
-                            } else {
-                                //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
-                                $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
-                                log::info('采集豆瓣评分-比例::' . $rade);
-                                if ($rade > 50) {
-                                    log::info('采集豆瓣评分-title-su-::' . $as_k['title'] . '---' . $v['vod_id']);
-                                    if (!empty($as_k['id'])) {
-                                        log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
-                                        $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
-                                        try {
-                                            sleep(1);
-                                            $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
-                                                // 设置代理
-                                             'proxy' => 'http://'. $this->proxy_server . ":" . $this->get_port,
-                                                //设置超时时间，单位：秒
-                                                'timeout' => 30,
-                                                'headers' => [
-                                                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                                    'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
-                                                    'Cookie' => $cookie
-                                                ]
-                                            ])->getHtml();
-                                            $get_url_search_id_data = json_decode($get_url_search_id_data, true);
-                                            Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
-                                        } catch (Exception $e) {
-                                            Log::info('err--过滤' . $e . $url);
-                                            continue;
-                                        }
+                            if ($da_k == 0 || $da_k == 1 || $da_k == 2) {
+                                log::info('采集豆瓣评分-title1-::' . mac_trim_all($v['vod_name']));
+                                log::info('采集豆瓣评分-title2-::' . $as_k['title']);
+                                $deas_data['title'] = $as_k['title'];
+                                $deas_data['link'] = $as_k['url'];
+                                $deas_data['douban_id'] = $as_k['id'];
+                                $deas_data['abstract'] = '';
+                                $deas_data['abstract_2'] = '';
+                                $deas_data['rating_nums'] = '0.0';
+                                $deas_data['time'] = time();
+                                try {
+                                    Db::name('douban_vod_details')->insert($deas_data);
+                                } catch (\Exception $e) {
+                                    log::info('采集豆瓣评分-数据重复添加::' . $as_k['title']);
+                                }
+                                if ($g == 1) {
+                                    log::info('采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
+                                } else {
+                                    //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
+                                    $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
+                                    log::info('采集豆瓣评分-比例::' . $rade);
+                                    if ($rade > 50) {
+                                        log::info('采集豆瓣评分-title-su-::' . $as_k['title'] . '---' . $v['vod_id']);
+                                        if (!empty($as_k['id'])) {
+                                            log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
+                                            $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
+                                            try {
+                                                $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
+                                                    // 设置代理
+                                                    'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+                                                    //设置超时时间，单位：秒
+                                                    'timeout' => 30,
+                                                    'headers' => [
+                                                        'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                                                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+                                                        'Cookie' => $cookie
+                                                    ]
+                                                ])->getHtml();
+                                                $get_url_search_id_data = json_decode($get_url_search_id_data, true);
+                                                Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+                                            } catch (Exception $e) {
+                                                Log::info('err--过滤' . $e . $url);
+                                                continue;
+                                            }
 
-                                        if (!empty($get_url_search_id_data)) {
+                                            if (!empty($get_url_search_id_data)) {
 
-                                            $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
-                                            $vod_director = $vod_data['vod_director']??'';
-                                            if (($vod_data['title'] == $v['vod_name'] || $vod_data['title'] == $v['vod_sub']) && ($v['vod_director'] == $vod_director)) {
-                                                if (isset($vod_data['title'])) {
-                                                    unset($vod_data['title']);
-                                                }
-                                                if (!empty($vod_data)) {
-                                                    log::info('vod--');
-                                                    $whereId = [];
-                                                    $whereId['vod_id'] = $v['vod_id'];
-                                                    $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                                                    if ($up_res) {
-                                                        log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
+                                                $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
+                                                $vod_director = $vod_data['vod_director'] ?? '';
+                                                if (($vod_data['title'] == $v['vod_name'] || $vod_data['title'] == $v['vod_sub']) && ($v['vod_director'] == $vod_director)) {
+                                                    if (isset($vod_data['title'])) {
+                                                        unset($vod_data['title']);
+                                                    }
+                                                    if (!empty($vod_data)) {
+                                                        log::info('vod--');
+                                                        $whereId = [];
+                                                        $whereId['vod_id'] = $v['vod_id'];
+                                                        $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                                        if ($up_res) {
+                                                            log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            $details_data = [];
-                                            $details_data['name'] = $vod_data['title'] ?? '';
-                                            $details_data['name_as'] = $vod_data['vod_sub'] ?? '';
-                                            $details_data['vod_director'] = $vod_data['vod_director'] ?? '';
-                                            $details_data['vod_actor'] = $vod_data['vod_actor'] ?? '';
-                                            $details_data['score'] = $vod_data['vod_douban_score'] ?? '0.0';
-                                            $details_data['text'] = json_encode($vod_data, true);
-                                            if (!empty($details_data)) {
-                                                log::info('vo222d--');
-                                                $where_id = [];
+                                                $details_data = [];
+                                                $details_data['name'] = $vod_data['title'] ?? '';
+                                                $details_data['name_as'] = $vod_data['vod_sub'] ?? '';
+                                                $details_data['vod_director'] = $vod_data['vod_director'] ?? '';
+                                                $details_data['vod_actor'] = $vod_data['vod_actor'] ?? '';
+                                                $details_data['score'] = $vod_data['vod_douban_score'] ?? '0.0';
+                                                $details_data['text'] = json_encode($vod_data, true);
+                                                if (!empty($details_data)) {
+                                                    log::info('vo222d--');
+                                                    $where_id = [];
 //                                                    var_dump(1);die;
-                                                $where_id['douban_id'] = $as_k['id'];
-                                                $up_res = $this->cmsDb->where($where_id)->update($details_data);
-                                                if ($up_res) {
-                                                    log::info('采集豆瓣评分-deteils-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
+                                                    $where_id['douban_id'] = $as_k['id'];
+                                                    $up_res = $this->cmsDb->where($where_id)->update($details_data);
+                                                    if ($up_res) {
+                                                        log::info('采集豆瓣评分-deteils-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
+                                                    }
                                                 }
+
                                             }
 
                                         }
-
                                     }
                                 }
                             }
-
                         }
 
                     }
