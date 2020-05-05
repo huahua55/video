@@ -159,7 +159,7 @@ class DoubanScoreJs extends Common
                             $r->addHeader('Cookie', $cookie);
                             $r->setUrl($url);
                             $r->setTimeout(10000); // 10 seconds
-                            $r->setDelay(2); // 3 seconds
+                            $r->setDelay(3); // 3 seconds
                             return $r;
                         }, false, [
 //                        '--proxy' => "183.129.244.16:51134",
@@ -248,7 +248,7 @@ class DoubanScoreJs extends Common
                     $r->addHeader('Cookie', $cookie);
                     $r->setUrl($link_url);
                     $r->setTimeout(10000); // 10 seconds
-                    $r->setDelay(2); // 3 seconds
+                    $r->setDelay(3); // 3 seconds
                     return $r;
                 }, false, [
 //                        '--proxy' => "183.129.244.16:17238",
