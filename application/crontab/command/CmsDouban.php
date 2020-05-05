@@ -50,32 +50,32 @@ class CmsDouban extends Common
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
-            $type = $param['type']??'';
-            $d_type = $param['d_type']??'';
-            $ids = $param['id']??'';
+            $type = $param['type'] ?? '';
+            $d_type = $param['d_type'] ?? '';
+            $ids = $param['id'] ?? '';
 
             $start = 0;
             $page = 1;
             $limit = 20;
             $is_true = true;
             $where = [];
-            if($d_type == 1){
+            if ($d_type == 1 || $d_type == 2) {
                 $is_vod_id = Cache::get('vod_cms_details_id');
-                $where['douban_id'] = ['neq', 0];
-                if(!empty($is_vod_id)){
+                $where['name'] = ['neq', ''];
+                if (!empty($is_vod_id)) {
                     $where['id'] = ['gt', $is_vod_id];
                 }
-            }else{
+            } else {
                 $where['name'] = ['eq', ''];
                 $where['douban_id'] = ['gt', 0];
-                if(!empty($ids)){
+                if (!empty($ids)) {
                     $where['id'] = ['gt', $ids];
                 }
             }
             $where['error_count'] = ['lt', 10];
-            if($type ==1){
+            if ($type == 1) {
                 $order = 'id desc';
-            }else{
+            } else {
                 $order = 'id asc';
             }
             //进入循环 取出数据
@@ -100,45 +100,55 @@ class CmsDouban extends Common
 //                        sleep(1);
                         $url = $this->get_search_id . $v['douban_id'];
                         log::info('采集CmsDoubanUrl:', $url);
-                        try {
+                        if ($d_type == 2) {
+                            $whereId['id'] = $v['id'];
+                            $vod_data['name'] = mac_characters_format($v['name']);
+                            $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                            if ($up_res) {
+                                log::info('CmsDouban-try-succ::' . $v['name']);
+                            }
+                        } else {
 
-                            $mac_curl_get_data = $this->getCmsData($url);
-                            Log::info('采集CmsDouban-try:');
-                        } catch (Exception $e) {
-                            Log::info('err--过滤' . $url);
-                            continue;
-                        }
+
+                            try {
+                                $mac_curl_get_data = $this->getCmsData($url);
+                                Log::info('采集CmsDouban-try:');
+                            } catch (Exception $e) {
+                                Log::info('err--过滤' . $url);
+                                continue;
+                            }
 //                     print_r($getSearchData);
-                        if (!empty($mac_curl_get_data)) {
-                            log::info('采集CmsDouban-try_su:',$mac_curl_get_data);
-                            if(isset($mac_curl_get_data['status']) && $mac_curl_get_data['status'] == 200  && !empty($mac_curl_get_data['data'])){
-                                log::info('采集CmsDouban-try_-su-::');
-                                $resdata = $mac_curl_get_data['data'];
-                                $res = $this->getFFConTent($resdata);
-                                $is_log = true;
-                                $is_error = true;
-                                $whereId['id'] = $v['id'];
-                                if(empty($d_type) && $d_type != 1){
-                                    $vod_data['name_as'] = $res['vod_sub']??'';
-                                    $vod_data['vod_director'] = $res['vod_director']??'';
-                                    $vod_data['vod_actor'] = $res['vod_actor']??'';
-                                    $vod_data['score'] = $res['vod_score']??'';
-                                    $vod_data['text'] = json_encode($res,true);
-                                }
-                                $vod_data['name'] = mac_characters_format($resdata['vod_name']);
-                                $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                                if ($up_res) {
-                                    log::info('CmsDouban-try-succ::' . $v['name']);
+                            if (!empty($mac_curl_get_data)) {
+                                log::info('采集CmsDouban-try_su:', $mac_curl_get_data);
+                                if (isset($mac_curl_get_data['status']) && $mac_curl_get_data['status'] == 200 && !empty($mac_curl_get_data['data'])) {
+                                    log::info('采集CmsDouban-try_-su-::');
+                                    $resdata = $mac_curl_get_data['data'];
+                                    $res = $this->getFFConTent($resdata);
+                                    $is_log = true;
+                                    $is_error = true;
+                                    $whereId['id'] = $v['id'];
+                                    if (empty($d_type) && $d_type != 1) {
+                                        $vod_data['name_as'] = $res['vod_sub'] ?? '';
+                                        $vod_data['vod_director'] = $res['vod_director'] ?? '';
+                                        $vod_data['vod_actor'] = $res['vod_actor'] ?? '';
+                                        $vod_data['score'] = $res['vod_score'] ?? '';
+                                        $vod_data['text'] = json_encode($res, true);
+                                    }
+                                    $vod_data['name'] = mac_characters_format($resdata['vod_name']);
+                                    $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                    if ($up_res) {
+                                        log::info('CmsDouban-try-succ::' . $v['name']);
+                                    }
                                 }
                             }
-                        }
-                        if ($is_log == false) {
-                            log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
-                        }
-                        if ($is_error != true) {
-                            $whereErrId['id'] = $v['id'];
-                            $vod_err_data['error_count'] =$v['error_count'] + 1;
-                            $this->vodDb->where($whereErrId)->update($vod_err_data);
+                            if ($is_log == false) {
+                                log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
+                            }
+                            if ($is_error != true) {
+                                $whereErrId['id'] = $v['id'];
+                                $vod_err_data['error_count'] = $v['error_count'] + 1;
+                                $this->vodDb->where($whereErrId)->update($vod_err_data);
+                            }
                         }
                     }
                     $page = $page + 1;
@@ -146,7 +156,7 @@ class CmsDouban extends Common
             }
         } catch (Exception $e) {
             $output->writeln("end1111....");
-            log::info('采集CmsDoubanUrl-error::'.$e);
+            log::info('采集CmsDoubanUrl-error::' . $e);
         }
         $output->writeln("end....");
     }
