@@ -234,7 +234,7 @@ class DoubanScoreCopy extends Common
 
                                                 $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
                                                 $vod_director = $vod_data['vod_director'] ?? '';
-                                                if (($vod_data['title'] == $v['vod_name'] || $vod_data['title'] == $v['vod_sub']) && ($v['vod_director'] == $vod_director)) {
+                                                if ((mac_characters_format($vod_data['title']) == mac_characters_format($v['vod_name']) || mac_characters_format($vod_data['title']) == mac_characters_format($v['vod_sub'])) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
