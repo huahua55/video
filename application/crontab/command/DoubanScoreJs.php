@@ -191,7 +191,7 @@ class DoubanScoreJs extends Common
                     unset($startTime);
                     if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
-//                        $this->update_url_proxy($error_count, $url);
+                        $this->get_port = $this->getPort($c);
                     }
 
                     log::info('js-采集豆瓣评分-url-::' . $url);
