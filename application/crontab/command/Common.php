@@ -334,6 +334,7 @@ class Common extends Command
         //主演列表
         if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
             $vod_data['vod_actor'] = $res['vod_actor'];
+            $vod_data['vod_actor'] =str_replace('更多...','',$vod_data['vod_actor']);
             $vod_data['vod_actor']   =str_replace('/',',', $vod_data['vod_actor']);
         }
         //导演

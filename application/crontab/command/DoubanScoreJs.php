@@ -309,6 +309,7 @@ class DoubanScoreJs extends Common
                                         $ex_v = explode('(', $ex_v)[0] ?? $ex_v;
                                     }
                                     if ($s_k == 'vod_actor') {
+                                        $ex_v =str_replace('更多...','',$ex_v);
                                         $ex_v = trim(mb_substr($ex_v, 0, 240));
                                     }
                                     if ($s_k == 'vod_total') {

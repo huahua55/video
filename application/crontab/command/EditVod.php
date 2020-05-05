@@ -15,9 +15,10 @@ use think\Log;
 use Exception;
 
 
-class EditVod extends Command
+class EditVod extends Common
 {
     protected $vodDb;//db
+    protected $detailsDb;//db
     protected $ql;//querylist
     protected $type;//day
 
@@ -25,6 +26,7 @@ class EditVod extends Command
     {
         //db
         $this->vodDb = Db::name('vod');
+        $this->detailsDb = Db::name('douban_vod_details');
         //获取豆瓣id
         $this->setName('editVod')->addArgument('parameter')
             ->setDescription('定时计划：修改视频表');
@@ -41,14 +43,22 @@ class EditVod extends Command
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
+            $d_type = $param['d_type']??'';
+            if($d_type == 1){//详情表优化
+               $this->up_vod_details();
+               $output->writeln("out");
+               exit('完结');
+            }
             $this->type = $param['type']??'';
             $ids = $param['id']??'';
+
 
             $start = 0;
             $page = 1;
             $limit = 40;
             $is_true = true;
             $where = [];
+
 
             $where['vod_id'] = ['gt', 1];
             if(!empty($ids)){
@@ -150,6 +160,21 @@ class EditVod extends Command
 
 
 
+    // 取出数据豆瓣详情数据
+    protected function getVodDoubanData($where, $order, $page, $limit, $start)
+    {
+
+        $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
+        if( $this->type == 1){ //
+            $total = $this->detailsDb->where($where)->whereTime('vod_time','today')->count();
+            $list = $this->detailsDb->where($where)->whereTime('vod_time','today')->order($order)->limit($limit_str)->select();
+        }else{
+            $total = $this->detailsDb->where($where)->count();
+            $list = $this->detailsDb->where($where)->order($order)->limit($limit_str)->select();
+        }
+        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+    }
+
     // 取出数据豆瓣评分为空数据
     protected function getVodDoubanScoreData($where, $order, $page, $limit, $start)
     {
@@ -166,18 +191,69 @@ class EditVod extends Command
     }
 
 
-    protected function ParSing($parameter)
-    {
-        $parameter_array = array();
-        $arry = explode('#', $parameter);
-        foreach ($arry as $key => $value) {
-            $zzz = explode('=', $value);
-            $parameter_array[$zzz[0]] = $zzz[1]??'';
-
+    //update
+    public function up_vod_details(){
+        $start = 0;
+        $page = 1;
+        $limit = 40;
+        $is_true = true;
+        $where = [];
+        $where['id'] = ['gt', 0];
+        if(!empty($ids)){
+            $where['id'] = ['gt', $ids];
         }
-        return $parameter_array;
 
+        $order = 'id asc';
+        //进入循环 取出数据
+        while ($is_true) {
+            //取出数据
+            $douBanScoreData = $this->getVodDoubanData($where, $order, $page, $limit, $start);
+            if (!empty($douBanScoreData)) {
+                $pagecount = $douBanScoreData['pagecount'] ?? 0;
+                if ($page > $pagecount) {
+                    $is_true = false;
+                    log::info('结束...');
+                    break;
+                }
+                foreach ($douBanScoreData['list'] as $k => $v) {
+                    $name = mac_characters_format($v['name']);
+                    if((strpos($v['name'],'[') !== false || strpos($v['name'],'【') !== false || strpos($v['name'],'（') !== false || strpos($v['name'],'(') !== false || strpos($v['name'],' ') !== false) || ($name !=$v['name'])  ){
+                        $update['name']  =$name;
+                    }
+                    if(strpos($v['vod_director'],'/') !== false ){
+                        $update['vod_director']  =str_replace('/',',',$v['vod_director']);
+                    }
+                    $v['vod_actor']  =str_replace('更多...','',$v['vod_actor']);
+                    if(strpos($v['vod_actor'],'/') !== false ){
+                        $update['vod_actor']  =str_replace('/',',',$v['vod_actor']);
+                    }
+                    if(strpos($v['name_as'],'/') !== false ){
+                        $update['name_as']  =str_replace('/',',',$v['name_as']);
+                    }
+
+                    $text = json_decode($v['text'],true);
+                    foreach ($text as $t_k=>$t_v){
+                        if(strpos($text[$t_k],'/') !== false ){
+                            $text[$t_k]  =str_replace('/',',',$text[$t_k]);
+                        }
+                    }
+                    $update['text'] = json_encode($text,true);
+                    if(!empty($update)){
+                        log::info('修改update::-'.$v['id'].'-'.'-');
+                        $res =$this->detailsDb->where(['id'=>$v['id']])->update($update);
+                        if ($res > 1){
+                            log::info('修改成功');
+                        }else{
+                            log::info('修改err----'.$v['id']);
+                        }
+                    }
+                }
+                $page = $page + 1;
+            }
+        }
     }
+
+
 
 
 }

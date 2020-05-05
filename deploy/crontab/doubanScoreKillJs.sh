@@ -8,3 +8,9 @@ cd /data/www/video/
 ps -ef | grep doubanScoreJs | grep -v grep | awk '{print $2}' | xargs kill -9
 sleep 3
 php think doubanScoreJs
+
+php think doubanScoreJs id=1
+
+php think doubanScoreJs id=50000
+
+php think doubanScoreJs id=100000
