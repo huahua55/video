@@ -133,6 +133,7 @@ function openSearch(){
 	$("body").on('touchmove', function(event) {
     	event.preventDefault();
 	});
+	$(".historyWarp").removeClass('on');
 }
 function closeSearch(){
 	$(".searchPop").hide();

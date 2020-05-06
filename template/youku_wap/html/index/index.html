@@ -35,19 +35,11 @@
 		<!-- 公告------------- -->
 		<section class="mod">
 			<div class="mod-main notice-swiper">
-				<!-- Swiper -->
-				<div class="swiper-container">
-					<div class="swiper-wrapper">
-						<!--  style="height: 2rem;" -->
-						{macdiy:notice num="10" type="current" order="desc" by="level"}
-						<div class="swiper-slide">
-							<a href="{:mac_url_art_detail($vo)}">
-								{$vo.art_content}
-							</a>
-						</div>
-						{/macdiy:notice}
-					</div>
-				</div>
+				{macdiy:notice num="10" type="current" order="desc" by="level"}
+				<a href="{:mac_url_art_detail($vo)}">
+					{$vo.art_content}
+				</a>
+				{/macdiy:notice}
 			</div>
 		</section>
 		<!-- 公告-------------over------- -->
