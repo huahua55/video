@@ -352,15 +352,19 @@ class DoubanScoreJs extends Common
             if (!empty($getDetailsData)) {
                 //更新详情表
                 $this->vod_details_update($get_search_id, $getDetailsData, $v);
-                $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
+                $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($v['vod_name'])), mac_trim_all(mac_characters_format($as_k['title']))) * 100;
                 log::info('js-采集豆瓣评分-比例::' . $rade);
                 if ($rade > 40) {
                     //名字或者别名 和导演相等
                     $getDetailsData['vod_sub'] = $getDetailsData['vod_sub'] ?? '';
                     $getDetailsData['vod_director'] = $getDetailsData['vod_director'] ?? '';
+                    $vod_actor= $getDetailsData['vod_actor'] ?? '';
                     $v['vod_sub'] = $v['vod_sub'] ?? '';
                     $v['vod_director'] = $v['vod_director'] ?? '';
-                    if ((mac_trim_all($getDetailsData['vod_name']) == mac_trim_all($v['vod_name']) || (mac_trim_all($getDetailsData['vod_sub']) == mac_trim_all($v['vod_sub'])) || (mac_trim_all($getDetailsData['vod_sub']) == mac_trim_all($v['vod_name']))) && mac_trim_all($getDetailsData['vod_director']) == mac_trim_all($v['vod_director'])) {
+                    $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
+                    log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
+//                    if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
+                    if (($vod_actor_rade > 85 || $rade > 95 || mac_trim_all(mac_characters_format($getDetailsData['vod_name'])) == mac_trim_all(mac_characters_format($v['vod_name'])) || (mac_trim_all(mac_characters_format($getDetailsData['vod_sub'])) == mac_trim_all(mac_characters_format($v['vod_sub']))) || (mac_trim_all(mac_characters_format($getDetailsData['vod_sub'])) == mac_trim_all(mac_characters_format($v['vod_name'])))) && mac_trim_all($getDetailsData['vod_director']) == mac_trim_all($v['vod_director'])) {
                         $whereId = [];
                         $whereId['vod_id'] = $v['vod_id'];
                         $up_res = $this->vodDb->where($whereId)->update($getDetailsData);
