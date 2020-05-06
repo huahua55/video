@@ -118,19 +118,58 @@ class DoubanScoreCopy extends Common
                     //开启代理
 //                    $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
-                    $mac_curl_get_data = $this->ql->get($url, null, [
-                        // 设置代理
-                            'proxy' => 'http://58.241.203.3:4286',
-//                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
-                        //设置超时时间，单位：秒
-                        'timeout' => 30,
-                        'headers' => [
-                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                            'User-Agent' => mac_ua_all(rand(0, 17)),
-                            'Cookie' => $cookie
-                        ]
-                    ])->getHtml();
-                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+//                    $mac_curl_get_data = $this->ql->get($url, null, [
+//                        // 设置代理
+//                            'proxy' => 'http://58.241.203.3:4286',
+////                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+//                        //设置超时时间，单位：秒
+//                        'timeout' => 30,
+//                        'headers' => [
+//                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+//                            'User-Agent' => mac_ua_all(rand(0, 17)),
+//                            'Cookie' => $cookie
+//                        ]
+//                    ])->getHtml();
+//                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+                    $targetUrl = $url;
+
+                    // 代理服务器
+                    $proxyServer = "http:"."http://58.241.203.3:4286";
+
+        // 隧道身份信息
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $targetUrl);
+
+        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, false);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        // 设置代理服务器
+        curl_setopt($ch, CURLOPT_PROXYTYPE, 0); //http
+
+//        curl_setopt($ch, CURLOPT_PROXYTYPE, 5); //sock5
+
+        curl_setopt($ch, CURLOPT_PROXY, $proxyServer);
+
+        // 设置隧道验证信息
+        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727;)");
+
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+        curl_setopt($ch, CURLOPT_HEADER, true);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        var_dump($result);die;
                     print_r($mac_curl_get_data);die;
                     try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
