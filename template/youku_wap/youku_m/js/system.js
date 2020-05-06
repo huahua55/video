@@ -283,7 +283,9 @@ var MAC = {
 	},
 	'Verify': {
 		'Init': function() {
-			MAC.Verify.Focus();
+			// MAC.Verify.Focus();
+			$(".mac_verify").removeClass('mac_verify').after(MAC.Verify.Show());
+			$(".mac_verify").unbind();
 			MAC.Verify.Click();
 		},
 		'Focus': function() { //验证码框焦点
