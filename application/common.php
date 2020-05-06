@@ -692,7 +692,15 @@ function mac_trim_all($str)//删除空格
     $hou=array("","","","","");
     return str_replace($qian,$hou,$str);
 }
-
+//交集相似度
+function mac_intersect($str1,$str2)
+{
+    $str1 = array_filter(explode(',',$str1));
+    $str2 = array_filter(explode(',',$str2));
+    $len =  count($str1) +  count($str2);
+    $percent =   array_intersect($str1, $str2);
+    return  (count($percent) *2 / $len )*100;
+}
 //去除多余空格
 function mac_filter_trim($str){
    return implode(',',array_filter(explode(',', $str)));

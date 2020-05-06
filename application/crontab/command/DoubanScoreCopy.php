@@ -53,30 +53,6 @@ class DoubanScoreCopy extends Common
     }
 
 
-//使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
-    public function testing($url, $auth_port)
-    {
-        $ch = curl_init();
-        $timeout = 30;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
-        curl_setopt($ch, CURLOPT_PROXY, $this->proxy_server); //代理服务器地址
-        curl_setopt($ch, CURLOPT_PROXYPORT, $auth_port); //代理服务器端口
-        curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
-        //如果访问为https协议
-        if (substr($url, 0, 5) == "https") {
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // 对认证证书来源的检查
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); // 从证书中检查SSL加密算法是否存在
-        }
-
-        $file_contents = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        return $httpCode;
-    }
-
     protected function execute(Input $input, Output $output)
     {
         // 输出到日志文件
@@ -157,7 +133,7 @@ class DoubanScoreCopy extends Common
                             ]
                         ])->getHtml();
                         $mac_curl_get_data = json_decode($mac_curl_get_data, true);
-                        Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+                        Log::info('err--proxyi-' . $this->proxy_server . ":" . $this->get_port);
                     } catch (Exception $e) {
                         $error_i_count++;
                         if ($error_i_count > 18) {
@@ -199,7 +175,7 @@ class DoubanScoreCopy extends Common
                                     log::info('采集豆瓣评分-title-su-::g' . $as_k['title'] . '---' . $v['vod_id']);
                                 } else {
                                     //                        if(mac_trim_all($v['vod_name']) == mac_trim_all($as_k['title'])){
-                                    $rade = $lcs->getSimilar(mac_trim_all($v['vod_name']), mac_trim_all($as_k['title'])) * 100;
+                                    $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($v['vod_name'])), mac_trim_all(mac_characters_format($as_k['title']))) * 100;
                                     log::info('采集豆瓣评分-比例::' . $rade);
                                     if ($rade > 50) {
                                         log::info('采集豆瓣评分-title-su-::' . $as_k['title'] . '---' . $v['vod_id']);
@@ -219,7 +195,7 @@ class DoubanScoreCopy extends Common
                                                     ]
                                                 ])->getHtml();
                                                 $get_url_search_id_data = json_decode($get_url_search_id_data, true);
-                                                Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
+                                                Log::info('err--proxyb-' . $this->proxy_server . ":" . $this->get_port);
                                             } catch (Exception $e) {
                                                 Log::info('err--过滤' . $e . $url);
                                                 continue;
@@ -227,10 +203,18 @@ class DoubanScoreCopy extends Common
 
                                             if (!empty($get_url_search_id_data)) {
                                                 $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
+
                                                 $vod_director = $vod_data['vod_director'] ?? '';
                                                 $title = $vod_data['title'] ?? '';
-                                                $title_lang = $title . $vod_director['vod_lang'];
-                                                if (($title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
+                                                $title_lang = $vod_data['vod_lang']??'';
+                                                $title_lang = $title . $title_lang;
+                                                $vod_actor = $vod_data['vod_actor']??'';
+                                                //相似度
+                                                $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
+
+                                                log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
+
+                                                if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
@@ -370,7 +354,7 @@ class DoubanScoreCopy extends Common
             $get_port_count = rand(1, count($get_port));
         }
         $k = $get_port_count - 1;
-        $this->get_port = $get_port[$k] ?? '';
+        $this->get_port = isset($get_port[$k])?$get_port[$k]:'';
 
     }
 
