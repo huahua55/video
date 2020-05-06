@@ -120,8 +120,8 @@ class DoubanScoreCopy extends Common
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
                     $mac_curl_get_data = $this->ql->get($url, null, [
                         // 设置代理
-//                            'proxy' => 'http://183.129.244.16:55466',
-                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+                            'proxy' => 'http://58.218.92.68:3104',
+//                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
                         //设置超时时间，单位：秒
                         'timeout' => 30,
                         'headers' => [
