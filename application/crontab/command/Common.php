@@ -140,7 +140,14 @@ class Common extends Command
     protected function getCookie($url, $is = false)
     {
         if ($is != true) {
-            return 'll="108288";bid=h4nqLajQEBo';
+            $str =[
+//                0=>'h4nqLajQEBo',
+                1=>'4OXcKrHanRU',
+                2=>'a0drRqH-g-0',
+                3=>'BsAnBI9c75E',
+            ];
+            $str_count= rand(0,count($str));
+            return 'll="108288";bid='.$str[$str_count].'';
         } else {
             $client = new Client();
             $response = $client->get($url);
@@ -220,20 +227,25 @@ class Common extends Command
             '&' . $this->key_pattern . $this->pattern .
             '&' .'user_ip=' . $ip;
     }
-    public function getPort($a = 0)
+    public function getPort($a = 0,$port_list =false)
     {
         $file = 'log.txt';
        if(!empty($times)){
           $this->times =  Cache::get('vod_times_cj_open_url');
        }
-        if ($a > 3) {
+
+        if ($a >= 3) {
             $open_data = mac_curl_get($this->get_open_url());
             file_put_contents($file, date('Y-m-d H:i:s', time())  . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);
             $code =  $open_data['code'] ??'';
             $left_ip =  $open_data['left_ip'] ??'';
             if (!empty($open_data) && $code == 100 && $left_ip > 1) {
                 if (!empty($open_data['port'])) {
-                    return $open_data['port'][0];
+                    if($port_list == true){
+                        return $open_data['port'];
+                    }else{
+                        return $open_data['port'][0];
+                    }
                 }
             }else{
 //                exit('终止');
@@ -263,14 +275,21 @@ class Common extends Command
                     }
                     $this->times = strtotime(array_pop($logs_data));
                     Cache::set('vod_times_cj_open_url',$this->times);
-                    return $queryData['port'][0];
+                    if($port_list == true){
+                        return $queryData['port'];
+                    }else{
+                        return $queryData['port'][0];
+                    }
                 } else {
                     $a++;
-                    $this->getPort($a);
+                    $this->getPort($a,$port_list);
                 }
-                return strval($queryData['port'][0]);
+                if($port_list == true){
+                     return  $queryData['port'];
+                }else{
+                    return strval($queryData['port'][0]);
+                }
             }
-
         } catch (\Exception $e) {
             file_put_contents($file, 'open_url||' . $e . PHP_EOL, FILE_APPEND);
         }

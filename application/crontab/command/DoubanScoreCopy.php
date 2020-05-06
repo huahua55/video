@@ -28,6 +28,7 @@ class DoubanScoreCopy extends Common
     protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
     protected $get_search_id = 'http://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
     protected $ql;//querylist
+    protected $num = 5;//获取代理端口数量
 
 
     protected function configure()
@@ -96,13 +97,8 @@ class DoubanScoreCopy extends Common
                 Cache::set('vod_id_list_douban_score', 1);
             }
 
-            //开启代理
-            $this->get_port = $this->getPort();
-            if ($this->get_port == false) {
-                $this->get_port = $this->getPort();
-                log::info('get_port-::');
-            }
-//        p($A);
+
+
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
             $start = 0;
@@ -141,11 +137,11 @@ class DoubanScoreCopy extends Common
 
                 foreach ($douBanScoreData['list'] as $k => $v) {
                     $error_count = 1;
+                    $error_i_count = 1;
                     $is_log = false;
                     $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > ($this->times + 180)) {
-                        $this->get_port = $this->getPort();
-                    }
+                    //开启代理
+                    $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
                     try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
@@ -157,28 +153,28 @@ class DoubanScoreCopy extends Common
                             'timeout' => 30,
                             'headers' => [
                                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+                                'User-Agent' =>  mac_ua_all(rand(0,17)),
                                 'Cookie' => $cookie
                             ]
                         ])->getHtml();
                         $mac_curl_get_data = json_decode($mac_curl_get_data, true);
                         Log::info('err--proxy-' . $this->proxy_server . ":" . $this->get_port);
                     } catch (Exception $e) {
+                        $error_i_count++;
+                        if ($error_i_count > 18) {
+                            $is_true = false;
+                            exit("错误i----");
+                            break;
+                        }
                         Log::info('err--过滤' . $url);
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
-                        log::info('采集豆瓣评分-url-err::');
                         $error_count++;
-                        if ($error_count > 10) {
-                            if ($this->get_port == false) {
-                                $this->get_port = $this->getPort();
-                                log::info('get_port-::');
-                            }
-                        }
-                        if ($error_count > 15) {
-                            Log::info('err--过滤' . $url);
-                            continue;
+                        if ($error_count > 18) {
+                            $is_true = false;
+                            exit("错误----");
+                            break;
                         }
                     }
                     log::info('采集豆瓣评分-url-::' . $url);
@@ -219,7 +215,7 @@ class DoubanScoreCopy extends Common
                                                     'timeout' => 30,
                                                     'headers' => [
                                                         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+                                                        'User-Agent' =>  mac_ua_all(rand(0,17)),
                                                         'Cookie' => $cookie
                                                     ]
                                                 ])->getHtml();
@@ -231,10 +227,11 @@ class DoubanScoreCopy extends Common
                                             }
 
                                             if (!empty($get_url_search_id_data)) {
-
                                                 $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
                                                 $vod_director = $vod_data['vod_director'] ?? '';
-                                                if ((mac_characters_format($vod_data['title']) == mac_characters_format($v['vod_name']) || mac_characters_format($vod_data['title']) == mac_characters_format($v['vod_sub'])) && ($v['vod_director'] == $vod_director)) {
+                                                $title = $vod_data['title']??'';
+                                                $title_lang =$title.$vod_director['vod_lang'];
+                                                if (($title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))   ) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
@@ -249,16 +246,14 @@ class DoubanScoreCopy extends Common
                                                     }
                                                 }
                                                 $details_data = [];
-                                                $details_data['name'] = $vod_data['title'] ?? '';
+                                                $details_data['name'] = $title;
                                                 $details_data['name_as'] = $vod_data['vod_sub'] ?? '';
                                                 $details_data['vod_director'] = $vod_data['vod_director'] ?? '';
                                                 $details_data['vod_actor'] = $vod_data['vod_actor'] ?? '';
                                                 $details_data['score'] = $vod_data['vod_douban_score'] ?? '0.0';
                                                 $details_data['text'] = json_encode($vod_data, true);
                                                 if (!empty($details_data)) {
-                                                    log::info('vo222d--');
                                                     $where_id = [];
-//                                                    var_dump(1);die;
                                                     $where_id['douban_id'] = $as_k['id'];
                                                     $up_res = $this->cmsDb->where($where_id)->update($details_data);
                                                     if ($up_res) {
@@ -294,18 +289,25 @@ class DoubanScoreCopy extends Common
     {
         $vod_data = [];
         if (isset($get_url_search_id_data['aka'])) {
-            $vod_data['vod_sub'] = implode('/', $get_url_search_id_data['aka']);
+            array_push($get_url_search_id_data['aka'],$get_url_search_id_data['original_title']);
+            $get_url_search_id_data['aka'] = array_unique($get_url_search_id_data['aka']);
+            $vod_data['vod_sub'] = implode(',', $get_url_search_id_data['aka']);
         }
         if (isset($get_url_search_id_data['episodes_count'])) {
             $vod_data['vod_total'] = $get_url_search_id_data['episodes_count'] ?? '';
             // $vod_data['vod_serial'] ='';
         }
         if (isset($get_url_search_id_data['languages'])) {
-            $vod_data['vod_lang'] = implode('/', $get_url_search_id_data['languages']);
+            $vod_data['vod_lang'] = implode(',', $get_url_search_id_data['languages']);
         }
-        $vod_data['vod_state'] = '正片';
+        if(isset($get_url_search_id_data['has_video']) && $get_url_search_id_data['has_video'] == false){
+            $vod_data['vod_state'] = '暂无上映';
+        }else{
+            $vod_data['vod_state'] = '正片';
+        }
+
         if (isset($get_url_search_id_data['countries'])) {
-            $vod_data['vod_area'] = implode('/', $get_url_search_id_data['countries']);
+            $vod_data['vod_area'] = implode(',', $get_url_search_id_data['countries']);
         }
         if (isset($get_url_search_id_data['casts'])) {
             $vod_data['vod_actor'] = implode(',', array_column($get_url_search_id_data['casts'], 'name'));
@@ -320,37 +322,51 @@ class DoubanScoreCopy extends Common
             $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdate'];
         }
         if (isset($get_url_search_id_data['rating']['average'])) {
-            $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
+          $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
         }
         if (isset($get_url_search_id_data['ratings_count'])) {
             $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
         }
-//        if($vod_data['vod_score_all'] == 0 || empty($vod_data['vod_score_all'])){
-//            $vod_data['vod_score'] = intval($vod_data['vod_score_num']) ;
-//        }else{
-//            $vod_data['vod_score'] = intval($vod_data['vod_score_all']);
-//        }
-//        if (isset($vod_data['vod_score_num']) && isset($vod_data['vod_score_all'])) {
-
-//        }
-//        if (isset($get_url_search_id_data['summary'])) {
-//            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
-//        }
+        if (isset($get_url_search_id_data['summary'])) {
+            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
+        }
         if (isset($get_url_search_id_data['durations'][0])) {
             $vod_data['vod_duration'] = $get_url_search_id_data['durations'][0];
+            if (strpos($vod_data['vod_duration'], '(') !== false) {
+                $vod_data['vod_duration'] = explode('(', $vod_data['vod_duration'])[0] ?? $vod_data['vod_duration'];
+            }
         }
         $vod_data['vod_douban_id'] = $id;
         if (isset($get_url_search_id_data['genres'])) {
             $vod_data['vod_tag'] = $vod_data['vod_class'] = implode(',', $get_url_search_id_data['genres']);
         }
         if (isset($get_url_search_id_data['title'])) {
-            $vod_data['title'] = $get_url_search_id_data['title'];
+            $vod_data['title'] = mac_trim_all(mac_characters_format($get_url_search_id_data['title']));
         }
         if (isset($get_url_search_id_data['share_url'])) {
             $vod_data['vod_reurl'] = $get_url_search_id_data['share_url'];
         }
         $vod_data['vod_author'] = '豆瓣';
         return $vod_data;
+    }
+
+
+    //获取getDate
+    public function getPortData()
+    {
+        $get_port = $this->getPort(0,true);
+//                    time() > ($this->times + 180)
+        if (empty($get_port)) {
+            $get_port = $this->getPort(3,true);
+        }
+        $get_port_count = rand(1,count($get_port));
+        if(count($get_port) < $this->num){
+            $get_port = $this->getPort(3,true);
+            $get_port_count = rand(1,count($get_port));
+        }
+        $k =$get_port_count-1;
+        $this->get_port =  $get_port[$k]??'';
+
     }
 
     public function headers()
