@@ -339,7 +339,7 @@ class Common extends Command
         }
         //资源类别
         if (isset($res['vod_state']) && !empty($res['vod_state'])) {
-            $vod_data['vod_state'] = $res['vod_state'];
+            $vod_data['vod_state'] = mac_filter_trim($res['vod_state']);
         }
         //视频标签
         if (isset($res['vod_type']) && !empty($res['vod_type'])) {
@@ -348,18 +348,18 @@ class Common extends Command
         }
         //发行地区
         if (isset($res['vod_area']) && !empty($res['vod_area'])) {
-            $vod_data['vod_area'] = trim($res['vod_area']);
+            $vod_data['vod_area'] = mac_filter_trim(trim($res['vod_area']));
         }
         //主演列表
         if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
             $vod_data['vod_actor'] = $res['vod_actor'];
             $vod_data['vod_actor'] =str_replace('更多...','',$vod_data['vod_actor']);
-            $vod_data['vod_actor']   =mac_substring(str_replace('/',',', $vod_data['vod_actor']),255);
+            $vod_data['vod_actor']   =mac_filter_trim(mac_substring(str_replace('/',',', $vod_data['vod_actor']),255));
         }
         //导演
         if (isset($res['vod_director'])  && !empty($res['vod_director'])) {
             $vod_data['vod_director'] = trim($res['vod_director']);
-            $vod_data['vod_director']   =mac_substring(str_replace('/',',', $vod_data['vod_director']),255);
+            $vod_data['vod_director']   = mac_filter_trim(mac_substring(str_replace('/',',', $vod_data['vod_director']),255));
         }
         //上映日期
         if (isset($res['vod_filmtime'])  && !empty($res['vod_filmtime'])) {
@@ -372,7 +372,7 @@ class Common extends Command
         //编剧
         if (isset($res['vod_writer']) && !empty($res['vod_writer'])) {
             $vod_data['vod_writer'] = mac_format_text($res['vod_writer']);
-            $vod_data['vod_writer']   =str_replace('/',',', $vod_data['vod_writer']);
+            $vod_data['vod_writer']   =mac_filter_trim(str_replace('/',',', $vod_data['vod_writer']));
         }
         //平均分
         if (isset($res['vod_gold']) && !empty($res['vod_gold'])) {
@@ -423,7 +423,7 @@ class Common extends Command
         //副本名称
         if (isset($res['vod_title']) && !empty($res['vod_title'])) {
             $vod_data['vod_sub'] = $res['vod_title'];
-            $vod_data['vod_sub']   =str_replace('/',',', $vod_data['vod_sub']);
+            $vod_data['vod_sub']   =mac_filter_trim(str_replace('/',',', $vod_data['vod_sub']));
         }
         return $vod_data;
     }
