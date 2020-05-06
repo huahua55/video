@@ -693,6 +693,11 @@ function mac_trim_all($str)//删除空格
     return str_replace($qian,$hou,$str);
 }
 
+//去除多余空格
+function mac_filter_trim($str){
+   return implode(',',array_filter(explode(',', $str)));
+}
+
 //名字过滤
 function mac_characters_format($vod_name){
 //    $vod_name = mac_trim_all($vod_name);

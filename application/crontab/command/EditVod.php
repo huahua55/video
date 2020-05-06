@@ -220,21 +220,28 @@ class EditVod extends Common
                     if((strpos($v['name'],'[') !== false || strpos($v['name'],'【') !== false || strpos($v['name'],'（') !== false || strpos($v['name'],'(') !== false || strpos($v['name'],' ') !== false) || ($name !=$v['name'])  ){
                         $update['name']  =$name;
                     }
-                    if(strpos($v['vod_director'],'/') !== false ){
+
+                    if(strpos($v['vod_director'],'/') !== false  || strpos($v['vod_director'],',') !== false ){
                         $update['vod_director']  =str_replace('/',',',$v['vod_director']);
+                        $update['vod_director']  =mac_filter_trim($update['vod_director']);
                     }
+
+
                     $v['vod_actor']  =str_replace('更多...','',$v['vod_actor']);
-                    if(strpos($v['vod_actor'],'/') !== false ){
+                    if(strpos($v['vod_actor'],'/') !== false  || strpos($v['vod_actor'],',') !== false ){
                         $update['vod_actor']  =str_replace('/',',',$v['vod_actor']);
+                        $update['vod_actor']  =mac_filter_trim($update['vod_actor']);
                     }
-                    if(strpos($v['name_as'],'/') !== false ){
+                    if(strpos($v['name_as'],'/') !== false || strpos($v['name_as'],',') !== false){
                         $update['name_as']  =str_replace('/',',',$v['name_as']);
+                        $update['name_as']  =mac_filter_trim($update['name_as']);
                     }
 
                     $text = json_decode($v['text'],true);
                     foreach ($text as $t_k=>$t_v){
-                        if(strpos($text[$t_k],'/') !== false ){
+                        if(strpos($text[$t_k],'/') !== false || strpos($text[$t_k],',') !== false ){
                             $text[$t_k]  =str_replace('/',',',$text[$t_k]);
+                            $text[$t_k]  =mac_filter_trim($text[$t_k]);
                         }
                     }
                     $update['text'] = json_encode($text,true);
