@@ -354,12 +354,12 @@ class Common extends Command
         if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
             $vod_data['vod_actor'] = $res['vod_actor'];
             $vod_data['vod_actor'] =str_replace('更多...','',$vod_data['vod_actor']);
-            $vod_data['vod_actor']   =str_replace('/',',', $vod_data['vod_actor']);
+            $vod_data['vod_actor']   =mac_substring(str_replace('/',',', $vod_data['vod_actor']),255);
         }
         //导演
         if (isset($res['vod_director'])  && !empty($res['vod_director'])) {
             $vod_data['vod_director'] = trim($res['vod_director']);
-            $vod_data['vod_director']   =str_replace('/',',', $vod_data['vod_director']);
+            $vod_data['vod_director']   =mac_substring(str_replace('/',',', $vod_data['vod_director']),255);
         }
         //上映日期
         if (isset($res['vod_filmtime'])  && !empty($res['vod_filmtime'])) {

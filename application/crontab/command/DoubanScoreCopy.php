@@ -316,8 +316,9 @@ class DoubanScoreCopy extends Common
         if (isset($get_url_search_id_data['casts'])) {
             $vod_data['vod_actor'] = implode(',', array_column($get_url_search_id_data['casts'], 'name'));
         }
+
         if (isset($get_url_search_id_data['directors'])) {
-            $vod_data['vod_director'] = implode(',', array_column($get_url_search_id_data['directors'], 'name'));
+            $vod_data['vod_director'] = mac_substring(implode(',', array_column($get_url_search_id_data['directors'], 'name')),255);
         }
         if (isset($get_url_search_id_data['writers'])) {
             $vod_data['vod_writer'] = implode(',', array_column($get_url_search_id_data['writers'], 'name'));
