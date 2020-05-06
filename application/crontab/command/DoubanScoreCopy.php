@@ -118,19 +118,20 @@ class DoubanScoreCopy extends Common
                     //开启代理
 //                    $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
-//                    $mac_curl_get_data = $this->ql->get($url, null, [
-//                        // 设置代理
-//                            'proxy' => 'http://58.241.203.3:4286',
-////                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
-//                        //设置超时时间，单位：秒
-//                        'timeout' => 30,
-//                        'headers' => [
-//                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-//                            'User-Agent' => mac_ua_all(rand(0, 17)),
-//                            'Cookie' => $cookie
-//                        ]
-//                    ])->getHtml();
-//                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+                    $mac_curl_get_data = $this->ql->get($url, null, [
+                        // 设置代理
+                            'proxy' => 'http://58.218.200.226:3646',
+//                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+                        //设置超时时间，单位：秒
+                        'timeout' => 30,
+                        'headers' => [
+                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                            'User-Agent' => mac_ua_all(rand(0, 17)),
+                            'Cookie' => $cookie
+                        ]
+                    ])->getHtml();
+                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+                    print_r($mac_curl_get_data);die;
                     $targetUrl = $url;
 //                    $targetUrl ="http://baidu.com";
 
