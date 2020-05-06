@@ -135,7 +135,7 @@ class DoubanScoreCopy extends Common
 //                    $targetUrl ="http://baidu.com";
 
                     // 代理服务器
-                    $proxyServer = "http:"."http://58.218.92.68:3043";
+                    $proxyServer = "http:"."http://58.218.200.226:3646";
 
         // 隧道身份信息
         $ch = curl_init();
