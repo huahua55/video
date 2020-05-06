@@ -477,11 +477,13 @@ class Index extends Base{
     // 用户记录日志
     public function userLog(){
         // 用户注册
-        $mac    = $this->_param['mac'] ??  "" ;
-        $type   = $this->_param['type'] ??  "" ;
-        $rid    = $this->_param['rid'] ??  "" ;
-        $sid    = $this->_param['sid'] ??  "" ;
-        $nid    = $this->_param['nid'] ??  "" ;
+        $mac        = $this->_param['mac'] ??  "" ;
+        $type       = $this->_param['type'] ??  "" ;
+        $rid        = $this->_param['rid'] ??  "" ;
+        $sid        = $this->_param['sid'] ??  "" ;
+        $nid        = $this->_param['nid'] ??  "" ;
+        $channel    = $this->_param['channel'] ??  0 ;
+        $version    = $this->_param['version'] ??  "" ;
 
         if($mac == "" || $type == "" || $rid == ""){
             return json_return("参数错误",0);
@@ -491,9 +493,17 @@ class Index extends Base{
         $userRes = $userModel->infoData(['user_name' => $mac],"user_id");
 
         if($userRes['code'] == 1002){
+            $channelInfo =  model("Channel")->where(['name'=> $channel])->find();
+            $channel_id  = isset($channelInfo['id']) ? $channelInfo['id'] : 0;
+
+            $versionInfo =  model("AppVersion")->where(['app_version'=> $version])->find();
+            $version_id  = isset($versionInfo['id']) ? $versionInfo['id'] : 0;
+
             $userModel->saveData([
-                'user_name' => $mac,
-                'user_pwd'  => "123456",
+                'user_name'     => $mac,
+                'user_pwd'      => "123456",
+                'channel_id'    => $channel_id,
+                'version_id'    => $version_id,
             ]);
             $userId = $userModel::getLastInsID();
         }else{
