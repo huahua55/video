@@ -272,7 +272,6 @@ class DoubanScoreCopy extends Common
                                 }
                             }
                         }
-
                     }
                     Cache::set('vod_id_list_douban_score', $v['vod_id']);
                     if ($is_log == false) {
