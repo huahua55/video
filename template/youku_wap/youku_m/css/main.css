@@ -996,7 +996,6 @@ cursor: pointer;
 .notice-swiper p{
 	position: relative;
     width:100%;
-    /* height: 2rem; */
     margin: 0 auto;
     box-sizing: border-box;
     background-color: #FFF;
