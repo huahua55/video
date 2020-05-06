@@ -132,7 +132,7 @@ class DoubanScoreCopy extends Common
 //                    ])->getHtml();
 //                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
                     $targetUrl = $url;
-                    $targetUrl ="http://baidu.com";
+//                    $targetUrl ="http://baidu.com";
 
                     // 代理服务器
                     $proxyServer = "http:"."http://58.241.203.3:4286";
