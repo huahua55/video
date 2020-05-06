@@ -327,9 +327,9 @@ class DoubanScoreCopy extends Common
         if (isset($get_url_search_id_data['ratings_count'])) {
             $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
         }
-        if (isset($get_url_search_id_data['summary'])) {
-            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
-        }
+//        if (isset($get_url_search_id_data['summary'])) {
+//            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
+//        }
         if (isset($get_url_search_id_data['durations'][0])) {
             $vod_data['vod_duration'] = $get_url_search_id_data['durations'][0];
             if (strpos($vod_data['vod_duration'], '(') !== false) {
