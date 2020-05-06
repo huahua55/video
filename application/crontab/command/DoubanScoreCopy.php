@@ -26,7 +26,7 @@ class DoubanScoreCopy extends Common
     protected $cmsDb;//db
     protected $search_url_re = 'https://search.douban.com/movie/subject_search?search_text=%s&cat=1002';//豆瓣搜索接口
     protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
-    protected $get_search_id = 'http://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
+    protected $get_search_id = 'https://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
     protected $ql;//querylist
     protected $num = 5;//获取代理端口数量
 
