@@ -98,7 +98,6 @@ class DoubanScoreCopy extends Common
             }
 
 
-
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
             $start = 0;
@@ -153,7 +152,7 @@ class DoubanScoreCopy extends Common
                             'timeout' => 30,
                             'headers' => [
                                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                'User-Agent' =>  mac_ua_all(rand(0,17)),
+                                'User-Agent' => mac_ua_all(rand(0, 17)),
                                 'Cookie' => $cookie
                             ]
                         ])->getHtml();
@@ -215,7 +214,7 @@ class DoubanScoreCopy extends Common
                                                     'timeout' => 30,
                                                     'headers' => [
                                                         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                                        'User-Agent' =>  mac_ua_all(rand(0,17)),
+                                                        'User-Agent' => mac_ua_all(rand(0, 17)),
                                                         'Cookie' => $cookie
                                                     ]
                                                 ])->getHtml();
@@ -229,9 +228,9 @@ class DoubanScoreCopy extends Common
                                             if (!empty($get_url_search_id_data)) {
                                                 $vod_data = $this->getConTent($get_url_search_id_data, $as_k['id']);
                                                 $vod_director = $vod_data['vod_director'] ?? '';
-                                                $title = $vod_data['title']??'';
-                                                $title_lang =$title.$vod_director['vod_lang'];
-                                                if (($title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))   ) && ($v['vod_director'] == $vod_director)) {
+                                                $title = $vod_data['title'] ?? '';
+                                                $title_lang = $title . $vod_director['vod_lang'];
+                                                if (($title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
@@ -239,7 +238,12 @@ class DoubanScoreCopy extends Common
                                                         log::info('vod--');
                                                         $whereId = [];
                                                         $whereId['vod_id'] = $v['vod_id'];
-                                                        $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                                        try {
+                                                            $up_res = $this->vodDb->where($whereId)->update($vod_data);
+                                                        } catch (Exception $e) {
+                                                            log::info('采集豆瓣评分-过滤::');
+                                                           continue;
+                                                        }
                                                         if ($up_res) {
                                                             log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
                                                         }
@@ -281,6 +285,7 @@ class DoubanScoreCopy extends Common
             $output->writeln("end.3." . $e);
             $output->writeln("end.311." . $this->vodDb->getlastsql());
             file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+
         }
         $output->writeln("end....");
     }
@@ -289,7 +294,7 @@ class DoubanScoreCopy extends Common
     {
         $vod_data = [];
         if (isset($get_url_search_id_data['aka'])) {
-            array_push($get_url_search_id_data['aka'],$get_url_search_id_data['original_title']);
+            array_push($get_url_search_id_data['aka'], $get_url_search_id_data['original_title']);
             $get_url_search_id_data['aka'] = array_unique($get_url_search_id_data['aka']);
             $vod_data['vod_sub'] = implode(',', $get_url_search_id_data['aka']);
         }
@@ -300,9 +305,9 @@ class DoubanScoreCopy extends Common
         if (isset($get_url_search_id_data['languages'])) {
             $vod_data['vod_lang'] = implode(',', $get_url_search_id_data['languages']);
         }
-        if(isset($get_url_search_id_data['has_video']) && $get_url_search_id_data['has_video'] == false){
+        if (isset($get_url_search_id_data['has_video']) && $get_url_search_id_data['has_video'] == false) {
             $vod_data['vod_state'] = '暂无上映';
-        }else{
+        } else {
             $vod_data['vod_state'] = '正片';
         }
 
@@ -322,7 +327,7 @@ class DoubanScoreCopy extends Common
             $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdate'];
         }
         if (isset($get_url_search_id_data['rating']['average'])) {
-          $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
+            $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
         }
         if (isset($get_url_search_id_data['ratings_count'])) {
             $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
@@ -354,18 +359,18 @@ class DoubanScoreCopy extends Common
     //获取getDate
     public function getPortData()
     {
-        $get_port = $this->getPort(0,true);
+        $get_port = $this->getPort(0, true);
 //                    time() > ($this->times + 180)
         if (empty($get_port)) {
-            $get_port = $this->getPort(3,true);
+            $get_port = $this->getPort(3, true);
         }
-        $get_port_count = rand(1,count($get_port));
-        if(count($get_port) < $this->num){
-            $get_port = $this->getPort(3,true);
-            $get_port_count = rand(1,count($get_port));
+        $get_port_count = rand(1, count($get_port));
+        if (count($get_port) < $this->num) {
+            $get_port = $this->getPort(3, true);
+            $get_port_count = rand(1, count($get_port));
         }
-        $k =$get_port_count-1;
-        $this->get_port =  $get_port[$k]??'';
+        $k = $get_port_count - 1;
+        $this->get_port = $get_port[$k] ?? '';
 
     }
 
