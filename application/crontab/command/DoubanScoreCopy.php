@@ -57,7 +57,7 @@ class DoubanScoreCopy extends Common
     {
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-        try {
+//        try {
             //字符串对比算法
             $lcs = new similarText();
             //cli模式接受参数
@@ -118,6 +118,20 @@ class DoubanScoreCopy extends Common
                     //开启代理
                     $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
+                    $mac_curl_get_data = $this->ql->get($url, null, [
+                        // 设置代理
+//                            'proxy' => 'http://183.129.244.16:55466',
+                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+                        //设置超时时间，单位：秒
+                        'timeout' => 30,
+                        'headers' => [
+                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                            'User-Agent' => mac_ua_all(rand(0, 17)),
+                            'Cookie' => $cookie
+                        ]
+                    ])->getHtml();
+                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+                    print_r($mac_curl_get_data);die;
                     try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
@@ -263,12 +277,12 @@ class DoubanScoreCopy extends Common
                 }
                 $page = $page + 1;
             }
-        } catch (Exception $e) {
-            $output->writeln("end.3." . $e);
-            $output->writeln("end.311." . $this->vodDb->getlastsql());
-            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-
-        }
+//        } catch (Exception $e) {
+//            $output->writeln("end.3." . $e);
+//            $output->writeln("end.311." . $this->vodDb->getlastsql());
+//            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+//
+//        }
         $output->writeln("end....");
     }
 
