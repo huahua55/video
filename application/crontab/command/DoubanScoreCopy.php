@@ -183,6 +183,7 @@ class DoubanScoreCopy extends Common
                                             log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
                                             $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
                                             try {
+                                                $this->getPortData();
                                                 $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
                                                     // 设置代理
                                                     'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
