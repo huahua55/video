@@ -316,7 +316,7 @@ class DoubanScoreJs extends Common
                                         $ex_v = trim(findNum($ex_v));
                                     }
                                     $ex_data[$s_k] = mac_trim_all(str_replace($s_v, '', $ex_v));
-                                    $ex_data[$s_k] =str_replace('/',',', $ex_data[$s_k]);;
+                                    $ex_data[$s_k] =mac_filter_trim(str_replace('/',',', $ex_data[$s_k]));
                                 }
                             }
                             $ex_data['vod_author'] = '豆瓣';
