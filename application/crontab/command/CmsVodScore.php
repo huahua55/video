@@ -91,7 +91,7 @@ class CmsVodScore extends Command
                             $cms_where['douban_id'] = $v['vod_douban_id'];
                             $cms_data = $this->cmsDb->where($cms_where)->find();
                         }else{
-                            $cms_where['name'] =$v['vod_name'];
+                            $cms_where['name'] =mac_characters_format($v['vod_name']);
 //                            $cms_where1['name_as'] =array(array('eq',$v['vod_sub']),array('eq',$v['vod_sub']), 'or');
                             $cms_where['vod_director'] = $v['vod_director'];
                             $cms_data = $this->cmsDb->where($cms_where)->find();
