@@ -211,9 +211,7 @@ class DoubanScoreCopy extends Common
                                                 $vod_actor = $vod_data['vod_actor']??'';
                                                 //相似度
                                                 $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
-
                                                 log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
-
                                                 if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
