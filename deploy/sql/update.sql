@@ -24,3 +24,15 @@ CREATE TABLE IF NOT EXISTS `vod_resolving_power` (
   KEY `vod_id` (`vod_id`) USING BTREE,
   KEY `path` (`path`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频 播放器 集 分辨率';
+
+CREATE TABLE IF NOT EXISTS `port_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(20) DEFAULT NULL COMMENT 'ip',
+  `port` varchar(10) DEFAULT NULL COMMENT '端口',
+  `expire_time` varchar(20) DEFAULT NULL COMMENT '失效时间',
+  `state` tinyint(2) DEFAULT '1' COMMENT '1 ok 2 失效',
+  `type` tinyint(2) DEFAULT '1' COMMENT '1 芝麻代理',
+  PRIMARY KEY (`id`),
+  KEY `expire_time` (`expire_time`),
+  KEY `type` (`type`,`state`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理日志表';

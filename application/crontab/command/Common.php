@@ -47,7 +47,7 @@ class Common extends Command
         $arry = explode('#', $parameter);
         foreach ($arry as $key => $value) {
             $zzz = explode('=', $value);
-            $parameter_array[$zzz[0]] = $zzz[1]??'';
+            $parameter_array[$zzz[0]] = $zzz[1] ?? '';
 
         }
         return $parameter_array;
@@ -71,7 +71,7 @@ class Common extends Command
     public function get_open_url()
     {
         $this->times = time();
-        Cache::set('vod_times_cj_open_url',time());
+        Cache::set('vod_times_cj_open_url', time());
         $time_stamp = $this->get_timestamp();
         $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
         return 'http://' . $this->proxy_server . ':'
@@ -108,40 +108,57 @@ class Common extends Command
     }
 
     //获取芝麻代理ip
-    public function get_zm_port(){
-        $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
-        $data  = mac_curl_get($url);
-        $data = json_decode($data,true);
-        if($data['code'] == 0 && !empty($data['data'])){
-//            foreach ($data['data'] as $k=>$v){
-//                if(time() > strtotime($v['expire_time'])){
-//                    unset($data['data'][$k]);
-//                }
-//            }
-            echo 'httpCode:' .  json_encode($data['data'],true) . "\n <br>";
-            $count = count($data['data']);//数量
-            $rand = rand(1,$count);
-            $rand =  $rand - 1;
-            if($rand < 0){
-                $rand = 0;
+    public function get_zm_port($i = false)
+    {
+        //查找是否存在ip
+        $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
+        $port_data = [];
+        if (empty($port_log_data) || $i == true) {
+            $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            $data = mac_curl_get($url);
+            $data = json_decode($data, true);
+            if ($data['code'] == 0 && !empty($data['data'])) {
+                foreach ($data['data'] as $k => $v) {
+                    $port_data[$k]['ip'] = trim($v['ip']);
+                    $port_data[$k]['port'] = trim($v['port']);
+                    $port_data[$k]['expire_time'] = trim($v['expire_time']);
+                    $port_data[$k]['type'] = 1;
+                    $port_data[$k]['state'] = 1;
+                }
+                Db::name('port_log')->insertAll($port_data);
             }
-            $this->proxy_server=$data['data'][$rand]['ip'];
-            $this->get_port=$data['data'][$rand]['port'];
-            $this->times=strtotime($data['data'][$rand]['expire_time']);
-        }else{
-            sleep(1);
-            $this->get_zm_port();
+        } else {
+            foreach ($port_log_data as $k => $v) {
+                if (time() > strtotime($v['expire_time'])) {
+                    unset($port_log_data[$k]);
+                    Db::name('port_log')->where(['id' => $v['id']])->update(['state'=>2]);
+                }
+            }
         }
+        $count = count($port_log_data);//数量
+        if($count < 2){
+            $this->get_zm_port(true);
+        }
+        $count = count($port_log_data);//数量
+        $rand = rand(1, $count);
+        $rand = $rand - 1;
+        if ($rand < 0) {
+            $rand = 0;
+        }
+        $this->proxy_server = $port_log_data[$rand]['ip'];
+        $this->get_port = $port_log_data[$rand]['port'];
+        $this->times = strtotime($port_log_data[$rand]['expire_time']);
     }
 
     //获取余额
-    public function get_zm_port_money(){
+    public function get_zm_port_money()
+    {
         $url = 'wapi.http.cnapi.cc/index/index/get_my_balance?neek=113896&appkey=9351187cca0de8584202f4257a5b17f2';
         return mac_curl_get($url);
     }
 
 //使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
-    public function testing($url, $auth_port,$s =1 )
+    public function testing($url, $auth_port, $s = 1)
     {
         $ch = curl_init();
         $timeout = 30;
@@ -161,9 +178,9 @@ class Common extends Command
 
         $file_contents = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if($s = 1){
+        if ($s = 1) {
             return $httpCode;
-        }else{
+        } else {
             return $file_contents;
         }
 
@@ -173,14 +190,14 @@ class Common extends Command
     protected function getCookie($url, $is = false)
     {
         if ($is != true) {
-            $str =[
+            $str = [
 //                0=>'h4nqLajQEBo',
-                1=>'4OXcKrHanRU',
-                2=>'a0drRqH-g-0',
-                3=>'BsAnBI9c75E',
+                1 => '4OXcKrHanRU',
+                2 => 'a0drRqH-g-0',
+                3 => 'BsAnBI9c75E',
             ];
-            $str_count= rand(0,count($str));
-            return 'll="108288";bid='.$str[$str_count].'';
+            $str_count = rand(0, count($str));
+            return 'll="108288";bid=' . $str[$str_count] . '';
         } else {
             $client = new Client();
             $response = $client->get($url);
@@ -248,8 +265,9 @@ class Common extends Command
             '&' . $this->key_md5 . $md5_str .
             '&' . $this->key_pattern . $this->pattern;
     }
+
     //返回请求分配代理端口URL链接
-    public function add_whitelist($ip=0)
+    public function add_whitelist($ip = 0)
     {
         $time_stamp = $this->get_timestamp();
         $md5_str = $this->get_md5_str($this->proxy_username . $this->proxy_passwd . strval($time_stamp));
@@ -258,29 +276,30 @@ class Common extends Command
             '&' . $this->key_timestamp . strval($time_stamp) .
             '&' . $this->key_md5 . $md5_str .
             '&' . $this->key_pattern . $this->pattern .
-            '&' .'user_ip=' . $ip;
+            '&' . 'user_ip=' . $ip;
     }
-    public function getPort($a = 0,$port_list =false)
+
+    public function getPort($a = 0, $port_list = false)
     {
         $file = 'log.txt';
-       if(!empty($times)){
-          $this->times =  Cache::get('vod_times_cj_open_url');
-       }
+        if (!empty($times)) {
+            $this->times = Cache::get('vod_times_cj_open_url');
+        }
 
         if ($a >= 3) {
             $open_data = mac_curl_get($this->get_open_url());
-            file_put_contents($file, date('Y-m-d H:i:s', time())  . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);
-            $code =  $open_data['code'] ??'';
-            $left_ip =  $open_data['left_ip'] ??'';
+            file_put_contents($file, date('Y-m-d H:i:s', time()) . '-|open_url||' . $open_data . PHP_EOL, FILE_APPEND);
+            $code = $open_data['code'] ?? '';
+            $left_ip = $open_data['left_ip'] ?? '';
             if (!empty($open_data) && $code == 100 && $left_ip > 1) {
                 if (!empty($open_data['port'])) {
-                    if($port_list == true){
+                    if ($port_list == true) {
                         return $open_data['port'];
-                    }else{
+                    } else {
                         return $open_data['port'][0];
                     }
                 }
-            }else{
+            } else {
 //                exit('终止');
             }
         }
@@ -297,29 +316,29 @@ class Common extends Command
                 $r = file_get_contents($reset_url);
             } else if ($code == 100 && $queryData['left_ip'] > 1) {
                 if (!empty($queryData['port'])) {
-                    $handler=fopen($file,"r");
+                    $handler = fopen($file, "r");
                     $logs_data = [];
-                    while(!feof($handler)) {
+                    while (!feof($handler)) {
                         $m = fgets($handler, 4096); //fgets逐行读取，4096最大长度，默认为1024
                         if (substr_count($m, $queryData['port'][0]) > 0) //查找字符串
                         {
-                            $logs_data[] =explode('-|',$m)[0]??'';
+                            $logs_data[] = explode('-|', $m)[0] ?? '';
                         }
                     }
                     $this->times = strtotime(array_pop($logs_data));
-                    Cache::set('vod_times_cj_open_url',$this->times);
-                    if($port_list == true){
+                    Cache::set('vod_times_cj_open_url', $this->times);
+                    if ($port_list == true) {
                         return $queryData['port'];
-                    }else{
+                    } else {
                         return $queryData['port'][0];
                     }
                 } else {
                     $a++;
-                    $this->getPort($a,$port_list);
+                    $this->getPort($a, $port_list);
                 }
-                if($port_list == true){
-                     return  $queryData['port'];
-                }else{
+                if ($port_list == true) {
+                    return $queryData['port'];
+                } else {
                     return strval($queryData['port'][0]);
                 }
             }
@@ -331,10 +350,12 @@ class Common extends Command
 
 
     //获取cms data
-    public function getCmsData($url){
+    public function getCmsData($url)
+    {
         $get_url_search_id_data = mac_curl_get($url);
         return $this->isJsonBool($get_url_search_id_data, true);
     }
+
     protected function isJsonBool($data = '', $assoc = false)
     {
         $data = json_decode($data, $assoc);
@@ -353,6 +374,7 @@ class Common extends Command
             return mb_convert_encoding($str, 'UTF-8', $encode);
         }
     }
+
     protected function getFFConTent($res)
     {
         $vod_data = [];
@@ -362,7 +384,7 @@ class Common extends Command
         }
         //连载数
         if (isset($res['vod_continu']) && !empty($res['vod_continu'])) {
-            $vod_data['vod_serial'] = mac_vod_remarks($res['vod_continu'],$res['vod_total']);
+            $vod_data['vod_serial'] = mac_vod_remarks($res['vod_continu'], $res['vod_total']);
         }
         // $vod_data['vod_name'] = $res['vod_name'];
         //  $vod_data['vod_pic'] = $res['vod_pic'];
@@ -377,7 +399,7 @@ class Common extends Command
         //视频标签
         if (isset($res['vod_type']) && !empty($res['vod_type'])) {
             $vod_data['vod_tag'] = mac_format_text(trim($res['vod_type']));
-            $vod_data['vod_tag']   =str_replace('/',',', $vod_data['vod_tag']);
+            $vod_data['vod_tag'] = str_replace('/', ',', $vod_data['vod_tag']);
         }
         //发行地区
         if (isset($res['vod_area']) && !empty($res['vod_area'])) {
@@ -386,26 +408,26 @@ class Common extends Command
         //主演列表
         if (isset($res['vod_actor']) && !empty($res['vod_actor'])) {
             $vod_data['vod_actor'] = $res['vod_actor'];
-            $vod_data['vod_actor'] =str_replace('更多...','',$vod_data['vod_actor']);
-            $vod_data['vod_actor']   =mac_filter_trim(mac_substring(str_replace('/',',', $vod_data['vod_actor']),255));
+            $vod_data['vod_actor'] = str_replace('更多...', '', $vod_data['vod_actor']);
+            $vod_data['vod_actor'] = mac_filter_trim(mac_substring(str_replace('/', ',', $vod_data['vod_actor']), 255));
         }
         //导演
-        if (isset($res['vod_director'])  && !empty($res['vod_director'])) {
+        if (isset($res['vod_director']) && !empty($res['vod_director'])) {
             $vod_data['vod_director'] = trim($res['vod_director']);
-            $vod_data['vod_director']   = mac_filter_trim(mac_substring(str_replace('/',',', $vod_data['vod_director']),255));
+            $vod_data['vod_director'] = mac_filter_trim(mac_substring(str_replace('/', ',', $vod_data['vod_director']), 255));
         }
         //上映日期
-        if (isset($res['vod_filmtime'])  && !empty($res['vod_filmtime'])) {
+        if (isset($res['vod_filmtime']) && !empty($res['vod_filmtime'])) {
             $vod_pubdate = mac_format_text(trim($res['vod_filmtime']));
-            if(strpos($vod_pubdate,'(')){
-                $vod_pubdate = explode('(',$vod_pubdate)[0]??'';
+            if (strpos($vod_pubdate, '(')) {
+                $vod_pubdate = explode('(', $vod_pubdate)[0] ?? '';
             }
             $vod_data['vod_pubdate'] = $vod_pubdate;
         }
         //编剧
         if (isset($res['vod_writer']) && !empty($res['vod_writer'])) {
             $vod_data['vod_writer'] = mac_format_text($res['vod_writer']);
-            $vod_data['vod_writer']   =mac_filter_trim(str_replace('/',',', $vod_data['vod_writer']));
+            $vod_data['vod_writer'] = mac_filter_trim(str_replace('/', ',', $vod_data['vod_writer']));
         }
         //平均分
         if (isset($res['vod_gold']) && !empty($res['vod_gold'])) {
@@ -425,7 +447,7 @@ class Common extends Command
 //            $vod_data['vod_blurb'] = "'$vod_content'";
 //        }
         //时长
-        if (isset($res['vod_length'])  && !empty($res['vod_length'])) {
+        if (isset($res['vod_length']) && !empty($res['vod_length'])) {
             $vod_data['vod_duration'] = trim($res['vod_length']);
         }
 //        //豆瓣id
@@ -439,7 +461,7 @@ class Common extends Command
         //扩展分类
         if (isset($res['vod_type']) && !empty($res['vod_type'])) {
             $vod_data['vod_class'] = mac_format_text(trim($res['vod_type']));
-            $vod_data['vod_class']   =str_replace('/',',', $vod_data['vod_class']);
+            $vod_data['vod_class'] = str_replace('/', ',', $vod_data['vod_class']);
         }
         //来源地址
         if (isset($res['vod_reurl']) && !empty($res['vod_reurl'])) {
@@ -447,16 +469,16 @@ class Common extends Command
         }
         //编辑人
         if (isset($res['vod_inputer']) && !empty($res['vod_inputer'])) {
-            if($res['vod_inputer'] == 'douban'){
+            if ($res['vod_inputer'] == 'douban') {
                 $vod_data['vod_author'] = '豆瓣';
-            }else{
+            } else {
                 $vod_data['vod_author'] = $res['vod_inputer'];
             }
         }
         //副本名称
         if (isset($res['vod_title']) && !empty($res['vod_title'])) {
             $vod_data['vod_sub'] = $res['vod_title'];
-            $vod_data['vod_sub']   =mac_filter_trim(str_replace('/',',', $vod_data['vod_sub']));
+            $vod_data['vod_sub'] = mac_filter_trim(str_replace('/', ',', $vod_data['vod_sub']));
         }
         return $vod_data;
     }
