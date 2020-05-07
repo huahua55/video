@@ -517,6 +517,7 @@ class Index extends Base{
             'ulog_rid'   => $rid ,      // 关联ID ：视频ID
             'ulog_sid'   => $sid ,      // 来源 ：播放源
             'ulog_nid'   => $nid ,      // 第几集
+            'app_version'   => $version , // App版本
         ];
         $res = model("Ulog")->saveData($data);
         if($res['code'] != 1){
