@@ -207,6 +207,7 @@ class DoubanScoreCopy extends Common
                                                 Log::info('err--proxyb-' . $this->proxy_server . ":" . $this->get_port);
                                             } catch (Exception $e) {
                                                 Log::info('err--过滤' . $e . $url);
+                                                Log::info('err--proxyerrb-' . $this->proxy_server . ":" . $this->get_port);
                                                 continue;
                                             }
 
