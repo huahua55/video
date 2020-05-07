@@ -110,7 +110,7 @@ class DoubanScoreCopy extends Common
                 if ($page > $pagecount) {
                     $is_true = false;
                     log::info('采集豆瓣评分结束...');
-                    $output->writeln("结束....");
+                    $output->writeln("采集豆瓣评分-结束....");
                     break;
                 }
 
@@ -149,24 +149,24 @@ class DoubanScoreCopy extends Common
                         $error_i_count++;
                         if ($error_i_count > 18) {
                             $is_true = false;
-                            exit("错误i----");
+                            exit("采集豆瓣评分-错误i----");
                             break;
                         }
-                        Log::info('err--过滤' . $url);
-                        Log::info('err--过滤' . $e . '---' . $url);
-                        Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
+                        Log::info('采集豆瓣评分-err--过滤' . $url);
+                        Log::info('采集豆瓣评分-err--过滤' . $e . '---' . $url);
+                        Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
-                        Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
+                        Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                         $error_count++;
                         if ($error_count > 18) {
                             $is_true = false;
-                            exit("错误----");
+                            exit("采集豆瓣评分-错误----");
                             break;
                         }
                     }
-                    Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
+                    Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                     log::info('采集豆瓣评分-url-:' . $url);
                     if (!empty($mac_curl_get_data)) {
                         log::info('采集豆瓣评分-url2-::');
@@ -219,10 +219,10 @@ class DoubanScoreCopy extends Common
                                                     ])->getHtml();
                                                 }
                                                 $get_url_search_id_data = json_decode($get_url_search_id_data, true);
-                                                Log::info('err--proxyb-' . $this->proxy_server . ":" . $this->get_port);
+                                                Log::info('采集豆瓣评分-err--proxyb-' . $this->proxy_server . ":" . $this->get_port);
                                             } catch (Exception $e) {
-                                                Log::info('err--过滤' . $e . $url);
-                                                Log::info('err--proxyerrb-' . $this->proxy_server . ":" . $this->get_port);
+                                                Log::info('采集豆瓣评分-err--过滤' . $e . $url);
+                                                Log::info('采集豆瓣评分-err--proxyerrb-' . $this->proxy_server . ":" . $this->get_port);
                                                 continue;
                                             }
 
