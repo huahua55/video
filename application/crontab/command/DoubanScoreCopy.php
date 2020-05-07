@@ -153,6 +153,7 @@ class DoubanScoreCopy extends Common
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
+                        Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                         $error_count++;
                         if ($error_count > 18) {
                             $is_true = false;
@@ -160,7 +161,7 @@ class DoubanScoreCopy extends Common
                             break;
                         }
                     }
-                    log::info('采集豆瓣评分-url-::' . $url);
+                    log::info('采集豆瓣评分-url-:' . $url);
                     if (!empty($mac_curl_get_data)) {
                         log::info('采集豆瓣评分-url2-::');
                         foreach ($mac_curl_get_data as $da_k => $as_k) {
