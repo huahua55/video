@@ -26,7 +26,7 @@ class DoubanScoreCopy extends Common
     protected $cmsDb;//db
     protected $search_url_re = 'https://search.douban.com/movie/subject_search?search_text=%s&cat=1002';//豆瓣搜索接口
     protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
-    protected $get_search_id = 'https://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
+    protected $get_search_id = 'http://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
     protected $ql;//querylist
     protected $num = 5;//获取代理端口数量
 
@@ -92,6 +92,7 @@ class DoubanScoreCopy extends Common
                 }
             }
 
+
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -117,68 +118,18 @@ class DoubanScoreCopy extends Common
                     $this->times = Cache::get('vod_times_cj_open_url');
                     //开启代理
 //                    $this->getPortData();
+
+
+//                   mac_curl_get($urls);
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
-                    $mac_curl_get_data = $this->ql->get($url, null, [
-                        // 设置代理
-                            'proxy' => 'http://58.218.200.226:3646',
-//                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
-                        //设置超时时间，单位：秒
-                        'timeout' => 30,
-                        'headers' => [
-                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                            'User-Agent' => mac_ua_all(rand(0, 17)),
-                            'Cookie' => $cookie
-                        ]
-                    ])->getHtml();
-                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
-                    print_r($mac_curl_get_data);die;
-                    $targetUrl = $url;
-//                    $targetUrl ="http://baidu.com";
-
-                    // 代理服务器
-                    $proxyServer = "http:"."http://58.218.200.226:3646";
-
-        // 隧道身份信息
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $targetUrl);
-
-        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, false);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        // 设置代理服务器
-        curl_setopt($ch, CURLOPT_PROXYTYPE, 0); //http
-
-//        curl_setopt($ch, CURLOPT_PROXYTYPE, 5); //sock5
-
-        curl_setopt($ch, CURLOPT_PROXY, $proxyServer);
-
-        // 设置隧道验证信息
-        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727;)");
-
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-        curl_setopt($ch, CURLOPT_HEADER, true);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        var_dump($result);die;
-                    print_r($mac_curl_get_data);die;
-                    try {
+//                    $data = $this->testing($url,$this->get_port,0);
+//                    print_r($data);die;
+//                    try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
                             // 设置代理
-//                            'proxy' => 'http://183.129.244.16:55466',
-                            'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+                            'proxy' => 'http://114.229.61.14:4216',
+//                            'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
                             //设置超时时间，单位：秒
                             'timeout' => 30,
                             'headers' => [
@@ -187,18 +138,21 @@ class DoubanScoreCopy extends Common
                                 'Cookie' => $cookie
                             ]
                         ])->getHtml();
+                    var_dump($url);
+                    print_r($mac_curl_get_data);die;
                         $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+
                         Log::info('err--proxyi-' . $this->proxy_server . ":" . $this->get_port);
-                    } catch (Exception $e) {
-                        $error_i_count++;
-                        if ($error_i_count > 18) {
-                            $is_true = false;
-                            exit("错误i----");
-                            break;
-                        }
-                        Log::info('err--过滤' . $url);
-                        continue;
-                    }
+//                    } catch (Exception $e) {
+//                        $error_i_count++;
+//                        if ($error_i_count > 18) {
+//                            $is_true = false;
+//                            exit("错误i----");
+//                            break;
+//                        }
+//                        Log::info('err--过滤' . $url);
+//                        continue;
+//                    }
                     if (empty($mac_curl_get_data)) {
                         $error_count++;
                         if ($error_count > 18) {
@@ -268,7 +222,7 @@ class DoubanScoreCopy extends Common
                                                 //相似度
                                                 $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
                                                 log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
-                                                if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_name']))) && ($v['vod_director'] == $vod_director)) {
+                                                if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
@@ -280,7 +234,7 @@ class DoubanScoreCopy extends Common
                                                             $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                                         } catch (Exception $e) {
                                                             log::info('采集豆瓣评分-过滤::');
-                                                           continue;
+                                                            continue;
                                                         }
                                                         if ($up_res) {
                                                             log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
@@ -442,4 +396,5 @@ class DoubanScoreCopy extends Common
             'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
         ];
     }
+
 }
