@@ -100,6 +100,10 @@ class DoubanScoreCopy extends Common
             $cookie = $this->newCookie($cookies);
             //进入循环 取出数据
             while ($is_true) {
+                $this->get_zm_port();
+                if(empty($this->get_port)){
+                    $this->get_zm_port();
+                }
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
 //            print_r( $this->vodDb->getlastsql());die;
