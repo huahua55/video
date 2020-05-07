@@ -57,7 +57,7 @@ class DoubanScoreCopy extends Common
     {
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-        try {
+//        try {
             //字符串对比算法
             $lcs = new similarText();
             //cli模式接受参数
@@ -119,7 +119,7 @@ class DoubanScoreCopy extends Common
                     //开启代理
                     $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
-                    try {
+//                    try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
                             // 设置代理
@@ -133,18 +133,21 @@ class DoubanScoreCopy extends Common
                                 'Cookie' => $cookie
                             ]
                         ])->getHtml();
+                    var_dump($url);
+                    print_r($mac_curl_get_data);die;
                         $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+
                         Log::info('err--proxyi-' . $this->proxy_server . ":" . $this->get_port);
-                    } catch (Exception $e) {
-                        $error_i_count++;
-                        if ($error_i_count > 18) {
-                            $is_true = false;
-                            exit("错误i----");
-                            break;
-                        }
-                        Log::info('err--过滤' . $url);
-                        continue;
-                    }
+//                    } catch (Exception $e) {
+//                        $error_i_count++;
+//                        if ($error_i_count > 18) {
+//                            $is_true = false;
+//                            exit("错误i----");
+//                            break;
+//                        }
+//                        Log::info('err--过滤' . $url);
+//                        continue;
+//                    }
                     if (empty($mac_curl_get_data)) {
                         $error_count++;
                         if ($error_count > 18) {
@@ -264,12 +267,12 @@ class DoubanScoreCopy extends Common
                 }
                 $page = $page + 1;
             }
-        } catch (Exception $e) {
-            $output->writeln("end.3." . $e);
-            $output->writeln("end.311." . $this->vodDb->getlastsql());
-            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-
-        }
+//        } catch (Exception $e) {
+//            $output->writeln("end.3." . $e);
+//            $output->writeln("end.311." . $this->vodDb->getlastsql());
+//            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+//
+//        }
         $output->writeln("end....");
     }
 
