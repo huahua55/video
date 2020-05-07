@@ -39,7 +39,7 @@ class DoubanScoreJs extends Common
         $this->ql = QueryList::getInstance();
         //获取豆瓣id
         $this->setName('doubanScoreJs')->addArgument('parameter')
-            ->setDescription('定时计划：采集豆瓣评分');
+            ->setDescription('定时计划：js采集豆瓣评分');
     }
 
     // 取出数据豆瓣评分为空数据
@@ -58,7 +58,7 @@ class DoubanScoreJs extends Common
 
 
         // 输出到日志文件
-        $output->writeln("开启采集:采集豆瓣评分");
+        $output->writeln("开启采集:js采集豆瓣评分");
         try {
             //字符串对比算法
             $lcs = new similarText();
@@ -373,7 +373,7 @@ class DoubanScoreJs extends Common
                     $v['vod_director'] = $v['vod_director'] ?? '';
                     $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
                     $v_name =  mac_trim_all(mac_characters_format($v['vod_name']));
-                    log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
+                    log::info('js-采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
 //                    if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                     if (($vod_actor_rade > 85 || $rade > 95 || $title_lang == $v_name ||  $title == $v_name || (mac_trim_all(mac_characters_format($getDetailsData['vod_sub'])) == mac_trim_all(mac_characters_format($v['vod_sub']))) || (mac_trim_all(mac_characters_format($getDetailsData['vod_sub'])) == $title )) && $getDetailsData['vod_director'] == $v['vod_director']) {
                         $whereId = [];
