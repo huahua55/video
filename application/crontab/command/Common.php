@@ -114,7 +114,7 @@ class Common extends Command
         $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
-            $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=25&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
             $data = mac_curl_get($url);
             $data = json_decode($data, true);
             if ($data['code'] == 0 && !empty($data['data'])) {
