@@ -145,6 +145,7 @@ class Common extends Command
         if ($rand < 0) {
             $rand = 0;
         }
+        echo 'httpCode:' . json_encode($port_log_data[$rand], true) . "\n <br>";
         $this->proxy_server = $port_log_data[$rand]['ip'];
         $this->get_port = $port_log_data[$rand]['port'];
         $this->times = strtotime($port_log_data[$rand]['expire_time']);
