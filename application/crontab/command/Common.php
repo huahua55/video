@@ -107,6 +107,39 @@ class Common extends Command
             '&' . $this->key_pattern . $this->pattern;
     }
 
+    //获取芝麻代理ip
+    public function get_zm_port(){
+        $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+        $data  = mac_curl_get($url);
+        $data = json_decode($data,true);
+        if($data['code'] == 0 && !empty($data['data'])){
+//            foreach ($data['data'] as $k=>$v){
+//                if(time() > strtotime($v['expire_time'])){
+//                    unset($data['data'][$k]);
+//                }
+//            }
+            echo 'httpCode:' .  json_encode($data['data'],true) . "\n <br>";
+            $count = count($data['data']);//数量
+            $rand = rand(1,$count);
+            $rand =  $rand - 1;
+            if($rand < 0){
+                $rand = 0;
+            }
+            $this->proxy_server=$data['data'][$rand]['ip'];
+            $this->get_port=$data['data'][$rand]['port'];
+            $this->times=strtotime($data['data'][$rand]['expire_time']);
+        }else{
+            sleep(1);
+            $this->get_zm_port();
+        }
+    }
+
+    //获取余额
+    public function get_zm_port_money(){
+        $url = 'wapi.http.cnapi.cc/index/index/get_my_balance?neek=113896&appkey=9351187cca0de8584202f4257a5b17f2';
+        return mac_curl_get($url);
+    }
+
 //使用代理进行测试 url为使用代理访问的链接，auth_port为代理端口
     public function testing($url, $auth_port,$s =1 )
     {

@@ -100,6 +100,11 @@ class DoubanScoreCopy extends Common
             $cookie = $this->newCookie($cookies);
             //进入循环 取出数据
             while ($is_true) {
+                //获取ip
+                $this->get_zm_port();
+                if(empty($this->get_port)){
+                    $this->get_zm_port();
+                }
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
 //            print_r( $this->vodDb->getlastsql());die;
@@ -119,7 +124,6 @@ class DoubanScoreCopy extends Common
                     //开启代理
 //                    $this->getPortData();
 
-
 //                   mac_curl_get($urls);
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
 //                    $data = $this->testing($url,$this->get_port,0);
@@ -128,8 +132,8 @@ class DoubanScoreCopy extends Common
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
                             // 设置代理
-                            'proxy' => 'http://114.229.61.14:4216',
-//                            'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
+//                            'proxy' => 'http://114.229.61.14:4216',
+                            'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
                             //设置超时时间，单位：秒
                             'timeout' => 30,
                             'headers' => [
@@ -192,7 +196,6 @@ class DoubanScoreCopy extends Common
                                             log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
                                             $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
                                             try {
-                                                $this->getPortData();
                                                 $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
                                                     // 设置代理
                                                     'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
