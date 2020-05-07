@@ -118,6 +118,8 @@ class DoubanScoreCopy extends Common
                     $this->times = Cache::get('vod_times_cj_open_url');
                     //开启代理
                     $this->getPortData();
+                   $urls =  $this->add_whitelist('23.224.163.201');
+                   mac_curl_get($urls);
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
 //                    try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
