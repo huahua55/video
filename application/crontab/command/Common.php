@@ -201,6 +201,8 @@ class Common extends Command
                 6 => 'cfFvjnR3szU',
                 7 => 'cggEZdzRju0',
                 8 => 'R6TmEajPUrU',
+                9 => 'geb-TWyfavc',
+                10 => 'ExqYMh8yikE;',
             ];
             $str_count = rand(0, count($str));
             return 'll="108288";bid=' . $str[$str_count] . '';

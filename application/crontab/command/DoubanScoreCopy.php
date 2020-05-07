@@ -166,6 +166,7 @@ class DoubanScoreCopy extends Common
                             break;
                         }
                     }
+                    Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                     log::info('采集豆瓣评分-url-:' . $url);
                     if (!empty($mac_curl_get_data)) {
                         log::info('采集豆瓣评分-url2-::');
