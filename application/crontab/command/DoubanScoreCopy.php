@@ -148,6 +148,8 @@ class DoubanScoreCopy extends Common
                             break;
                         }
                         Log::info('err--过滤' . $url);
+                        Log::info('err--过滤' .$e.'---'. $url);
+                        Log::info('err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
