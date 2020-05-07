@@ -85,11 +85,11 @@ class DoubanScoreJs extends Common
             $this->ql->use(PhantomJs::class, $ph_js_path);
             $this->ql->use(PhantomJs::class, $ph_js_path, 'browser');
             //开启代理
-            $this->get_port = $this->getPort();
-            if ($this->get_port == false) {
-                $this->get_port = $this->getPort();
-                log::info('get_port-::');
-            }
+//            $this->get_port = $this->getPort();
+//            if ($this->get_port == false) {
+//                $this->get_port = $this->getPort();
+//                log::info('get_port-::');
+//            }
 //        p($A);
             //开始cookie
             $cookies = $this->getCookie('https://movie.douban.com/');
@@ -125,6 +125,12 @@ class DoubanScoreJs extends Common
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
+
+                $this->get_zm_port();
+                if(empty($this->get_port)){
+                    $this->get_zm_port();
+                }
+
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
@@ -144,11 +150,11 @@ class DoubanScoreJs extends Common
                     $is_log = false;
                     $mac_curl_get_data = '';
 //                    sleep(1);
-                    $this->times = Cache::get('vod_times_cj_open_url');
-                    if (time() > ($this->times + 180) || empty($this->get_port)) {
-                        $this->get_port = $this->getPort($c);
-                        $c++;
-                    }
+//                    $this->times = Cache::get('vod_times_cj_open_url');
+//                    if (time() > ($this->times + 180) || empty($this->get_port)) {
+//                        $this->get_port = $this->getPort($c);
+//                        $c++;
+//                    }
                     $url = sprintf($this->search_url_re, urlencode($v['vod_name']));
                     $startTime = microtime(TRUE);
                     try {
@@ -191,7 +197,7 @@ class DoubanScoreJs extends Common
                     unset($startTime);
                     if (empty($getSearchData)) {
                         log::info('js-采集豆瓣评分-url-err::');//更新 代理
-                        $this->get_port = $this->getPort();
+//                        $this->get_port = $this->getPort();
                     }
 
                     log::info('js-采集豆瓣评分-url-::' . $url);
