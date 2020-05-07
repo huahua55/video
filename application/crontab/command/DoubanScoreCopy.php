@@ -26,7 +26,7 @@ class DoubanScoreCopy extends Common
     protected $cmsDb;//db
     protected $search_url_re = 'https://search.douban.com/movie/subject_search?search_text=%s&cat=1002';//豆瓣搜索接口
     protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
-    protected $get_search_id = 'https://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
+    protected $get_search_id = 'http://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
     protected $ql;//querylist
     protected $num = 5;//获取代理端口数量
 
@@ -57,7 +57,7 @@ class DoubanScoreCopy extends Common
     {
         // 输出到日志文件
         $output->writeln("开启采集:采集豆瓣评分");
-//        try {
+        try {
             //字符串对比算法
             $lcs = new similarText();
             //cli模式接受参数
@@ -116,63 +116,8 @@ class DoubanScoreCopy extends Common
                     $is_log = false;
                     $this->times = Cache::get('vod_times_cj_open_url');
                     //开启代理
-//                    $this->getPortData();
+                    $this->getPortData();
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
-                    $mac_curl_get_data = $this->ql->get($url, null, [
-                        // 设置代理
-                            'proxy' => 'http://58.218.200.226:3646',
-//                        'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
-                        //设置超时时间，单位：秒
-                        'timeout' => 30,
-                        'headers' => [
-                            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                            'User-Agent' => mac_ua_all(rand(0, 17)),
-                            'Cookie' => $cookie
-                        ]
-                    ])->getHtml();
-                    $mac_curl_get_data = json_decode($mac_curl_get_data, true);
-                    print_r($mac_curl_get_data);die;
-                    $targetUrl = $url;
-//                    $targetUrl ="http://baidu.com";
-
-                    // 代理服务器
-                    $proxyServer = "http:"."http://58.218.200.226:3646";
-
-        // 隧道身份信息
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $targetUrl);
-
-        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, false);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        // 设置代理服务器
-        curl_setopt($ch, CURLOPT_PROXYTYPE, 0); //http
-
-//        curl_setopt($ch, CURLOPT_PROXYTYPE, 5); //sock5
-
-        curl_setopt($ch, CURLOPT_PROXY, $proxyServer);
-
-        // 设置隧道验证信息
-        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727;)");
-
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-        curl_setopt($ch, CURLOPT_HEADER, true);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        var_dump($result);die;
-                    print_r($mac_curl_get_data);die;
                     try {
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
@@ -268,7 +213,7 @@ class DoubanScoreCopy extends Common
                                                 //相似度
                                                 $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
                                                 log::info('采集豆瓣评分-rade:'.$v['vod_actor'].'--'.$vod_actor.'-rade--'.$vod_actor_rade.'-radename--'.$rade);
-                                                if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_name']))) && ($v['vod_director'] == $vod_director)) {
+                                                if (($vod_actor_rade > 85 || $rade > 95 || $title == mac_characters_format($v['vod_name']) || $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && ($v['vod_director'] == $vod_director)) {
                                                     if (isset($vod_data['title'])) {
                                                         unset($vod_data['title']);
                                                     }
@@ -280,7 +225,7 @@ class DoubanScoreCopy extends Common
                                                             $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                                         } catch (Exception $e) {
                                                             log::info('采集豆瓣评分-过滤::');
-                                                           continue;
+                                                            continue;
                                                         }
                                                         if ($up_res) {
                                                             log::info('采集豆瓣评分-vod-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
@@ -318,12 +263,12 @@ class DoubanScoreCopy extends Common
                 }
                 $page = $page + 1;
             }
-//        } catch (Exception $e) {
-//            $output->writeln("end.3." . $e);
-//            $output->writeln("end.311." . $this->vodDb->getlastsql());
-//            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-//
-//        }
+        } catch (Exception $e) {
+            $output->writeln("end.3." . $e);
+            $output->writeln("end.311." . $this->vodDb->getlastsql());
+            file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
+
+        }
         $output->writeln("end....");
     }
 
