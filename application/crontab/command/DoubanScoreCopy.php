@@ -122,9 +122,9 @@ class DoubanScoreCopy extends Common
                     //开启代理
                     $url = sprintf($this->search_url, urlencode($v['vod_name']));
                     try {
-                        if(empty($this->get_port)){
+//                        if(empty($this->get_port)){
                             $this->get_zm_port();
-                        }
+//                        }
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         $mac_curl_get_data = $this->ql->get($url, null, [
                             // 设置代理
@@ -189,9 +189,9 @@ class DoubanScoreCopy extends Common
                                             log::info('采集豆瓣评分-ok-id::' . $as_k['id']);
                                             $get_url_search_id = sprintf($this->get_search_id, $as_k['id']);
                                             try {
-                                                if(empty($this->get_port)){
+//                                                if(empty($this->get_port)){
                                                     $this->get_zm_port();
-                                                }
+//                                                }
                                                 $get_url_search_id_data = $this->ql->get($get_url_search_id, null, [
                                                     // 设置代理
                                                     'proxy' => 'http://' . $this->proxy_server . ":" . $this->get_port,
