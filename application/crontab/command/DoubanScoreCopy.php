@@ -124,7 +124,8 @@ class DoubanScoreCopy extends Common
 //                        if(empty($this->get_port)){
                         $this->get_zm_port();
 //                        }
-                        usleep(500000);
+//                        usleep(500000);
+                        sleep(1);
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         if ($port_type == 1) {
                             $str_data = $this->getUrl($url);
@@ -201,7 +202,8 @@ class DoubanScoreCopy extends Common
 //                                                if(empty($this->get_port)){
                                                 $this->get_zm_port();
 //                                                }
-                                                usleep(500000);
+//                                                usleep(500000);
+                                                sleep(1);
                                                 if ($port_type == 1) {
                                                     $str_data = $this->getUrl($url);
                                                     $get_url_search_id_data = array_pop(explode("\r\n", $str_data));
