@@ -40,6 +40,9 @@ class Channel extends Base
     public function info(){
         if (Request()->isPost()) {
             $param = input();
+            if(!is_numeric($param['recom_vod'])){
+                return $this->error("视频ID错误");
+            }
             $res = model('Channel')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
@@ -85,7 +88,9 @@ class Channel extends Base
             $data['name'] = $param['name'][$k];
 
             $data['recom_vod'] = $param['recom_vod'][$k];
-
+            if(!is_numeric($param['recom_vod'][$k])){
+                continue;
+            }
             if (empty($data['name'])) {
                 $data['name'] = '未知';
             }
