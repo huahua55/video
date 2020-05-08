@@ -81,7 +81,7 @@ class DoubanTopList extends Common
         $delWhere['status'] = 0;
 
         //获取豆瓣top list 榜单
-//        $this->getDouBanTopList();
+        $this->getDouBanTopList();
         //获取腾讯top list 榜单
         $this->getTxTopList($x);
         Db::name('douban_recommend')->whereOr($delWhere)->delete();

@@ -1000,6 +1000,7 @@ CREATE TABLE `douban_recommend` (
   `douban_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '豆瓣视频id',
   `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 2 下线',
   `time` varchar(30) DEFAULT '' COMMENT '时间  2020-03-04',
+    `cj_type` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1.豆瓣  2.腾讯',
   PRIMARY KEY (`id`),
   KEY `vid` (`name`,`type_id`,`vod_id`,`status`,`time`),
   KEY `time` (`time`),
