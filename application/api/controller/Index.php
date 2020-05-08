@@ -16,30 +16,44 @@ class Index extends Base{
 
     // 首页导航
     public function home_nav(){
-        $lp = [
-            'type_status'   => 1,
-            'type_pid'      => 0,
-        ];
-        $list  = model("Type")->listData($lp,"type_id asc");
 
-        $data[] = ['id' => 0, 'name' => "推荐", 'img' => "",];
-        $list = $list['list'] ?? [];
-        $array = [];
+        $cache_time = intval($GLOBALS['config']['api']['vod']['cachetime']);
+        $cach_name = 'home_nav';
+        $list = Cache::get($cach_name);
+        if(empty($list) || $cache_time == 0) {
+            $lp = [
+                'type_status'   => 1,
+                'type_pid'      => 0,
+            ];
+            $list  = model("Type")->listData($lp,"type_id asc");
 
-        foreach($list as $key=>$item){
-            $array[$key]['id']      = $item['type_id'];
-            $array[$key]['name']    = $item['type_name'];
-            $array[$key]['img']     = $item['img'] ?? "";
-            $array[$key]['msg']     = type_extend($item['type_extend']) ?? [];
+            $data[] = ['id' => 0, 'name' => "推荐", 'img' => "",];
+            $list = $list['list'] ?? [];
+            $array = [];
+
+            foreach($list as $key=>$item){
+                $array[$key]['id']      = $item['type_id'];
+                $array[$key]['name']    = $item['type_name'];
+                $array[$key]['img']     = $item['img'] ?? "";
+                $array[$key]['msg']     = type_extend($item['type_extend']) ?? [];
+            }
+            $list = array_merge($data, $array);
+
+            if($cache_time > 0) {
+                Cache::set($cach_name, $list, $cache_time);
+            }
         }
-        $list = array_merge($data, $array);
+
         return json_return($list);
     }
 
     // 首页导航下数据
     public function home_data(){
         $id = $this->_param['id'] ?? 0;
-
+        $idArr = [0,1,2,3,4,5,33];
+        if(!in_array($id,$idArr)){
+            return json_return([]);
+        }
         // 轮播图
         $lp = [
             'status'   => 1,
@@ -56,69 +70,78 @@ class Index extends Base{
             $getSlide[$k]['type']   = 1;
         }
 
-        $getListBlock = [];
         // 内容
         if ($id == 0){
             $getListBlock = $this->tuijian();
         }else{
-            $fatherRes =  [];
+            $cache_time = intval($GLOBALS['config']['api']['vod']['cachetime']);
+            $cach_name = 'home_data_'.$id;
+            $getListBlock = Cache::get($cach_name) ? Cache::get($cach_name) : [];
+            if(empty($getListBlock) || $cache_time == 0) {
+                $fatherRes = [];
 
-            // 单独查询 纪录片
-            if($id == 33){
+                // 单独查询 纪录片
+                if ($id == 33) {
+                    $where = [
+                        'type_id' => $id
+                    ];
+                    $fatherRes = model("Type")->listData($where, "type_sort asc");
+                    $fatherRes = $fatherRes['list'] ?? [];
+                }
+
                 $where = [
-                    'type_id'   => $id
+                    'type_pid' => $id,
+                    'type_status' => 1,
                 ];
-                $fatherRes =  model("Type")->listData($where,"type_sort asc");
-                $fatherRes = $fatherRes['list'] ?? [];
-            }
+                $sonRes = model("Type")->listData($where, "type_sort asc");
+                $sonRes = $sonRes['list'] ?? [];
 
-            $where = [
-                'type_pid'   => $id,
-                'type_status' => 1,
-            ];
-            $sonRes =  model("Type")->listData($where,"type_sort asc");
-            $sonRes = $sonRes['list'] ?? [];
+                $res = array_merge($sonRes, $fatherRes);
 
-            $res = array_merge($sonRes,$fatherRes);
+                foreach ($res as $item) {
+                    $r = $item["type_id"];
+                    $d = array(
+                        'name' => $item['type_name'],
+                        'nav' => 1,
+                        'type' => 1,
+                        'data' => $this->getVodList($r, 6, 1),
+                        'extend' => selectOption($id, $item['type_name']),
+                    );
 
-            foreach($res as $item){
-                $r = $item["type_id"];
-                $d = array(
-                    'name'  => $item['type_name'],
-                    'nav'   => 1,
-                    'type'  => 1,
-                    'data'  => $this->getVodList($r,6,1),
-                    'extend'=> selectOption($id,$item['type_name']),
-                );
+                    array_push($getListBlock, $d);
+                }
 
-                array_push($getListBlock,$d);
-            }
+                // 电影、电视剧 加上最近热播
+                if (in_array($id, [1, 2])) {
+                    $doubanRecomData = [];
+                    $where = [
+                        'd.type_id' => ['eq', $id],
+                        'd.status' => ['eq', '1'],
+                        'd.vod_id' => ['neq', '0'],
+                        'v.vod_play_from' => ['like', '%3u8%'],
+                    ];
+                    // 电影取三条
+                    $doubanList = model("douban_recommend")
+                        ->alias('d')
+                        ->field('d.vod_id')
+                        ->join('vod v', 'd.vod_id = v.vod_id', 'left')
+                        ->where($where)->order('d.id asc')->limit(6)->select();
+                    $doubanIds = implode(",", array_column($doubanList, 'vod_id'));
+                    $doubanRecomData[] = [
+                        'name' => "最近热播",
+                        'nav' => 0,
+                        'type' => 4,
+                        'data' => $this->vodStrData($doubanIds),
+                        'extend' => [],
+                    ];
+                    $getListBlock = array_merge($doubanRecomData, $getListBlock);
+                }
 
-            // 电影、电视剧 加上最近热播
-            if(in_array($id,[1,2])){
-                $doubanRecomData = [];
-                $where = [
-                    'd.type_id'   => ['eq',$id],
-                    'd.status'    => ['eq','1'],
-                    'd.vod_id'    => ['neq','0'],
-                    'v.vod_play_from'    => ['like','%3u8%'],
-                ];
-                // 电影取三条
-                $doubanList  = model("douban_recommend")
-                    ->alias('d')
-                    ->field('d.vod_id')
-                    ->join('vod v','d.vod_id = v.vod_id','left')
-                    ->where($where)->order('d.id asc')->limit(6)->select();
-                $doubanIds  = implode(",",array_column($doubanList,'vod_id'));
-                $doubanRecomData[] = [
-                    'name'  => "最近热播",
-                    'nav'   => 0,
-                    'type'  => 4,
-                    'data'  => $this->vodStrData($doubanIds),
-                    'extend'=> [],
-                ];
+                // 存入缓存
+                if($cache_time > 0) {
+                    Cache::set($cach_name, $getListBlock, $cache_time);
+                }
 
-                $getListBlock = array_merge($doubanRecomData,$getListBlock);
             }
         }
 
@@ -147,70 +170,79 @@ class Index extends Base{
             ];
         }
 
-        // 豆瓣推荐
-        $doubanData = $this->doubanRecom();
+        $cache_time = intval($GLOBALS['config']['api']['vod']['cachetime']);
+        $cach_name = 'home_tuijian';
+        $list = Cache::get($cach_name);
+        if(empty($list) || $cache_time == 0) {
+            // 豆瓣推荐
+            $doubanData = $this->doubanRecom();
 
-        // 后台推荐配置
-        $tuijianData = [];
-        $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort asc" );
-        $tuijian = $tuijian['list'] ?? [];
-        foreach($tuijian as $item){
-            $tuijianData[] = [
-                'type'  => 2,
-                'nav'   => 0,
-                'id'    => $item['id'],
-                'msg'   => "",
-                'name'  => $item['name'],
-                'data'  => $this->vodStrData($item['rel_ids']),
+            // 后台推荐配置
+            $tuijianData = [];
+            $tuijian = model("VodRecommend")->listData(['status' => 1,"type_id" => 0], "sort asc" );
+            $tuijian = $tuijian['list'] ?? [];
+            foreach($tuijian as $item){
+                $tuijianData[] = [
+                    'type'  => 2,
+                    'nav'   => 0,
+                    'id'    => $item['id'],
+                    'msg'   => "",
+                    'name'  => $item['name'],
+                    'data'  => $this->vodStrData($item['rel_ids']),
+                ];
+            }
+
+            $model = model("douban_recommend");
+            $where = [
+                'r.status'    => ['eq','1'],
+                'r.vod_id'    => ['neq','0'],
             ];
+            $apiListData  = $model->apiListData(array_merge($where,['r.type_id'=>['eq',1]]), 3, "id asc", 6);
+            $apiListData2 = $model->apiListData(array_merge($where,['r.type_id'=>['eq',2]]), 3, "vod_time asc", 6);
+            // 本地热门
+            $data = [
+                [
+                    'type'  => 1,
+                    'nav'   => 1,
+                    'id'    => 1,
+                    'msg'   => json_encode(getScreen(1),JSON_UNESCAPED_UNICODE),
+                    'name'  => '热播电影',
+                    'data'  => $apiListData,
+                ],
+                [
+                    'type'  => 1,
+                    'nav'   => 1,
+                    'id'    => 2,
+                    'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
+                    'name'  => '热播剧',
+                    'data'  => $apiListData2,
+                ],
+                [
+                    'type'  => 1,
+                    'nav'   => 1,
+                    'id'    => 3,
+                    'msg'   => json_encode(getScreen(3),JSON_UNESCAPED_UNICODE),
+                    'name'  => '热播综艺',
+                    'data'  => $this->getVodList(3,6,1),
+                ],
+                [
+                    'type'  => 1,
+                    'nav'   => 1,
+                    'id'    => 4,
+                    'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
+                    'name'  => '热播动漫',
+                    'data'  => $this->getVodList(4,6,1),
+                ],
+            ];
+
+            $list = array_merge($doubanData,$tuijianData,$data);
+            if($cache_time > 0) {
+                Cache::set($cach_name, $list, $cache_time);
+            }
         }
 
-        $model = model("douban_recommend");
-        $where = [
-            'r.status'    => ['eq','1'],
-            'r.vod_id'    => ['neq','0'],
-        ];
-        $apiListData  = $model->apiListData(array_merge($where,['r.type_id'=>['eq',1]]), 3, "id asc", 6);
-        $apiListData2 = $model->apiListData(array_merge($where,['r.type_id'=>['eq',2]]), 3, "vod_time asc", 6);
-        // 本地热门
-        $data = [
-            [
-                'type'  => 1,
-                'nav'   => 1,
-                'id'    => 1,
-                'msg'   => json_encode(getScreen(1),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播电影',
-                'data'  => $apiListData,
-            ],
-            [
-                'type'  => 1,
-                'nav'   => 1,
-                'id'    => 2,
-                'msg'   => json_encode(getScreen(2),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播剧',
-                'data'  => $apiListData2,
-            ],
-            [
-                'type'  => 1,
-                'nav'   => 1,
-                'id'    => 3,
-                'msg'   => json_encode(getScreen(3),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播综艺',
-                'data'  => $this->getVodList(3,6,1),
-            ],
-            [
-                'type'  => 1,
-                'nav'   => 1,
-                'id'    => 4,
-                'msg'   => json_encode(getScreen(4),JSON_UNESCAPED_UNICODE),
-                'name'  => '热播动漫',
-                'data'  => $this->getVodList(4,6,1),
-            ],
-        ];
-
-        $data = array_merge($guessDatas,$doubanData,$tuijianData,$data);
-
-        return $data;
+        $datas = array_merge($guessDatas,$list);
+        return $datas;
     }
 
     // 豆瓣推荐
