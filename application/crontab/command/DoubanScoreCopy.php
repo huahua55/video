@@ -124,8 +124,7 @@ class DoubanScoreCopy extends Common
 //                        if(empty($this->get_port)){
                         $this->get_zm_port();
 //                        }
-//                        usleep(500000);
-                        sleep(1);
+                        usleep(500000);
 //                        $cookie = 'bid=tre-gFuRDCw; Expires=Fri, 23-Apr-21 10:03:41 GMT; Domain=.douban.com; Path=/';
                         if ($port_type == 1) {
                             $str_data = $this->getUrl($url);
@@ -202,8 +201,7 @@ class DoubanScoreCopy extends Common
 //                                                if(empty($this->get_port)){
                                                 $this->get_zm_port();
 //                                                }
-//                                                usleep(500000);
-                                                sleep(1);
+                                                usleep(500000);
                                                 if ($port_type == 1) {
                                                     $str_data = $this->getUrl($url);
                                                     $get_url_search_id_data = array_pop(explode("\r\n", $str_data));
@@ -414,41 +412,5 @@ class DoubanScoreCopy extends Common
         ];
     }
 
-    public function getUrl($targetUrl)
-    {
-        // 要访问的目标页面
-        $proxyServer = "http" . ":" . "http://" . $this->proxy_server . ":" . $this->get_port;
-        // 隧道身份信息
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $targetUrl);
-
-        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, false);
-
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        // 设置代理服务器
-        curl_setopt($ch, CURLOPT_PROXYTYPE, 0); //http
-//
-//        curl_setopt($ch, CURLOPT_PROXYTYPE, 5); //sock5
-
-        curl_setopt($ch, CURLOPT_PROXY, $proxyServer);
-
-        // 设置隧道验证信息
-        curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
-
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727;)");
-
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
-        curl_setopt($ch, CURLOPT_HEADER, true);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
 
 }
