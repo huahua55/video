@@ -663,4 +663,21 @@ class Index extends Base{
         return $this->vodStrData($recommend['rel_ids']);
     }
 
+    // 渠道推广视频ID
+    public function channelRecom(){
+        $keys    = $this->_param['keys'] ??  "";
+        if($keys == ""){
+            return json_return(0);
+        }
+
+        $vodId =  model("Channel")
+            ->field('recom_vod')
+            ->where(['keys' => ['eq',$keys]])
+            ->find();
+        $vodId = objectToArray($vodId);
+        $vodId = $vodId['recom_vod'] ?? 0;
+
+        return json_return(['vod_id'=>$vodId]);
+    }
+
 }

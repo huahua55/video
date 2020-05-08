@@ -25,6 +25,7 @@
             <tr>
                 <th width="25"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
                 <th width="100">名称</th>
+                <th width="100">keys</th>
                 <th width="100">状态</th>
                 <th>推广视频ID</th>
                 <th width="130">操作</th>
@@ -35,6 +36,7 @@
             <tr>
                 <td><input type="checkbox" name="ids[]" value="{$vo.id}" class="layui-checkbox checkbox-ids" lay-skin="primary"></td>
                 <td><input type="input" name="name[]" value="{$vo.name}" class="layui-input"></td>
+                <td><input type="input" name="keys[]" value="{$vo.keys}" class="layui-input"></td>
                 <td>
                     <input type="checkbox" name="status" {if condition="$vo['states'] eq 1"}checked{/if} value="{$vo['states']}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" data-href="{:url('field?col=states&ids='.$vo['id'])}">
                 </td>
