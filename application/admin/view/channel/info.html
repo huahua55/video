@@ -1,0 +1,70 @@
+{include file="../../../application/admin/view/public/head" /}
+
+<div class="page-container p10">
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input id="id" name="id" type="hidden" value="{$info.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">渠道名称：</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.name}" lay-verify="name" placeholder="请输入推荐标题" id="name" name="name">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">推广视频ID：</label>
+            <div class="layui-input-inline w500">
+                <input type="text" class="layui-input" value="{$info.recom_vod}" placeholder="请输入视频ID" id="recom_vod" name="recom_vod">
+            </div>
+            <div class="layui-input-inline ">
+                <a class="layui-btn j-iframe" data-href="{:url('vod/data')}?select=1&input=recom_vod" href="javascript:;" title="查询数据">查询数据</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-input-inline">
+                <select class="w100" name="states">
+                    <option value="0" {if condition="$info['states'] eq 0"}selected {/if}>关闭</option>
+                    <option value="1" {if condition="$info['states'] eq 1"}selected {/if}>显示</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+                , layer = layui.layer
+                , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输入推荐标题";
+                }
+            },
+            rel_ids: function (value) {
+                if (value == "") {
+                    return "请输入相关ID列表";
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
