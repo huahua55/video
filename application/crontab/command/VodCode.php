@@ -81,11 +81,12 @@ class VodCode extends Common
             } else {
                 $where['a.vod_id'] = ['gt', 1];
             }
+            if (!empty($vod_id)) {
+                $vod_id = $vod_id['vod_id'] ?? 1;
+                $where['a.vod_id'] = ['gt', $vod_id];
+            }
         }
-        if (!empty($vod_id)) {
-            $vod_id = $vod_id['vod_id'] ?? 1;
-            $where['a.vod_id'] = ['gt', $vod_id];
-        }
+
         $start = 0;
         $page = 1;
         $limit = 20;
