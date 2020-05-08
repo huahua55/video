@@ -112,7 +112,7 @@ class Index extends Base{
                 }
 
                 // 电影、电视剧 加上最近热播
-                if (in_array($id, [1, 2])) {
+                if (in_array($id, [1, 2, 4])) {
                     $doubanRecomData = [];
                     $where = [
                         'd.type_id' => ['eq', $id],
