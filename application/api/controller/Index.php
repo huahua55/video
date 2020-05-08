@@ -665,9 +665,16 @@ class Index extends Base{
 
     // 渠道推广视频ID
     public function channelRecom(){
+        $mac     = $this->_param['mac'] ??  "";
         $keys    = $this->_param['keys'] ??  "";
-        if($keys == ""){
-            return json_return(0);
+        if($mac == "" || $keys == ""){
+            return json_return(['vod_id'=>0]);
+        }
+
+        // 老用户 不返回视频
+        $user = model("User")->where(['user_name'=>['eq',$mac]])->find();
+        if($user){
+            return json_return(['vod_id'=>0]);
         }
 
         $vodId =  model("Channel")
