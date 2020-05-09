@@ -332,6 +332,14 @@ class DoubanScoreCopy extends Common
         if (isset($get_url_search_id_data['pubdate']) && !empty($get_url_search_id_data['pubdate'])) {
             $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdate'];
         }
+        if(!isset($get_url_search_id_data['pubdate']) && empty($vod_data['vod_pubdate'])){
+            if (isset($get_url_search_id_data['pubdates']) && !empty($get_url_search_id_data['pubdates'])) {
+                $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdates'];
+                if (strpos($vod_data['vod_pubdate'], '(') !== false) {
+                    $vod_data['vod_pubdate'] = explode('(', $vod_data['vod_pubdate'])[0] ?? $vod_data['vod_pubdate'];
+                }
+            }
+        }
         if (isset($get_url_search_id_data['rating']['average'])) {
             $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
         }
