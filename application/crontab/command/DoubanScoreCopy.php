@@ -338,6 +338,10 @@ class DoubanScoreCopy extends Common
         if (isset($get_url_search_id_data['ratings_count'])) {
             $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
         }
+        if (isset($get_url_search_id_data['year'])) {
+            $vod_data['vod_year'] = $get_url_search_id_data['year'];
+        }
+
 //        if (isset($get_url_search_id_data['summary'])) {
 //            $vod_data['vod_blurb'] = $get_url_search_id_data['summary'];
 //        }
