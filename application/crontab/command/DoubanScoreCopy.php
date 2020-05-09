@@ -144,7 +144,6 @@ class DoubanScoreCopy extends Common
                             ])->getHtml();
                         }
                         $mac_curl_get_data = json_decode($mac_curl_get_data, true);
-                        Log::info('err--proxyi-' . $this->proxy_server . ":" . $this->get_port);
                     } catch (Exception $e) {
                         $error_i_count++;
                         if ($error_i_count > 18) {
@@ -154,7 +153,7 @@ class DoubanScoreCopy extends Common
                         }
                         Log::info('采集豆瓣评分-err--过滤' . $url);
                         Log::info('采集豆瓣评分-err--过滤' . $e . '---' . $url);
-                        Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
+                        Log::info('采集豆瓣评分-err-- ww--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
