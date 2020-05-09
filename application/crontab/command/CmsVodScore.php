@@ -80,7 +80,6 @@ class CmsVodScore extends Command
                         break;
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
-//                        print_r($v);die;
                         log::info('合并cmsVodScore进入foreach',$v['vod_name']);
                         $is_log = false;
                         $is_error = false;
@@ -92,27 +91,13 @@ class CmsVodScore extends Command
                             $cms_where['douban_id'] = $v['vod_douban_id'];
                             $cms_data = $this->cmsDb->where($cms_where)->find();
                         }else{
-                            //第一次匹配
-                            $vod_name =  mac_trim_all(mac_characters_format($v['vod_name']));
-                            $vod_sub =  mac_trim_all(mac_characters_format($v['vod_sub']));
-                            $cms_where1['name'] = array(array('like',"%".$vod_name."%"),array('eq',"%".$vod_sub."%"), 'or');
-                            $cms_where1['name_as'] = array(array('eq',"%".$vod_name."%"),array('eq',"%".$vod_sub."%"), 'or');
+                            $cms_where['name'] =$v['vod_name'];
+//                            $cms_where1['name_as'] =array(array('eq',$v['vod_sub']),array('eq',$v['vod_sub']), 'or');
                             $cms_where['vod_director'] = $v['vod_director'];
-                            var_dump($vod_name);
-                            var_dump($v['vod_director']);
-                            $cms_data_array = $this->cmsDb->where($cms_where)->whereOr($cms_where1)->select();
-                            foreach ($cms_data_array as $cda_k=>$cda_v){
-                                if(mac_trim_all($cda_v['vod_director']) != mac_trim_all($v['vod_director'])){
-                                    continue;
-                                }else{
-                                    print_r(1);
-                                    print_r($cda_v['text']);die;
-                                }
-                            }
+                            $cms_data = $this->cmsDb->where($cms_where)->find();
                         }
 
-                     print_r([]);die;
-                     print_r($cms_data);die;
+//                     print_r($getSearchData);
                         if (!empty($cms_data)) {
                             log::info('合并cmsVodScore-try_su:');
                             if (!empty($cms_data)) {
@@ -198,7 +183,7 @@ class CmsVodScore extends Command
     {
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_year,vod_writer,vod_pubdate,vod_sub')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
