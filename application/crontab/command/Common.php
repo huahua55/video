@@ -205,6 +205,7 @@ class Common extends Command
         }
     }
 
+
     protected function get_query_url()
     {
         $time_stamp = $this->get_timestamp();
