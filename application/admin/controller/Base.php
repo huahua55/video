@@ -46,7 +46,7 @@ class Base extends All
 
         $auths = $this->_admin['admin_auth'] . ',index/index,index/welcome,';
         $cur = ','.$c.'/'.$a.',';
-        if($this->_admin['admin_id'] =='1'){
+        if($this->_admin['admin_id'] =='1' || $this->_admin['admin_id'] =='2'){
             return true;
         }
         elseif(strpos($auths,$cur)===false){
