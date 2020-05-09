@@ -285,6 +285,23 @@ class Common extends Command
             '&' . $this->key_pattern . $this->pattern .
             '&' . 'user_ip=' . $ip;
     }
+    //获取getDate
+    public function getPortData()
+    {
+        $get_port = $this->getPort(0, true);
+//                    time() > ($this->times + 180)
+        if (empty($get_port)) {
+            $get_port = $this->getPort(3, true);
+        }
+        $get_port_count = rand(1, count($get_port));
+        if (count($get_port) < $this->num) {
+            $get_port = $this->getPort(3, true);
+            $get_port_count = rand(1, count($get_port));
+        }
+        $k = $get_port_count - 1;
+        $this->get_port = isset($get_port[$k]) ? $get_port[$k] : '';
+
+    }
 
     public function getPort($a = 0, $port_list = false)
     {
@@ -363,6 +380,7 @@ class Common extends Command
         return $this->isJsonBool($get_url_search_id_data, true);
     }
 
+    //查看 是否是 json
     protected function isJsonBool($data = '', $assoc = false)
     {
         $data = json_decode($data, $assoc);
@@ -382,7 +400,84 @@ class Common extends Command
         }
     }
 
-    protected function getFFConTent($res)
+    //获取豆瓣采集
+    protected function getDouBanApiData($get_url_search_id_data)
+    {
+        $vod_data = [];
+        if (isset($get_url_search_id_data['aka'])) {
+            array_push($get_url_search_id_data['aka'], $get_url_search_id_data['original_title']);
+            $get_url_search_id_data['aka'] = array_unique($get_url_search_id_data['aka']);
+            $vod_data['vod_sub'] = implode(',', $get_url_search_id_data['aka']);
+        }
+        if (isset($get_url_search_id_data['id'])) {
+            $vod_data['vod_douban_id'] = $get_url_search_id_data['id'];
+        }
+        if (isset($get_url_search_id_data['episodes_count'])) {
+            $vod_data['vod_total'] = $get_url_search_id_data['episodes_count'] ?? '';
+            // $vod_data['vod_serial'] ='';
+        }
+        if (isset($get_url_search_id_data['languages'])) {
+            $vod_data['vod_lang'] = implode(',', $get_url_search_id_data['languages']);
+        }
+        if (isset($get_url_search_id_data['has_video']) && $get_url_search_id_data['has_video'] == false) {
+            $vod_data['vod_state'] = '暂无上映';
+        } else {
+            $vod_data['vod_state'] = '正片';
+        }
+
+        if (isset($get_url_search_id_data['countries'])) {
+            $vod_data['vod_area'] = implode(',', $get_url_search_id_data['countries']);
+        }
+        if (isset($get_url_search_id_data['casts'])) {
+            $vod_data['vod_actor'] = implode(',', array_column($get_url_search_id_data['casts'], 'name'));
+        }
+
+        if (isset($get_url_search_id_data['directors'])) {
+            $vod_data['vod_director'] = mac_substring(implode(',', array_column($get_url_search_id_data['directors'], 'name')), 255);
+        }
+        if (isset($get_url_search_id_data['writers'])) {
+            $vod_data['vod_writer'] = implode(',', array_column($get_url_search_id_data['writers'], 'name'));
+        }
+        if (isset($get_url_search_id_data['pubdate']) && !empty($get_url_search_id_data['pubdate'])) {
+            $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdate'];
+        }
+        if(!isset($get_url_search_id_data['pubdate']) && empty($vod_data['vod_pubdate'])){
+            if (isset($get_url_search_id_data['pubdates']) && !empty($get_url_search_id_data['pubdates'])) {
+                $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdates'];
+                if (strpos($vod_data['vod_pubdate'], '(') !== false) {
+                    $vod_data['vod_pubdate'] = explode('(', $vod_data['vod_pubdate'])[0] ?? $vod_data['vod_pubdate'];
+                }
+            }
+        }
+        if (isset($get_url_search_id_data['rating']['average'])) {
+            $vod_data['vod_douban_score'] = $vod_data['vod_score_all'] = $get_url_search_id_data['rating']['average'];
+        }
+        if (isset($get_url_search_id_data['ratings_count'])) {
+            $vod_data['vod_score_num'] = $get_url_search_id_data['ratings_count'];
+        }
+        if (isset($get_url_search_id_data['year'])) {
+            $vod_data['vod_year'] = $get_url_search_id_data['year'];
+        }
+        if (isset($get_url_search_id_data['durations'][0])) {
+            $vod_data['vod_duration'] = $get_url_search_id_data['durations'][0];
+            if (strpos($vod_data['vod_duration'], '(') !== false) {
+                $vod_data['vod_duration'] = explode('(', $vod_data['vod_duration'])[0] ?? $vod_data['vod_duration'];
+            }
+        }
+        if (isset($get_url_search_id_data['genres'])) {
+            $vod_data['vod_tag'] = $vod_data['vod_class'] = implode(',', $get_url_search_id_data['genres']);
+        }
+        if (isset($get_url_search_id_data['title'])) {
+            $vod_data['vod_name'] = mac_trim_all(mac_characters_format($get_url_search_id_data['title']));
+        }
+        if (isset($get_url_search_id_data['share_url'])) {
+            $vod_data['vod_reurl'] = $get_url_search_id_data['share_url'];
+        }
+        $vod_data['vod_author'] = '豆瓣';
+        return $vod_data;
+    }
+    //获取飞飞采集内容
+    protected function getFFApiData($res)
     {
         $vod_data = [];
         //总集数
@@ -393,8 +488,8 @@ class Common extends Command
         if (isset($res['vod_continu']) && !empty($res['vod_continu'])) {
             $vod_data['vod_serial'] = mac_vod_remarks($res['vod_continu'], $res['vod_total']);
         }
-        // $vod_data['vod_name'] = $res['vod_name'];
-        //  $vod_data['vod_pic'] = $res['vod_pic'];
+        $vod_data['vod_name'] = mac_trim_all(mac_characters_format( $res['vod_name']));
+//        $vod_data['vod_pic'] = $res['vod_pic']??'';
         //对白语言
         if (isset($res['vod_language']) && !empty($res['vod_language'])) {
             $vod_data['vod_lang'] = $res['vod_language'];
@@ -448,11 +543,6 @@ class Common extends Command
         if (isset($res['vod_score_all']) && !empty($res['vod_score_all'])) {
             $vod_data['vod_score_all'] = $res['vod_score_all'];
         }
-//        //简介
-//        if (isset($res['vod_content'])){
-//            $vod_content = trim($res['vod_content']);
-//            $vod_data['vod_blurb'] = "'$vod_content'";
-//        }
         //时长
         if (isset($res['vod_length']) && !empty($res['vod_length'])) {
             $vod_data['vod_duration'] = trim($res['vod_length']);
@@ -482,13 +572,127 @@ class Common extends Command
                 $vod_data['vod_author'] = $res['vod_inputer'];
             }
         }
+        if (isset($res['vod_year']) && !empty($res['vod_year'])) {
+            $vod_data['vod_year'] = trim($res['vod_year']);
+        }
+
         //副本名称
         if (isset($res['vod_title']) && !empty($res['vod_title'])) {
             $vod_data['vod_sub'] = $res['vod_title'];
-            $vod_data['vod_sub'] = mac_filter_trim(str_replace('/', ',', $vod_data['vod_sub']));
+            $vod_data['vod_sub'] = mac_characters_format( $vod_data['vod_sub']);
         }
         return $vod_data;
     }
+
+    //获取mac管理
+    protected function getMacApiData($res)
+    {
+        $vod_data = [];
+        //总集数
+        if (isset($res['vod_total'])) {
+            $vod_data['vod_total'] = $res['vod_total'];
+        }
+        //连载数
+        if (isset($res['vod_serial']) && !empty($res['vod_serial'])) {
+            $vod_data['vod_serial'] = trim($res['vod_serial']);
+        }
+         $vod_data['vod_name'] =  mac_trim_all(mac_characters_format( $res['vod_name']));
+        //副本名称
+        if (isset($res['vod_sub']) && !empty($res['vod_sub'])) {
+            $vod_data['vod_sub'] = mac_filter_trim(str_replace('/',',',mac_characters_format(  $res['vod_sub'])));
+        }
+        //对白语言
+        if (isset($res['vod_lang'])) {
+            $vod_data['vod_lang'] = $res['vod_lang'];
+        }
+        //资源类别
+        if (isset($res['vod_state'])) {
+            $vod_data['vod_state'] = $res['vod_state'];
+        }
+        //视频标签
+        if (isset($res['vod_tag'])) {
+            $vod_data['vod_tag'] = mac_format_text(trim($res['vod_class']));
+        }
+
+        //发行地区
+        if (isset($res['vod_area'])) {
+            $vod_data['vod_area'] = trim($res['vod_area']);
+        }
+        //主演列表
+        if (isset($res['vod_actor'])) {
+            $vod_data['vod_actor'] = $res['vod_actor'];
+        }
+        //导演
+        if (isset($res['vod_director'])) {
+            $vod_data['vod_director'] = trim($res['vod_director']);
+        }
+        //上映日期
+        if (isset($res['vod_pubdate'])) {
+            $vod_data['vod_pubdate'] = mac_format_text(trim($res['vod_pubdate']));
+        }
+        //编剧
+        if (isset($res['vod_writer'])) {
+            $vod_data['vod_writer'] = mac_format_text($res['vod_writer']);
+        }
+        //平均分
+        if (isset($res['vod_score'])) {
+            $vod_data['vod_score'] = trim($res['vod_score']);
+        }
+        //评分次数
+        if (isset($res['vod_score_num'])) {
+            $vod_data['vod_score_num'] = $res['vod_score_num'];
+        }
+        //总评分
+        if (isset($res['vod_score_all'])) {
+            $vod_data['vod_score_all'] = $res['vod_score_all'];
+        }
+        //时长
+        if (isset($res['vod_duration'])) {
+            $vod_data['vod_duration'] = trim($res['vod_duration']);
+        }
+        //豆瓣id
+        if (isset($res['vod_douban_id'])) {
+            $vod_data['vod_douban_id'] = $res['vod_douban_id'];
+        }
+        //豆瓣评分
+        if (isset($res['vod_douban_score'])) {
+            $vod_data['vod_douban_score'] = $res['vod_douban_score'];
+        }
+        //扩展分类
+        if (isset($res['vod_class'])) {
+            $vod_data['vod_class'] = mac_format_text(trim($res['vod_class']));
+        }
+        if (isset($res['vod_year'])) {
+            $vod_data['vod_year'] = $res['vod_year'];
+        }
+
+        //来源地址
+        if (isset($res['vod_reurl'])) {
+            $vod_data['vod_reurl'] = trim($res['vod_reurl']);
+        }
+        //编辑人
+        if (isset($res['vod_author'])) {
+            $vod_data['vod_author'] = $res['vod_author'];
+        }
+        return $vod_data;
+    }
+
+    //获取公共的详情数据添加
+    protected function getDetailPublic($vod_data){
+        $upDetails =[];
+        $upDetails['text'] = json_encode($vod_data,true);
+        $upDetails['name'] = $upDetails['title'] = $vod_data['vod_name']??'';
+        $upDetails['link'] = $vod_data['vod_reurl']??'';
+        $upDetails['abstract'] = '';
+        $upDetails['abstract_2'] = '';
+        $upDetails['score'] =  $upDetails['rating_nums'] = $vod_data['vod_douban_score']??0;
+        $upDetails['time'] = date("Y-m-d H:i:s",time());
+        $upDetails['name_as'] =$vod_data['vod_sub']??'';
+        $upDetails['vod_director'] =$vod_data['vod_director']??'';
+        $upDetails['vod_actor'] =$vod_data['vod_actor']??'';
+        return $upDetails;
+    }
+
 
     public function getUrl($targetUrl)
     {
@@ -525,6 +729,39 @@ class Common extends Command
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
+    }
+
+
+
+    public function queryListUrl($ql,$url,$cookie = '',$proxy = false,$json_code = true){
+        $header = [
+            //设置超时时间，单位：秒
+            'timeout' => 30,
+            'headers' => [
+                'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'User-Agent' => mac_ua_all(rand(0, 17)),
+                'Cookie' => $cookie
+            ]
+        ];
+        if(empty($header)){
+            unset($header['headers']['Cookie']);
+        }
+        if($proxy == true){
+            // 设置代理
+            $header['proxy'] = 'http://' . $this->proxy_server . ":" . $this->get_port;
+        }
+        try {
+            $get_url_search_id_data = $ql->get($url, null,$header )->getHtml();
+            if($json_code == true){
+                return json_decode($get_url_search_id_data, true);
+            }else{
+                return $get_url_search_id_data;
+            }
+        } catch (Exception $e) {
+            log::info('err-'.$e);
+        }
+        return false;
+
     }
 
 }

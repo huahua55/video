@@ -1011,6 +1011,7 @@ CREATE TABLE `douban_vod_details` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
   `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
+  `type` tinyint(2) NOT NULL DEFAULT '1',
   `douban_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '豆瓣视频id',
   `abstract` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要1',
   `abstract_2` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要2',

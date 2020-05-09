@@ -22,174 +22,165 @@ use QL\QueryList;
 
 class CmsDouban extends Common
 {
-    protected $vodDb;//db
-//    protected $get_search_id = 'http://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
-    protected $get_search_id = 'https://api.daicuo.cc/douban/feifeicms/?id=';//cms 通过id获取内容
+    protected $detailsDb;//db
+    protected $get_mac_id = 'https://api.maccms.com/douban/?callback=douban&id=';//cms 通过id获取内容
+    protected $get_feifei_id = 'https://api.daicuo.cc/douban/feifeicms/?id=';//cms 通过id获取内容
+    protected $get_douban_id = 'https://api.douban.com/v2/movie/subject/%s?apikey=0df993c66c0c636e29ecbb5344252a4a';
     protected $ql;//querylist
 
     protected function configure()
     {
-        //db
-        $this->vodDb = Db::name('douban_vod_details');
         $this->ql = QueryList::getInstance();
-        //获取豆瓣id
+        //db  优化详情表数据
+        $this->detailsDb = Db::name('douban_vod_details');
         $this->setName('cmsDouban')->addArgument('parameter')
-            ->setDescription('定时计划：采集CmsDouban');
+            ->setDescription('优化：详情表');
+    }
+    // 取出详情表数据数据
+    protected function getData($where, $order, $page, $limit, $start)
+    {
+
+        $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
+
+        $total = $this->detailsDb->where($where)->count();
+        $list = $this->detailsDb->where($where)->order($order)->limit($limit_str)->select();
+        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+    }
+
+
+    //从豆瓣接口获取内容
+    public function getDouBanApi($douban_id){
+        $url = sprintf($this->get_douban_id, $douban_id);
+//        $this->get_zm_port();//开启芝麻代理
+//        usleep(500000);
+//        $str_data = $this->getUrl($url);
+//        $get_url_data = array_pop(explode("\r\n", $str_data));
+        //开启飞蚁代理
+        $this->getPortData();
+        $cookie = $this->newCookie($this->getCookie('',false));
+      $get_url_data =   $this->queryListUrl($this->ql,$url,$cookie,true);
+        //不用代理
+//        $cookie = $this->newCookie($this->getCookie('',false));
+//        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
+        print_r($get_url_data);die;
+        if(!empty($get_url_data)){
+            //获取名称
+            $vod_data = $this->getDouBanApiData($get_url_data);
+            $upDetails = [];
+            $upDetails['text'] = json_encode($vod_data,true);
+            $upDetails['type'] = 7;
+            $upDetails['name'] = $upDetails['title'] = $vod_data['vod_name']??'';
+            $upDetails['link'] = $vod_data['vod_reurl']??'';
+            $upDetails['abstract'] = '';
+            $upDetails['abstract_2'] = '';
+            $upDetails['score'] =  $upDetails['rating_nums'] = $vod_data['vod_douban_score']??0;
+            $upDetails['time'] = date("Y-m-d H:i:s",time());
+            $upDetails['name_as'] =$vod_data['vod_sub']??'';
+            $upDetails['vod_director'] =$vod_data['vod_director']??'';
+            $upDetails['vod_actor'] =$vod_data['vod_actor']??'';
+            $this-> upDetails($douban_id,$upDetails);
+        }else{
+            $this->getFeiFeiApi($douban_id);
+        }
+        return true;
+    }
+
+    //从飞飞接口获取内容
+    public function getFeiFeiApi($douban_id){
+        $url =$this->get_feifei_id. $douban_id;
+        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'');
+//        $get_url_data = json_decode(mac_curl_get($url),true);
+        if(isset($get_url_data['data']) && isset($get_url_data['status']) && $get_url_data['status'] == 200 && !empty($get_url_data['data'])){
+            //获取飞飞采集内容
+            $vod_data = $this->getFFApiData($get_url_data['data']);
+            $upDetails = $this->getDetailPublic($vod_data);
+            $upDetails['type'] = 8;
+            $upDetails['vod_douban_id'] = $douban_id;
+            $this-> upDetails($douban_id,$upDetails);
+        }else{
+            $this->getMacApi($douban_id);
+        }
+        return true;
+    }
+    //从mac接口获取内容
+    public function getMacApi($douban_id){
+//        sleep(1);
+        $url = $this->get_mac_id. $douban_id;
+        $get_url_data =  $this->queryListUrl($this->ql,$url,'',false,false);
+        //        $get_url_data = json_decode(mac_curl_get($url),true);
+        $get_url_data = str_replace('douban(', '', $get_url_data);
+        $get_url_data = str_replace(');', '', $get_url_data);
+        $get_url_data = $this->isJsonBool($get_url_data, true);
+        if(isset($get_url_data['data']) && isset($get_url_data['code']) && $get_url_data['code'] == 1 && !empty($get_url_data['data'])){
+            //获取飞飞采集内容
+            $vod_data = $this->getMacApiData($get_url_data['data']);
+            $upDetails = $this->getDetailPublic($vod_data);
+            $upDetails['type'] = 9;
+            $this-> upDetails($douban_id,$upDetails);
+        }
+        return true;
+    }
+    //修改详情表
+    public function upDetails($douban_id,$data){
+        $res =  $this->detailsDb->where(['douban_id'=>$douban_id])->update($data);
+        if($res){
+            log::info('优化：详情表-up-succ' .$res);
+        }else{
+            log::info('优化：详情表-up-error' .$res);
+        }
     }
 
     protected function execute(Input $input, Output $output)
     {
-
         // 输出到日志文件
-        $output->writeln("开启采集:采集CmsDouban评分");
+        $output->writeln("优化：详情表-开始");
+        $myparme = $input->getArguments();
+        $parameter = $myparme['parameter'];
+        //参数转义解析
+        $param = $this->ParSing($parameter);
+        $type = $param['type'] ?? 1;
+        $id = $param['id'] ?? '';
         try {
-            //字符串对比算法
-            $lcs = new similarText();
-            //cli模式接受参数
-            $myparme = $input->getArguments();
-            $parameter = $myparme['parameter'];
-            //参数转义解析
-            $param = $this->ParSing($parameter);
-            $type = $param['type'] ?? '';
-            $d_type = $param['d_type'] ?? '';
-            $ids = $param['id'] ?? '';
-
             $start = 0;
             $page = 1;
-            $limit = 20;
+            $limit = 40;
             $is_true = true;
             $where = [];
-            if ($d_type == 1) {
-                $is_vod_id = Cache::get('vod_cms_details_id');
-                $where['name'] = ['neq', ''];
-                if (!empty($is_vod_id)) {
-                    $where['id'] = ['gt', $is_vod_id];
-                }
-            } else {
-                $where['name'] = ['eq', ''];
-                $where['douban_id'] = ['gt', 0];
-            }
+            $where['type'] = 1;
             if (!empty($ids)) {
-                $where['id'] = ['gt', $ids];
+                $where['id'] = ['gt', $id];
             }
-            $where['error_count'] = ['lt', 10];
-            if ($type == 1) {
-                $order = 'id desc';
-            } else {
-                $order = 'id asc';
-            }
+            $order = 'id asc';
             //进入循环 取出数据
             while ($is_true) {
-                //取出数据
-                $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+                $douBanScoreData = $this->getData($where, $order, $page, $limit, $start);
                 if (!empty($douBanScoreData)) {
-                    log::info('采集CmsDouban进入foreach');
+                    log::info('优化：详情表-进入foreach');
                     $pagecount = $douBanScoreData['pagecount'] ?? 0;
                     if ($page > $pagecount) {
                         $is_true = false;
-                        log::info('采集CmsDouban结束...');
+                        log::info('优化：详情表-结束...');
                         $output->writeln("结束...");
                         break;
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
 
-                        Cache::set('vod_cms_details_id', $v['id']);
-                        $is_log = false;
-                        $is_error = false;
-                        $mac_curl_get_data = '';
-//                        sleep(1);
-                        $url = $this->get_search_id . $v['douban_id'];
-                        log::info('采集CmsDoubanUrl:', $url);
-                        if ($d_type == 2) {
-                            $whereId['id'] = $v['id'];
-                            if(empty($v['name'])){
-                                continue;
-                            }
-                            $vod_data['name'] = mac_characters_format($v['name']);
-                            $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                            if ($up_res) {
-                                log::info('CmsDouban-try-succ::' . $v['name']);
-                            }
-                        } else {
-                            try {
-                                $mac_curl_get_data = $this->getCmsData($url);
-                                Log::info('采集CmsDouban-try:');
-                            } catch (Exception $e) {
-                                Log::info('err--过滤' . $url);
-                                continue;
-                            }
-//                     print_r($getSearchData);
-                            if (!empty($mac_curl_get_data)) {
-                                log::info('采集CmsDouban-try_su:', $mac_curl_get_data);
-                                if (isset($mac_curl_get_data['status']) && $mac_curl_get_data['status'] == 200 && !empty($mac_curl_get_data['data'])) {
-                                    log::info('采集CmsDouban-try_-su-::');
-                                    $resdata = $mac_curl_get_data['data'];
-                                    $res = $this->getFFConTent($resdata);
-                                    $is_log = true;
-                                    $is_error = true;
-                                    $whereId['id'] = $v['id'];
-                                    if (empty($d_type) && $d_type != 1) {
-                                        $vod_data['name_as'] = $res['vod_sub'] ?? '';
-                                        $vod_data['vod_director'] = $res['vod_director'] ?? '';
-                                        $vod_data['vod_actor'] = $res['vod_actor'] ?? '';
-                                        $vod_data['score'] = $res['vod_score'] ?? '';
-                                        $vod_data['text'] = json_encode($res, true);
-                                    }
-                                    $vod_data['name'] = mac_characters_format($resdata['vod_name']);
-                                    $up_res = $this->vodDb->where($whereId)->update($vod_data);
-                                    if ($up_res) {
-                                        log::info('CmsDouban-try-succ::' . $v['name']);
-                                    }
-                                }
-                            }
-                            if ($is_log == false) {
-                                log::info('采集CmsDoubanUrl-过滤::' . $v['title']);
-                            }
-                            if ($is_error != true) {
-                                $whereErrId['id'] = $v['id'];
-                                $vod_err_data['error_count'] = $v['error_count'] + 1;
-                                $this->vodDb->where($whereErrId)->update($vod_err_data);
-                            }
+                        $douban_id =  $v['douban_id'];
+                        if($type == 1 ){
+                            $this->getDouBanApi($douban_id);//7
+                        }else if($type ==2){
+                            $this->getFeiFeiApi($douban_id);//8
+                        }else if($type ==3){
+                            $this->getMacApi($douban_id);//9
                         }
                     }
                     $page = $page + 1;
                 }
             }
         } catch (Exception $e) {
-            $output->writeln("end1111....");
-            log::info('采集CmsDoubanUrl-error::' . $e);
+            $output->writeln("end...");
+            log::info('优化：' . $e);
         }
         $output->writeln("end....");
     }
-
-    function strToUtf8($str)
-    {
-        $encode = mb_detect_encoding($str, array("ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5'));
-        if ($encode == 'UTF-8') {
-            return $str;
-        } else {
-            return mb_convert_encoding($str, 'UTF-8', $encode);
-        }
-    }
-
-    protected function isJsonBool($data = '', $assoc = false)
-    {
-        $data = json_decode($data, $assoc);
-        if (($data && is_object($data)) || (is_array($data) && !empty($data))) {
-            return $data;
-        }
-        return false;
-    }
-
-    // 取出数据豆瓣评分为空数据
-    protected function getVodDoubanScoreData($where, $order, $page, $limit, $start)
-    {
-
-        $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-
-        $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
-    }
-
 }

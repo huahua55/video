@@ -25,7 +25,6 @@ class DoubanScoreJs extends Common
 {
     protected $vodDb;//db
     protected $search_url_re = 'https://search.douban.com/movie/subject_search?search_text=%s&cat=1002';//豆瓣搜索接口
-    protected $search_url = 'https://movie.douban.com/j/subject_suggest?q=%s';//豆瓣搜索接口
     protected $ql;//querylist
     protected $cmsDb;//db
     protected $vod_errorDb;//db
@@ -48,7 +47,7 @@ class DoubanScoreJs extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->alias('a')->join('vod_douban_error b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->count();
-        $list = $this->vodDb->field('a.vod_id,a.vod_sub,a.vod_name,a.vod_class,a.vod_actor,a.vod_director,a.vod_douban_id,a.vod_douban_score')->alias('a')->join('vod_douban_error b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('a.vod_id,a.vod_sub,a.vod_name,a.vod_class,a.vod_year,a.vod_actor,a.vod_director,a.vod_douban_id,a.vod_douban_score')->alias('a')->join('vod_douban_error b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
@@ -357,7 +356,6 @@ class DoubanScoreJs extends Common
 //            log::info('js-datall-' .json_encode($getDetailsData,true));
             if (!empty($getDetailsData)) {
                 //更新详情表
-                $this->vod_details_update($get_search_id, $getDetailsData, $v);
                 $title    =   mac_trim_all(mac_characters_format($getDetailsData['vod_name']));
                 $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($v['vod_name'])), $title) * 100;
                 log::info('js-采集豆瓣评分-比例::' . $rade);
@@ -451,7 +449,6 @@ class DoubanScoreJs extends Common
                 if (empty($t_data)) {
                     $this->cmsDb->insert($deas_data);
                 }
-
             } catch (\Exception $e) {
                 log::info('js-采集豆瓣评分-数据重复添加::' . $as_k['title'] . $e);
             }
@@ -459,24 +456,5 @@ class DoubanScoreJs extends Common
         return $get_search_id;
     }
 
-    //更新详情表
-    protected function vod_details_update($get_search_id, $getDetailsData, $v)
-    {
-        $details_data = [];
-        $details_data['name'] = $getDetailsData['vod_name'] ?? '';
-        $details_data['name_as'] = trim(mb_substr($getDetailsData['vod_sub'] ?? '', 0, 200));
-        $details_data['vod_director'] = $getDetailsData['vod_director'] ?? '';
-        $details_data['vod_actor'] = $getDetailsData['vod_actor'] ?? '';
-        $details_data['score'] = $getDetailsData['vod_douban_score'] ?? '0.0';
-        $details_data['text'] = json_encode($getDetailsData, true);
-        if (!empty($details_data)) {//首先更新详情表
-            log::info('js-vo222d--');
-            $where_id = [];
-            $where_id['douban_id'] = $get_search_id;
-            $up_res = $this->cmsDb->where($where_id)->update($details_data);
-            if ($up_res) {
-                log::info('js-采集豆瓣评分-deteils-succ::' . $v['vod_name'] . '---' . $v['vod_id']);
-            }
-        }
-    }
+
 }
