@@ -69,7 +69,7 @@ class Banner extends Base
         if(!empty($ids)){
             $where=[];
             $where['id'] = ['in',$ids];
-            $res = model('BannerRecommend')->delData($where);
+            $res = model('Banner')->delData($where);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }
