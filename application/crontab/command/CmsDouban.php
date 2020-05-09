@@ -51,18 +51,18 @@ class CmsDouban extends Common
     //从豆瓣接口获取内容
     public function getDouBanApi($douban_id){
         $url = sprintf($this->get_douban_id, $douban_id);
-//        $this->get_zm_port();//开启芝麻代理
-//        usleep(500000);
-//        $str_data = $this->getUrl($url);
-//        $get_url_data = array_pop(explode("\r\n", $str_data));
+        $this->get_zm_port();//开启芝麻代理
+        $str_data = $this->getUrl($url);
+        $get_url_data = array_pop(explode("\r\n", $str_data));
+        $get_url_data = json_decode($get_url_data,true);
         //开启飞蚁代理
-        $this->getPortData();
-        $cookie = $this->newCookie($this->getCookie('',false));
-      $get_url_data =   $this->queryListUrl($this->ql,$url,$cookie,true);
+//        $this->getPortData();
+//        $cookie = $this->newCookie($this->getCookie('',false));
+//      $get_url_data =   $this->queryListUrl($this->ql,$url,$cookie,true);
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
-        print_r($get_url_data);die;
+//        var_dump($this->add_whitelist('23.224.163.201'));die;
         if(!empty($get_url_data)){
             //获取名称
             $vod_data = $this->getDouBanApiData($get_url_data);
