@@ -121,7 +121,7 @@ class Common extends Command
                 foreach ($data['data'] as $k => $v) {
                     $port_data[$k]['ip'] = trim($v['ip']);
                     $port_data[$k]['port'] = trim($v['port']);
-                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])) - 4*60);;
+                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])) - 1*60);;
                     $port_data[$k]['type'] = 1;
                     $port_data[$k]['state'] = 1;
                 }
