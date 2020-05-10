@@ -66,6 +66,16 @@ class CmsVodScore extends Common
             if (!empty($id)) {
                 $where['vod_douban_id'] = ['gt', $id];
             }
+            $cha_id= Cache::get('cms_vod_id_puth');
+            if(empty($cha_id)){
+                Cache::set('cms_vod_id_puth',1);
+                $where['vod_id'] = ['gt', 1];
+            }else{
+                $where['vod_id'] = ['gt', $cha_id];
+            }
+
+
+
             $order = 'vod_id asc';
 
             //进入循环 取出数据
@@ -82,6 +92,7 @@ class CmsVodScore extends Common
                         break;
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
+                        Cache::set('cms_vod_id_puth',$v['vod_id']);
                         log::info('合并cmsVodScore进入foreach', $v['vod_name']);
                         $is_log = false;
                         $cms_where['name'] = ['neq', ''];
