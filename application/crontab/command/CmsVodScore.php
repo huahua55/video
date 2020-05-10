@@ -136,7 +136,7 @@ class CmsVodScore extends Common
                                 if (isset($vod_data['vod_name'])) {
                                     unset($vod_data['vod_name']);
                                 }
-                                var_dump($whereId['vod_id']);
+                                var_dump('info----------------'.$whereId['vod_id']);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
                                     log::info('合并cmsVodScore-succ::' . $v['vod_name']);
