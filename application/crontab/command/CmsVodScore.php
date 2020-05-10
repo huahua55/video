@@ -95,7 +95,7 @@ class CmsVodScore extends Common
                             $vod_name = mac_trim_all(mac_characters_format($v['vod_name']));
                             $vod_sub = mac_trim_all(mac_characters_format($v['vod_sub']));
                             $cms_where1['name'] = array(array('like', "%" . $vod_name . "%"), array('like', "%" . $vod_sub . "%"), 'or');
-                            $cms_where1['name_as'] = array(array('like', "%" . $vod_name . "%"), array('like', "%" . $vod_sub . "%"), 'or');
+//                            $cms_where1['name_as'] = array(array('like', "%" . $vod_name . "%"), array('like', "%" . $vod_sub . "%"), 'or');
                             $cms_where['vod_director'] = $v['vod_director'];
 
 //                            var_dump($v['vod_actor']);
