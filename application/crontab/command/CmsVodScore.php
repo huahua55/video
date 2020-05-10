@@ -98,7 +98,7 @@ class CmsVodScore extends Common
                             $cms_where1['name_as'] = array(array('eq', "%" . $vod_name . "%"), array('eq', "%" . $vod_sub . "%"), 'or');
                             $cms_where['vod_director'] = $v['vod_director'];
                             var_dump($vod_name . '---' . $v['vod_director']);
-                            var_dump($v['vod_actor']);
+//                            var_dump($v['vod_actor']);
 //                            var_dump($v['vod_director']);
                             $cms_data_array = $this->cmsDb->where($cms_where)->whereOr($cms_where1)->select();
                             foreach ($cms_data_array as $cda_k => $cda_v) {
@@ -135,6 +135,7 @@ class CmsVodScore extends Common
                                 if (isset($vod_data['vod_name'])) {
                                     unset($vod_data['vod_name']);
                                 }
+                                var_dump($whereId['vod_id']);
                                 $up_res = $this->vodDb->where($whereId)->update($vod_data);
                                 if ($up_res) {
                                     log::info('合并cmsVodScore-succ::' . $v['vod_name']);
