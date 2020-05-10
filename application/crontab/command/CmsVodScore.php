@@ -114,7 +114,7 @@ class CmsVodScore extends Common
 
 //                            var_dump($v['vod_actor']);
 //                            var_dump($v['vod_director']);
-                            $cms_data_array = $this->cmsDb->where()->where($cms_where)->whereOr($cms_where1)->select();
+                            $cms_data_array = $this->cmsDb->where($cms_where)->whereOr($cms_where1)->select();
                             foreach ($cms_data_array as $cda_k => $cda_v) {
                                 $cda_name = mac_trim_all(mac_characters_format($cda_v['name']));
                                 var_dump($vod_name . '---' . $cda_name);
