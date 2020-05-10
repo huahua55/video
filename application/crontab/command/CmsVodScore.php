@@ -107,11 +107,14 @@ class CmsVodScore extends Common
                             $vod_sub = mac_trim_all(mac_characters_format($v['vod_sub']));
                             $cms_where1['name'] = array(array('like', "%" . $vod_name . "%"), array('like', "%" . $vod_sub . "%"), 'or');
 //                            $cms_where1['name_as'] = array(array('like', "%" . $vod_name . "%"), array('like', "%" . $vod_sub . "%"), 'or');
+                            if(empty($v['vod_director'])){
+                                continue;
+                            }
                             $cms_where['vod_director'] = $v['vod_director'];
 
 //                            var_dump($v['vod_actor']);
 //                            var_dump($v['vod_director']);
-                            $cms_data_array = $this->cmsDb->where($cms_where)->whereOr($cms_where1)->select();
+                            $cms_data_array = $this->cmsDb->where()->where($cms_where)->whereOr($cms_where1)->select();
                             foreach ($cms_data_array as $cda_k => $cda_v) {
                                 $cda_name = mac_trim_all(mac_characters_format($cda_v['name']));
                                 var_dump($vod_name . '---' . $cda_name);
