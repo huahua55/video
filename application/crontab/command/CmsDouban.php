@@ -146,7 +146,8 @@ class CmsDouban extends Common
             $limit = 40;
             $is_true = true;
             $where = [];
-            $where['type'] = 1;
+//            $where['type'] = 1;
+            $where['name'] = '';
             if (!empty($ids)) {
                 $where['id'] = ['gt', $id];
             }
