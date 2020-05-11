@@ -137,8 +137,9 @@ return array (
     'watermark_color' => '#FF0000',
     'protocol' => 'http',
     'mode' => 'remote',
-    'remoteurl' => 'http://s1.863my.com/',
-    'api' => 
+    'remoteurl' => 'http://www.863my.com/',
+//    'remoteurl' => 'http://s1.863my.com/',
+    'api' =>
     array (
       'upyun' => 
       array (
