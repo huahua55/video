@@ -148,7 +148,7 @@ class CmsDouban extends Common
             $where = [];
 //            $where['type'] = 1;
             $where['name'] = '';
-            if (!empty($ids)) {
+            if (!empty($id)) {
                 $where['id'] = ['gt', $id];
             }
             $order = 'id asc';
