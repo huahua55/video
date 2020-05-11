@@ -1,0 +1,57 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>热搜榜-{$maccms.site_name}</title>
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/head"}
+{include file="public/slide"}
+<!--当前位置-->
+ <div class="yk-container"> 
+   <div class="yk-row"> 
+	<div class="yk-pannel-box"> 
+	<div class="yk-pannel_hd clearfix"> 
+ <div class="selectList clearfix">
+ 
+
+         </div>
+		</div>
+	 </div>
+		 <div class="yk-pannel-box"> 
+      <div class="yk-pannel_hd clearfix"> 
+       <div class="yk-pannel_head clearfix"> 
+<div class="v_th">
+    <i class="iLine"></i>
+    <p class="pTab">
+ 
+	</p>
+
+	    <div class="pSelected"><span class="sNum">共有<em>495</em>个娱乐</span>
+			</div>
+		</div>
+   </div>
+ </div>
+      <div class="yk-pannel_bd clearfix"> 
+       <div class="yk-vodlist clearfix"> 
+         {maccms:vod order="desc" by="rnd" num="60" type="all"}
+      <li class="yk-pack"> 
+          <div class="p-thumb"> 
+           <a href="{:mac_url_vod_detail($vo)} " title="{$vo.vod_name}"  ></a> 
+           <img class="quic ff-img" src="{:mac_url_img($vo.vod_pic)} " alt="{$vo.vod_name}" /> 
+           <span class="playshow">{$vo.vod_remarks}</span> 
+          </div> 
+          <ul class="info-list"> 
+           <li class="title"><a href="{:mac_url_vod_detail($vo)} "  >{$vo.vod_name}</a></li> 
+           <li><span>{$vo.vod_hits}次播放</span></li> 
+          </ul> 
+		  </li> 
+         {/maccms:vod}
+         </ul>
+ </div>
+
+
+{include file="public/foot"}
+</body>
+</html>
