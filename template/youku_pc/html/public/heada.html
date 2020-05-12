@@ -12,11 +12,10 @@
 				<div class="newhead-small-nav">
 					<li><a href="/" target="_self">首页</a></li>
 					{maccms:type ids="parent" mid="1" order="asc" by="sort"}
-					<li class="{if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"}
-					 cur {/if}"> <a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
+					<li class="{if condition=" ($param['id']==$vo.type_id) OR ($obj['parent']['type_id']==$vo.type_id)"} cur {/if}">
+					 <a href="{:mac_url_type($vo)}" target="_self">{$vo.type_name}</a></li>
 					{/maccms:type}
-					<li class="{if condition=" ($maccms.aid==4)"} cur {/if}"> <a href="{:mac_url('gbook/index')}"
-					 target="_self" >求片/留言</a></li>
+					<li class="{if condition=" ($maccms.aid==4)"} cur {/if}"> <a href="{:mac_url('gbook/index')}" target="_self">求片/留言</a></li>
 				</div>
 			</div>
 			<div id="searchbar" class="search-main" tabindex="0">
@@ -33,7 +32,7 @@
 				<!-- 热搜 -->
 				<div class="hot-search">
 					<div id="searchWrap">
-						<p class="hot-title">搜索记录 <a href="javascript:;" class="clearSearchRecords">清空</a></p>
+						<p class="hot-title">搜索记录<a href="javascript:;" class="clearSearchRecords">清空</a></p>
 						<ul class="hot-wrap">
 							<li><a href="javascript:;"><span>aaaSearch</span></a></li>
 							<li><a href="javascript:;"><span>aaaSearch</span></a></li>

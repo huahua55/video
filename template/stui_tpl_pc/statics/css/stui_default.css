@@ -140,7 +140,7 @@ textarea.form-control{ height: auto;}
 .stui-content__thumb .pic{ display: block; width: 220px;}
 .stui-content__thumb .pic img{ max-width: 100%;}
 .stui-content__side{ width: 240px; padding-top: 80px; text-align: center; background-color: #444;}
-.stui-content__detail{ padding: 20px; background-color: #1c1b1e;}
+.stui-content__detail{ padding: 20px; background-color: #1c1b1e;position: relative;}
 .stui-content__detail .title{margin:0 0 10px; font-size: 18px; color: #fff;}
 .stui-content__detail .data{margin-bottom:10px}
 .stui-content__detail .desc{padding-left:42px; line-height: 25px;}
@@ -326,3 +326,9 @@ textarea.form-control{ height: auto;}
 	
 	.hidden-xs{ display: none !important;}
 }
+.video_score{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+.video_score .score_v .score{font-size:12px}.video_score .score_v{position:absolute;top:0;right:5px;width:66px;height:20px;line-height:22px;text-align:right;color:#ff6600}.video_score .score_v .f{font-size:12px}.video_score .score_db{display:block;position:relative;font-size:0;width:90px;height:22px;border-radius:10px;border:1px solid #fdf751;cursor:pointer}.video_score .score_db .db{display:inline-block;width:50%;font-size:12px;line-height:20px;border-radius:9px 0 0 9px;background:#fdf751;color:#333;text-align:center;text-indent:2px}.video_score .score_db .score{display:inline-block;width:30px;font-size:12px;line-height:18px;color:#fdf751;text-align:center}
