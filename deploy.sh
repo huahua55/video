@@ -63,6 +63,7 @@ function deploy_online()
 	ln -sf $prj_dir/deploy/conf/online/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
 	ln -sf $prj_dir/deploy/conf/online/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
 	ln -sf $prj_dir/deploy/conf/online/m.video.conf /usr/local/nginx/conf/vhost/m.video.conf
+	ln -sf $prj_dir/deploy/conf/online/utcc.video.conf /usr/local/nginx/conf/vhost/utcc.video.conf
 }
 
 # update assets.json
