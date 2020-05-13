@@ -30,11 +30,11 @@
 									今日更新:<span class="STYLE2">{:mac_data_count(0,'today','vod')}</span>部 </span></a> </h3>
 						<!-- 热门推荐 -->
 						<ul class="stui-vodlist clearfix">
-							{maccms:vod num="1" type="all" order="desc" by="time" level="5"}
+							{maccms:vod num="6" type="all" order="desc" by="time" level="9"}
 							<li class="index">
 								<div class="stui-vodlist__box">
 									<a class="stui-vodlist__thumb active lazyload" href="{:mac_url_vod_play($vo,['sid'=>1,'nid'=>1])}" title="{$vo.vod_name}"
-									 data-original="{:mac_url_img($vo.vod_pic_slide)}">
+									 data-original="{:mac_url_img($vo.vod_pic)}">
 										<span class="play" style="display: block;"></span>
 										<span class="pic-text text-right">{if condition="$vo.vod_remarks neq ''"}{$vo.vod_remarks}{elseif
 											condition="$vo.vod_serial gt 0"}第{$vo.vod_serial}集{else /}已完结{/if}</span>
@@ -49,11 +49,9 @@
 								</div>
 							</li>
 							{/maccms:vod}
-
 							{maccms:vod num="10" type="all" order="desc" by="time" year="2018" level="3"}
 							<li {if condition="$key gt 9" } class="hidden-xs" {/if}> {include file="block/vod_box" } </li> {/maccms:vod} </ul>
 							 <!-- end 热门推荐 -->
-
 								<!-- 分类列表 -->
 								{maccms:type ids="parent" order="asc" by="sort" id="vo1" key="key1" flag="vod"}
 								<div class="stui-vodlist__head">
@@ -74,7 +72,6 @@
 								</ul>
 								{/maccms:type}
 								<!-- end 分类列表 -->
-
 								<!-- 最新专题 -->
 								<div class="stui-vodlist__head">
 									<h3><a href="{:mac_url_type($vo1,[],'show')}"><i class="iconfont icon-all"></i> 最新专题</a></h3>
@@ -96,7 +93,6 @@
 									{/maccms:topic}
 								</ul>
 								<!-- end 最新专题 -->
-
 					</div>
 					<!-- <div class="stui-pannel_ft col-pd">
 						<ul class="stui-link__text clearfix">
