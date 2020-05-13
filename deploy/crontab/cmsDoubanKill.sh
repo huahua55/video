@@ -5,4 +5,6 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 cd /data/www/video/
 
 #001 更新 cms豆瓣分
+ps -ef | grep cmsDouban | grep -v grep | awk '{print $2}' | xargs kill -9
+sleep 5
 php think cmsDouban
