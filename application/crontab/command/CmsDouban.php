@@ -53,10 +53,10 @@ class CmsDouban extends Common
         $url = sprintf($this->get_douban_id, $douban_id);
         $this->get_zm_port();//开启芝麻代理
         $str_data = $this->getUrl($url);
-        print_r($str_data);die;
+//        print_r($str_data);die;
         $get_url_data = array_pop(explode("\r\n", $str_data));
         $get_url_data = json_decode($get_url_data,true);
-        print_r($str_data);die;
+//        print_r($str_data);die;
         //开启飞蚁代理
 //        $this->getPortData();
 //        $cookie = $this->newCookie($this->getCookie('',false));
@@ -134,6 +134,11 @@ class CmsDouban extends Common
 
     protected function execute(Input $input, Output $output)
     {
+
+        $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+        $data = mac_curl_get($url);
+        $data = json_decode($data, true);
+        print_r($data);die;
         // 输出到日志文件
         $output->writeln("优化：详情表-开始");
         $myparme = $input->getArguments();
@@ -157,7 +162,7 @@ class CmsDouban extends Common
             //进入循环 取出数据
             while ($is_true) {
                 $douBanScoreData = $this->getData($where, $order, $page, $limit, $start);
-                var_dump($douBanScoreData);
+//                var_dump($douBanScoreData);
                 if (!empty($douBanScoreData)) {
                     log::info('优化：详情表-进入foreach');
                     $pagecount = $douBanScoreData['pagecount'] ?? 0;
