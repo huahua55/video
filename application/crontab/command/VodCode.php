@@ -2,6 +2,7 @@
 
 namespace app\crontab\command;
 
+use app\common\util\Dir;
 use JonnyW\PhantomJs\Http\PdfRequest;
 use similar_text\similarText;
 use think\Cache;
@@ -41,6 +42,7 @@ class VodCode extends Common
     {
 
         $output->writeln("定时计划:视频编码开启:");
+
         $myparme = $input->getArguments();
         $parameter = $myparme['parameter'];
         //参数转义解析
@@ -48,28 +50,41 @@ class VodCode extends Common
         $type = $param['type'] ?? ''; //从1 开始爬取
         $id = $param['id'] ?? ''; //从1 开始爬取
         $f = $param['f'] ?? ''; //从1 开始爬取
-        if($f == 'mac'){
-            $this->ffmpeg = '/usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg';
+        $get_vod_id = $param['vod_id'] ?? ''; //从1 开始爬取
+        $get_player = $param['player'] ?? ''; //从1 开始爬取
+        $get_collection = $param['collection'] ?? ''; //从1 开始爬取
+        $up = $param['up'] ?? ''; //
+        if($up == 1 ){
+            $this->getData($type,$id,$f,$output);
         }else{
+            $this->getWort($type,$id,$f,$get_vod_id,$get_collection,$get_player,$output);
+        }
+        $output->writeln("定时计划:视频编码结束:");
+    }
+    public function getWort($type,$id,$f,$get_vod_id,$get_collection,$get_player,$output){
+        if ($f == 'mac') {
+            $this->ffmpeg = '/usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg';
+        } else {
             $this->ffmpeg = '/usr/bin/ffmpeg';
         }
-
         //编辑
         $vod_id = $this->powerDb->field('vod_id')->order('vod_id desc')->find();
         if (!empty($type) && $type == 1) {
             Cache::set('vod_resolving_power_id', 1);
         }
         $is_vod_id = Cache::get('vod_id_list_douban_score');
-        if(!empty($id)){
+        if (!empty($id)) {
             $where['a.vod_id'] = ['gt', $id];
-        }else{
+        } else {
             if (!empty($is_vod_id)) {
                 $where['a.vod_id'] = ['gt', $is_vod_id];
+            } else {
+                $where['a.vod_id'] = ['gt', 1];
             }
-        }
-        if(!empty($vod_id)){
-            $vod_id =  $vod_id['vod_id']??1;
-            $where['a.vod_id'] = ['gt', $vod_id];
+            if (!empty($vod_id)) {
+                $vod_id = $vod_id['vod_id'] ?? 1;
+                $where['a.vod_id'] = ['gt', $vod_id];
+            }
         }
 
         $start = 0;
@@ -77,10 +92,22 @@ class VodCode extends Common
         $limit = 20;
         $is_true = true;
         $order = 'a.vod_id asc';
-        $where['a.vod_id'] = ['gt', 1];
-        $where['b.vod_id'] = ['EXP', Db::raw('IS NULL')];
+        //单独某个计算
+        if (!empty($get_vod_id)) {
+            $where['a.vod_id'] = ['eq', $get_vod_id];
+            $limit = 1;
+        } else {
+            $where['b.vod_id'] = ['EXP', Db::raw('IS NULL')];
+        }
         while ($is_true) {//进入循环 取出数据
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+            $pagecount = $douBanScoreData['pagecount'] ?? 0;
+            if ($page > $pagecount) {
+                $is_true = false;
+                log::info('js-采集豆瓣评分结束...');
+                $output->writeln("结束....");
+                break;
+            }
             foreach ($douBanScoreData['list'] as $d_key => $d_val) {
                 Cache::set('vod_id_list_douban_score', $d_val['vod_id']);
                 log::info('视频编码开启-list');
@@ -104,10 +131,24 @@ class VodCode extends Common
                                     $vod_play_url_key_url_val = $vod_play_url_key_url_val_str[1];
                                 }
                                 log::info('视频编码开启-url-' . $vod_play_url_key_url_val);
+                                if (!empty($get_vod_id) && !empty($get_player)) {
+                                    if ($vod_play_from_val != $get_player) {
+                                        continue;
+                                    }
+                                }
+
+                                $collection = findNum($vod_play_url_key_url_val_str[0] ?? '');
+                                if (empty($collection)) {
+                                    $collection = $vod_play_url_key_url_val_str[0] ?? '';
+                                }
+                                if (!empty($get_vod_id) && !empty($get_player) && !empty($get_collection)) {
+                                    if ($collection != $get_collection) {
+                                        continue;//过滤参数
+                                    }
+                                }
 //                                if ($vod_play_from_val == 'mbckm3u8' || $vod_play_from_val == '135m3u8' || $vod_play_from_val == 'wlm3u8' || $vod_play_from_val == 'ckm3u8' || $vod_play_from_val == 'zuidam3u8') {
 //                                    continue;
 //                                }
-
                                 $vod_play_url_key_url_val_text_url = '';
                                 $get_vod_ts = '';
                                 $home = '';
@@ -117,22 +158,24 @@ class VodCode extends Common
                                     $vod_play_url_key_url_val_text_url = $vod_play_url_key_url_val;
                                 }
 
+
 //                                print_r($vod_play_from_val);die;
 
-                                if ($vod_play_from_val == 'zuidam3u8') {
-                                    log::info('视频编码开启-' . $vod_play_from_val . '-存在');
+//                                if ($vod_play_from_val == 'zuidam3u8') {
+//                                    log::info('视频编码开启-' . $vod_play_from_val . '-存在');
+//
+//                                    $vod_play_url_key_url_val_text = mac_curl_get($vod_play_url_key_url_val);
+//                                    $vod_play_url_key_url_val_text = explode("\n", $vod_play_url_key_url_val_text);
+//                                    $vod_play_url_key_url_val_text_url = $vod_play_url_key_url_val_text[2] ?? '';
+//                                    $home = parse_url($vod_play_url_key_url_val);
+//                                    $vod_play_url_key_url_val_text_url = str_replace($home['path'], $vod_play_url_key_url_val_text_url, $vod_play_url_key_url_val);
+//                                    if (strpos($vod_play_url_key_url_val_text_url, 'http') !== false && strpos($vod_play_url_key_url_val_text_url, 'm3u8') !== false) {
+//                                        log::info('视频编码开启-' . $vod_play_from_val . '-存在http-m3u8');
+//                                        $get_vod_ts = mac_curl_get($vod_play_url_key_url_val_text_url);//获取ts
+//                                    }
+//                                }
 
-                                    $vod_play_url_key_url_val_text = mac_curl_get($vod_play_url_key_url_val);
-                                    $vod_play_url_key_url_val_text = explode("\n", $vod_play_url_key_url_val_text);
-                                    $vod_play_url_key_url_val_text_url = $vod_play_url_key_url_val_text[2] ?? '';
-                                    $home = parse_url($vod_play_url_key_url_val);
-                                    $vod_play_url_key_url_val_text_url = str_replace($home['path'], $vod_play_url_key_url_val_text_url, $vod_play_url_key_url_val);
-                                    if (strpos($vod_play_url_key_url_val_text_url, 'http') !== false && strpos($vod_play_url_key_url_val_text_url, 'm3u8') !== false) {
-                                        log::info('视频编码开启-' . $vod_play_from_val . '-存在http-m3u8');
-                                        $get_vod_ts = mac_curl_get($vod_play_url_key_url_val_text_url);//获取ts
-                                    }
-                                }
-                                if ($vod_play_from_val == 'mbckm3u8' || $vod_play_from_val == 'ckm3u8') {
+                                if ($vod_play_from_val == 'mbckm3u8' || $vod_play_from_val == 'ckm3u8' || $vod_play_from_val == 'zuidam3u8') {
                                     log::info('视频编码开启-' . $vod_play_from_val . '-存在');
                                     $vod_play_url_key_url_val_text = mac_curl_get($vod_play_url_key_url_val);
                                     $vod_play_url_key_url_val_text = explode("\n", $vod_play_url_key_url_val_text);
@@ -143,9 +186,9 @@ class VodCode extends Common
                                         $get_vod_ts = mac_curl_get($vod_play_url_key_url_val_text_url);//获取ts
                                     }
                                 }
-//                                var_dump($get_vod_ts);die;
+
                                 if (strpos($get_vod_ts, 'ts') !== false) {
-                                    log::info('视频编码开启--' . $vod_play_from_val . '-存在ts'.$d_val['vod_id']);
+                                    log::info('视频编码开启--' . $vod_play_from_val . '-存在ts' . $d_val['vod_id']);
                                     $vod_ts = explode("\n", $get_vod_ts);
                                     $t_url_str = '';
                                     $FfmpegEncryptionText = '';
@@ -159,13 +202,13 @@ class VodCode extends Common
                                                 if ($vod_play_from_val == 'wlm3u8') {
                                                     $t_val = array_pop(explode('/', $t_val));
                                                 }
-                                                if ($vod_play_from_val == 'zuidam3u8') {
-                                                    $t_array = explode('/', $t_val);
-                                                    $scheme = $home['scheme'] ?? 'http';
-                                                    $host = $home['host'] ?? '';
-                                                    $t_val = array_pop($t_array);
-                                                    $vod_play_url_key_url_val_text_url = $scheme . '://' . $host . implode('/', $t_array) . '/index.m3u8';
-                                                }
+//                                                if ($vod_play_from_val == 'zuidam3u8') {
+//                                                    $t_array = explode('/', $t_val);
+//                                                    $scheme = $home['scheme'] ?? 'http';
+//                                                    $host = $home['host'] ?? '';
+//                                                    $t_val = array_pop($t_array);
+//                                                    $vod_play_url_key_url_val_text_url = $scheme . '://' . $host . implode('/', $t_array) . '/index.m3u8';
+//                                                }
                                                 $t_url_str = $t_val;
                                                 $FfmpegEncryptionText .= '%s' . "\r\n";
                                                 $FfmpegEncryptionText .= '#EXT-X-ENDLIST' . "\r\n";
@@ -178,23 +221,26 @@ class VodCode extends Common
 
                                     if (!empty($t_url_str)) {
                                         log::info('视频编码开启存在--' . $t_url_str . '-存在ts');
-                                        if($vod_play_from_val == 'zkm3u8'){
-                                            $str_p = 'playlist.m3u8';
-                                        }else{
-                                            $str_p = 'index.m3u8';
-                                        }
+//                                        if ($vod_play_from_val == 'zkm3u8') {
+//                                            $str_p = 'playlist.m3u8';
+//                                        } else {
+//                                            $str_p = 'index.m3u8';
+//                                        }
+                                        $str_p = array_pop(explode('/',$vod_play_url_key_url_val_text_url));
+
                                         $vod_play_url_key_url_val_text_ts_url = str_replace($str_p, $t_url_str, $vod_play_url_key_url_val_text_url);
+
                                         //type_id_1 type_id id 播放器 集 5dsHHdzp1025000.ts
-                                        $collection = findNum($vod_play_url_key_url_val_str[0] ?? '');
-                                        if (empty($collection)) {
-                                            $collection = $vod_play_url_key_url_val_str[0] ?? '';
-                                        }
                                         $ts_path_dir = ROOT_PATH . 'static' . DS . 'vod_ts' . DS . $d_val['type_id_1'] . DS . $d_val['type_id'] . DS . $d_val['vod_id'] . DS . $vod_play_from_val . DS . $collection;
                                         $ts_path = $ts_path_dir . DS . $t_url_str;//ts文件
                                         $ts_new_path = $ts_path_dir . DS . 'new_' . $t_url_str;//new_ts文件
                                         $power_where['path'] = $ts_new_path;
                                         $powerData = $this->getFind($power_where);
+                                        $is_no_up = false;
                                         if (!empty($powerData)) {
+                                            $is_no_up = true;
+                                        }
+                                        if (!empty($powerData) && !empty($powerData['resolution'])) {
                                             log::info('视频编码开启存在--过滤' . $d_val['vod_id']);
                                             continue; //过滤
                                         }
@@ -224,36 +270,47 @@ class VodCode extends Common
 //                                            $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
 //                                            $resolution_data = $this->getVideoInfo($ts_path);
 //                                        } else {
-                                            //下载ts
-//                                            var_dump($vod_play_url_key_url_val_text_ts_url);
+                                        //下载ts
+
+
+                                        if (strpos($vod_play_url_key_url_val_text_ts_url, '.ts') !== false) {
+                                             $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
+                                        }else{
+                                            $str_p = array_pop(explode('/',$vod_play_url_key_url_val_text_ts_url));
+                                            $vod_play_url_key_url_val_text_ts_url = str_replace($str_p, $t_url_str, $vod_play_url_key_url_val_text_ts_url);
                                             $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
-                                            if ($is_encryption == true) { //解码视频
-                                                $path = $ts_new_path;
-                                                //new ts 转换存储地址 + 视频信息
-                                                $resolution_data = $this->getFFmpegData($index_last_m3u8_path, $path);
-                                                if (empty($resolution_data)) {
-                                                    log::info('视频编码开启存在--过滤');
-                                                    $resolution_data = $this->getVideoInfo($path);
-                                                }
-                                            } else {
-                                                $path = $ts_path;
+                                        }
+                                        $this->get_list_vod($vod_play_url_key_url_val_text_ts_url, $ts_path);
+                                        if ($is_encryption == true) { //解码视频
+                                            $path = $ts_new_path;
+                                            //new ts 转换存储地址 + 视频信息
+                                            $resolution_data = $this->getFFmpegData($index_last_m3u8_path, $path);
+                                            if (empty($resolution_data)) {
+                                                log::info('视频编码开启存在--过滤');
                                                 $resolution_data = $this->getVideoInfo($path);
                                             }
-                                            //入库data
-                                            $resolution = $resolution_data['resolution'] ?? '';
+                                        } else {
+                                            $path = $ts_path;
+                                            $resolution_data = $this->getVideoInfo($path);
+                                        }
+//                                        v($resolution_data);die;
+                                        //入库data
+                                        $resolution = $resolution_data['resolution'] ?? '';
 //                                        }
-                                        $res = $this->getAdd($d_val['vod_id'], $d_val['vod_name'],$vod_play_from_val, $collection, $resolution, $ts_new_path, 1, $resolution_data);
-                                        if ($res) {
-                                            if(!empty($resolution_data['code_name'])){
-                                                if (file_exists($ts_path)) { //先删除ts
-                                                    log::info('视频编码--先删除---视频');
-                                                    unlink($ts_path);
-                                                }
-                                                if (file_exists($ts_new_path)) { //先删除ts
-                                                    log::info('视频编码--先删除--new-视频');
-                                                    unlink($ts_new_path);
-                                                }
-                                            }
+                                        $res = $this->getAdd($is_no_up, $d_val['vod_id'], $d_val['vod_name'], $vod_play_from_val, $collection, $resolution, $ts_new_path, 1, $resolution_data);
+                                        Dir::delDir($ts_path_dir);
+                                        if ($res !== false) {
+                                            Dir::delDir($ts_path_dir);
+//                                            if(!empty($resolution_data['code_name'])){
+//                                                if (file_exists($ts_path)) { //先删除ts
+//                                                    log::info('视频编码--先删除---视频');
+//                                                    unlink($ts_path);
+//                                                }
+//                                                if (file_exists($ts_new_path)) { //先删除ts
+//                                                    log::info('视频编码--先删除--new-视频');
+//                                                    unlink($ts_new_path);
+//                                                }
+//                                            }
                                             log::info('视频编码开启存在--添加入库' . $d_val['vod_id']);
                                         }
                                     }
@@ -263,9 +320,10 @@ class VodCode extends Common
                     }
                 }
             }
+            $page = $page + 1;
         }
-        $output->writeln("定时计划:视频编码结束:");
     }
+
 
 
     //获取top index
@@ -299,20 +357,24 @@ class VodCode extends Common
     }
 
     // 取出数据豆瓣评分为空数据
-    protected function getAdd($id, $name ,$vod_play_from_val, $collection, $resolution, $ts_new_path, $state, $resolution_data)
+    protected function getAdd($is_no_up, $id, $name, $vod_play_from_val, $collection, $resolution, $ts_new_path, $state, $resolution_data)
     {
         $install_data = [];
         $install_data['vod_id'] = $id;
         $install_data['title'] = $name;
         $install_data['player'] = $vod_play_from_val;
-        $install_data['code'] = $resolution_data['code']??1;
-        $install_data['code_name'] = $resolution_data['code_name']??'';
+        $install_data['code'] = $resolution_data['code'] ?? 1;
+        $install_data['code_name'] = $resolution_data['code_name'] ?? '';
         $install_data['collection'] = $collection;
         $install_data['resolution'] = $resolution;
         $install_data['path'] = $ts_new_path;
         $install_data['state'] = $state;
         $install_data['text'] = json_encode($resolution_data, true);
-        return $this->powerDb->insert($install_data);
+        if ($is_no_up == true) {
+            return $this->powerDb->where(['path' => $ts_new_path])->update($install_data);
+        } else {
+            return $this->powerDb->insert($install_data);
+        }
     }
 
     // 取出数据豆瓣评分为空数据
@@ -323,9 +385,13 @@ class VodCode extends Common
         // `vod_play_note`   '播放备注',
         //`vod_play_url`     播放地址',
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodDb->alias('a')->join('vod_resolving_power b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->count();
+        if($limit == 1){
+            $total = 1;
+        }else{
+            $total = $this->vodDb->field('a.vod_id,a.type_id_1,a.type_id,a.vod_name,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.vod_play_url')->alias('a')->join('vod_resolving_power b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->count();
+        }
         $list = $this->vodDb->field('a.vod_id,a.type_id_1,a.type_id,a.vod_name,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.vod_play_url')->alias('a')->join('vod_resolving_power b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
-         return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
     //new ts 转换存储地址
@@ -333,7 +399,7 @@ class VodCode extends Common
     {
         ///usr/bin/ffmpeg
         //usr/local/Cellar/ffmpeg/4.2.2_2/bin/ffmpeg
-        $ffmpeg_path =   $this->ffmpeg.' -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i %s -c copy %s 2>&1';
+        $ffmpeg_path = $this->ffmpeg . ' -allowed_extensions ALL -protocol_whitelist "file,http,crypto,tcp" -i %s -c copy %s >/dev/null 2>&1';
 //        var_dump($ffmpeg_path);die;
         $ffmpeg_str_shell = sprintf($ffmpeg_path, $index_last_m3u8_path, $ts_new_path);
         //调用php的exec方法去执行脚本
@@ -347,15 +413,12 @@ class VodCode extends Common
         if (!empty($is_data)) {
             $info = implode(',', $is_data);
         } else {
-            $ffmpeg_path =   $this->ffmpeg.' -i "%s" 2>&1';
-//            print_r($ffmpeg_path);die;
+            $ffmpeg_path = $this->ffmpeg . ' -i "%s" 2>&1';
             $command = sprintf($ffmpeg_path, $file);
-            ob_start();
-            passthru($command);
-            $info = ob_get_contents();
-            ob_end_clean();
+            //调用php的exec方法去执行脚本
+            exec($command, $output, $return_val);
+            $info = implode(',', $output);
         }
-
         $data = array();
         if (preg_match("/Duration: (.*?), start: (.*?), bitrate: (\d*) kb\/s/", $info, $match)) {
             $data['duration'] = $match[1]; //播放时间
@@ -371,22 +434,22 @@ class VodCode extends Common
             $arr_resolution = explode('x', $match[3]);
             $data['width'] = $arr_resolution[0];
             $data['height'] = $arr_resolution[1];
-            if($data['height']<480 && $data['width'] < 640){
+            if ($data['height'] < 480 && $data['width'] < 640) {
                 $data['code'] = 1;//省流量
                 $data['code_name'] = '省流';//省流量
-            }else if(($data['height']<608 && $data['width'] < 1080 )  && ($data['height']>480 && $data['width'] >640)){
+            } else if (($data['height'] < 608 && $data['width'] < 1080) && ($data['height'] > 480 && $data['width'] > 640)) {
                 $data['code'] = 2;//
                 $data['code_name'] = '高清480P';
-            }else if(($data['height']<1080  && $data['width'] < 1920) && ($data['height']>608 && $data['width'] > 1080)){
+            } else if (($data['height'] < 1080 && $data['width'] < 1920) && ($data['height'] > 608 && $data['width'] > 1080)) {
                 $data['code'] = 3;
                 $data['code_name'] = '超清720P';
-            }else if(($data['height']< 2160 && $data['width'] < 3840) && ($data['height']>1080 && $data['width'] > 1920)){
+            } else if (($data['height'] < 2160 && $data['width'] < 3840) && ($data['height'] > 1080 && $data['width'] > 1920)) {
                 $data['code'] = 4;
                 $data['code_name'] = '蓝光';
-            }else if($data['height']>= 2160 && $data['width'] >= 3840){
+            } else if ($data['height'] >= 2160 && $data['width'] >= 3840) {
                 $data['code'] = 5;
                 $data['code_name'] = '4K';
-            }else{
+            } else {
                 $data['code'] = 2;//省流量
                 $data['code_name'] = '高清480P';//省流量
             }
@@ -401,24 +464,33 @@ class VodCode extends Common
         $data['size'] = filesize($file); //文件大小
         return $data;
     }
+
+    public function getData($type,$id,$f,$output){
+       $power_data =  $this->powerDb->where(['resolution'=>''])->select();
+       foreach ($power_data as $power_k=>$power_v){
+           $this->getWort($type,$id,$f,$power_v['vod_id'],$power_v['collection'],$power_v['player'],$output);
+       }
+    }
+
     //获取分辨率
-    public function getCode(){
+    public function getCode()
+    {
         return [
-            '320x240'=>'省流',
-            '640x480'=>'高清480P',
-            '720x576'=>'高清480P',
-            '704x396'=>'高清480P',
-            '704x576'=>'高清480P',
-            '1024x768'=>'超清720P',
-            '1080x608'=>'超清720P',
-            '1280x720'=>'超清720P',
+            '320x240' => '省流',
+            '640x480' => '高清480P',
+            '720x576' => '高清480P',
+            '704x396' => '高清480P',
+            '704x576' => '高清480P',
+            '1024x768' => '超清720P',
+            '1080x608' => '超清720P',
+            '1280x720' => '超清720P',
             '1280x960' => '超清960Р',
             '1920x1080' => '蓝光',//c
-            '2048x1536'=>'3MP',
-            '2560x1440' =>'4MP',
-            '2592x2048' =>'5MP',
-            '3264x2448' =>'8MP',
-            '3840x2160' =>'4K'
+            '2048x1536' => '3MP',
+            '2560x1440' => '4MP',
+            '2592x2048' => '5MP',
+            '3264x2448' => '8MP',
+            '3840x2160' => '4K'
         ];
     }
 

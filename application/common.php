@@ -1354,10 +1354,10 @@ function mac_play_list($vod_play_from,$vod_play_url,$vod_play_server,$vod_play_n
 
     $res_list = [];
     $sort=[];
+
     foreach($vod_play_from_list as $k=>$v){
         $server = (string)$vod_play_server_list[$k];
         $urls = mac_play_list_one($vod_play_url_list[$k],$v);
-
         $player_info = $player_list[$v];
         $server_info = $server_list[$server];
         if($player_info['status'] == '1') {
@@ -1375,7 +1375,6 @@ function mac_play_list($vod_play_from,$vod_play_url,$vod_play_server,$vod_play_n
             ];
         }
     }
-
     if( (ENTRANCE!='admin' && MAC_PLAYER_SORT=='1') ||  $GLOBALS['ismake']=='1' ){
         array_multisort($sort, SORT_DESC, SORT_FLAG_CASE , $res_list);
         $tmp=[];
@@ -1396,9 +1395,23 @@ function new_stripslashes($string) {
 function mac_play_list_one($url_one, $from_one, $server_one=''){
     $url_list = array();
     $array_url = explode('#',$url_one);
+    $new_array= [];
+    foreach ($array_url as $k=>$v){
+        list($title, $url, $from) = explode('$', $v);
+        $new_array[$k]['key']=$title;
+        $new_array[$k]['url']=$url;
+        if(!empty($from)){
+            $new_array[$k]['from']=$from;
+        }
+    }
+    $last_names = array_column($new_array,'key');
+    array_multisort($last_names,SORT_ASC,$new_array);
+    foreach ($new_array as $k=>$v){
+        $new_array[$k] = implode('$', $v);
+    }
+    $array_url = $new_array;
     foreach($array_url as $key=>$val){
         if(empty($val)) continue;
-
         list($title, $url, $from) = explode('$', $val);
         if ( empty($url) ) {
             $url_list[$key+1]['name'] = '第'.($key+1).'集';

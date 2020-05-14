@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+     <title>全网影视排行榜 - {$obj.type_title} - {$maccms.site_name}</title>
+    <meta name="keywords" content="{$obj.type_key}" />
+    <meta name="description" content="{$obj.type_des}" />
+    {include file="public/include"}
+</head>
+<body>
+{include file="public/heada"}
+
+<div class="top_banner">
+	<div class="banner_main">
+		<div class="container_inner">
+			<h1 class="banner_title">全网影视排行榜</h1>
+		</div>
+	</div>
+</div>
+<div class="main-box"> 
+
+ {maccms:type ids="1,2,3,4" order="asc" by="sort"}
+<div class="exp-Sort">
+ <h2 class="title"><a href="#"  >{$vo.type_name}</a><a href="{:mac_url_type($vo.type)} " class="more"  >更多</a></h2>
+ 
+<ul>
+ {maccms:vod order="desc" by="hits" num="10" paging="false" ids="all" type="'.$vo['type_id'].'" }
+                  {if condition="$key lt 2"}
+  
+<li class="first">
+<h2><i class="num colred1"> {$key}
+</i><a href="{:mac_url_vod_detail($vo)}"   title="{$vo.vod_name}" class="ellipsis">{$vo.vod_name}</a>
+<em class="exup"></em></h2>
+<p class="expnum">播放指数：{$vo.vod_hits}</p>
+<p><a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"   class="checked">
+<img class="quic" src="{:mac_url_img($vo.vod_pic)}" title="{$vo.vod_name}" alt="{$vo.vod_name}">
+</a></p>
+</li> 
+  
+{if condition="$key eq 1"}
+                {/if}
+				  {else}
+<li>
+<h2><i class="num colred2">{$key}</i>
+<a href="{:mac_url_vod_detail($vo)}"   title="{$vo.vod_name}" class="ellipsis">{$vo.vod_name}</a>
+<em class="up"></em></h2>
+<p class="expnum">播放指数：{$vo.vod_hits}</p>
+</li>
+ {/if}
+				  
+				{/maccms:vod}
+ </ul>
+</div>
+
+  {/maccms:type}
+  
+  </div>
+</div>
+
+<script type="text/javascript" src="{$maccms.path_tpl}youku/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="{$maccms.path_tpl}youku/js/layer.js"></script>
+
+{include file="public/foot"}
+</body>
+</html>

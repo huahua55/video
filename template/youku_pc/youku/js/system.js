@@ -619,7 +619,7 @@ var MAC = {
 				}
 			}
 			html =
-				'<div class="panel"> <i class="arrow"></i><div class="content"><dl class="rec-list"><dt>最近播放</dt><i id="bplayer">';
+				'<div class="panel"><i class="arrow"></i><div class="content"><dl class="rec-list"><dt>最近播放</dt><i id="bplayer">';
 			html += '';
 			if (jsondata.length > 0) {
 				for ($i = 0; $i < jsondata.length; $i++) {
@@ -628,8 +628,7 @@ var MAC = {
 					} else {
 						html += '';
 					}
-					html += '<dd><p title="' + jsondata[$i].name + '">' + jsondata[$i].name + '</p><span><a href="' + jsondata[$i].link +
-						'" >[继续播放]</a></span></dd>';
+					html += '<dd><p title="' + jsondata[$i].name + '">' + jsondata[$i].name + '</p><span><a href="' + jsondata[$i].link + '" >[继续播放]</a></span></dd>';
 				}
 			} else {
 				html += '<dd class="hide">暂无浏览记录</dd>';

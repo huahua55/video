@@ -58,11 +58,13 @@ function deploy_online()
 	ln -sf $prj_dir/online.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
+	ln -sf $prj_dir/deploy/conf/online/www.tanxi.conf /usr/local/nginx/conf/vhost/www.tanxi.conf
 	ln -sf $prj_dir/deploy/conf/online/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/conf/online/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/conf/online/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
 	ln -sf $prj_dir/deploy/conf/online/api.video.conf /usr/local/nginx/conf/vhost/api.video.conf
 	ln -sf $prj_dir/deploy/conf/online/m.video.conf /usr/local/nginx/conf/vhost/m.video.conf
+	ln -sf $prj_dir/deploy/conf/online/utcc.video.conf /usr/local/nginx/conf/vhost/utcc.video.conf
 }
 
 # update assets.json

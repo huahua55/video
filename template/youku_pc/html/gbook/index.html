@@ -68,8 +68,7 @@
 						<div class="reply_answer" style="border: 1px solid #2692ff; border-radius: 6px;">
 							<p class="msg_title"><strong style="color: #2692ff">站长回复：</strong>
 								<span class="time">{$vo.gbook_reply_time|date='Y-m-d H:i:s',###}</span></p>
-							<div class="msg_cont">{$vo.gbook_reply}
-							</div>
+							<div class="msg_cont">{$vo.gbook_reply}</div>
 						</div>
 						{/if}
 						<p class="comment-handle">
@@ -80,8 +79,8 @@
 						</p>
 					</div>
 				</div>
-				{/maccms:gbook}
 			</div>
+			{/maccms:gbook}
 			{include file="public/paging"}
 		</div>
 		{include file="public/foot"}

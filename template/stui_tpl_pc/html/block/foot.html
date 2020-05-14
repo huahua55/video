@@ -1,0 +1,25 @@
+<div class="container">
+	<div class="row">
+		<div class="stui-foot clearfix">
+			<p class="text-center hidden-xs">
+				<!-- 本站共有视频资源:{:mac_data_count(0,'all','vod')}部 今日更新:{:mac_data_count(0,'today','vod')}部<br> -->
+				{$maccms.site_url} 版权所有 联系邮箱：<a href="mailto:{maccms:email}">{$maccms.site_email}</a></p>
+			<p class="footer-copyright text-muted text-center visible-xs">Copyright © {:date('Y')} {$maccms.site_name} All Rights Reserved {$maccms.site_icp}. {$maccms.site_tj}</p>
+			<!-- <p class="footer-copyright text-muted text-center visible-xs">Copyright&copy;{:date('Y')} {$maccms.site_name} .All Rights Reserved . {$maccms.site_tj}</p> -->
+			<p class="text-center hidden-xs">本站所有资源均系互联网收集,仅提供页面服务,不提供影片资源存储,录制,上传,所有言论及信息不代表本站立场！</p>
+			<p class="text-center hidden-xs">产生不良后果和法律责任与本站无关,如果侵犯了您的版权,请来信告知 {$maccms.site_email} 将及时更正和删除！</p>
+		</div>
+	</div>
+</div>
+<div class="hide">{$maccms.site_tj}</div>
+<!-- 引入主动推送 -->
+{include file="public/baidu_zidong_tuisong"}
+<!-- 360主动推送 -->
+<script>
+	(function() {
+		var src = (document.location.protocol == "http:") ?
+			"http://js.passport.qihucdn.com/11.0.1.js?85b2897187df96ebf508a8f2097c0428" :
+			"https://jspassport.ssl.qhimg.com/11.0.1.js?85b2897187df96ebf508a8f2097c0428";
+		document.write('<script src="' + src + '" id="sozz"><\/script>');
+	})();
+</script>

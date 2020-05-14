@@ -7,6 +7,8 @@ return array(
         '13' => array("show"=>1,"name" => '推荐配置', 'controller' => 'vodRecommend', 'action' => 'index'),
         '14' => array("show"=>1,"name" => '轮播配置', 'controller' => 'banner', 'action' => 'index'),
         '15' => array("show"=>1,"name" => '视频解析', 'controller' => 'jx', 'action' => 'index'),
+        '16' => array("show"=>1,"name" => '渠道配置', 'controller' => 'channel', 'action' => 'index'),
+        '17' => array("show"=>1,"name" => '推荐短视频', 'controller' => 'Recom', 'action' => 'index'),
         //'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
         '1001' => array("show"=>0,"name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
@@ -39,6 +41,11 @@ return array(
         '2911' => array("show"=>0,'name' => '--定时任务信息维护', 'controller' => 'type',		'action' => 'info'),
         '2912' => array("show"=>0,'name' => '--定时任务删除', 'controller' => 'type',		'action' => 'del'),
         '2913' => array("show"=>0,'name' => '--定时任务状态', 'controller' => 'type',		'action' => 'field'),
+
+        '2920' => array("show"=>1,"name" => '站群配置', 'controller' => 'domain',	'action' => 'index'),
+        '2922' => array("show"=>0,'name' => '--站群删除', 'controller' => 'domain',		'action' => 'del'),
+        '2923' => array("show"=>0,'name' => '--站群导出', 'controller' => 'domain',		'action' => 'export'),
+        '2924' => array("show"=>0,'name' => '--站群导入', 'controller' => 'domain',		'action' => 'import'),
     )),
 
     '3' => array('name' => '基础', 'icon' => 'xe64b', 'sub' => array(

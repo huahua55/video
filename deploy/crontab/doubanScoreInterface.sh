@@ -8,5 +8,3 @@ ps -ef | grep doubanScoreCopy | grep -v grep | awk '{print $2}' | xargs kill -9
 sleep 3
 #001 更新 豆瓣分
 php think doubanScoreCopy
-sleep 3
-php think doubanScoreCopy id=1
