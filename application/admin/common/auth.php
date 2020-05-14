@@ -40,6 +40,11 @@ return array(
         '2911' => array("show"=>0,'name' => '--定时任务信息维护', 'controller' => 'type',		'action' => 'info'),
         '2912' => array("show"=>0,'name' => '--定时任务删除', 'controller' => 'type',		'action' => 'del'),
         '2913' => array("show"=>0,'name' => '--定时任务状态', 'controller' => 'type',		'action' => 'field'),
+
+        '2920' => array("show"=>1,"name" => '站群配置', 'controller' => 'domain',	'action' => 'index'),
+        '2922' => array("show"=>0,'name' => '--站群删除', 'controller' => 'domain',		'action' => 'del'),
+        '2923' => array("show"=>0,'name' => '--站群导出', 'controller' => 'domain',		'action' => 'export'),
+        '2924' => array("show"=>0,'name' => '--站群导入', 'controller' => 'domain',		'action' => 'import'),
     )),
 
     '3' => array('name' => '基础', 'icon' => 'xe64b', 'sub' => array(
