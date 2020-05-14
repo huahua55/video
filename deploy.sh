@@ -58,6 +58,7 @@ function deploy_online()
 	ln -sf $prj_dir/online.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
+	ln -sf $prj_dir/deploy/conf/online/www.tanxi.conf /usr/local/nginx/conf/vhost/www.tanxi.conf
 	ln -sf $prj_dir/deploy/conf/online/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/conf/online/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/conf/online/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
