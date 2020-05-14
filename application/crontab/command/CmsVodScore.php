@@ -172,6 +172,7 @@ class CmsVodScore extends Common
         $output->writeln("end....");
     }
 
+
     // 取出数据豆瓣评分为空数据
     protected function getVodDoubanScoreData($where, $order, $page, $limit, $start)
     {
