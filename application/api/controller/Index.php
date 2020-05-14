@@ -719,4 +719,21 @@ class Index extends Base{
         return json_return(['vod_id'=>$vodId]);
     }
 
+
+    // 推荐短视频
+    public function recomVodList(){
+        $page  = $this->_param['page'] ?? 1;
+        $limit = 10;
+        $pageSize = ($page - 1) * $limit;
+
+        $list =  model("Recom")
+            ->field('id,name,image,url,intro')
+            ->where(['states' => ['eq',0]])
+            ->limit($pageSize,$limit)
+            ->select();
+        $list = objectToArray($list);
+
+        return json_return($list);
+    }
+
 }
