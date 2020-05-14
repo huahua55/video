@@ -24,6 +24,7 @@
             <thead>
             <tr>
                 <th width="25"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                <th width="100">视频ID</th>
                 <th width="100">名称</th>
                 <th width="100">状态</th>
                 <th width="100">排序</th>
@@ -37,6 +38,7 @@
             {volist name="list" id="vo"}
             <tr>
                 <td><input type="checkbox" name="ids[]" value="{$vo.id}" class="layui-checkbox checkbox-ids" lay-skin="primary"></td>
+                <td>{$vo.vod_id}</td>
                 <td><input type="input" name="name[]" value="{$vo.name}" class="layui-input"></td>
                 <td>
                     <input type="checkbox" name="states" {if condition="$vo['status'] eq 0"}checked{/if} value="{$vo['states']}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" data-href="{:url('field?col=states&ids='.$vo['id'])}">

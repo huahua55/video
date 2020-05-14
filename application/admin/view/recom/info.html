@@ -5,27 +5,25 @@
     <form class="layui-form layui-form-pane" method="post" action="" enctype=multipart/form-data>
         <input id="id" name="id" type="hidden" value="{$info.id}">
         <div class="layui-form-item">
-            <label class="layui-form-label">推荐标题：</label>
+            <label class="layui-form-label">名称：</label>
             <div class="layui-input-block">
                 <input type="text" class="layui-input" value="{$info.name}" lay-verify="name" placeholder="请输入视频标题" id="name" name="name">
             </div>
         </div>
+
+
         <div class="layui-form-item">
-            <label class="layui-form-label">分类：</label>
-            <div class="layui-input-inline w150">
-                <select name="type_id" lay-filter="type_id">
-                    <option value="">首页</option>
-                    {volist name="type_tree" id="vo"}
-                    {if condition="$vo.type_mid eq 1"}
-                    <option value="{$vo.type_id}" {if condition="$info.type_id eq $vo.type_id"}selected{/if}>{$vo.type_name}</option>
-                    {volist name="$vo.child" id="ch"}
-                    <option value="{$ch.type_id}" {if condition="$info.type_id eq $ch.type_id"}selected{/if}>&nbsp;|&nbsp;&nbsp;&nbsp;|—{$ch.type_name}</option>
-                    {/volist}
-                    {/if}
-                    {/volist}
-                </select>
+            <label class="layui-form-label">视频ID：</label>
+            <div class="layui-input-inline w500">
+                <input type="text" class="layui-input" value="{$info.vod_id}" placeholder="请输入视频ID" id="vod_id" name="vod_id">
+            </div>
+            <div class="layui-input-inline ">
+                <a class="layui-btn j-iframe" data-href="{:url('vod/data')}?select=1&input=vod_id" href="javascript:;" title="查询数据">查询数据</a>
             </div>
         </div>
+
+
+
         <div class="layui-form-item">
             <label class="layui-form-label">排列顺序：</label>
             <div class="layui-input-inline w100">

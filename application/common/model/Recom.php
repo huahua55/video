@@ -21,9 +21,17 @@ class Recom extends Base {
             $where = json_decode($where,true);
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
-        $total = $this->alias('r')->join("type t","r.type_id = t.type_id",'left')->where($where)->count();
+        $total = $this->alias('r')->join("vod v","r.vod_id = v.vod_id",'left')->where($where)->count();
 
-        $list  = Db::name('Recom')->alias('r')->field("r.*,t.type_name")->join("type t","r.type_id = t.type_id",'left')->where($where)->order($order)->limit($limit_str)->select();
+        $list  = Db::name('Recom')
+            ->alias('r')
+            ->field("r.*,v.vod_id,t.type_name")
+            ->join("vod v","r.vod_id = v.vod_id",'left')
+            ->join("type t","v.type_id = t.type_id",'left')
+            ->where($where)
+            ->order($order)
+            ->limit($limit_str)
+            ->select();
 
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }

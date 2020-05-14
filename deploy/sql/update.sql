@@ -36,3 +36,19 @@ CREATE TABLE IF NOT EXISTS `port_log` (
   KEY `expire_time` (`expire_time`),
   KEY `type` (`type`,`state`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理日志表';
+
+CREATE TABLE `recom` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `vod_id` int(11) NOT NULL DEFAULT '0' COMMENT '视频ID',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '视频名称',
+  `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类ID',
+  `image` varchar(200) NOT NULL DEFAULT '' COMMENT '视频首针图片',
+  `url` text NOT NULL COMMENT '视频地址',
+  `sort` int(6) NOT NULL,
+  `intro` text NOT NULL COMMENT '视频简介',
+  `states` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0开启 1关闭',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '上传时间',
+  PRIMARY KEY (`id`),
+  KEY `type_id` (`type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推荐短视频';
+
