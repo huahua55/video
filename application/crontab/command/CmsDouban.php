@@ -90,7 +90,9 @@ class CmsDouban extends Common
     //从飞飞接口获取内容
     public function getFeiFeiApi($douban_id){
         $url =$this->get_feifei_id. $douban_id;
-        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'');
+        $this->get_zm_port();//开启芝麻代理
+        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'',true);
+//        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'',true,false);
 //        $get_url_data = json_decode(mac_curl_get($url),true);
         if(isset($get_url_data['data']) && isset($get_url_data['status']) && $get_url_data['status'] == 200 && !empty($get_url_data['data'])){
             //获取飞飞采集内容
@@ -108,7 +110,9 @@ class CmsDouban extends Common
     public function getMacApi($douban_id){
 //        sleep(1);
         $url = $this->get_mac_id. $douban_id;
-        $get_url_data =  $this->queryListUrl($this->ql,$url,'',false,false);
+        $this->get_zm_port();//开启芝麻代理
+        $get_url_data =  $this->queryListUrl($this->ql,$url,'',true,false);
+//        $get_url_data =  $this->queryListUrl($this->ql,$url,'',false,false);
         //        $get_url_data = json_decode(mac_curl_get($url),true);
         $get_url_data = str_replace('douban(', '', $get_url_data);
         $get_url_data = str_replace(');', '', $get_url_data);
@@ -134,11 +138,6 @@ class CmsDouban extends Common
 
     protected function execute(Input $input, Output $output)
     {
-
-        $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
-        $data = mac_curl_get($url);
-        $data = json_decode($data, true);
-        print_r($data);die;
         // 输出到日志文件
         $output->writeln("优化：详情表-开始");
         $myparme = $input->getArguments();

@@ -733,7 +733,7 @@ class Common extends Command
 
 
 
-    public function queryListUrl($ql,$url,$cookie = '',$proxy = false,$json_code = true){
+    public function queryListUrl($ql,$url,$cookie = '',$proxy = false,$json_code = true,$ip = '',$port = ''){
         $header = [
             //设置超时时间，单位：秒
             'timeout' => 30,
@@ -743,13 +743,20 @@ class Common extends Command
                 'Cookie' => $cookie
             ]
         ];
-        if(empty($header)){
+        if(empty($cookie)){
             unset($header['headers']['Cookie']);
         }
         if($proxy == true){
             // 设置代理
+            if(!empty($ip)){
+                $this->proxy_server = $ip;
+            }
+            if(!empty($port)){
+                $this->get_port = $port;
+            }
             $header['proxy'] = 'http://' . $this->proxy_server . ":" . $this->get_port;
         }
+//        var_dump($header);die;
         try {
             $get_url_search_id_data = $ql->get($url, null,$header )->getHtml();
             if($json_code == true){
