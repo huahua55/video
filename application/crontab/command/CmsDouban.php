@@ -157,6 +157,7 @@ class CmsDouban extends Common
             //进入循环 取出数据
             while ($is_true) {
                 $douBanScoreData = $this->getData($where, $order, $page, $limit, $start);
+                var_dump($douBanScoreData);
                 if (!empty($douBanScoreData)) {
                     log::info('优化：详情表-进入foreach');
                     $pagecount = $douBanScoreData['pagecount'] ?? 0;
