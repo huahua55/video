@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `port_log` (
   PRIMARY KEY (`id`),
   KEY `expire_time` (`expire_time`),
   KEY `type` (`type`,`state`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='代理日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='代理日志表';
 
 CREATE TABLE `recom` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -50,5 +50,24 @@ CREATE TABLE `recom` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '上传时间',
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='推荐短视频';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='推荐短视频';
 
+CREATE TABLE `tmpvod` (
+  `id1` int(10) unsigned DEFAULT NULL,
+  `name1` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `tmpart` (
+  `id1` int(10) unsigned DEFAULT NULL,
+  `name1` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `channel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '渠道名称',
+  `keys` varchar(100) NOT NULL DEFAULT '' COMMENT '客户端名称keys',
+  `states` smallint(1) NOT NULL DEFAULT '0' COMMENT '关闭状态 0开启  1关闭',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `recom_vod` int(11) NOT NULL DEFAULT '0' COMMENT '推广视频ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='渠道表';

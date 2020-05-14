@@ -732,6 +732,10 @@ class Index extends Base{
             ->limit($pageSize,$limit)
             ->select();
         $list = objectToArray($list);
+        foreach($list as &$item){
+            $item['image']  = mac_url_img($item['image']);
+            $item['url']    = mac_url_img($item['url']);
+        }
 
         return json_return($list);
     }
