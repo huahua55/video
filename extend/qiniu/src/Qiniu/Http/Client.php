@@ -78,8 +78,8 @@ final class Client
         $options = array(
             CURLOPT_USERAGENT => self::userAgent(),
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_HEADER => true,
             CURLOPT_NOBODY => false,
             CURLOPT_CUSTOMREQUEST => $request->method,
@@ -88,7 +88,7 @@ final class Client
 
         // Handle open_basedir & safe mode
         if (!ini_get('safe_mode') && !ini_get('open_basedir')) {
-            $options[CURLOPT_FOLLOWLOCATION] = true;
+            $options[CURLOPT_FOLLOWLOCATION] = 1;
         }
 
         if (!empty($request->headers)) {

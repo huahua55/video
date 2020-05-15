@@ -706,7 +706,7 @@ class Common extends Command
 
         curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, false);
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
         // 设置代理服务器
         curl_setopt($ch, CURLOPT_PROXYTYPE, 0); //http

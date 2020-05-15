@@ -187,8 +187,8 @@ abstract class ThinkOauth
         $opts = array(
             CURLOPT_TIMEOUT => 30,
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_HTTPHEADER => $header
         );
 

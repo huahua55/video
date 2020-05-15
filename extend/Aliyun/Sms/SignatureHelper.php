@@ -79,8 +79,8 @@ class SignatureHelper {
         ));
 
         if(substr($url, 0,5) == 'https') {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         }
 
         $rtn = curl_exec($ch);
