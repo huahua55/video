@@ -70,6 +70,7 @@ class Init
             config('dispatch_error_tmpl','public/jump');
         }
 
+        die;
         config('template.view_path', 'template/' . $TMP_TEMPLATEDIR .'/' . $TMP_HTMLDIR .'/');
 
         if(ENTRANCE=='admin'){
