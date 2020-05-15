@@ -138,7 +138,8 @@ return array (
     'protocol' => 'http',
     'mode' => 'remote',
 //    'remoteurl' => 'http://www.863my.com/',
-    'remoteurl' => 'http://s1.863my.com/',
+    'remoteurl' => 'https://sp1.rdxplus.cn/',
+//    'remoteurl' => 'http://s1.863my.com/',
     'api' =>
     array (
       'upyun' => 
