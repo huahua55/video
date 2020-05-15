@@ -39,7 +39,7 @@ class Text extends All
 
 
             $param = $this->_param;
-            $path =     LOG_PATH;
+            $path =     RUNTIME_PATH;
             $host = $param['host'] ?? '';
             if(empty($host)){
                 $host = 'www.lanhv.tv';
