@@ -530,6 +530,8 @@ function onSelectResult(input, obj) {
 		}
 	});
 	alert('添加成功!');
+	//关闭弹窗
+	layer.closeAll('iframe');
 }
 
 function rndNum(under, over) {
