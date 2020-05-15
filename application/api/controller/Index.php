@@ -727,8 +727,10 @@ class Index extends Base{
         $pageSize = ($page - 1) * $limit;
 
         $list =  model("Recom")
-            ->field('id,vod_id,name,image,url,intro')
-            ->where(['states' => ['eq',0]])
+            ->alias('r')
+            ->field('r.id,r.vod_id,v.vod_name,r.name,r.image,r.url,r.intro')
+            ->join('vod v','v.vod_id = r.vod_id')
+            ->where(['r.states' => ['eq',0]])
             ->limit($pageSize,$limit)
             ->select();
         $list = objectToArray($list);
