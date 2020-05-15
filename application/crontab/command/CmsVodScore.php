@@ -172,10 +172,12 @@ class CmsVodScore extends Common
         $output->writeln("end....");
     }
 
+
     // 取出数据豆瓣评分为空数据
     protected function getVodDoubanScoreData($where, $order, $page, $limit, $start)
     {
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
+
         $total = $this->vodDb->where($where)->count();
         $list = $this->vodDb->field('vod_id,vod_sub,vod_year,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
