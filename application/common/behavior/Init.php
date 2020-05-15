@@ -18,7 +18,7 @@ class Init
         echo "<pre>";
         var_dump($ua);
 
-        $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|mac os x|chrome|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
+        $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
@@ -30,6 +30,8 @@ class Init
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
+            echo "<pre>";
+            print_r($config);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
@@ -38,7 +40,8 @@ class Init
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
         }
-
+        echo "<pre>";
+        print_r(  $config['site']);die;
 
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
