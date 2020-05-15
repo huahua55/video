@@ -80,54 +80,32 @@
 {include file="../../../application/admin/view/public/foot" /}
 
 <script type="text/javascript">
-    //ue = editor_getEditor('vod_content');
-    var player_select='{volist name="player_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
-    var downer_select='{volist name="downer_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
-    var server_select='{volist name="server_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
-
-    layui.use(['form','upload', 'layer'], function () {
+    layui.use(['form','upload', 'layer'], function(){
         // 操作对象
-        var form = layui.form
+        var element = layui.element
+                ,form = layui.form
                 , layer = layui.layer
-                , $ = layui.jquery
-                , upload = layui.upload;;
+                , upload = layui.upload;
 
         // 验证
         form.verify({
-            vod_name: function (value) {
+            name: function (value) {
                 if (value == "") {
-                    return "请输入专题名称";
+                    return "请输入名称";
+                }
+            },
+            link: function (value) {
+                if (value == "") {
+                    return "请输入链接地址";
                 }
             }
         });
-
-        $(document).on("click", ".extend", function(){
-            $id = $(this).attr('data-id');
-            if($id == 'vod_class' || $id == 'vod_keywords'){
-                $val = $("input[id='"+$id+"']").val();
-                if($val!=''){
-                    $val = $val+',';
-                }
-                if($val.indexOf($(this).text())>-1){
-                    return;
-                }
-                $("input[id='"+$id+"']").val($val+$(this).text());
-            }else{
-                $("input[id='"+$id+"']").val($(this).text());
-            }
-        });
-
-
-        form.on('select(type_id)', function(data){
-            getExtend(data.value);
-        });
-
 
         upload.render({
             elem: '.layui-upload'
-            ,url: "{:url('upload/upload')}?flag=vod"
+            ,url: "{:url('upload/upload')}?flag=site"
             ,method: 'post'
-//            ,accept: 'file'
+            ,accept: 'file'
             ,before: function(input) {
                 layer.msg('文件上传中...', {time:3000000});
             },done: function(res, index, upload) {
@@ -156,11 +134,12 @@
             var left = e.clientX+document.body.scrollLeft+20;
             var top = e.clientY+document.body.scrollTop+20;
             $(".showpic").css({left:left,top:top,display:""});
-            if(imgsrc.indexOf('://')<0){ imgsrc = ROOT_PATH  + '/' + imgsrc;	} else{ imgsrc = imgsrc.replace('mac:','http:'); }
+            if(imgsrc.indexOf('://')<0){ imgsrc = ROOT_PATH + '/' + imgsrc;	} else{ imgsrc = imgsrc.replace('mac:','http:'); }
             $(".showpic_img").attr("src", imgsrc);
         },function (e){
             $(".showpic").css("display","none");
         });
+
 
     });
 
