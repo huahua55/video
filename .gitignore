@@ -17,6 +17,8 @@ upload
 /.env
 application/extra
 application/data
+application/config.php
+application/database.php
 /index.html
 /map.html
 static/js/tj.js
