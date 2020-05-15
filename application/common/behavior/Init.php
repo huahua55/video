@@ -7,33 +7,17 @@ class Init
     {
         $config = config('maccms');
         $domain = config('domain');
-        echo "<pre>";
-        print_r($config);
-        echo "<pre>";
-        print_r($domain);
-
 
         $isMobile = 0;
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']??'');
-        echo "<pre>";
-        var_dump($ua);
-
         $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
-        echo "<pre>";
-        print_r($uachar);
-        echo "<pre>";
-        print_r($isMobile);
-        echo "<pre>";
-        print_r($_SERVER['HTTP_HOST']);
+
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
-            echo "<pre>";
-            echo "1111111111111111111111";
-            print_r($config);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
@@ -42,8 +26,7 @@ class Init
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
         }
-        echo "<pre>";
-        print_r(  $config['site']);die;
+
 
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
@@ -52,11 +35,6 @@ class Init
 
 
         if($isMobile){
-            echo "<pre>";
-            var_dump($_SERVER['HTTP_HOST']);
-            echo "<pre>";
-            var_dump($config['site']['site_wapurl']);
-
             if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
@@ -64,8 +42,7 @@ class Init
                 $TMP_ADSDIR = $config['site']['mob_ads_dir'];
             }
         }
-        echo "<pre>";
-        var_dump($TMP_TEMPLATEDIR);
+
         define('MAC_PATH', '/');
         define('MAC_MOB', $TMP_ISWAP);
         define('MAC_ROOT_TEMPLATE', ROOT_PATH .'template/'.$TMP_TEMPLATEDIR.'/'. $TMP_HTMLDIR .'/');
@@ -84,7 +61,6 @@ class Init
             config('dispatch_error_tmpl','public/jump');
         }
 
-        die;
         config('template.view_path', 'template/' . $TMP_TEMPLATEDIR .'/' . $TMP_HTMLDIR .'/');
 
         if(ENTRANCE=='admin'){
