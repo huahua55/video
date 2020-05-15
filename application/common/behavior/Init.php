@@ -31,6 +31,7 @@ class Init
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
             echo "<pre>";
+            echo "1111111111111111111111";
             print_r($config);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
