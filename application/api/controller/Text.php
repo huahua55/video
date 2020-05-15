@@ -101,8 +101,9 @@ class Text extends All
                 }
                 $page = $page + 1;
             }
+        $path_name = '1.txt';
         header("Content-type: text/plain");			//Mime-Type类型
-        header("Content-Disposition:attachment;filename = ".$path);	//弹出保存框的形式下载文件(附件)
+        header("Content-Disposition:attachment;filename = ".$path_name);	//弹出保存框的形式下载文件(附件)
         readfile($path);	//返回从文件中读入的字节数
         die();
     }
