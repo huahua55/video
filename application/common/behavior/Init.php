@@ -59,7 +59,8 @@ class Init
                 $TMP_ADSDIR = $config['site']['mob_ads_dir'];
             }
         }
-
+        echo "<pre>";
+        var_dump($TMP_TEMPLATEDIR);
         define('MAC_PATH', '/');
         define('MAC_MOB', $TMP_ISWAP);
         define('MAC_ROOT_TEMPLATE', ROOT_PATH .'template/'.$TMP_TEMPLATEDIR.'/'. $TMP_HTMLDIR .'/');
