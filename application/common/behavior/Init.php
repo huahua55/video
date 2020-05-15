@@ -7,25 +7,22 @@ class Init
     {
         $config = config('maccms');
         $domain = config('domain');
-        echo "<pre>";
-        var_dump($config);
-        echo "<pre>";
-        var_dump($domain);
+//        echo "<pre>";
+//        var_dump($config);
+//        echo "<pre>";
+//        var_dump($domain);
 
 
         $isMobile = 0;
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']??'');
-        echo "<pre>";
-        var_dump($ua);
+//        echo "<pre>";
+//        var_dump($ua);
 
         $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|mac os x|chrome|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
-        echo "<pre>";
-        var_dump($uachar);
-        echo "<pre>";
-        var_dump($isMobile);
+
 
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
@@ -74,7 +71,7 @@ class Init
             config('dispatch_error_tmpl','public/jump');
         }
 
-        die;
+//        die;
         config('template.view_path', 'template/' . $TMP_TEMPLATEDIR .'/' . $TMP_HTMLDIR .'/');
 
         if(ENTRANCE=='admin'){
