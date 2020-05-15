@@ -100,7 +100,6 @@ class Init
             config('session.port',$config['app']['cache_port']);
             config('session.password',$config['app']['cache_password']);
         }
-
         if(ENTRANCE == 'fapi') {
             config('exception_handle', '\\app\\common\\exception\\Http');
             config('default_return_type', 'json');
