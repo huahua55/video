@@ -8,9 +8,9 @@ class Init
         $config = config('maccms');
         $domain = config('domain');
         echo "<pre>";
-        var_dump($config);
+        print_r($config);
         echo "<pre>";
-        var_dump($domain);
+        print_r($domain);
 
 
         $isMobile = 0;
@@ -23,9 +23,9 @@ class Init
             $isMobile = 1;
         }
         echo "<pre>";
-        var_dump($uachar);
+        print_r($uachar);
         echo "<pre>";
-        var_dump($isMobile);
+        print_r($isMobile);
 
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
