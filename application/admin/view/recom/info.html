@@ -133,7 +133,6 @@
             },done: function(res, index, upload) {
                 var obj = this.item;
                 if (res.code == 0) {
-                    res.msg = "OK";
                     layer.msg(res.msg);
                     return false;
                 }
