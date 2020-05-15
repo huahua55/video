@@ -184,7 +184,7 @@ class Upload extends Base
 
         $savename = $n_dir . '/' . md5(microtime(true));
         $upfile = $file->move($_upload_path,$savename);
-
+        p($upfile);
         if (!is_file($_upload_path.$upfile->getSaveName())) {
             return self::upload_return('文件上传失败！', $param['from']);
         }
