@@ -81,6 +81,11 @@ class Text extends All
             while ($is_true) {
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start, $total);
+                $pagecount = $douBanScoreData['pagecount'] ?? 0;
+                if ($page > $pagecount) {
+                    $is_true = false;
+                    break;
+                }
                 if(empty($douBanScoreData['list'])){
                     $is_true = false;
                     break;
