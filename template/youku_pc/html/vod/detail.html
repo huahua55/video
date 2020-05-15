@@ -155,13 +155,9 @@
 					</div>
 				</div>
 				<div class="d-play-side">
-					<!-- 预告花絮 -->
-					<div class="d-play-hd">
+					<!-- <div class="d-play-hd">
 						<div class="d-play-title">
 							<h2 class="title">猜您喜欢</h2>
-							<!-- <div class="d-play-showmore">
-								<a class="d-play-link" href="javascript:void(0)"><span class="icon_text">更多</span><i class="icon_sm icon_right_sm"></i></a>
-							</div> -->
 						</div>
 						<div class="d-play-default">
 							{maccms:vod order="desc" by="rnd" num="10" paging="false" ids="all"}
@@ -178,7 +174,7 @@
 							</li>
 							{/maccms:vod}
 						</div>
-					</div>
+					</div> -->
 					<!-- 相关推荐 -->
 					<div class="summary-expend">
 						<div class="module-title">
@@ -188,7 +184,7 @@
 							<div id="myCarousel" class="carousel slide">
 								<div class="carousel-inner">
 									<div class="index-list-1 item active"> 
-										{maccms:vod num="10" type="current" level="all" order="desc" by="time"}
+										{maccms:vod num="12" type="current" level="all" order="desc" by="time"}
 										<li class="yk-pack">
 											<div class="p-thumb">
 												<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
@@ -212,7 +208,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="c-body-right">
+		<!-- <div class="c-body-right">
 			<div class="d-play-mod d-play-top" id="guideSlider">
 				<div class="module-title">
 					<h2>{$obj.type.type_name} 榜单</h2>
@@ -261,7 +257,7 @@
 					{/maccms:vod}
 				</ul>
 			</div>
-		</div>
+		</div> -->
 		</div>
 		</div>
 		<script>
