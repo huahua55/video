@@ -14,7 +14,6 @@ use think\Log;
 
 use Exception;
 
-
 class EditVod extends Common
 {
     protected $vodDb;//db
