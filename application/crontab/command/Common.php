@@ -146,8 +146,8 @@ class Common extends Command
             $rand = 0;
         }
 //        echo 'httpCode:' . json_encode($port_log_data[$rand], true) . "\n <br>";
-        $this->proxy_server = $port_log_data[$rand]['ip'];
-        $this->get_port = $port_log_data[$rand]['port'];
+        $this->proxy_server = $port_log_data[$rand]['ip']??'';
+        $this->get_port = $port_log_data[$rand]['port']??'';
         $this->times = strtotime($port_log_data[$rand]['expire_time']);
     }
 
@@ -204,7 +204,8 @@ class Common extends Command
                 9 => 'geb-TWyfavc',
             ];
             $str_count = rand(0, count($str));
-            return 'll="108288";bid=' . $str[$str_count] . '';
+            $st =  $str[$str_count]??'R6TmEajPUrU';
+            return 'll="108288";bid=' . $st . '';
         } else {
             $client = new Client();
             $response = $client->get($url);
@@ -350,7 +351,8 @@ class Common extends Command
                             $logs_data[] = explode('-|', $m)[0] ?? '';
                         }
                     }
-                    $this->times = strtotime(array_pop($logs_data));
+                    $logs_data =  array_pop($logs_data);
+                    $this->times = strtotime($logs_data);
                     Cache::set('vod_times_cj_open_url', $this->times);
                     if ($port_list == true) {
                         return $queryData['port'];
