@@ -26,7 +26,8 @@ class Init
         print_r($uachar);
         echo "<pre>";
         print_r($isMobile);
-
+        echo "<pre>";
+        print_r($_SERVER['HTTP_HOST']);
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
