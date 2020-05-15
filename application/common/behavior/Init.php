@@ -8,12 +8,20 @@ class Init
         $config = config('maccms');
         $domain = config('domain');
 
+        var_dump($config);
+        var_dump($domain);
+
+
         $isMobile = 0;
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']??'');
+        var_dump($ua);
+
         $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
+        var_dump($uachar);
+        var_dump($isMobile);
 
         $isDomain=0;
         if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
@@ -35,6 +43,7 @@ class Init
 
 
         if($isMobile){
+
             if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
