@@ -7,20 +7,24 @@ class Init
     {
         $config = config('maccms');
         $domain = config('domain');
-
+        echo "<pre>";
         var_dump($config);
+        echo "<pre>";
         var_dump($domain);
 
 
         $isMobile = 0;
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']??'');
+        echo "<pre>";
         var_dump($ua);
 
         $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
+        echo "<pre>";
         var_dump($uachar);
+        echo "<pre>";
         var_dump($isMobile);
 
         $isDomain=0;
