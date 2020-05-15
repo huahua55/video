@@ -104,7 +104,7 @@ class Text extends All
         header("Content-type: text/plain");			//Mime-Type类型
         header("Content-Disposition:attachment;filename = ".$path);	//弹出保存框的形式下载文件(附件)
         readfile($path);	//返回从文件中读入的字节数
-        exit;
+        die();
     }
 
 }
