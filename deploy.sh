@@ -41,7 +41,7 @@ function deploy_dev()
 	ln -sf $prj_dir/test.env $prj_dir/.env
 
 	mkdir -p /var/log/nginx
-	ln -sf $prj_dir/deploy/conf/online/www.tanxi.conf /usr/local/nginx/conf/vhost/www.tanxi.conf
+	ln -sf $prj_dir/deploy/conf/dev/www.tanxi.conf /usr/local/nginx/conf/vhost/www.tanxi.conf
 	ln -sf $prj_dir/deploy/conf/dev/www.video.conf /usr/local/nginx/conf/vhost/www.video.conf
 	ln -sf $prj_dir/deploy/conf/dev/admin.video.conf /usr/local/nginx/conf/vhost/admin.video.conf
 	ln -sf $prj_dir/deploy/conf/dev/s1.video.conf /usr/local/nginx/conf/vhost/s1.video.conf
