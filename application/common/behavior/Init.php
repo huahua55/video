@@ -16,9 +16,8 @@ class Init
         }
 
         $isDomain=0;
-        $http_host = $_SERVER['HTTP_HOST']??'';
-        if( is_array($domain) && !empty($http_host)){
-            $config['site'] = array_merge($config['site'],$domain[$http_host]);
+        if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
+            $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
