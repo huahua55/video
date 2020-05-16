@@ -62,8 +62,8 @@ class Text extends All
             }
             $year = $param['year'] ?? '';
             if (!empty($year)) {
-                $where['vod_year'] = ['eq', $tid];
-                $path= $path.$tid.'_';
+                $where['vod_year'] = ['eq', $year];
+                $path= $path.$year.'_';
             }
             $path = $path.'.txt';
 //           print_r($path);die;
