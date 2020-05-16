@@ -109,7 +109,7 @@ class Text extends All
                             break;
                         }
                     }
-                    $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html ' . PHP_EOL;
+                    $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html' ."\r\n";
                     file_put_contents($path, $url, FILE_APPEND);
                 }
                 $page = $page + 1;
