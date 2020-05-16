@@ -33,13 +33,16 @@ class Text extends All
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
+
     public function index()
     {
-
-
-
+            set_time_limit(0);
             $param = $this->_param;
-            $path =     RUNTIME_PATH;
+            $t_path = $path =     RUNTIME_PATH.DS.'Text'.DS;
+            if (!is_dir($path)) {
+                @mkdir($path, 0755, true);
+            }
+
             $host = $param['host'] ?? '';
             if(empty($host)){
                 $host = 'www.lanhv.tv';
@@ -68,20 +71,21 @@ class Text extends All
             $start = 0;
             $page = 1;
             $limit = 20;
+
             $is_true = true;
             $order = 'vod_id asc';
             if (empty($where)) {
                 return json_encode(['code' => 0, 'msg' => 'err,没有参数'], true);
             }
 
-//            if(is_file($path)){
-//                unlink($path);
-//            }
+            if(is_file($path)){
+                unlink($path);
+            }
+            $count = 0;
             //进入循环 取出数据
             while ($is_true) {
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start, $total);
-
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
                 if ($page > $pagecount) {
                     $is_true = false;
@@ -98,13 +102,19 @@ class Text extends All
                     if(is_array($v['vod_id'])){
                         continue;
                     }
-                    $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html';
-                    file_put_contents($path, $url.PHP_EOL, FILE_APPEND);
-//                   var_dump($a);die;
+                    $count = $count+1;
+                    if(!empty($total)){
+                        if($count > $total){
+                            $is_true = false;
+                            break;
+                        }
+                    }
+                    $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html ' . PHP_EOL;
+                    file_put_contents($path, $url, FILE_APPEND);
                 }
                 $page = $page + 1;
             }
-        $path_name = str_replace(RUNTIME_PATH,'',$path);
+        $path_name = str_replace($t_path,'',$path);
         header("Content-type: text/plain");			//Mime-Type类型
         header("Content-Disposition:attachment;filename = ".$path_name);	//弹出保存框的形式下载文件(附件)
         readfile($path);	//返回从文件中读入的字节数
