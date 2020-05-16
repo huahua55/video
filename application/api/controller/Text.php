@@ -81,7 +81,7 @@ class Text extends All
             while ($is_true) {
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start, $total);
-                print_r($douBanScoreData);die;
+
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
                 if ($page > $pagecount) {
                     $is_true = false;
@@ -91,6 +91,7 @@ class Text extends All
                     $is_true = false;
                     break;
                 }
+                print_r($path);die;
 //                echo "<pre>";
 //                print_r($douBanScoreData['list']);die;
                 foreach ($douBanScoreData['list'] as $k=>$v){
