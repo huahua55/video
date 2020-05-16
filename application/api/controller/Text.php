@@ -91,7 +91,7 @@ class Text extends All
                     $is_true = false;
                     break;
                 }
-                print_r($path);die;
+//                print_r($path);die;
 //                echo "<pre>";
 //                print_r($douBanScoreData['list']);die;
                 foreach ($douBanScoreData['list'] as $k=>$v){
@@ -99,7 +99,8 @@ class Text extends All
                         continue;
                     }
                     $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html';
-                    file_put_contents($path, $url.PHP_EOL, FILE_APPEND);
+                   $a =  file_put_contents($path, $url.PHP_EOL, FILE_APPEND);
+                   var_dump($a);die;
                 }
                 $page = $page + 1;
             }
