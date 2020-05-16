@@ -30,6 +30,9 @@
                 <input type="text" class="layui-input" value="{$info.sort}" placeholder="请输入顺序号" id="sort" name="sort">
             </div>
         </div>
+
+
+        <!--
         <div class="layui-form-item">
             <label class="layui-form-label">图片：</label>
             <div class="layui-input-inline w500 upload">
@@ -39,6 +42,8 @@
                 <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload">上传图片</button>
             </div>
         </div>
+        -->
+
 
         <div class="layui-form-item">
             <label class="layui-form-label">视频：</label>
@@ -103,7 +108,7 @@
 
         upload.render({
             elem: '.layui-upload'
-            ,url: "{:url('upload/upload')}?flag=site"
+            ,url: "{:url('upload/upload')}?flag=vod"
             ,method: 'post'
             ,accept: 'file'
             ,before: function(input) {

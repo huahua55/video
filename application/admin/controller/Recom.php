@@ -35,6 +35,20 @@ class Recom extends Base{
     {
         if (Request()->isPost()) {
             $param = input();
+            // 视频压缩
+
+
+            // 截取视频首针 图片
+            $video  = ROOT_PATH . $param['url'];
+            $url    = pathinfo($param['url']);
+            $output = $url['dirname'] . "/" .  md5(microtime(true)) . ".jpg";
+
+            // ffmpeg 截取
+            $command = "ffmpeg  -i {$video} -ss 0.1 {$output}";
+            shell_exec($command);
+
+            $param['image'] = $output;
+
             $res = model('Recom')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
