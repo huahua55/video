@@ -74,9 +74,9 @@ class Text extends All
                 return json_encode(['code' => 0, 'msg' => 'err,没有参数'], true);
             }
 
-            if(is_file($path)){
-                unlink($path);
-            }
+//            if(is_file($path)){
+//                unlink($path);
+//            }
             //进入循环 取出数据
             while ($is_true) {
                 //取出数据
@@ -99,12 +99,12 @@ class Text extends All
                         continue;
                     }
                     $url = 'https://www.lanhu.tv/vod/play/id/'.$v['vod_id'].'/sid/1/nid/1.html';
-                   $a =  file_put_contents($path, $url.PHP_EOL, FILE_APPEND);
-                   var_dump($a);die;
+                    file_put_contents($path, $url.PHP_EOL, FILE_APPEND);
+//                   var_dump($a);die;
                 }
                 $page = $page + 1;
             }
-        $path_name = '1.txt';
+        $path_name = str_replace(RUNTIME_PATH,'',$path);
         header("Content-type: text/plain");			//Mime-Type类型
         header("Content-Disposition:attachment;filename = ".$path_name);	//弹出保存框的形式下载文件(附件)
         readfile($path);	//返回从文件中读入的字节数
