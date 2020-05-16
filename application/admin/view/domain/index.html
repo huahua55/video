@@ -42,6 +42,7 @@
                             <div class="layui-input-inline w150"><input type="text" name="domain[site_description][]" class="layui-input" placeholder="描述" value="{$vo.site_description}"></div>&nbsp;
                             <div class="layui-input-inline w150"><select name="domain[template_dir][]"><option value="no">请选择模板.</option>{volist name="templates" id="vo2"}<option value="{$vo2}" {if condition="$vo2 eq $vo.template_dir"}selected{/if}>{$vo2}</option>{/volist}</select></div>
                             <div class="layui-input-inline w150"><input type="text" name="domain[html_dir][]" class="layui-input" placeholder="模板目录" value="{$vo.html_dir}"></div>
+                            <div class="layui-input-inline w150"><input type="text" name="domain[site_email][]" class="layui-input" placeholder="邮箱" value="{$vo.site_email}"></div>
                             <div class="layui-input-inline w150"><input type="text" name="domain[ads_dir][]" class="layui-input" placeholder="广告目录" value="{$vo.ads_dir}"></div>
                             <div> <a class="layui-badge-rim j-tr-del" data-href="{:url('del?ids='.$vo['site_url'])}" href="javascript:;" title="删除">删除</a></div>
                         </div>
