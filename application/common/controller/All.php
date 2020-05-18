@@ -26,7 +26,6 @@ class All extends Controller
         if(defined('ENTRANCE') && ENTRANCE == 'index' && $GLOBALS['config']['app']['cache_page'] ==1  && $GLOBALS['config']['app']['cache_time_page'] ) {
             $cach_name = MAC_MOB . '_'. $GLOBALS['config']['app']['cache_flag']. '_' .$tpl .'_'. http_build_query(mac_param_url());
             $res = Cache::get($cach_name);
-            p($res);
             if ($res) {
                 if($type=='json'){
                     $res = json_encode($res);
