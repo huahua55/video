@@ -86,12 +86,12 @@
 							<div class="v_th">
 								<i class="iLine"></i>
 								<p class="pTab">
-									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'time' ],'show')}"
-									 class="order {if condition=" $param.by eq '' || $param.by eq 'time'"}cur{/if}">按时间</a>
-									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'hits' ],'show')}"
-									 class="order {if condition=" $param.by eq 'hits'"}cur{/if}">按人气</a>
-									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'score' ],'show')}"
-									 class="order {if condition=" $param.by eq 'score'"}cur{/if}">按评分</a>
+									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'time,year,douban_score' ],'show')}"
+									 class="order {if condition=" $param.by eq '' || $param.by eq 'time,year,douban_score'"}cur{/if}">按时间</a>
+									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'hits,year,douban_score' ],'show')}"
+									 class="order {if condition=" $param.by eq 'hits,year,douban_score'"}cur{/if}">按人气</a>
+									<a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'score,year,douban_score' ],'show')}"
+									 class="order {if condition=" $param.by eq 'score,year,douban_score'"}cur{/if}">按评分</a>
 								</p>
 							</div>
 						</div>
@@ -102,7 +102,8 @@
 							<div class="box">
 								<div class="box_con">
 									<ul class="img-list">
-										{maccms:vod num="24" paging="yes" pageurl="vod/show" type="current" order="desc" by="time"}
+										<!-- vod_score,vod_year, -->
+										{maccms:vod num="24" paging="yes" pageurl="vod/show" type="current" order="desc,desc,desc" by="time, year, douban_score"}}
 										<li class="yk-pack">
 											<div class="p-thumb">
 												<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
