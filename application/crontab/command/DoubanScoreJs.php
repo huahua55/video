@@ -89,9 +89,11 @@ class DoubanScoreJs extends Common
 //                $this->get_port = $this->getPort();
 //                log::info('get_port-::');
 //            }
+
+
 //        p($A);
             //开始cookie
-            $cookies = $this->getCookie('https://movie.douban.com/');
+            $cookies = $this->getCookie('');
             $start = 0;
             $page = 1;
             $limit = 20;
@@ -124,12 +126,10 @@ class DoubanScoreJs extends Common
             $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             while ($is_true) {//进入循环 取出数据
-
                 $this->get_zm_port();
                 if(empty($this->get_port)){
                     $this->get_zm_port();
                 }
-
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
@@ -195,10 +195,9 @@ class DoubanScoreJs extends Common
                     unset($b_time);
                     unset($startTime);
                     if (empty($getSearchData)) {
-                        log::info('js-采集豆瓣评分-url-err::');//更新 代理
+                        log::info('js-采集豆瓣评分-url-err:: -- '.$url);//更新 代理
 //                        $this->get_port = $this->getPort();
                     }
-
                     log::info('js-采集豆瓣评分-url-::' . $url);
                     if (!empty($getSearchData)) {
                         foreach ($getSearchData as $da_k => $as_k) {
@@ -332,6 +331,7 @@ class DoubanScoreJs extends Common
 
                 log::info('js-err-iiii---proxy-' . $this->proxy_server . ":" . $this->get_port);
                 $mac_curl_get_details_data = objectToArray($mac_curl_get_details_data);
+
                 if (isset($mac_curl_get_details_data[0]) && !empty($mac_curl_get_details_data[0])) {
                     $detailsData = $mac_curl_get_details_data[0];
                     $detailsDataText = $detailsData['vod_text'];
@@ -447,6 +447,7 @@ class DoubanScoreJs extends Common
                 log::info('js-采集豆瓣评分suc');
                 $t_data = $this->cmsDb->where(['douban_id' => $get_search_id])->find();
                 if (empty($t_data)) {
+                    log::info('js-采集详情豆瓣评分succs');
                     $this->cmsDb->insert($deas_data);
                 }
             } catch (\Exception $e) {

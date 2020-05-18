@@ -98,6 +98,7 @@ class DoubanScoreCopy extends Common
                 if (empty($this->get_port)) {
                     $this->get_zm_port();
                 }
+
                 //取出数据
                 $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
 //            print_r( $this->vodDb->getlastsql());die;
