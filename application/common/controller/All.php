@@ -18,6 +18,7 @@ class All extends Controller
         $this->_cl = request()->controller();
         $this->_ac = request()->action();
         $this->_tsp = date('Ymd');
+
     }
 
     protected function load_page_cache($tpl,$type='html')
@@ -25,6 +26,7 @@ class All extends Controller
         if(defined('ENTRANCE') && ENTRANCE == 'index' && $GLOBALS['config']['app']['cache_page'] ==1  && $GLOBALS['config']['app']['cache_time_page'] ) {
             $cach_name = MAC_MOB . '_'. $GLOBALS['config']['app']['cache_flag']. '_' .$tpl .'_'. http_build_query(mac_param_url());
             $res = Cache::get($cach_name);
+            p($res);
             if ($res) {
                 if($type=='json'){
                     $res = json_encode($res);
@@ -33,6 +35,7 @@ class All extends Controller
                 die;
             }
         }
+
     }
 
     protected function label_fetch($tpl,$loadcache=1,$type='html')
@@ -49,6 +52,7 @@ class All extends Controller
             $cach_name = MAC_MOB . '_' . $GLOBALS['config']['app']['cache_flag']. '_' . $tpl .'_'. http_build_query(mac_param_url());
             $res = Cache::set($cach_name,$html,$GLOBALS['config']['app']['cache_time_page']);
         }
+
         return $html;
     }
 
@@ -76,7 +80,6 @@ class All extends Controller
         $maccms['http_url'] = $GLOBALS['http_type']. ''.$_SERVER['SERVER_NAME'].($_SERVER["SERVER_PORT"]==80 ? '' : ':'.$_SERVER["SERVER_PORT"]).$_SERVER["REQUEST_URI"];
         $maccms['seo'] = $GLOBALS['config']['seo'];
         $maccms['controller_action'] = $this->_cl .'/'.$this->_ac;
-
         if(!empty($GLOBALS['mid'])) {
             $maccms['mid'] = $GLOBALS['mid'];
         }
@@ -89,11 +92,13 @@ class All extends Controller
         else{
             $maccms['aid'] = mac_get_aid($this->_cl,$this->_ac);
         }
+//        p($maccms);
         $this->assign( ['maccms'=>$maccms] );
     }
 
     protected function label_user()
     {
+
         if(ENTRANCE != 'index'){
             return;
         }
@@ -129,10 +134,10 @@ class All extends Controller
 
     protected function label_type($view=0)
     {
+
         $param = mac_param_url();
         $this->assign('param',$param);
         $info = mac_label_type($param);
-
         $this->assign('obj',$info);
         if(empty($info)){
             return $this->error('获取分类失败，请选择其它分类！');
@@ -151,6 +156,7 @@ class All extends Controller
     {
         $param = mac_param_url();
         $this->assign('param',$param);
+
     }
 
     protected function label_actor_detail($info=[],$view=0)
@@ -377,7 +383,6 @@ class All extends Controller
     {
         $param = mac_param_url();
         $this->assign('param', $param);
-
         if (empty($info)) {
             $res = mac_label_vod_detail($param);
             if ($res['code'] > 1) {

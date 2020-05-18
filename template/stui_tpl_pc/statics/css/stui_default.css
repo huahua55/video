@@ -138,7 +138,7 @@ textarea.form-control{ height: auto;}
 .stui-content{ padding: 10px;}
 .stui-content__detail,.stui-content__thumb,.stui-content__side{display:table-cell;vertical-align:top}
 .stui-content__thumb .pic{ display: block; width: 220px;}
-.stui-content__thumb .pic img{ max-width: 100%;}
+.stui-content__thumb .pic img{width: 100%;display: block;}
 .stui-content__side{ width: 240px; padding-top: 80px; text-align: center; background-color: #444;}
 .stui-content__detail{ padding: 20px; background-color: #1c1b1e;position: relative;}
 .stui-content__detail .title{margin:0 0 10px; font-size: 18px; color: #fff;}

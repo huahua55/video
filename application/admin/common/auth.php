@@ -85,6 +85,10 @@ return array(
         '3601' => array("show"=>0,'name' => '--附件删除', 'controller' => 'images',		'action' => 'del'),
         '3602' => array("show"=>0,'name' => '--同步图片选项', 'controller' => 'images',		'action' => 'opt'),
         '3603' => array("show"=>0,'name' => '--同步图片方法', 'controller' => 'images',		'action' => 'sync'),
+
+        '37' => array("show"=>1,'name' => '分类SEO优化', 'controller' => 'typeSeo',		'action' => 'index'),
+        '3701' => array("show"=>0,'name' => '--分类信息维护', 'controller' => 'typeSeo',		'action' => 'info'),
+        '3702' => array("show"=>0,'name' => '--分类批量修改', 'controller' => 'typeSeo',		'action' => 'batch'),
     )),
 
     '5' => array('name' => '文章', 'icon' => 'xe616', 'sub' => array(
@@ -130,7 +134,7 @@ return array(
         '47' => array("show"=>1,'name' => '已锁定视频', 'controller' => 'vod',		'action' => 'data', 'param'=>'lock=1'),
         '48' => array("show"=>1,'name' => '未审核视频', 'controller' => 'vod',		'action' => 'data', 'param'=>'status=0'),
         '481' => array("show"=>1,'name' => '需积分视频', 'controller' => 'vod',		'action' => 'data', 'param'=>'points=1'),
-        '481' => array("show"=>1,'name' => '有分集剧情', 'controller' => 'vod',		'action' => 'data', 'param'=>'plot=1'),
+        '482' => array("show"=>1,'name' => '有分集剧情', 'controller' => 'vod',		'action' => 'data', 'param'=>'plot=1'),
 
         '49' => array("show"=>1,'name' => '批量操作视频', 'controller' => 'vod',		'action' => 'batch'),
         '491' => array("show"=>1,'name' => '重名视频数据', 'controller' => 'vod',		'action' => 'data', 'param'=>'repeat=1'),

@@ -11,14 +11,16 @@ class Domain extends Base
     {
         if (Request()->isPost()) {
             $config = input();
-
             $tmp = $config['domain'];
             $domain=[];
-
-
-
             foreach ($tmp['site_url'] as $k=>$v){
-
+                $tableName = $v.'_type';
+                $tableName = str_replace('.','_',$tableName);
+                //是否存在这张表
+                if(isTable($tableName) !=true){
+                    //复制表
+                    copyTable($tableName,'type');
+                }
                 $domain[$v] =[
                    'site_url'=>$v,
                     'site_name'=>$tmp['site_name'][$k],
@@ -29,17 +31,13 @@ class Domain extends Base
                     'site_email'=>$tmp['site_email'][$k],
                     'ads_dir'=>$tmp['ads_dir'][$k],
                 ];
-
             }
-
-
             $res = mac_arr2file(APP_PATH . 'extra/domain.php', $domain);
             if ($res === false) {
                 return $this->error('保存失败，请重试!');
             }
             return $this->success('保存成功!');
         }
-
 
         $templates = glob('./template' . '/*', GLOB_ONLYDIR);
         foreach ($templates as $k => &$v) {

@@ -7,9 +7,9 @@ cd /data/www/video/
 #001 更新 分辨率
 ps -ef | grep vodCode | grep -v grep | awk '{print $2}' | xargs kill -9
 
-sleep 3
-#修复一些奇特解码方式
-php think vodCode up=1
+#sleep 3
+##修复一些奇特解码方式
+#php think vodCode up=1
 
 sleep 3
 php think vodCode

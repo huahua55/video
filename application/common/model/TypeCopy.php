@@ -4,21 +4,19 @@ use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
 
-class Type extends Base {
+class TypeCopy extends Base {
     // 设置数据表（不含前缀）
-    protected $name;
-    protected $table;
+    protected $name = 'type';
 
     // 定义时间戳字段名
     protected $createTime = '';
     protected $updateTime = '';
-    protected $type_list_name;
-    protected $type_tree_name;
 
     // 自动完成
     protected $auto       = [];
     protected $insert     = [];
     protected $update     = [];
+
 
     //自定义初始化
     protected function initialize()
@@ -26,35 +24,22 @@ class Type extends Base {
         //需要调用`Model`的`initialize`方法
         parent::initialize();
         //TODO:自定义的初始化
-        if(mac_get_type_list() != false){
-            $new_table = mac_get_type_list_model();
-            $this->name = $new_table;
-            $this->table =$new_table;
-            $this->type_list_name = $new_table.'_type_list';
-            $this->type_tree_name = $new_table.'_type_tree';
-        }else{
-            $this->name = 'type';
-            $this->table ='type';
-            $this->type_list_name = 'type_list';
-            $this->type_tree_name = 'type_tree';
-        }
-
     }
 
     public function listData($where,$order,$format='def',$mid=0,$limit=999,$start=0,$totalshow=1)
     {
-
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
         $limit_str = ($limit * (1-1) + $start) .",".$limit;
         if($totalshow==1) {
-            $total = db()->name($this->name)->where($where)->count();
+            $total = $this->where($where)->count();
         }
         else{
 
         }
-        $tmp = db()->name($this->name)->where($where)->order($order)->limit($limit_str)->select();
+        $tmp = Db::name('Type')->where($where)->order($order)->limit($limit_str)->select();
+
         $list = [];
         $childs=[];
         foreach($tmp as $k=>$v){
@@ -62,12 +47,13 @@ class Type extends Base {
             $list[$v['type_id']] = $v;
             $childs[$v['type_pid']][] = $v['type_id'];
         }
+
         $rc=false;
         foreach($list as $k=>$v){
             if($v['type_pid']==0){
                 if(!empty($where)){
                     if(!$rc){
-                        $type_list = $this->getCache($this->type_list_name);
+                        $type_list = model('Type')->getCache('type_list');
                         $rc=true;
                     }
                     $list[$k]['childids'] = $type_list[$v['type_id']]['childids'];
@@ -87,9 +73,11 @@ class Type extends Base {
                 }
             }
         }
+
         if($format=='tree'){
             $list = mac_list_to_tree($list,'type_id','type_pid');
         }
+
         return ['code'=>1,'msg'=>'数据列表','total'=>$total,'list'=>$list];
     }
 
@@ -214,16 +202,21 @@ class Type extends Base {
         if(empty($where) || !is_array($where)){
             return ['code'=>1001,'msg'=>'参数错误'];
         }
-        $info = db()->name($this->name)->field($field)->where($where)->find();
+        $info = $this->field($field)->where($where)->find();
+
         if(empty($info)){
             return ['code'=>1002,'msg'=>'获取数据失败'];
         }
+        $info = $info->toArray();
+
         if(!empty($info['type_extend'])){
             $info['type_extend'] = json_decode($info['type_extend'],true);
         }
         else{
             $info['type_extend'] = json_decode('{"type":"","area":"","lang":"","year":"","star":"","director":"","state":"","version":""}',true);
         }
+
+
         return ['code'=>1,'msg'=>'获取成功','info'=>$info];
     }
 
@@ -240,13 +233,14 @@ class Type extends Base {
         if(empty($data['type_en'])){
             $data['type_en'] = Pinyin::get($data['type_name']);
         }
+
         if(!empty($data['type_id'])){
             $where=[];
             $where['type_id'] = ['eq',$data['type_id']];
-            $res = db()->name($this->name)->where($where)->update($data);
+            $res = $this->allowField(true)->where($where)->update($data);
         }
         else{
-            $res = db()->name($this->name)->insert($data);
+            $res = $this->allowField(true)->insert($data);
         }
         if(false === $res){
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
@@ -258,7 +252,7 @@ class Type extends Base {
 
     public function delData($where)
     {
-        $list = db()->name($this->name)->where($where)->select();
+        $list = $this->where($where)->select();
         foreach($list as $k=>$v){
             $where2=[];
             $where2['type_id|type_id_1'] = ['eq',$v['type_id']];
@@ -269,10 +263,11 @@ class Type extends Base {
             }
         }
 
-        $res = db()->name($this->name)->where($where)->delete();
+        $res = $this->where($where)->delete();
         if($res===false){
             return ['code'=>1001,'msg'=>'删除失败：'.$this->getError() ];
         }
+
         $this->setCache();
         return ['code'=>1,'msg'=>'删除成功'];
     }
@@ -286,7 +281,7 @@ class Type extends Base {
         $data = [];
         $data[$col] = $val;
 
-        $res = db()->name($this->name)->where($where)->update($data);
+        $res = $this->allowField(true)->where($where)->update($data);
 
         if($res===false){
             return ['code'=>1002,'msg'=>'设置失败：'.$this->getError() ];
@@ -298,7 +293,7 @@ class Type extends Base {
 
     public function moveData($where,$val)
     {
-        $list = $this->db()->where($where)->select();
+        $list = $this->where($where)->select();
         $type_info = $this->getCacheInfo($val);
         if(empty($type_info)){
             return ['code'=>1011,'msg'=>'获取目标分类信息失败'];
@@ -322,17 +317,14 @@ class Type extends Base {
     {
         $res = $this->listData([],'type_id asc');
         $list = $res['list'];
-        Cache::set($this->type_list_name,$list);
+        Cache::set('type_list',$list);
 
         $type_tree = mac_list_to_tree($list,'type_id','type_pid');
-        Cache::set($this->type_tree_name,$type_tree);
+        Cache::set('type_tree',$type_tree);
     }
 
-    public function getCache($flag='')
+    public function getCache($flag='type_list')
     {
-        if(empty($flag)){
-            $flag = $this->type_list_name ;
-        }
         $cache = Cache::get($flag);
         if(empty($cache)){
             $this->setCache();
@@ -343,7 +335,7 @@ class Type extends Base {
 
     public function getCacheInfo($id)
     {
-        $type_list = $this->getCache($this->type_list_name);
+        $type_list = $this->getCache('type_list');
         if(is_numeric($id)) {
             return $type_list[$id];
         }

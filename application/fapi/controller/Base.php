@@ -2,6 +2,7 @@
 
 namespace app\fapi\controller;
 
+use http\Exception\BadQueryStringException;
 use think\Controller;
 use think\Exception;
 use app\common\util\Context;
@@ -29,7 +30,6 @@ class Base extends Controller
         $this->label_system();
         $this->label_user();
         $this->label_nav();
-
     }
 
     function assign($k, $v) {

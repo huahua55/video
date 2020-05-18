@@ -12,6 +12,8 @@ class Type extends Base
 
     public function index()
     {
+
+
         $order='type_sort asc';
         $where=[];
         $res = model('Type')->listData($where,$order,'tree');

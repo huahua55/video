@@ -26,7 +26,13 @@ class Banner extends Base {
         $list = Db::name('Banner')->where($where)->order($order)->limit($limit_str)->select();
 
         //分类
-        $type_list = model('Type')->getCache('type_list');
+        if(mac_get_type_list() != false){
+            $new_table =  mac_get_type_list_model();
+            $model =  new \app\common\model\TypeSeo($new_table);
+            $type_list = $model->getCache();
+        }else{
+            $type_list = model('Type')->getCache('type_list');
+        }
         foreach($list as $k=>$v){
             if(!empty($v['type_id'])) {
                 $list[$k]['type'] = $type_list[$v['type_id']];

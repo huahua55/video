@@ -12,6 +12,7 @@ class Base extends All
         parent::__construct();
 
         $this->_param = input();
+
     }
 
     public function _empty(){
