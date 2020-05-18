@@ -28,7 +28,6 @@ function v($array, $ext = 0){
     }
 }
 
-
 function randomFloat($min = 0, $max = 10)
 {
     $num = $min + mt_rand() / mt_getrandmax() * ($max - $min);
@@ -58,6 +57,8 @@ function getScreen($id){
         'type_id'   => $id
     ];
     $res =  model("Type")->infoData($where);
+    var_dump(903);
+    p($res);
     $res = $res['info'] ?? [];
 
     $type = explode(',','全部,'.$res["type_extend"]["class"]);
@@ -78,7 +79,6 @@ function selectOption($id, $type_name){
     ];
     $res =  model("Type")->infoData($where);
     $res = $res['info'] ?? [];
-
     $classKey = 0;  // 类型
     $areaKey  = 0;  // 地区
 
@@ -130,8 +130,6 @@ function json_return($msg,$code=1,$data=''){
         return json_encode($rs, JSON_UNESCAPED_UNICODE);
     }
 }
-
-
 
 // 应用公共文件
 function mac_return($msg,$code=1,$data=''){
@@ -523,6 +521,17 @@ function mac_check_back_link($url)
 
     return $res;
 }
+ function object_array($array) {
+    if(is_object($array)) {
+        $array = (array)$array;
+    }
+    if(is_array($array)) {
+        foreach($array as $key=>$value) {
+            $array[$key] =object_array($value);
+        }
+    }
+    return $array;
+}
 
 function mac_list_to_tree($list, $pk='id',$pid = 'pid',$child = 'child',$root=0)
 {
@@ -821,8 +830,22 @@ function mac_substring($str, $lenth, $start=0)
     }
     return  join('',$r);
 }
-
-
+//查看表是否存在
+function isTable($table){
+    $tableName=config('database.prefix').$table;
+    $isTable=db()->query('SHOW TABLES LIKE '."'".$table."'");
+    if($isTable){
+        //表存在
+        return true;
+    }
+    return false;
+}
+// 复制表  新表名字 原本表
+function copyTable($new_table,$from_table){
+    #创建tp5_temp3表，数据全部自源于 tp5_staff 子查询
+    $sql = "CREATE TABLE `".$new_table."` AS SELECT * FROM `".$from_table."` ";
+    return db()->query($sql);
+}
 function mac_array2xml($arr,$level=1)
 {
     $s = $level == 1 ? "<xml>" : '';
@@ -841,6 +864,14 @@ function mac_array2xml($arr,$level=1)
     return $level == 1 ? $s."</xml>" : $s;
 }
 
+//encode
+function mac_json_encode($data){
+    return json_encode($data,true);
+}
+//decode
+function mac_json_decode($data){
+    return json_decode($data,true);
+}
 
 function mac_xml2array($xml)
 {
@@ -961,6 +992,7 @@ function mac_interface_type()
 {
     $key = 'interface_type';
     $data = think\Cache::get($key);
+
     if(empty($data)){
         $config = config('maccms.interface');
         $vodtype = str_replace([chr(10),chr(13)],['','#'],$config['vodtype']);
@@ -997,6 +1029,7 @@ function mac_interface_type()
     }
 
     $type_list = model('Type')->getCache('type_list');
+
     $type_names = [];
     foreach($type_list as $k=>$v){
         $type_names[$v['type_name']] = $v['type_id'];
@@ -1165,6 +1198,7 @@ function mac_get_aid($controller,$action='')
     if(!empty($arr[$key])){
         $res= $arr[$key];
     }
+//    v($res);
     return $res;
 }
 
@@ -1469,6 +1503,7 @@ function mac_num_fill($num)
 
 function mac_multisort($arr,$col_sort,$sort_order,$col_status='',$status_val='')
 {
+
     $sort=[];
     foreach($arr as $k=>$v){
         $sort[] = $v[$col_sort];
@@ -1489,6 +1524,7 @@ function mac_get_body($text,$start,$end)
     $start=stripslashes($start);
     $end=stripslashes($end);
 
+
     if(strpos($text,$start)!=""){
         $str = substr($text,strpos($text,$start)+strlen($start));
         $str = substr($str,0,strpos($str,$end));
@@ -1501,6 +1537,7 @@ function mac_get_body($text,$start,$end)
 
 function mac_find_array($text,$start,$end)
 {
+
     $start=stripslashes($start);
     $end=stripslashes($end);
     if(empty($text)){ return false; }
@@ -2157,7 +2194,6 @@ function mac_url($model,$param=[],$info=[])
             }
         }
     }
-
     return $url;
 }
 function mac_url_page($url,$num)
@@ -2345,7 +2381,6 @@ function mac_label_website_detail($param)
     }
     $where['website_status'] = ['eq',1];
     $res = model('Website')->infoData($where,'*',1);
-
     $GLOBALS['type_id'] = $res['info']['type_id'];
     $GLOBALS['type_pid'] = $res['info']['type']['type_pid'];
     return $res;
@@ -2422,7 +2457,6 @@ function mac_label_vod_detail($param)
     }
     $where['vod_status'] = ['eq',1];
     $res = model('Vod')->infoData($where,'*',1);
-
     $GLOBALS['type_id'] = $res['info']['type_id'];
     $GLOBALS['type_pid'] = $res['info']['type']['type_pid'];
     return $res;
@@ -2437,15 +2471,44 @@ function mac_label_vod_role($param)
     $res = model('Role')->listData($where,$order,1,999,0,'*',0,0);
     return $res;
 }
+//获取域名分类
+function mac_get_type_list(){
+    //获取域名
+    $domain_conf = config('domain');
+    //存在
+    if( is_array($domain_conf) && !empty($domain_conf[$_SERVER['HTTP_HOST']])){
+       return true;
+    }
+    return false;
+}
+
+function mac_get_type_list_table(){
+    return $_SERVER['HTTP_HOST'].'_type';
+
+}
+function mac_get_type_list_model(){
+    $new_table =  mac_get_type_list_table();
+    $new_table = str_replace('.','_',$new_table);
+    return $new_table;
+}
 
 function mac_label_type($param)
 {
-    $type_info = model('Type')->getCacheInfo($param['id']);
-
-    $GLOBALS['type_id'] =$type_info['type_id'];
-    $GLOBALS['type_pid'] = $type_info['type_pid'];
-
-    $parent = model('Type')->getCacheInfo($type_info['type_pid']);
+    //获取域名分类
+    if(mac_get_type_list() != false) {
+        $new_table = $_SERVER['HTTP_HOST'].'_type';
+        $new_table = str_replace('.','_',$new_table);
+        $model =  new \app\common\model\TypeSeo($new_table);
+        $type_info = $model->getCacheInfo($param['id']);
+        $GLOBALS['type_id'] =$type_info['type_id'];
+        $GLOBALS['type_pid'] = $type_info['type_pid'];
+        $parent = $model->getCacheInfo($type_info['type_pid']);
+    }else{
+        $type_info = model('Type')->getCacheInfo($param['id']);
+        $GLOBALS['type_id'] =$type_info['type_id'];
+        $GLOBALS['type_pid'] = $type_info['type_pid'];
+        $parent = model('Type')->getCacheInfo($type_info['type_pid']);
+    }
     $type_info['parent'] = $parent;
     return $type_info;
 }

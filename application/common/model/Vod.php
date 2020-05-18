@@ -25,6 +25,7 @@ class Vod extends Base {
 
     public function listData($where,$order,$page=1,$limit=20,$start=0,$field='*',$addition=1,$totalshow=1)
     {
+
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
@@ -42,7 +43,14 @@ class Vod extends Base {
         $list = Db::name('Vod')->field($field)->where($where)->where($where2)->order($order)->limit($limit_str)->select();
 
         //分类
-        $type_list = model('Type')->getCache('type_list');
+        //分类
+        if(mac_get_type_list() != false){
+            $new_table =  mac_get_type_list_model();
+            $model =  new \app\common\model\TypeSeo($new_table);
+            $type_list = $model->getCache();
+        }else{
+            $type_list = model('Type')->getCache('type_list');
+        }
         //用户组
         $group_list = model('Group')->getCache('group_list');
 
@@ -62,6 +70,7 @@ class Vod extends Base {
 
     public function listRepeatData($where,$order,$page=1,$limit=20,$start=0,$field='*',$addition=1)
     {
+
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
@@ -79,9 +88,14 @@ class Vod extends Base {
             ->order($order)
             ->limit($limit_str)
             ->select();
-
         //分类
-        $type_list = model('Type')->getCache('type_list');
+        if(mac_get_type_list() != false){
+            $new_table =  mac_get_type_list_model();
+            $model =  new \app\common\model\TypeSeo($new_table);
+            $type_list = $model->getCache();
+        }else{
+            $type_list = model('Type')->getCache('type_list');
+        }
         //用户组
         $group_list = model('Group')->getCache('group_list');
 
@@ -157,7 +171,6 @@ class Vod extends Base {
         }
 
         $param = mac_param_url();
-
         if($paging=='yes') {
             $totalshow = 1;
             if(!empty($param['id'])){
@@ -243,7 +256,14 @@ class Vod extends Base {
 
             if($pageurl=='vod/type' || $pageurl=='vod/show'){
                 $type = intval( $GLOBALS['type_id'] );
-                $type_list = model('Type')->getCache('type_list');
+                //分类
+                if(mac_get_type_list() != false){
+                    $new_table =  mac_get_type_list_model();
+                    $model =  new \app\common\model\TypeSeo($new_table);
+                    $type_list = $model->getCache();
+                }else{
+                    $type_list = model('Type')->getCache('type_list');
+                }
                 $type_info = $type_list[$type];
                 $flag='type';
                 if($pageurl == 'vod/show'){
@@ -326,7 +346,14 @@ class Vod extends Base {
             }
             if($type!='all') {
                 $tmp_arr = explode(',',$type);
-                $type_list = model('Type')->getCache('type_list');
+                //分类
+                if(mac_get_type_list() != false){
+                    $new_table =  mac_get_type_list_model();
+                    $model =  new \app\common\model\TypeSeo($new_table);
+                    $type_list = $model->getCache();
+                }else{
+                    $type_list = model('Type')->getCache('type_list');
+                }
                 $type = [];
                 foreach($type_list as $k2=>$v2){
                     if(in_array($v2['type_id'].'',$tmp_arr) || in_array($v2['type_pid'].'',$tmp_arr)){
@@ -508,7 +535,14 @@ class Vod extends Base {
 
             //分类
             if (!empty($info['type_id'])) {
-                $type_list = model('Type')->getCache('type_list');
+
+                if(mac_get_type_list() != false){
+                    $new_table =  mac_get_type_list_model();
+                    $model =  new \app\common\model\TypeSeo($new_table);
+                    $type_list = $model->getCache();
+                }else{
+                    $type_list = model('Type')->getCache('type_list');
+                }
                 $info['type'] = $type_list[$info['type_id']];
                 $info['type_1'] = $type_list[$info['type']['type_pid']];
             }
@@ -537,7 +571,14 @@ class Vod extends Base {
         $key = 'vod_detail_'.$data['vod_id'].'_'.$data['vod_en'];
         Cache::rm($key);
 
-        $type_list = model('Type')->getCache('type_list');
+        //分类
+        if(mac_get_type_list() != false){
+            $new_table =  mac_get_type_list_model();
+            $model =  new \app\common\model\TypeSeo($new_table);
+            $type_list = $model->getCache();
+        }else{
+            $type_list = model('Type')->getCache('type_list');
+        }
         $type_info = $type_list[$data['type_id']];
         $data['type_id_1'] = $type_info['type_pid'];
 

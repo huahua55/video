@@ -11,6 +11,7 @@ class Index extends Base
     public function index()
     {
         $param = mac_param_url();
+
         $this->assign('param',$param);
         return $this->label_fetch('index/index');
     }

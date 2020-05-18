@@ -4,7 +4,7 @@ use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
 
-class Type extends Base {
+class TypeSeo extends Base {
     // 设置数据表（不含前缀）
     protected $name;
     protected $table;
@@ -20,25 +20,23 @@ class Type extends Base {
     protected $insert     = [];
     protected $update     = [];
 
+
+    public function __construct($new_table,$data = [])
+    {
+        parent::__construct($data);
+        $this->name = $new_table;
+        $this->table = $new_table;
+        $this->type_list_name = $new_table.'_type_list';
+        $this->type_tree_name = $new_table.'_type_tree';
+
+    }
+
     //自定义初始化
     protected function initialize()
     {
         //需要调用`Model`的`initialize`方法
         parent::initialize();
         //TODO:自定义的初始化
-        if(mac_get_type_list() != false){
-            $new_table = mac_get_type_list_model();
-            $this->name = $new_table;
-            $this->table =$new_table;
-            $this->type_list_name = $new_table.'_type_list';
-            $this->type_tree_name = $new_table.'_type_tree';
-        }else{
-            $this->name = 'type';
-            $this->table ='type';
-            $this->type_list_name = 'type_list';
-            $this->type_tree_name = 'type_tree';
-        }
-
     }
 
     public function listData($where,$order,$format='def',$mid=0,$limit=999,$start=0,$totalshow=1)
