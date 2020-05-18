@@ -57,8 +57,6 @@ function getScreen($id){
         'type_id'   => $id
     ];
     $res =  model("Type")->infoData($where);
-    var_dump(903);
-    p($res);
     $res = $res['info'] ?? [];
 
     $type = explode(',','全部,'.$res["type_extend"]["class"]);
