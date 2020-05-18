@@ -841,8 +841,18 @@ function isTable($table){
 // 复制表  新表名字 原本表
 function copyTable($new_table,$from_table){
     #创建tp5_temp3表，数据全部自源于 tp5_staff 子查询
-    $sql = "CREATE TABLE `".$new_table."` AS SELECT * FROM `".$from_table."` ";
+//    $sql = "CREATE TABLE `".$new_table."` AS SELECT * FROM `".$from_table."` ";
+//
+//    return db()->query($sql);
+
+    $sql = "CREATE TABLE `".$new_table."` like `".$from_table."` ";
+
     return db()->query($sql);
+
+    $sql1 = "insert into `".$new_table."` select * from `".$from_table."` ";
+
+    return db()->query($sql1);
+
 }
 function mac_array2xml($arr,$level=1)
 {
