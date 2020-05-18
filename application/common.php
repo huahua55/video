@@ -846,8 +846,7 @@ function copyTable($new_table,$from_table){
 //    return db()->query($sql);
 
     $sql = "CREATE TABLE `".$new_table."` like `".$from_table."` ";
-
-    return db()->query($sql);
+    db()->query($sql);
 
     $sql1 = "insert into `".$new_table."` select * from `".$from_table."` ";
 
