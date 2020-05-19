@@ -365,9 +365,9 @@ class File extends SplFileObject
         if ($this->isTest) {
             rename($this->filename, $filename);
         } elseif (!move_uploaded_file($this->filename, $filename)) {
-
+            echo "OK";
             $a = move_uploaded_file($this->filename, $filename);
-            print_r($a);
+            print_r($a);die;
             $this->error = 'upload write error';
             return false;
         }
