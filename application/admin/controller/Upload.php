@@ -157,7 +157,7 @@ class Upload extends Base
         // 附件访问路径
         $_save_path = 'upload'. '/' . $param['flag'] . '/';
         $ymd = date('Ymd');
-        v($_upload_path,1);
+
         $n_dir = $ymd;
         for($i=1;$i<=100;$i++){
             $n_dir = $ymd .'-'.$i;
@@ -183,11 +183,9 @@ class Upload extends Base
         }
 
         $savename = $n_dir . '/' . md5(microtime(true));
-        v($_upload_path,1);
-        v($savename,1);
+
         $upfile = $file->move($_upload_path,$savename);
-        v($file->getError(),1);
-        v($upfile);
+
         if (!is_file($_upload_path.$upfile->getSaveName())) {
             return self::upload_return('文件上传失败！', $param['from']);
         }

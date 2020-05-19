@@ -94,6 +94,7 @@
             elem: '.layui-upload'
             ,url: "{:url('upload/upload')}?flag=site"
             ,method: 'post'
+            ,accept: 'file'
             ,before: function(input) {
                 layer.msg('文件上传中...', {time:3000000});
             },done: function(res, index, upload) {
