@@ -71,7 +71,7 @@ class Upload extends Base
 
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file($param['input']);
-
+        v($file);
         $data = [];
         if (empty($file)) {
             return self::upload_return('未找到上传的文件(原因：表单名可能错误，默认表单名“file”)！', $param['from']);
@@ -184,7 +184,7 @@ class Upload extends Base
 
         $savename = $n_dir . '/' . md5(microtime(true));
         $upfile = $file->move($_upload_path,$savename);
-        v($upfile);
+
         if (!is_file($_upload_path.$upfile->getSaveName())) {
             return self::upload_return('文件上传失败！', $param['from']);
         }
