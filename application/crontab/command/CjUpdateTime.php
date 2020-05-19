@@ -13,6 +13,7 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 use think\Log;
+use Exception;
 
 class CjUpdateTime extends Command
 {
@@ -135,8 +136,13 @@ class CjUpdateTime extends Command
                     }
 //                   }
                     if(!empty($upWhere)){
-                        log::info('采集修改::' . $v['vod_name']);
-                        $this->vodDb->where(['vod_id'=>$v['vod_id']])->update($upWhere);
+                        try {
+                            $this->vodDb->where(['vod_id'=>$v['vod_id']])->update($upWhere);
+                        } catch (Exception $e) {
+                            log::info('time-error::' . $e);
+                            log::info('time-error::' . $upWhere);
+                            $output->writeln("end.311." . $this->vodDb->getlastsql());
+                        }
                     }
                 }
             }
