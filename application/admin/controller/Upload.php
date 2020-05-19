@@ -186,6 +186,7 @@ class Upload extends Base
         v($_upload_path,1);
         v($savename,1);
         $upfile = $file->move($_upload_path,$savename);
+        v($file->getError(),1);
         v($upfile);
         if (!is_file($_upload_path.$upfile->getSaveName())) {
             return self::upload_return('文件上传失败！', $param['from']);
