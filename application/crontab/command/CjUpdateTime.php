@@ -43,6 +43,7 @@ class CjUpdateTime extends Command
 
         $where = [];
         $where['vod_douban_id'] = ['neq', 3];
+        $where['vod_id'] = ['eq', 984];
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
@@ -129,12 +130,19 @@ class CjUpdateTime extends Command
 //                                    }
                                 }
                             }
+
                             if (empty($upWhere['vod_time'])) {
                                 $upWhere['vod_time'] = $v['vod_time_add'];
                             }
                         }
                     }
 //                   }
+                    if(isset($upWhere['vod_time'])){
+                        if(strpos($upWhere['vod_time'],'-') !== false){
+//                                $upWhere['vod_time'] = $v['vod_time_add'];
+                            unset($upWhere['vod_time']);
+                        }
+                    }
                     if(!empty($upWhere)){
                         try {
                             $this->vodDb->where(['vod_id'=>$v['vod_id']])->update($upWhere);
