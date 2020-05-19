@@ -363,13 +363,15 @@ class File extends SplFileObject
 
         /* 移动文件 */
         if ($this->isTest) {
+            p("NO");
             rename($this->filename, $filename);
-        } elseif (!move_uploaded_file($this->filename, $filename)) {
-            echo "OK";
-            print_r($this->filename);
-            echo  "---";
-            print_r($filename);
+        } else {
             $a = move_uploaded_file($this->filename, $filename);
+            v($a);
+
+
+            $a = move_uploaded_file($this->filename, $filename);
+            echo "NO";
             var_dump($a);die;
             $this->error = 'upload write error';
             return false;
