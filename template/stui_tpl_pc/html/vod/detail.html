@@ -47,7 +47,7 @@
 								<h3><a href="{:mac_url_type($vo1,[],'show')}"><i class="iconfont icon-hot"></i> 猜你喜欢</a></h3>
 							</div>
 							<ul class="stui-vodlist clearfix">
-								{maccms:vod num="12" type="current" order="desc" by="time"}
+								{maccms:vod num="12" type="current" order="desc,desc,desc" by="time, year, douban_score"}
 								<li>
 									{include file="block/vod_box"}
 								</li>

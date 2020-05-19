@@ -49,8 +49,6 @@
 									<div class="data">
 										{$obj.vod_score}分 / {$obj.vod_year|mac_default='内详'} / {$obj.vod_area|mac_default='内详'} / {$obj.vod_class} /
 										{$obj.vod_hits}次播放&nbsp;&nbsp;<a href="javascript:;" class="open-desc">详情 </a>
-										<!-- -----<a href="https://www.myues.cn" target="_blank" class="STYLE1">京东优惠券</a>-----<a href="http://www.haolebang.com"
-										 target="_blank" class="STYLE2">淘宝优惠券</a> -->
 										 </div>
 									<div class="data-more" style="display: none;">
 										<p><span>主演：</span>{$obj.vod_actor|mac_substring=60|mac_url_create='actor'}</p>
@@ -123,7 +121,7 @@
 									{/notempty}
 									<div class="item">
 										<ul class="stui-vodlist clearfix">
-											{maccms:vod num="12" type="current" order="desc" by="time"}
+											{maccms:vod num="12" type="current" order="desc,desc,desc" by="time, year, douban_score"}
 											<li class="like">
 												<div class="stui-vodlist__box">
 													<a class="stui-vodlist__thumb lazyload" href="{:mac_url_vod_play($vo,['sid'=>1,'nid'=>1])}" title="{$vo.vod_name}"
