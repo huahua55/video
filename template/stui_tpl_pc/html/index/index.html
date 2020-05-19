@@ -28,7 +28,7 @@
 									今日更新:<span class="STYLE2">{:mac_data_count(0,'today','vod')}</span>部 </span></a> </h3>
 						<!-- 热门推荐 -->
 						<ul class="stui-vodlist clearfix">
-							{maccms:vod num="6" type="all" order="desc,desc,desc" by="time, year, douban_score" level="9"}
+							{maccms:vod num="6" type="all" order="desc,desc,desc" by="year, time, douban_score" level="9"}
 							<li class="index">
 								<div class="stui-vodlist__box">
 									<a class="stui-vodlist__thumb active lazyload" href="{:mac_url_vod_play($vo,['sid'=>1,'nid'=>1])}" title="{$vo.vod_name}"
@@ -63,7 +63,7 @@
 								</div>
 								
 								<ul class="stui-vodlist clearfix">
-									{maccms:vod num="12" type="'.$vo1['type_id'].'" order="desc,desc,desc" by="time, year, douban_score"}
+									{maccms:vod num="12" type="'.$vo1['type_id'].'" order="desc,desc,desc" by="year, time, douban_score"}
 									<li>
 										{include file="block/vod_box"}
 									</li>

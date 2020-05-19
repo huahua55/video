@@ -106,14 +106,14 @@
 								<li>
 									<span>按排序：</span>
 								</li>
-								<li {if condition="$param.by eq '' || $param.by eq 'time, year, douban_score'"} class="active"{/if}><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'time, year, douban_score' ],'show')}">时间</a></li>
+								<li {if condition="$param.by eq '' || $param.by eq 'year, time, douban_score'"} class="active"{/if}><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'year, time, douban_score' ],'show')}">时间</a></li>
 						        <li {if condition="$param.by eq 'hits, year, douban_score'"} class="active"{/if}><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'hits, year, douban_score' ],'show')}">人气</a></li>
 						        <li {if condition="$param.by eq 'score, year, douban_score'"} class="active"{/if}><a href="{:mac_url_type($obj,['area'=>$param['area'],'lang'=>$param['lang'],'year'=>$param['year'],'level'=>$param['level'],'letter'=>$param['letter'],'state'=>$param['state'],'tag'=>$param['tag'],'class'=>$param['class'],'order'=>$param['order'],'by'=>'score, year, douban_score' ],'show')}">评分</a></li>
 							</ul>
 						</div>
 					</div>
         			<ul class="stui-vodlist clearfix">
-						{maccms:vod num="12" paging="yes" pageurl="vod/show" type="current" order="desc,desc,desc" by="time, year, douban_score"}
+						{maccms:vod num="12" paging="yes" pageurl="vod/show" type="current" order="desc,desc,desc" by="year, time, douban_score"}
 						<li>
 							{include file="block/vod_box"}											
 						</li>
