@@ -88,7 +88,7 @@
 						</div>
 						<div class="yk-pannel_bd clearfix">
 							<ul class="index-list-1 active clearfix">
-								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc, desc, desc, desc" by="level, time, year, douban_score"}
+								{maccms:vod num="18" type="'.$vo['type_id'].'" order="desc, desc, desc, desc" by="level, year, time, douban_score"}
 								<li class="yk-pack">
 									<div class="p-thumb">
 										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
@@ -117,7 +117,7 @@
 						</div>
 						<div class="yk-pannel_bd clearfix">
 							<ul class="index-list-1 active clearfix">
-								{maccms:vod num="24" type="current" order="desc,desc,desc" by="time, year, douban_score"}
+								{maccms:vod num="24" type="current" order="desc,desc,desc" by="year, time, douban_score"}
 								<li class="yk-pack">
 									<div class="p-thumb">
 										<a href="{:mac_url_vod_detail($vo)}" title="{$vo.vod_name}"></a>
