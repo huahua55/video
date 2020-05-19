@@ -2,7 +2,7 @@
 <script type="text/javascript" src="__STATIC__/js/jquery.jscolor.js"></script>
 {include file="../../../application/admin/view/public/editor" flag="vod_editor"/}
 <div class="page-container p10">
-    <form class="layui-form layui-form-pane" method="post" action="" enctype=multipart/form-data>
+    <form class="layui-form layui-form-pane" method="post" action="">
         <input id="id" name="id" type="hidden" value="{$info.id}">
         <div class="layui-form-item">
             <label class="layui-form-label">名称：</label>
@@ -110,7 +110,6 @@
             elem: '.layui-upload'
             ,url: "{:url('upload/upload')}?flag=vod"
             ,method: 'post'
-            ,accept: 'file'
             ,before: function(input) {
                 layer.msg('文件上传中...', {time:3000000});
             },done: function(res, index, upload) {
