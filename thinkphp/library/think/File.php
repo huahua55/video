@@ -366,6 +366,8 @@ class File extends SplFileObject
             p("NO");
             rename($this->filename, $filename);
         } else {
+            v($this->filename,1);
+            v($this->filename,1);
             $a = move_uploaded_file($this->filename, $filename);
             v($a);
 
