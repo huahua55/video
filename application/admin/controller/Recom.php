@@ -3,6 +3,11 @@ namespace app\admin\controller;
 
 class Recom extends Base{
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index(){
 
         $param = input();
