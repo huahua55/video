@@ -113,7 +113,7 @@
 						</div>
 					</div>
         			<ul class="stui-vodlist clearfix">
-						{maccms:vod num="12" paging="yes" pageurl="vod/show" type="current" order="desc" by="time"}
+						{maccms:vod num="12" paging="yes" pageurl="vod/show" type="current" order="desc,desc,desc" by="time, year, douban_score"}
 						<li>
 							{include file="block/vod_box"}											
 						</li>
