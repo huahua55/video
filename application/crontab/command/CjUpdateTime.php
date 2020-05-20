@@ -44,14 +44,16 @@ class CjUpdateTime extends Command
         $where = [];
         $where['vod_douban_id'] = ['neq', 3];
 //        $where['vod_id'] = ['eq', 984];
+
 //        $startTime =  date("Y-m-d 00:00:00",time());
 //        $endTime =  date("Y-m-d 23:59:59",time());
 //        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
+
         $order = 'vod_id asc';
         //进入循环 取出数据
         while ($is_true) {
             //取出数据
-            usleep(50000);
+//            usleep(50000);
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
             if (!empty($douBanScoreData)) {
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
@@ -145,6 +147,7 @@ class CjUpdateTime extends Command
                     }
                     if(!empty($upWhere)){
                         try {
+                            log::info('time-su::' . $v['vod_id']);
                             $this->vodDb->where(['vod_id'=>$v['vod_id']])->update($upWhere);
                         } catch (Exception $e) {
                             log::info('time-error::' . $e);
