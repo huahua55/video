@@ -13,7 +13,7 @@ input,select{font-size:12px;vertical-align:middle; border:none;}
 ul,li{list-style-type:none;}
 img{border:0 none;}
 p{margin:0 0 10px;}
-::-webkit-scrollbar{ width: 4px; background-color: #1c1b1e;}
+::-webkit-scrollbar{ width: 4px; background-color: #1c1b1e;height: 4px;}
 ::-webkit-scrollbar-thumb{background-color: #434145;}
 
 /* container */

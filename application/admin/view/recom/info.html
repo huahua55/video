@@ -1,8 +1,6 @@
 {include file="../../../application/admin/view/public/head" /}
-<script type="text/javascript" src="__STATIC__/js/jquery.jscolor.js"></script>
-{include file="../../../application/admin/view/public/editor" flag="vod_editor"/}
 <div class="page-container p10">
-    <form class="layui-form layui-form-pane" method="post" action="" enctype=multipart/form-data>
+    <form class="layui-form layui-form-pane" method="post" action="">
         <input id="id" name="id" type="hidden" value="{$info.id}">
         <div class="layui-form-item">
             <label class="layui-form-label">名称：</label>
@@ -31,27 +29,13 @@
             </div>
         </div>
 
-
-        <!--
-        <div class="layui-form-item">
-            <label class="layui-form-label">图片：</label>
-            <div class="layui-input-inline w500 upload">
-                <input type="text" class="layui-input upload-input" style="max-width:100%;" value="{$info.image}" placeholder="" id="image" name="image">
-            </div>
-            <div class="layui-input-inline ">
-                <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload">上传图片</button>
-            </div>
-        </div>
-        -->
-
-
         <div class="layui-form-item">
             <label class="layui-form-label">视频：</label>
             <div class="layui-input-inline w500 upload">
                 <input type="text" class="layui-input upload-input" style="max-width:100%;" value="{$info.url}" placeholder="" id="url" name="url">
             </div>
             <div class="layui-input-inline ">
-                <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload1">上传视频</button>
+                <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'site[site_logo]'}}" id="upload1">上传视频</button>
             </div>
         </div>
 

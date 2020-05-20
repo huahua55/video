@@ -39,9 +39,19 @@ class Vod extends Base {
         if($totalshow==1) {
             $total = $this->where($where)->count();
         }
-
-        $list = Db::name('Vod')->field($field)->where($where)->where($where2)->order($order)->limit($limit_str)->select();
-
+//        p($order);
+        if(strpos($order,'vod_year') !== false){
+            $orderArray = explode(',',$order);
+            foreach ($orderArray as $order_k => $order_v){
+                if(strpos($order_v,'vod_year') !== false){
+                   unset($orderArray[$order_k]);
+                }
+            }
+            $order =  implode(',',$orderArray);
+            $list = Db::name('Vod')->field($field)->where($where)->where($where2)->orderRaw('CAST(vod_year AS SIGNED) desc')->order($order)->limit($limit_str)->select();
+        }else{
+            $list = Db::name('Vod')->field($field)->where($where)->where($where2)->order($order)->limit($limit_str)->select();
+        }
         //分类
         //分类
         if(mac_get_type_list() != false){

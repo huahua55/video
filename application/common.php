@@ -740,6 +740,22 @@ function mac_characters_format($vod_name){
     return $vod_name;
 }
 
+function mac_vod_remarks_is_v($vod_remarks){
+    $is_remarks = false;
+    $array_remarks=[
+        '完结',
+        '集全',
+        '全集',
+        '大结局',
+    ];
+    foreach ($array_remarks as $k=>$v){
+        if(strpos($vod_remarks,$v) !== false){
+            $is_remarks = true;
+        }
+    }
+    return $is_remarks;
+}
+
 //备注过滤
 function mac_vod_remarks($vod_remarks,$vod_total){
     $update['vod_serial'] = '';

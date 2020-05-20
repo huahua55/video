@@ -183,6 +183,7 @@ class Upload extends Base
         }
 
         $savename = $n_dir . '/' . md5(microtime(true));
+
         $upfile = $file->move($_upload_path,$savename);
 
         if (!is_file($_upload_path.$upfile->getSaveName())) {
