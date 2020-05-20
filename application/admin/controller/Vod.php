@@ -97,7 +97,7 @@ class Vod extends Base
         if(!empty($param['server'])){
             $where['vod_play_server|vod_down_server'] = ['like','%'.$param['server'].'%'];
         }
-        $order='vod_year desc,vod_time desc';
+        $order='vod_year desc,vod_time desc,vod_douban_score desc';
         if(in_array($param['order'],['vod_id','vod_hits','vod_hits_month','vod_hits_week','vod_hits_day'])){
             $order = $param['order'] .' desc';
         } else {
