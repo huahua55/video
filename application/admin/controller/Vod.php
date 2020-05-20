@@ -102,10 +102,16 @@ class Vod extends Base
             $order = $param['order'] .' desc';
         } else {
             $by_arr = explode(',', $param['order']);
-            if (count($by_arr) == 2) {
-                $order = '';
-                foreach ($by_arr as $k => $v) {
-                    $order .= trim($v) .' desc,';
+            foreach ($by_arr as $k => $v) {
+                if(strpos($order,$v) !== false){
+                    continue;
+                }
+                if($v == 'vod_level'){
+                    $order =  str_replace('vod_time','vod_level desc,vod_time',$order);
+                }else{
+                   if(!empty($v)){
+                       $order .= trim($v) .' desc,';
+                   }
                 }
                 $order = rtrim($order, ',');
             }
