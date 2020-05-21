@@ -304,7 +304,7 @@ class Index extends Base{
                 $list = $this->guessUserMovies();
                 break;
             case 4;
-                $list = $this->doubanMore($page);
+                $list = $this->doubanMore($page,$id);
                 break;
         }
         return json_return($list);
@@ -673,7 +673,7 @@ class Index extends Base{
     }
 
     // 豆瓣推荐列表
-    public function doubanMore($page){
+    public function doubanMore($page,$id = 0){
         $limit = 18;
         $pageSize = ( $page - 1 ) * $limit;
 
@@ -683,41 +683,50 @@ class Index extends Base{
             'v.vod_play_from'   => ['like','%3u8%'],
         ];
 
+        if($id != 0){
+            $where['r.type_id'] = ['eq',$id];
+        }
         $model = model("douban_recommend");
-        $list  = $model->alias('r')
-            ->field('r.vod_id,r.name,v.vod_pic,r.type_id as r_type_id,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
-            ->join('vod v','r.vod_id = v.vod_id','left')
-            ->where($where)
-            ->select();
-        $list = objectToArray($list);
 
-        $data = [];
-        foreach($list as $item){
-             $data[$item['r_type_id']][] = $item;
-        }
-
-        $size = count($data[1]) > count($data[2]) ? count($data[1]) : count($data[2]); //取出元素最多的数组循环
-
-        $arr = array();
-        for($i=0; $i < $size; $i++){
-            if(isset($data[1][$i])){
-                array_push($arr,$data[1][$i]); //将数组压入新的变量
+        if($id == 0){
+            $list  = $model->alias('r')
+                ->field('r.vod_id,r.name,v.vod_pic,r.type_id as r_type_id,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
+                ->join('vod v','r.vod_id = v.vod_id','left')
+                ->where($where)
+                ->order('id asc')
+                ->select();
+            $list = objectToArray($list);
+            $data = [];
+            foreach($list as $item){
+                 $data[$item['r_type_id']][] = $item;
             }
-            if(isset($data[2][$i])){
-                array_push($arr,$data[2][$i]); //将数组压入新的变量
+
+            $size = count($data[1]) > count($data[2]) ? count($data[1]) : count($data[2]); //取出元素最多的数组循环
+
+            $arr = array();
+            for($i=0; $i < $size; $i++){
+                if(isset($data[1][$i])){
+                    array_push($arr,$data[1][$i]); //将数组压入新的变量
+                }
+                if(isset($data[2][$i])){
+                    array_push($arr,$data[2][$i]); //将数组压入新的变量
+                }
             }
-        }
 
-        if(isset($data[3]) && !empty($data[3])){
-            $arr = array_merge($arr,$data[3]);
-        }
+            if(isset($data[3]) && !empty($data[3])){
+                $arr = array_merge($arr,$data[3]);
+            }
 
-        if(isset($data[4]) && !empty($data[4])){
-            $arr = array_merge($arr,$data[4]);
-        }
-        // 分页最终数组
-        $return = array_slice($arr,$pageSize ,$limit);
+            if(isset($data[4]) && !empty($data[4])){
+                $arr = array_merge($arr,$data[4]);
+            }
+            // 分页最终数组
+            $return = array_slice($arr,$pageSize ,$limit);
 
+        }else{
+            // 分页最终数组
+            $return = $model->apiListData($where,$pageSize);
+        }
 
         $datas = [];
         foreach($return as &$item){
