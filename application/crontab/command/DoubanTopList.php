@@ -79,17 +79,20 @@ class DoubanTopList extends Common
         $delWhere['vod_id'] = 0;
         $delWhere['type_id'] = 0;
         $delWhere['status'] = 0;
+        $sql1 = 'truncate table douban_recommend';
+        Db::execute($sql1);
+
 
         //获取豆瓣top list 榜单
         $this->getDouBanTopList();
         //获取腾讯top list 榜单
         $this->getTxTopList($x);
-        Db::name('douban_recommend')->whereOr($delWhere)->delete();
-        $sql = 'DELETE FROM douban_recommend WHERE vod_id IN (SELECT vid FROM ( SELECT MIN( vod_id ) AS vid FROM douban_recommend WHERE vod_id > 0 GROUP BY vod_id HAVING count( vod_id ) > 1 ) a)';
-        $res = Db::execute($sql);
-        if($res){
-            log::info('delete');
-        }
+//        Db::name('douban_recommend')->whereOr($delWhere)->delete();
+//        $sql = 'DELETE FROM douban_recommend WHERE vod_id IN (SELECT vid FROM ( SELECT MIN( vod_id ) AS vid FROM douban_recommend WHERE vod_id > 0 GROUP BY vod_id HAVING count( vod_id ) > 1 ) a)';
+//        $res = Db::execute($sql);
+//        if($res){
+//            log::info('delete');
+//        }
         $output->writeln("开启采集:采集豆瓣热门end:");
     }
 
