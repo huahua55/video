@@ -637,6 +637,7 @@ class Index extends Base{
             'vod_id'    => ['neq',$id],
             'vod_actor' => ['like', "%".$actor."%"],
             'vod_play_from' => ['like', "%3u8%"],
+            'vod_time_add' => ['lt', time()],
         ];
 
         if($info['type_id'] <= 4 || $info['type_id'] == 33) {
@@ -645,14 +646,14 @@ class Index extends Base{
             $where['type_id_1'] = ['eq',$info['type_id_1']];
         }
 
-        $res = $model->field($field)->where($where)->order('vod_time_add desc')->limit(6)->select();
+        $res = $model->field($field)->where($where)->order('vod_score desc')->limit(6)->select();
         $res = objectToArray($res);
 
         $count = count($res);
         if($count < 6){
             unset($where['vod_actor']);
             $limit = $count >= 6 ? 6 : 6 - $count;
-            $res2 = $model->field($field)->where($where)->order('vod_time_add desc')->limit($limit)->select();
+            $res2 = $model->field($field)->where($where)->order('vod_score desc')->limit($limit)->select();
             $res = array_merge($res,$res2);
         }
 
