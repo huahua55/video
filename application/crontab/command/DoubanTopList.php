@@ -127,7 +127,7 @@ class DoubanTopList extends Common
                     if(empty($vodDouBanFindData)){
                         $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
                         $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
-                        $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->where($vodDouBanFindWhere)->find();
+                        $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->whereOr($vodDouBanFindWhere)->find();
                     }else{
                         $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
                     }
