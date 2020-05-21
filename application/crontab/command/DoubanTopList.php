@@ -121,20 +121,26 @@ class DoubanTopList extends Common
                         continue; //暂时过滤
                     }
                     //查询视频表 豆瓣id不等于空
-                    $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
+//                    $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
                     $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
-                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->whereOr($vodDouBanFindWhere)->find();
+                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->where($vodDouBanFindWhere)->find();
+                    if(empty($vodDouBanFindData)){
+                        $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
+                        $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
+                        $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->where($vodDouBanFindWhere)->find();
+                    }
                     //查询推荐表 豆瓣id不等于空
                     $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
                     $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
                     $reCommend['name'] =  $vodDouBanFindWhere['vod_name'] ;
                     if (!empty($vodDouBanFindData)) {
                         $reCommend['status'] = 1;
-                        $type_id =  $vodDouBanFindData['type_id_1'];
-                        if($vodDouBanFindData['type_id_1'] == 0){
-                            $type_id =  $vodDouBanFindData['type_id'];
-                        }
-                        $reCommend['type_id'] = $type_id;
+//                        $type_id =  $vodDouBanFindData['type_id_1'];
+//                        if($vodDouBanFindData['type_id_1'] == 0){
+//                            $type_id =  $vodDouBanFindData['type_id'];
+//                        }
+//                        $reCommend['type_id'] = $type_id;
+                        $reCommend['type_id'] = $k;
                         $reCommend['vod_id'] = $vodDouBanFindData['vod_id'];
                         $reCommend['douban_id'] = $sub_val['id'];
                         $reCommend['time'] = date('Y-m-d', time());
@@ -222,11 +228,12 @@ class DoubanTopList extends Common
                         $reCommend['name'] = $where['name'];
                         if (!empty($DouBanRes)) {
                             $reCommend['status'] = 1;
-                            $type_id =  $DouBanRes['type_id_1'];
-                            if($DouBanRes['type_id_1'] == 0){
-                               $type_id =  $DouBanRes['type_id'];
-                            }
-                            $reCommend['type_id'] = $type_id;
+//                            $type_id =  $DouBanRes['type_id_1'];
+//                            if($DouBanRes['type_id_1'] == 0){
+//                               $type_id =  $DouBanRes['type_id'];
+//                            }
+//                            $reCommend['type_id'] = $type_id;
+                            $reCommend['type_id'] = 4;
                             $reCommend['vod_id'] = $DouBanRes['vod_id'];
                             $reCommend['douban_id'] = $DouBanRes['douban_id'] ?? 0;
                             $reCommend['time'] = date('Y-m-d', time());
@@ -246,11 +253,12 @@ class DoubanTopList extends Common
                         $reCommend['name'] = $where['name'];
                         if (!empty($DouBanRes)) {
                             $reCommend['status'] = 1;
-                            $type_id =  $DouBanRes['type_id_1'];
-                            if($DouBanRes['type_id_1'] == 0){
-                                $type_id =  $DouBanRes['type_id'];
-                            }
-                            $reCommend['type_id'] =$type_id;
+//                            $type_id =  $DouBanRes['type_id_1'];
+//                            if($DouBanRes['type_id_1'] == 0){
+//                                $type_id =  $DouBanRes['type_id'];
+//                            }
+//                            $reCommend['type_id'] =$type_id;
+                            $reCommend['type_id'] =4;
                             $reCommend['vod_id'] = $DouBanRes['vod_id'];
                             $reCommend['douban_id'] = $DouBanRes['douban_id'] ?? 0;
                         } else {
