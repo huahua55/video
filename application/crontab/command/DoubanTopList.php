@@ -79,9 +79,12 @@ class DoubanTopList extends Common
         $delWhere['vod_id'] = 0;
         $delWhere['type_id'] = 0;
         $delWhere['status'] = 0;
-        $sql1 = 'truncate table douban_recommend';
-        Db::execute($sql1);
-
+        //获取top代理ip
+        $this->get_zm_port();
+        if (!empty($this->get_port)){
+            $sql1 = 'truncate table douban_recommend';
+            Db::execute($sql1);
+        }
 
         //获取豆瓣top list 榜单
         $this->getDouBanTopList();
@@ -100,8 +103,7 @@ class DoubanTopList extends Common
     public function getDouBanTopList()
     {
 
-        //获取top代理ip
-        $this->get_zm_port();
+
         foreach ($this->search_url as $k => $v) {
             sleep(1);
 
