@@ -674,7 +674,9 @@ class Index extends Base{
 
     // 豆瓣推荐列表
     public function doubanMore($page){
-        $pageSize = ( $page - 1 ) * 18;
+        $limit = 18;
+        $pageSize = ( $page - 1 ) * $limit;
+
         $where = [
             'r.status'    => ['eq','1'],
             'r.vod_id'    => ['neq','0'],
@@ -682,8 +684,53 @@ class Index extends Base{
         ];
 
         $model = model("douban_recommend");
-        $list = $model->apiListData($where, $pageSize);
-        return $list;
+        $list  = $model->alias('r')
+            ->field('r.vod_id,r.name,v.vod_pic,r.type_id as r_type_id,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
+            ->join('vod v','r.vod_id = v.vod_id','left')
+            ->where($where)
+            ->select();
+        $list = objectToArray($list);
+
+        $data = [];
+        foreach($list as $item){
+             $data[$item['r_type_id']][] = $item;
+        }
+
+        $size = count($data[1]) > count($data[2]) ? count($data[1]) : count($data[2]); //取出元素最多的数组循环
+
+        $arr = array();
+        for($i=0; $i < $size; $i++){
+            if(isset($data[1][$i])){
+                array_push($arr,$data[1][$i]); //将数组压入新的变量
+            }
+            if(isset($data[2][$i])){
+                array_push($arr,$data[2][$i]); //将数组压入新的变量
+            }
+        }
+
+        if(isset($data[3]) && !empty($data[3])){
+            $arr = array_merge($arr,$data[3]);
+        }
+
+        if(isset($data[4]) && !empty($data[4])){
+            $arr = array_merge($arr,$data[4]);
+        }
+        // 分页最终数组
+        $return = array_slice($arr,$pageSize ,$limit);
+
+
+        $datas = [];
+        foreach($return as &$item){
+            $datas[] = [
+                'img'   => mac_url_img($item['vod_pic']),
+                'id'    => $item['vod_id'],
+                'name'  => $item['name'],
+                'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
+                'msg'   => vodRemark($item),
+            ];
+        }
+
+        return $datas;
     }
 
     // recommend
