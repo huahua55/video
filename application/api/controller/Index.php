@@ -524,12 +524,12 @@ class Index extends Base{
         $userModel = model("User");
         $userRes = $userModel->infoData(['user_name' => $mac],"user_id");
 
+        $versionInfo =  model("AppVersion")->where(['app_version'=> $version])->find();
+        $version_id  = isset($versionInfo['id']) ? $versionInfo['id'] : 0;
+
         if($userRes['code'] == 1002){
             $channelInfo =  model("Channel")->where(['name'=> $channel])->find();
             $channel_id  = isset($channelInfo['id']) ? $channelInfo['id'] : 0;
-
-            $versionInfo =  model("AppVersion")->where(['app_version'=> $version])->find();
-            $version_id  = isset($versionInfo['id']) ? $versionInfo['id'] : 0;
 
             $userModel->saveData([
                 'user_name'     => $mac,
