@@ -12,6 +12,7 @@ class Domain extends Base
         if (Request()->isPost()) {
             $config = input();
             $tmp = $config['domain'];
+
             $domain=[];
             foreach ($tmp['site_url'] as $k=>$v){
                 $tableName = $v.'_type';
@@ -30,8 +31,10 @@ class Domain extends Base
                     'html_dir'=>$tmp['html_dir'][$k],
                     'site_email'=>$tmp['site_email'][$k],
                     'ads_dir'=>$tmp['ads_dir'][$k],
+                    'site_logo'=>$tmp['site_logo'][$k],
                 ];
             }
+//            p($domain);
             $res = mac_arr2file(APP_PATH . 'extra/domain.php', $domain);
             if ($res === false) {
                 return $this->error('保存失败，请重试!');
