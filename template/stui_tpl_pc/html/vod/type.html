@@ -14,7 +14,7 @@
         		<div class="stui-pannel__bd clearfix">
         			<div class="stui-screen">
 						<div class="head clearfix">
-							<a href="javascript:;" class="open-screen pull-right">展开 <i class="iconfont icon-moreunfold"></i></a>
+							<a href="javascript:;" class="open-screen pull-right">收起 <i class="iconfont icon-less"></i></a>
 							<span class="text">
 								已选择：{if condition="$param.by eq '' || $param.by eq 'time'"}最新{elseif condition="$param.by eq 'hits'"/}热门{elseif condition="$param.by eq 'score'"/}高分{/if}
 								{if condition="$obj.type_name neq ''"}-{$obj.type_name}{/if}
@@ -22,7 +22,7 @@
 							</span>	
 							<span class="all">，共检索到“{:mac_data_count($obj.type_id,'all')}”条结果</span>
 						</div>
-						<div class="item" id="screenbox" style="display: none;">
+						<div class="item" id="screenbox" style="">
 							<!-- 筛选 -->
 							<ul class="clearfix">
 								<li>

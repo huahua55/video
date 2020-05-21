@@ -119,7 +119,7 @@ textarea.form-control{ height: auto;}
 .stui-vodlist li.index{ width: 33.333333%;}
 .stui-vodlist li.like{ width: 50%; padding: 5px;}
 .stui-vodlist li.topic{ width: 25%;}
-.stui-vodlist__thumb{display: block; position: relative; padding-top: 150%; background: url(../img/load.gif) no-repeat; background-position: 50% 50%; background-size: cover;}
+.stui-vodlist__thumb{display: block; position: relative; padding-top: 150%; background: url(../img/load.png) no-repeat; background-position: 50% 50%; background-size: cover;}
 .stui-vodlist__thumb.active{ padding-top: 60%; background: url(../img/load_w.gif) no-repeat; background-position: 50% 50%; background-size: cover;}
 .stui-vodlist__thumb .play{display: none; position: absolute; top: 0; z-index: 1; width: 100%; height: 100%; background: rgba(0,0,0,0.1) url(../img/play.png) center no-repeat;}
 .stui-vodlist__thumb:hover .play{ display: block;}
