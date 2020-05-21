@@ -722,21 +722,20 @@ class Index extends Base{
             }
             // 分页最终数组
             $return = array_slice($arr,$pageSize ,$limit);
-
+            $datas = [];
+            foreach($return as &$item){
+                $datas[] = [
+                    'img'   => mac_url_img($item['vod_pic']),
+                    'id'    => $item['vod_id'],
+                    'name'  => $item['name'],
+                    'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
+                    'msg'   => vodRemark($item),
+                ];
+            }
         }else{
             // 分页最终数组
-            $return = $model->apiListData($where,$pageSize);
-        }
+            $datas = $model->apiListData($where,$pageSize);
 
-        $datas = [];
-        foreach($return as &$item){
-            $datas[] = [
-                'img'   => mac_url_img($item['vod_pic']),
-                'id'    => $item['vod_id'],
-                'name'  => $item['name'],
-                'score' => $item['vod_douban_score'] > 0 ? $item['vod_douban_score'] : $item['vod_score'],
-                'msg'   => vodRemark($item),
-            ];
         }
 
         return $datas;
