@@ -29,6 +29,7 @@ class Domain extends Base
                     'site_description'=>$tmp['site_description'][$k],
                     'template_dir'=>$tmp['template_dir'][$k],
                     'html_dir'=>$tmp['html_dir'][$k],
+                    'mob_template_dir'=>$tmp['mob_template_dir'][$k],
                     'site_email'=>$tmp['site_email'][$k],
                     'ads_dir'=>$tmp['ads_dir'][$k],
                     'site_logo'=>$tmp['site_logo'][$k],
