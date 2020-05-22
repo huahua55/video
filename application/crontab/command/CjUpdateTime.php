@@ -15,7 +15,7 @@ use think\Db;
 use think\Log;
 use Exception;
 
-class CjUpdateTime extends Command
+class CjUpdateTime extends Common
 {
     protected $Collect = '';
     protected $vodDb;//db
@@ -33,21 +33,29 @@ class CjUpdateTime extends Command
 
         // 输出到日志文件
         $output->writeln("CjUpdateTime:");
+        $myparme = $input->getArguments();
+        $parameter = $myparme['parameter'];
+        //参数转义解析
+        $param = $this->ParSing($parameter);
+        $xtime = $param['xtime'] ?? '';
 
         $start = 0;
         $page = 1;
         $limit = 40;
         $is_true = true;
         $year = date("Y");//年数
-        $times = strtotime(date("Y-m-d"));
+//        $times = date("Y-m-d");
 
         $where = [];
         $where['vod_douban_id'] = ['neq', 3];
 //        $where['vod_id'] = ['eq', 984];
 
-        $startTime =  date("Y-m-d 00:00:00",time());
-        $endTime =  date("Y-m-d 23:59:59",time());
-        $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
+        if(empty($xtime)){
+            $startTime =  date("Y-m-d 00:00:00",time());
+            $endTime =  date("Y-m-d 23:59:59",time());
+            $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
+        }
+
 
         $order = 'vod_id asc';
         //进入循环 取出数据
@@ -79,6 +87,29 @@ class CjUpdateTime extends Command
                     $vod_pubdate = false;
                     if (strpos($v['vod_pubdate'], $year) !== false) {
                         $vod_pubdate = true;
+                    }
+                    if(!empty($v['vod_year'])){
+                        $vod_year = $v['vod_year'];
+                        $vod_year_len =  strlen($vod_year);
+                        $year_len   = strlen($year);
+                        if($vod_year_len > $year_len){
+                            $vod_year =$upWhere['vod_year']= substr($vod_year,0,$year_len);
+                        }
+                        if($vod_year > $year){
+                            $upWhere['vod_year']= $year;
+                        }
+
+                    }
+                    //编辑条数 电视剧和动漫
+                    if($v['type_id_1'] == 0){
+                        $v['type_id_1'] = $v['type_id'];
+                    }
+                    if($v['type_id_1'] == 2 || $v['type_id_1'] == 4){
+                        $serial = mac_vod_remarks($v['vod_remarks'],$v['vod_total']);
+                        if($serial > $v['vod_serial']){
+                            $upWhere['vod_serial']= $serial;
+                        }
+
                     }
                     //完结 或者 不是这一年 或者 上映时间
                     if ($v['vod_isend'] == 1 || $year != $v['vod_year'] || $vod_pubdate != true || mac_vod_remarks_is_v($v['vod_remarks']) == true) {
@@ -128,7 +159,7 @@ class CjUpdateTime extends Command
                                     $num_remarks = substr($num_remarks, -4);
                                     $r_num_remarks = $v['vod_year'] . '-' . substr($num_remarks, 0, 2) . '-' . substr($num_remarks, -2);
 //                                    if (empty($upWhere['vod_time'])) {
-                                        $upWhere['vod_time'] = strtotime($r_num_remarks);
+                                    $upWhere['vod_time'] = strtotime($r_num_remarks);
 //                                    }
                                 }
                             }
