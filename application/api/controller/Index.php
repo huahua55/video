@@ -536,6 +536,7 @@ class Index extends Base{
                 'user_pwd'      => "123456",
                 'channel_id'    => $channel_id,
                 'version_id'    => $version_id,
+                'user_reg_time' => time(),
             ]);
             $userId = $userModel::getLastInsID();
         }else{
