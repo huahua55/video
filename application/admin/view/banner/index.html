@@ -6,13 +6,10 @@
             <form class="layui-form " method="post">
                 <div class="layui-input-inline w150">
                     <select name="type">
-                        <option value="">选择分类</option>
+                        <option value="9999" >选择分类</option>
                         {volist name="type_tree" id="vo"}
                         {if condition="$vo.type_mid eq 1"}
                         <option value="{$vo.type_id}" {if condition="$param['type'] eq $vo.type_id"}selected {/if}>{$vo.type_name}</option>
-                        {volist name="vo.child" id="ch"}
-                        <option value="{$ch.type_id}" {if condition="$param['type'] eq $ch.type_id"}selected {/if}>&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;{$ch.type_name}</option>
-                        {/volist}
                         {/if}
                         {/volist}
                     </select>
