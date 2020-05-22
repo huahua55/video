@@ -19,6 +19,21 @@ class Banner extends Base
             $param['wd'] = htmlspecialchars(urldecode($param['wd']));
             $where['name'] = ['like','%'.$param['wd'].'%'];
         }
+        if($param['type'] == null){
+            $param['type'] = '9999';
+        }
+        if($param['type'] != '9999' && $param['type'] >= 0 && $param['type']!= null){
+            $where['type_id'] = ['eq',$param['type']];
+        }
+        //分类
+        $type_tree = model('Type')->getCache('type_tree');
+        $type_tree_array=[];
+        $type_tree_array['type_id']=0;
+        $type_tree_array['type_name']='首页';
+        $type_tree_array['type_mid']=1;
+        array_unshift($type_tree,$type_tree_array);
+//        p($type_tree);die;
+        $this->assign('type_tree',$type_tree);
 
         $order='id desc';
         $res = model('Banner')->listData($where,$order,$param['page'],$param['limit']);
@@ -26,7 +41,6 @@ class Banner extends Base
         $this->assign('total',$res['total']);
         $this->assign('page',$res['page']);
         $this->assign('limit',$res['limit']);
-
 
         $param['page'] = '{page}';
         $param['limit'] = '{limit}';
