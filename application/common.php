@@ -1453,11 +1453,30 @@ function new_stripslashes($string) {
     foreach($string as $key => $val) $string[$key] = new_stripslashes($val);
     return $string;
 }
+function mac_sort_arr($arrays,$sort_key,$sort_order=SORT_ASC,$sort_type=SORT_NUMERIC ){
+    $key_arrays =array();
+    if(is_array($arrays)){
+        foreach ($arrays as $array){
+            if(is_array($array)){
+                $key_arrays[] = $array[$sort_key];
+            }else{
+                return false;
+            }
+        }
+    }else{
+        return false;
+    }
+    array_multisort($key_arrays,$sort_order,$sort_type,$arrays);
+    return $arrays;
+}
 
 function mac_play_list_one($url_one, $from_one, $server_one=''){
+
     $url_list = array();
     $array_url = explode('#',$url_one);
     $new_array= [];
+
+    $array_url =  array_reverse($array_url);
     foreach ($array_url as $k=>$v){
         list($title, $url, $from) = explode('$', $v);
         $new_array[$k]['key']=$title;
@@ -1466,8 +1485,7 @@ function mac_play_list_one($url_one, $from_one, $server_one=''){
             $new_array[$k]['from']=$from;
         }
     }
-    $last_names = array_column($new_array,'key');
-    array_multisort($last_names,SORT_ASC,$new_array);
+    array_multisort(array_column($new_array,'key'),SORT_STRING | SORT_FLAG_CASE | SORT_NATURAL,$new_array);
     foreach ($new_array as $k=>$v){
         $new_array[$k] = implode('$', $v);
     }
