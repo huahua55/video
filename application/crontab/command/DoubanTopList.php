@@ -18,6 +18,7 @@ use QL\QueryList;
 class DoubanTopList extends Common
 {
     protected $vodDb;//db
+    protected $isTrue = false;//
     protected $ql;//querylist
     protected $search_url = [
         '1' => 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0',
@@ -63,6 +64,28 @@ class DoubanTopList extends Common
         return Db::name('douban_recommend')->field('id')->where($where)->find();
     }
 
+    public function cePing($c){
+        if($c > 5){
+            return false;
+        }
+        $this->get_zm_port();
+        $str_ = $this->getUrl('https://movie.douban.com/j/search_subjects?type=movie&tag=%E9%9F%A9%E5%9B%BD&sort=recommend&page_limit=20&page_start=0');
+        $str_ = array_pop(explode("\r\n", $str_));
+//            $mac_curl_get_data = mac_curl_get($v);
+        $str_data = json_decode($str_, true);
+        if (isset($str_data['subjects']) && !empty($str_data['subjects'])) {
+            $this->isTrue = true;
+        }
+        if (!empty($this->get_port) && $this->isTrue == true){
+            $sql1 = 'truncate table douban_recommend';
+            Db::execute($sql1);
+            return true;
+        }else{
+            $c ++ ;
+            $this->cePing($c);
+        }
+        return false;
+    }
 
     protected function execute(Input $input, Output $output)
     {
@@ -80,23 +103,22 @@ class DoubanTopList extends Common
         $delWhere['type_id'] = 0;
         $delWhere['status'] = 0;
         //获取top代理ip
-        $this->get_zm_port();
-        if (!empty($this->get_port)){
-            $sql1 = 'truncate table douban_recommend';
-            Db::execute($sql1);
-        }
-
-        //获取豆瓣top list 榜单
-        $this->getDouBanTopList();
-        //获取腾讯top list 榜单
-        $this->getTxTopList($x);
+        $is_data = $this->cePing(1);
+        if($is_data == false){
+            $output->writeln("开启采集:采集豆瓣热门end:");
+        }else{
+            //获取豆瓣top list 榜单
+            $this->getDouBanTopList();
+            //获取腾讯top list 榜单
+            $this->getTxTopList($x);
 //        Db::name('douban_recommend')->whereOr($delWhere)->delete();
 //        $sql = 'DELETE FROM douban_recommend WHERE vod_id IN (SELECT vid FROM ( SELECT MIN( vod_id ) AS vid FROM douban_recommend WHERE vod_id > 0 GROUP BY vod_id HAVING count( vod_id ) > 1 ) a)';
 //        $res = Db::execute($sql);
 //        if($res){
 //            log::info('delete');
 //        }
-        $output->writeln("开启采集:采集豆瓣热门end:");
+            $output->writeln("开启采集:采集豆瓣热门end:");
+        }
     }
 
     //获取豆瓣top list 榜单
@@ -105,8 +127,6 @@ class DoubanTopList extends Common
 
 
         foreach ($this->search_url as $k => $v) {
-            sleep(1);
-
             $str_data = $this->getUrl($v);
             $mac_curl_get_data = array_pop(explode("\r\n", $str_data));
 //            $mac_curl_get_data = mac_curl_get($v);
@@ -114,6 +134,7 @@ class DoubanTopList extends Common
             log::info('采集豆瓣热门-url-::' . $v);
             log::info('采集豆瓣热门-url-data::' . $mac_curl_get_data);
             if (isset($getSearchData['subjects']) && !empty($getSearchData['subjects'])) {
+
                 foreach ($getSearchData['subjects'] as $sub_key => $sub_val) {
 
                     $getDouBan['name'] = mac_trim_all(mac_characters_format($sub_val['title']));

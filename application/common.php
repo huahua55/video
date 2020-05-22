@@ -778,7 +778,7 @@ function mac_vod_remarks($vod_remarks,$vod_total){
     return $update['vod_serial'];
 }
 //ua大全
-function mac_ua_all($type = 17){
+function mac_ua_all($type = 16){
      $ua_all = [
         0=>'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 OPR/26.0.1656.60',
         1=>'Opera/8.0 (Windows NT 5.1; U; en)',
@@ -797,7 +797,6 @@ function mac_ua_all($type = 17){
         14=>'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 732; .NET4.0C; .NET4.0E)',
         15=>'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.84 Safari/535.11 SE 2.X MetaSr 1.0',
         16=>'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SV1; QQDownload 732; .NET4.0C; .NET4.0E; SE 2.X MetaSr 1.0)',
-        17=>'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
     ];
    return  isset($ua_all[$type])?$ua_all[$type]:'not-ua';
 }

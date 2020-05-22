@@ -19,7 +19,7 @@
                         2，不限制域名网站数量<br>
                         3，导入文本格式是：域名$网站名称$关键字$描述$模板$模板目录$广告目录。每行一个网站。清空原有数据。<br>
                         <a class="layui-btn layui-btn-primary" href="{:url('export')}" title="导出">导出</a>
-                        <a class="layui-btn layui-btn-primary layui-upload" data-href="{:url('import')}" >导入</a>
+                        <a class="layui-btn layui-btn-primary layui-upload imData"  data-href="{:url('import')}" >导入</a>
                     </blockquote>
 
                     <script>
@@ -93,23 +93,25 @@
                 , $ = layui.jquery
             , upload = layui.upload;
 
-
-        upload.render({
-            elem: '.layui-upload'
-            ,url: "{:url('domain/import')}"
-            ,method: 'post'
-            ,exts:'txt'
-            ,before: function(input) {
-                layer.msg('文件上传中...', {time:3000000});
-            },done: function(res, index, upload) {
-                var obj = this.item;
-                if (res.code == 0) {
-                    layer.msg(res.msg);
-                    return false;
+        $('.imData').on('click',function(){
+            upload.render({
+                elem: '.layui-upload'
+                ,url: "{:url('domain/import')}"
+                ,method: 'post'
+                ,exts:'txt'
+                ,before: function(input) {
+                    layer.msg('文件上传中...', {time:3000000});
+                },done: function(res, index, upload) {
+                    var obj = this.item;
+                    if (res.code == 0) {
+                        layer.msg(res.msg);
+                        return false;
+                    }
+                    location.reload();
                 }
-                location.reload();
-            }
+            });
         });
+
 
 
         $('.j-player-add').on('click',function(){
