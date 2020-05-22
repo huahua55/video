@@ -19,7 +19,12 @@ class Banner extends Base
             $param['wd'] = htmlspecialchars(urldecode($param['wd']));
             $where['name'] = ['like','%'.$param['wd'].'%'];
         }
-
+        if(!empty($param['type'])){
+            $where['type_id'] = ['eq',$param['type']];
+        }
+        //分类
+        $type_tree = model('Type')->getCache('type_tree');
+        $this->assign('type_tree',$type_tree);
         $order='id desc';
         $res = model('Banner')->listData($where,$order,$param['page'],$param['limit']);
         $this->assign('list',$res['list']);
