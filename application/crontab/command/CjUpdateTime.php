@@ -50,7 +50,7 @@ class CjUpdateTime extends Common
         $where['vod_douban_id'] = ['neq', 3];
 //        $where['vod_id'] = ['eq', 984];
 
-        if(!empty($xtime)){
+        if(empty($xtime)){
             $startTime =  date("Y-m-d 00:00:00",time());
             $endTime =  date("Y-m-d 23:59:59",time());
             $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
