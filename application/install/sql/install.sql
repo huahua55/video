@@ -934,6 +934,7 @@ CREATE TABLE `banner` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
   `type_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属分类ID',
+   `site_img` varchar(255) NOT NULL DEFAULT '' COMMENT '网站大图',
   `img` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
   `rel_vod` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联视频ID',
   `link` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
