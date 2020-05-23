@@ -15,8 +15,9 @@ class Init
             $isMobile = 1;
         }
 
+
         $isDomain=0;
-        if( is_array($domain) && !empty($domain[$_SERVER['HTTP_HOST']])){
+        if( is_array($domain) && isset($domain[$_SERVER['HTTP_HOST']]) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
@@ -26,7 +27,6 @@ class Init
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
         }
-
 
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
