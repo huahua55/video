@@ -20,6 +20,7 @@ class Init
         //获取当前域名
         $request = Request::instance();
         $host = $request->host();
+        $host_name = $request->server('SERVER_NAME');
 
         $isDomain=0;
         if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
@@ -34,7 +35,7 @@ class Init
         }
 
 
-        $config['site']['site_name'] = $host.'-www-视频';
+        $config['site']['site_name'] = $host.'---'.$host_name.'-视频';
 
 
         $TMP_ISWAP = 0;
