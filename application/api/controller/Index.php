@@ -355,16 +355,22 @@ class Index extends Base{
 
         $info = $info['list'] ?? [];
         $array = array();
-        foreach($info as $r){
-            $d = array(
-                'img'   => mac_url_img($r['vod_pic']),
-                'id'    => $r['vod_id'],
-                'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
-                'msg'   => vodRemark($r),
-            );
-            array_push($array,$d);
+
+        foreach($vodIds as $item){
+            foreach($info as $r) {
+                if ($item == $r['vod_id'] ){
+                    $d = array(
+                        'img'   => mac_url_img($r['vod_pic']),
+                        'id'    => $r['vod_id'],
+                        'name'  => $r['vod_name'],
+                        'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
+                        'msg'   => vodRemark($r),
+                    );
+                    array_push($array,$d);
+                }
+            }
         }
+
         return $array;
     }
 
