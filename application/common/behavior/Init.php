@@ -20,8 +20,6 @@ class Init
         //获取当前域名
         $request = Request::instance();
         $host = $request->host();
-        $host_name = $request->server('SERVER_NAME');
-
         $isDomain=0;
         if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
             $config['site'] = array_merge($config['site'],$domain[$host]);
@@ -32,12 +30,8 @@ class Init
             $config['site']['site_wapurl'] = $config['site']['site_url'];
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
+            $config['app']['cache_flag'] = substr(md5($host),0,10);
         }
-
-
-        $config['site']['site_name'] = $host.'---'.$host_name.'-视频';
-
-
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
         $TMP_HTMLDIR = $config['site']['html_dir'];
@@ -62,6 +56,8 @@ class Init
         define('MAC_PAGE_SP', $config['path']['page_sp'] .'');
         define('MAC_PLAYER_SORT', $config['app']['player_sort'] );
         //define('ADDON_PATH', ROOT_PATH . 'addons' . DS);
+
+
 
         $GLOBALS['config'] = $config;
         $GLOBALS['http_type'] = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
@@ -97,16 +93,17 @@ class Init
             elseif($config['app']['cache_type'] =='2'){
                 $config['app']['cache_type']  = 'redis';
             }
-
             config('cache.type', $config['app']['cache_type']);
             config('cache.timeout',1000);
             config('cache.host',$config['app']['cache_host']);
             config('cache.port',$config['app']['cache_port']);
+            //
+            config('cache.flag', $config['app']['cache_flag'] ) ;
             config('cache.username',$config['app']['cache_username']);
             config('cache.password',$config['app']['cache_password']);
-
             config('session.type', $config['app']['cache_type']);
             config('session.host',$config['app']['cache_host']);
+            config('session.flag',$config['app']['cache_flag']);
             config('session.port',$config['app']['cache_port']);
             config('session.password',$config['app']['cache_password']);
         }
