@@ -1,5 +1,8 @@
 <?php
 namespace app\common\behavior;
+//头部引入
+use think\Request;
+
 
 class Init
 {
@@ -14,12 +17,13 @@ class Init
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
-        $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
-
+        //获取当前域名
+        $request = Request::instance();
+        $host = $request->host();
         $config['site']['site_name'] = $host.'-www-视频';
         $isDomain=0;
         if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
-            $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
+            $config['site'] = array_merge($config['site'],$domain[$host]);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
