@@ -9,13 +9,11 @@ class Init
         $domain = config('domain');
 
         $isMobile = 0;
-        $ua = strtolower($_SERVER['HTTP_USER_AGENT']??'');
+        $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
         $uachar = "/(nokia|sony|ericsson|mot|samsung|sgh|lg|philips|panasonic|alcatel|lenovo|meizu|cldc|midp|iphone|wap|mobile|android)/i";
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
-
-
         $isDomain=0;
         if( is_array($domain) && isset($domain[$_SERVER['HTTP_HOST']]) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
