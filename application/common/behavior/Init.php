@@ -14,15 +14,17 @@ class Init
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
-        $config['site']['site_name'] = $_SERVER['HTTP_HOST'].'-www-视频';
+        $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+
+        $config['site']['site_name'] = $host.'-www-视频';
         $isDomain=0;
-        if( is_array($domain) && isset($domain[$_SERVER['HTTP_HOST']]) && !empty($domain[$_SERVER['HTTP_HOST']])){
+        if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
             }
-            $config['site']['site_name'] = $_SERVER['HTTP_HOST'].'--视频';
+            $config['site']['site_name'] = $host.'--视频';
             $config['site']['site_wapurl'] = $config['site']['site_url'];
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
@@ -35,7 +37,7 @@ class Init
 
 
         if($isMobile){
-            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $_SERVER['HTTP_HOST']==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
+            if( ($config['site']['mob_status']==2 ) || ($config['site']['mob_status']==1 && $host==$config['site']['site_wapurl']) || ($config['site']['mob_status']==1 && $isDomain) ) {
                 $TMP_ISWAP = 1;
                 $TMP_TEMPLATEDIR = $config['site']['mob_template_dir'];
                 $TMP_HTMLDIR = $config['site']['mob_html_dir'];
