@@ -135,6 +135,8 @@ class Common extends Command
                 }
             }
         }
+        $port_log_data = array_merge($port_log_data,$port_data);
+
         $count = count($port_log_data);//数量
         if($count < 2){
             $this->get_zm_port(true);
@@ -146,9 +148,15 @@ class Common extends Command
             $rand = 0;
         }
         if(isset($port_log_data[$rand])){
-            $this->proxy_server = $port_log_data[$rand]['ip']??'';
-            $this->get_port = $port_log_data[$rand]['port']??'';
-            $this->times = strtotime($port_log_data[$rand]['expire_time']);
+            if($i == true){
+                $this->proxy_server = $port_data[1]['ip']??'';
+                $this->get_port = $port_data[1]['port']??'';
+                $this->times = strtotime($port_data[1]['expire_time']);
+            }else{
+                $this->proxy_server = $port_log_data[$rand]['ip']??'';
+                $this->get_port = $port_log_data[$rand]['port']??'';
+                $this->times = strtotime($port_log_data[$rand]['expire_time']);
+            }
         }else{
 //            exit;
         }
