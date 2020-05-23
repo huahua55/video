@@ -14,6 +14,7 @@ class Init
         if((preg_match($uachar, $ua))) {
             $isMobile = 1;
         }
+        $config['site']['site_name'] = $_SERVER['HTTP_HOST'].'-www-视频';
         $isDomain=0;
         if( is_array($domain) && isset($domain[$_SERVER['HTTP_HOST']]) && !empty($domain[$_SERVER['HTTP_HOST']])){
             $config['site'] = array_merge($config['site'],$domain[$_SERVER['HTTP_HOST']]);
@@ -21,6 +22,7 @@ class Init
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
             }
+            $config['site']['site_name'] = $_SERVER['HTTP_HOST'].'--视频';
             $config['site']['site_wapurl'] = $config['site']['site_url'];
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
