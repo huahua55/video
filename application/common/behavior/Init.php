@@ -20,7 +20,7 @@ class Init
         //获取当前域名
         $request = Request::instance();
         $host = $request->host();
-        $config['site']['site_name'] = $host.'-www-视频';
+
         $isDomain=0;
         if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
             $config['site'] = array_merge($config['site'],$domain[$host]);
@@ -28,11 +28,14 @@ class Init
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
             }
-            $config['site']['site_name'] = $host.'--视频';
             $config['site']['site_wapurl'] = $config['site']['site_url'];
             $config['site']['mob_html_dir'] = $config['site']['html_dir'];
             $config['site']['mob_ads_dir'] = $config['site']['ads_dir'];
         }
+
+
+        $config['site']['site_name'] = $host.'-www-视频';
+
 
         $TMP_ISWAP = 0;
         $TMP_TEMPLATEDIR = $config['site']['template_dir'];
