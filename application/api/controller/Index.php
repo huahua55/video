@@ -345,13 +345,13 @@ class Index extends Base{
     }
 
     // 后台配置 推荐视频
-    public function vodStrData($vodIds,$limit = 6){
+    public function vodStrData($vodIds, $sort = ""){
         $vodIds = explode(",",$vodIds);
 
         $lp = [
             'vod_id'   => ['in',$vodIds],
         ];
-        $info = model("Vod")->listData($lp,  $this->sort[2], 1, $limit);
+        $info = model("Vod")->listData($lp,  $sort, 1, 6);
 
         $info = $info['list'] ?? [];
         $array = array();
