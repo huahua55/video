@@ -42,7 +42,7 @@
 								{volist name="$vo.rel_vod" id="vo2"}
 								<li class="yk-pack">
 									<div class="p-thumb"><a href="{:mac_url_vod_detail($vo2)}" title="{$vo2.vod_name}"></a><img class="quic ff-img"
-										 data-original="{:mac_url_img($vo2.vod_pic)}" alt="{$vo2.vod_name}" src="{:mac_url_img($vo2.vod_pic)}" style="display: inline;"><span
+										 data-original="{$vo.site_img}" alt="{$vo2.vod_name}" src="{$vo.site_img}" style="display: inline;"><span
 										 class="playshow">{$vo2.vod_remarks}</span></div>
 									<ul class="info-list">
 										<li class="title"><a href="{:mac_url_vod_detail($vo2)}">{$vo2.vod_name}</a></li><span title="{$vo2.vod_actor}">{$vo2.vod_actor}</span>
