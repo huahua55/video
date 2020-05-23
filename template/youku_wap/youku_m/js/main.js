@@ -98,9 +98,7 @@ $(function() {
 			xiangq = $(this).parent().data("content")
 			num++
 		}
-		console.log(typeof($(this).html()))
 		if ($(this).html() == "展开") {
-			console.log("1")
 			$(this).html("收起")
 			$(this).siblings("span").html(xiangq)
 		} else {
@@ -148,7 +146,7 @@ $(function() {
 			jsondata.unshift(jsonstrList)
 		}
 		jsonstr = decode(jsondata)
-		console.log(jsondata)
+		// console.log(jsondata)
 		window.localStorage.setItem('wap_history', jsonstr);
 	}
 	if (jsonstr != undefined) {

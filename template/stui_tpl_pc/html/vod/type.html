@@ -18,7 +18,6 @@
 							<span class="text">
 								已选择：{if condition="$param.by eq '' || $param.by eq 'time'"}最新{elseif condition="$param.by eq 'hits'"/}热门{elseif condition="$param.by eq 'score'"/}高分{/if}
 								{if condition="$obj.type_name neq ''"}-{$obj.type_name}{/if}
-								
 							</span>	
 							<span class="all">，共检索到“{:mac_data_count($obj.type_id,'all')}”条结果</span>
 						</div>
@@ -38,20 +37,6 @@
 		                        	{/maccms:type}		
 		                        {/if}
 							</ul>
-							<!--<ul class="clearfix">
-								<li>
-									<span>按剧情：</span>
-								</li>
-							  	{empty name="$obj.type_extend.class"}
-							        {maccms:foreach name=":explode(',',$obj.parent.type_extend.class)"}
-							        <li><a {if condition="$key gt 12"}class="hide"{/if} href="{:mac_url_type($obj,['class'=>$vo],'show')}">{$vo}</a></li>
-							        {/maccms:foreach}
-							    {else /}
-							        {maccms:foreach name=":explode(',',$obj.type_extend.class)"}
-							       	<li><a {if condition="$key gt 12"}class="hide"{/if} href="{:mac_url_type($obj,['class'=>$vo],'show')}">{$vo}</a></li>
-							        {/maccms:foreach}
-							    {/empty}								
-							</ul>-->
 							<ul class="clearfix">
 								<li>
 									<span>按地区：</span>
