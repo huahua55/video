@@ -208,7 +208,7 @@ class DoubanTopList extends Common
     //获取腾讯top list 榜单 国漫
     public function getTxTopList($x)
     {
-        $this->get_zm_port();
+        $this->get_zm_port(true);
         $this->ql = QueryList::getInstance();
         //选择mac扩展还是 linux 扩展
         if (!empty($x) && $x == 'mac') {
