@@ -68,18 +68,20 @@ class DoubanTopList extends Common
         if($c > 5){
             return false;
         }
+        $isTrue =  false;
         $this->get_zm_port();
-        $str_ = $this->getUrl('https://movie.douban.com/j/search_subjects?type=movie&tag=%E9%9F%A9%E5%9B%BD&sort=recommend&page_limit=20&page_start=0');
-        $str_ = array_pop(explode("\r\n", $str_));
-//            $mac_curl_get_data = mac_curl_get($v);
-        $str_data = json_decode($str_, true);
+        $cookies = $this->getCookie('');
+        $cookie = $this->newCookie($cookies);
+        $str_ = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0';
+        $this->ql = QueryList::getInstance();
+        $str_data = $this->queryListUrl( $this->ql,$str_,$cookie,$proxy = true);
         if (isset($str_data['subjects']) && !empty($str_data['subjects'])) {
-            $this->isTrue = true;
+            $isTrue = true;
         }
-        if (!empty($this->get_port) && $this->isTrue == true){
+        if (!empty($this->get_port) && $isTrue == true){
             $sql1 = 'truncate table douban_recommend';
             Db::execute($sql1);
-            return true;
+            return $str_data;
         }else{
             $c ++ ;
             $this->cePing($c);
@@ -104,22 +106,14 @@ class DoubanTopList extends Common
         $delWhere['status'] = 0;
 //        $this->get_zm_port(true);
         //获取top代理ip
-
         $is_data = $this->cePing(1);
         if($is_data == false ){
             sleep(3);
-            $is_data = $this->cePing(1);
-            if($is_data == false){
-                sleep(3);
-                $is_data = $this->cePing(1);
-                if($is_data == false){
-                    $output->writeln("开启采集:采集豆瓣热门end:");
-                    exit(1);
-                }
-            }
+            $output->writeln("开启采集:采集豆瓣热门end:");
+            exit(1);
         }
         //获取豆瓣top list 榜单
-        $this->getDouBanTopList();
+        $this->getDouBanTopList($is_data);
         //获取腾讯top list 榜单
         $this->getTxTopList($x);
 //        Db::name('douban_recommend')->whereOr($delWhere)->delete();
@@ -132,51 +126,55 @@ class DoubanTopList extends Common
     }
 
     //获取豆瓣top list 榜单
-    public function getDouBanTopList()
+    public function getDouBanTopList($data)
     {
-
-
+        $this->ql = QueryList::getInstance();
         foreach ($this->search_url as $k => $v) {
-            $str_data = $this->getUrl($v);
-            $mac_curl_get_data = array_pop(explode("\r\n", $str_data));
-//            $mac_curl_get_data = mac_curl_get($v);
-            $getSearchData = json_decode($mac_curl_get_data, true);
-            log::info('采集豆瓣热门-url-::' . $v);
-            log::info('采集豆瓣热门-url-data::' . $mac_curl_get_data);
+            if($k == 1 &&  $data != false){
+                $getSearchData = $data;
+            }else{
+                $cookies = $this->getCookie('');
+                $cookie = $this->newCookie($cookies);;
+                $getSearchData = $this->queryListUrl( $this->ql,$v,$cookie,$proxy = true);
+                log::info('采集豆瓣热门-url-::' . $v);
+            }
             if (isset($getSearchData['subjects']) && !empty($getSearchData['subjects'])) {
 
                 foreach ($getSearchData['subjects'] as $sub_key => $sub_val) {
-
-                    $getDouBan['name'] = mac_trim_all(mac_characters_format($sub_val['title']));
-                    $getDouBan['cj_type'] = ['neq',1];
-                    $douBanName = $this->getDouBanRecommendFindData($getDouBan);
-                    if(!empty($douBanName)){ //名字相等且不是自己的类型
-                        continue; //暂时过滤
-                    }
                     //查询视频表 豆瓣id不等于空
 //                    $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
                     $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
-                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->where($vodDouBanFindWhere)->find();
-                    if(empty($vodDouBanFindData)){
-                        $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
-                        $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
-                        $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name')->whereOr($vodDouBanFindWhere)->find();
-                    }else{
-                        $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
+                    $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
+
+                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name,vod_play_from,vod_play_url')->whereOr($vodDouBanFindWhere)->select();
+                    foreach ($vodDouBanFindData as $k=>$v){
+                        $vod_play_from_list = [];
+                        $vod_play_url_list = [];
+                        $count = [];
+                        if(!empty($v['vod_play_from'])) {
+                            $vod_play_from_list = explode('$$$', $v['vod_play_from']);
+                        }
+                        if(!empty($v['vod_play_url'])) {
+                            $vod_play_url_list = explode('$$$', $v['vod_play_url']);
+                        }
+                        foreach($vod_play_from_list as $ks=>$vs) {
+                            $count[$ks] =  count(mac_play_list_one($vod_play_url_list[$ks],$vs));
+                        }
+                        unset($vodDouBanFindData[$k]['vod_play_from']);
+                        unset($vodDouBanFindData[$k]['vod_play_url']);
+                        $vodDouBanFindData[$k]['count'] =  max($count);
                     }
+                    array_multisort(array_column($vodDouBanFindData,'count'),SORT_STRING | SORT_FLAG_CASE | SORT_NATURAL,$vodDouBanFindData);
+                    $vodDouBanFindNewData = array_pop($vodDouBanFindData);
+
                     //查询推荐表 豆瓣id不等于空
                     $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
                     $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
                     $reCommend['name'] =  $vodDouBanFindWhere['vod_name'] ;
-                    if (!empty($vodDouBanFindData)) {
+                    if (!empty($vodDouBanFindNewData)) {
                         $reCommend['status'] = 1;
-//                        $type_id =  $vodDouBanFindData['type_id_1'];
-//                        if($vodDouBanFindData['type_id_1'] == 0){
-//                            $type_id =  $vodDouBanFindData['type_id'];
-//                        }
-//                        $reCommend['type_id'] = $type_id;
                         $reCommend['type_id'] = $k;
-                        $reCommend['vod_id'] = $vodDouBanFindData['vod_id'];
+                        $reCommend['vod_id'] = $vodDouBanFindNewData['vod_id'];
                         $reCommend['douban_id'] = $sub_val['id'];
                         $reCommend['time'] = date('Y-m-d', time());
                     } else {
@@ -187,7 +185,7 @@ class DoubanTopList extends Common
                         $reCommend['time'] = date('Y-m-d', time());
                     }
                     if (!empty($douBanRecommendFindData)) {
-                        if (empty($vodDouBanFindData)) {
+                        if (empty($vodDouBanFindNewData)) {
                             unset( $reCommend['time']);
                         }
                         $reCommend['cj_type'] = 1;
@@ -258,7 +256,26 @@ class DoubanTopList extends Common
 //                    $where['type_id'] = 4;
                     $TxWhere['vod_name'] =  $where['name'] = mac_trim_all(mac_characters_format($get_v['name']));
                     $res = $this->getDouBanRecommendFindData($where);
-                    $DouBanRes = $this->getVodTxDouBanFindData($TxWhere);
+                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name,vod_play_from,vod_play_url')->where($TxWhere)->select();
+                    foreach ($vodDouBanFindData as $k=>$v){
+                        $vod_play_from_list = [];
+                        $vod_play_url_list = [];
+                        $count = [];
+                        if(!empty($v['vod_play_from'])) {
+                            $vod_play_from_list = explode('$$$', $v['vod_play_from']);
+                        }
+                        if(!empty($v['vod_play_url'])) {
+                            $vod_play_url_list = explode('$$$', $v['vod_play_url']);
+                        }
+                        foreach($vod_play_from_list as $ks=>$vs) {
+                            $count[$ks] =  count(mac_play_list_one($vod_play_url_list[$ks],$vs));
+                        }
+                        unset($vodDouBanFindData[$k]['vod_play_from']);
+                        unset($vodDouBanFindData[$k]['vod_play_url']);
+                        $vodDouBanFindData[$k]['count'] =  max($count);
+                    }
+                    array_multisort(array_column($vodDouBanFindData,'count'),SORT_STRING | SORT_FLAG_CASE | SORT_NATURAL,$vodDouBanFindData);
+                    $DouBanRes = array_pop($vodDouBanFindData);
                     if (!empty($res)) {
                         $reCommend['name'] = $where['name'];
                         if (!empty($DouBanRes)) {
