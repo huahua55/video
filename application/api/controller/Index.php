@@ -851,4 +851,9 @@ class Index extends Base{
         return json_return($list);
     }
 
+    // 清楚缓存
+    public function clearData(){
+        $name = $this->_param['name'] ?? 0;
+        Cache::rm($name);
+    }
 }
