@@ -102,8 +102,9 @@ class DoubanTopList extends Common
         $delWhere['vod_id'] = 0;
         $delWhere['type_id'] = 0;
         $delWhere['status'] = 0;
-        $this->get_zm_port(true);
+//        $this->get_zm_port(true);
         //获取top代理ip
+
         $is_data = $this->cePing(1);
 
         if($is_data == false){
