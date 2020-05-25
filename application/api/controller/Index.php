@@ -768,21 +768,39 @@ class Index extends Base{
 
     // 渠道推广视频ID
     public function channelRecom(){
-        $mac     = $this->_param['mac'] ??  "";
-        $keys    = $this->_param['keys'] ??  "";
+        $mac        = $this->_param['mac'] ??  "";
+        $keys       = $this->_param['keys'] ??  "";
+        $version    = $this->_param['version'] ??  "" ;
         if($mac == "" || $keys == ""){
             return json_return(['vod_id'=>0]);
         }
 
+        $userModel = model("User");
         // 老用户 不返回视频
-        $user = model("User")->where(['user_name'=>['eq',$mac]])->find();
+        $user = $userModel->where(['user_name'=>['eq',$mac]])->find();
         if($user){
             return json_return(['vod_id'=>0]);
+        }else{
+            $channelInfo =  model("Channel")->where(['name'=> $keys])->find();
+            $channel_id  = isset($channelInfo['id']) ? $channelInfo['id'] : 0;
+            $version_id  = 0;
+            if($version){
+                $versionInfo =  model("AppVersion")->where(['app_version'=> $version])->find();
+                $version_id  = isset($versionInfo['id']) ? $versionInfo['id'] : 0;
+            }
+            // 添加用户
+            $userModel->saveData([
+                'user_name'     => $mac,
+                'user_pwd'      => "123456",
+                'channel_id'    => $channel_id,
+                'version_id'    => $version_id,
+                'user_reg_time' => time(),
+            ]);
         }
 
         $vodId =  model("Channel")
             ->field('recom_vod')
-            ->where(['keys' => ['eq',$keys]])
+            ->where(['name' => ['eq',$keys]])
             ->find();
         $vodId = objectToArray($vodId);
         $vodId = $vodId['recom_vod'] ?? 0;
