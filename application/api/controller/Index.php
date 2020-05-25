@@ -404,14 +404,14 @@ class Index extends Base{
     public function search(){
         $key  = $this->_param['key'] ?? "";
         $page = $this->_param['page'] ?? 1;
+        $limit = 10;
+        $pageSize = ($page - 1) * $limit;
 
-        $where = [
-            "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
-            "vod_play_from" => ["like", '%3u8%']
-        ];
-        $res = model("Vod")->listData($where, $this->sort[2], $page, 10);
-        $res = $res['list'] ?? [];
 
+        $sql = "SELECT vod_id,vod_pic,vod_name,vod_content,vod_remarks,type_id,type_id_1,vod_serial FROM `vod` WHERE vod_name LIKE '%".$key."%' OR vod_sub LIKE '%".$key."%' OR vod_actor LIKE '%".$key."%' OR vod_director LIKE '%".$key."%' ORDER BY  ( ( CASE WHEN vod_name LIKE '" . $key . "%' THEN 3 ELSE 0 END ) +
+        ( CASE WHEN vod_name LIKE '%" . $key . "%' THEN 1 ELSE 0 END )) DESC," . $this->sort[2] . " LIMIT " . $pageSize . "," . $limit;
+        $res = Db::query($sql);
+        
         $data = [];
         foreach($res as $r){
             $d = array(
