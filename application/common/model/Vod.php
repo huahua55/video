@@ -39,20 +39,35 @@ class Vod extends Base {
         if($totalshow==1) {
             $total = $this->where($where)->count();
         }
-//        p($order);
-        if(strpos($order,'vod_year') !== false){
-            $orderArray = explode(',',$order);
-            foreach ($orderArray as $order_k => $order_v){
-                if(strpos($order_v,'vod_year') !== false){
-                   unset($orderArray[$order_k]);
+        $order_str = 'CAST(%s AS SIGNED) %s';
+        $orderRaw = [];
+        $orderArray = explode(',',$order);
+        foreach ($orderArray as $k_order => $v_order){
+            if(strpos($order,'vod_year') !== false || strpos($order,'vod_douban_score') !== false || strpos($order,'vod_level') !== false || strpos($order,'vod_time') !== false){
+                $v_order_str = explode(' ',$v_order);
+                if(isset($v_order_str[0])){
+                    if(strpos($v_order,'vod_year') !== false){
+                        array_unshift($orderRaw,sprintf($order_str,$v_order_str[0],$v_order_str[1]??''));
+                    }else{
+                        array_push($orderRaw,sprintf($order_str,$v_order_str[0],$v_order_str[1]??''));
+                    }
                 }
+                unset($orderArray[$k_order]);
             }
-            $order =  implode(',',$orderArray);
-            $list = Db::name('Vod')->field($field)->where($where)->where($where2)->orderRaw('CAST(vod_year AS SIGNED) desc')->order($order)->limit($limit_str)->select();
+        }
+        if(!empty($orderRaw)){
+            $orderRawStr =  implode(',',$orderRaw);
+            if(!empty($orderArray)){
+                $orderStr =  implode(',',$orderArray);
+                $list = Db::name('Vod')->field($field)->where($where)->where($where2)->orderRaw($orderRawStr)->order($orderStr)->limit($limit_str)->select();
+            }else{
+                $list = Db::name('Vod')->field($field)->where($where)->where($where2)->orderRaw($orderRawStr)->limit($limit_str)->select();
+            }
         }else{
             $list = Db::name('Vod')->field($field)->where($where)->where($where2)->order($order)->limit($limit_str)->select();
         }
-        //分类
+//        //分类
+//        p(Db::name('Vod')->getLastSql());
         //分类
         if(mac_get_type_list() != false){
             $new_table =  mac_get_type_list_model();

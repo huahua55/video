@@ -106,22 +106,29 @@ class DoubanTopList extends Common
         //获取top代理ip
 
         $is_data = $this->cePing(1);
-
-        if($is_data == false){
-            $output->writeln("开启采集:采集豆瓣热门end:");
-        }else{
-            //获取豆瓣top list 榜单
-            $this->getDouBanTopList();
-            //获取腾讯top list 榜单
-            $this->getTxTopList($x);
+        if($is_data == false ){
+            sleep(3);
+            $is_data = $this->cePing(1);
+            if($is_data == false){
+                sleep(3);
+                $is_data = $this->cePing(1);
+                if($is_data == false){
+                    $output->writeln("开启采集:采集豆瓣热门end:");
+                    exit(1);
+                }
+            }
+        }
+        //获取豆瓣top list 榜单
+        $this->getDouBanTopList();
+        //获取腾讯top list 榜单
+        $this->getTxTopList($x);
 //        Db::name('douban_recommend')->whereOr($delWhere)->delete();
 //        $sql = 'DELETE FROM douban_recommend WHERE vod_id IN (SELECT vid FROM ( SELECT MIN( vod_id ) AS vid FROM douban_recommend WHERE vod_id > 0 GROUP BY vod_id HAVING count( vod_id ) > 1 ) a)';
 //        $res = Db::execute($sql);
 //        if($res){
 //            log::info('delete');
 //        }
-            $output->writeln("开启采集:采集豆瓣热门end:");
-        }
+        $output->writeln("开启采集:采集豆瓣热门end:");
     }
 
     //获取豆瓣top list 榜单
