@@ -407,21 +407,31 @@ class Index extends Base{
         $limit = 10;
         $pageSize = ($page - 1) * $limit;
 
+        $cache_time = intval($GLOBALS['config']['api']['vod']['cachetime']);
+        $cach_name = 'home_search_' . $key;
+        $data = Cache::get($cach_name);
+        if(empty($data) || $cache_time == 0) {
 
-        $sql = "SELECT vod_id,vod_pic,vod_name,vod_content,vod_remarks,type_id,type_id_1,vod_serial FROM `vod` WHERE vod_name LIKE '%".$key."%' OR vod_sub LIKE '%".$key."%' OR vod_actor LIKE '%".$key."%' OR vod_director LIKE '%".$key."%' ORDER BY  ( ( CASE WHEN vod_name LIKE '" . $key . "%' THEN 3 ELSE 0 END ) +
+            $sql = "SELECT vod_id,vod_pic,vod_name,vod_content,vod_remarks,type_id,type_id_1,vod_serial FROM `vod` WHERE vod_name LIKE '%".$key."%' OR vod_sub LIKE '%".$key."%' OR vod_actor LIKE '%".$key."%' OR vod_director LIKE '%".$key."%' ORDER BY  ( ( CASE WHEN vod_name LIKE '" . $key . "%' THEN 3 ELSE 0 END ) +
         ( CASE WHEN vod_name LIKE '%" . $key . "%' THEN 1 ELSE 0 END )) DESC," . $this->sort[2] . " LIMIT " . $pageSize . "," . $limit;
-        $res = Db::query($sql);
-        
-        $data = [];
-        foreach($res as $r){
-            $d = array(
-                'img'   => mac_url_img($r['vod_pic']),
-                'name'  => $r['vod_name'],
-                'msg'   => vodRemark($r),
-                'text'  => $r['vod_content'],
-                'url'   => $r['vod_id'],
-            );
-            array_push($data,$d);
+            $res = Db::query($sql);
+
+            $data = [];
+            foreach($res as $r){
+                $d = array(
+                    'img'   => mac_url_img($r['vod_pic']),
+                    'name'  => $r['vod_name'],
+                    'msg'   => vodRemark($r),
+                    'text'  => $r['vod_content'],
+                    'url'   => $r['vod_id'],
+                );
+                array_push($data,$d);
+            }
+
+            if($cache_time > 0) {
+                Cache::set($cach_name, $data, $cache_time);
+            }
+
         }
 
         // 记录用户搜索数据
