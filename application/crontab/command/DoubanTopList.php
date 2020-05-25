@@ -147,7 +147,7 @@ class DoubanTopList extends Common
                     $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
 
                     $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name,vod_play_from,vod_play_url')->whereOr($vodDouBanFindWhere)->select();
-                    foreach ($vodDouBanFindData as $k=>$v){
+                    foreach ($vodDouBanFindData as $ky =>$v){
                         $vod_play_from_list = [];
                         $vod_play_url_list = [];
                         $count = [];
@@ -160,9 +160,9 @@ class DoubanTopList extends Common
                         foreach($vod_play_from_list as $ks=>$vs) {
                             $count[$ks] =  count(mac_play_list_one($vod_play_url_list[$ks],$vs));
                         }
-                        unset($vodDouBanFindData[$k]['vod_play_from']);
-                        unset($vodDouBanFindData[$k]['vod_play_url']);
-                        $vodDouBanFindData[$k]['count'] =  max($count);
+                        unset($vodDouBanFindData[$ky]['vod_play_from']);
+                        unset($vodDouBanFindData[$ky]['vod_play_url']);
+                        $vodDouBanFindData[$ky]['count'] =  max($count);
                     }
                     array_multisort(array_column($vodDouBanFindData,'count'),SORT_STRING | SORT_FLAG_CASE | SORT_NATURAL,$vodDouBanFindData);
                     $vodDouBanFindNewData = array_pop($vodDouBanFindData);
