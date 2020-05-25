@@ -3,7 +3,7 @@
 {include file="../../../application/admin/view/public/editor" flag="vod_editor"/}
 <div class="page-container p10">
     <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
-    
+
     <form class="layui-form layui-form-pane" method="post" action="">
         <input type="hidden" name="vod_id" value="{$info.vod_id}">
 
@@ -19,96 +19,91 @@
             <div class="layui-tab-content">
 
                 <div class="layui-tab-item layui-show">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">ID：</label>
-                    <div class="layui-input-inline w100">
-                        <input type="text" class="layui-input" value="{$info.vod_id}" readonly>
-                    </div>
-                    <div class="layui-input-inline w110">
-                        <input type="checkbox" name="uptime" title="更新时间" value="1" checked class="layui-checkbox checkbox-ids" lay-skin="primary">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">参数：</label>
-                    <div class="layui-input-inline w150">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">参数：</label>
+                        <div class="layui-input-inline w150">
                             <select name="type_id" lay-filter="type_id">
                                 <option value="">请选择分类</option>
                                 {volist name="type_tree" id="vo"}
-                                    {if condition="$vo.type_mid eq 1"}
-                                    <option value="{$vo.type_id}" {if condition="$info.type_id eq $vo.type_id"}selected{/if}>{$vo.type_name}</option>
-                                    {volist name="$vo.child" id="ch"}
-                                    <option value="{$ch.type_id}" {if condition="$info.type_id eq $ch.type_id"}selected{/if}>&nbsp;|&nbsp;&nbsp;&nbsp;|—{$ch.type_name}</option>
-                                    {/volist}
-                                    {/if}
+                                {if condition="$vo.type_mid eq 1"}
+                                <option value="{$vo.type_id}" {if condition="$info.type_id eq $vo.type_id"}selected{/if}>{$vo.type_name}</option>
+                                {volist name="$vo.child" id="ch"}
+                                <option value="{$ch.type_id}" {if condition="$info.type_id eq $ch.type_id"}selected{/if}>&nbsp;|&nbsp;&nbsp;&nbsp;|—{$ch.type_name}</option>
+                                {/volist}
+                                {/if}
                                 {/volist}
                             </select>
-                    </div>
+                        </div>
 
-                    <div class="layui-input-inline w150">
+                        <div class="layui-input-inline w150">
                             <select name="vod_level">
-                                <option value="0">请选择显示权重</option>
-                                <option value="9" {if condition="$info.vod_level eq 9"}selected{/if}>权重值：9-幻灯</option>
-                                <option value="1" {if condition="$info.vod_level eq 1"}selected{/if}>权重值：1</option>
-                                <option value="2" {if condition="$info.vod_level eq 2"}selected{/if}>权重值：2</option>
-                                <option value="3" {if condition="$info.vod_level eq 3"}selected{/if}>权重值：3</option>
-                                <option value="4" {if condition="$info.vod_level eq 4"}selected{/if}>权重值：4</option>
-                                <option value="5" {if condition="$info.vod_level eq 5"}selected{/if}>权重值：5</option>
-                                <option value="6" {if condition="$info.vod_level eq 6"}selected{/if}>权重值：6</option>
-                                <option value="7" {if condition="$info.vod_level eq 7"}selected{/if}>权重值：7</option>
-                                <option value="8" {if condition="$info.vod_level eq 8"}selected{/if}>权重值：8</option>
+                                <option value="0">请选择推荐</option>
+                                <option value="9" {if condition="$info.vod_level eq 9"}selected{/if}>推荐9-幻灯</option>
+                                <option value="1" {if condition="$info.vod_level eq 1"}selected{/if}>推荐1</option>
+                                <option value="2" {if condition="$info.vod_level eq 2"}selected{/if}>推荐2</option>
+                                <option value="3" {if condition="$info.vod_level eq 3"}selected{/if}>推荐3</option>
+                                <option value="4" {if condition="$info.vod_level eq 4"}selected{/if}>推荐4</option>
+                                <option value="5" {if condition="$info.vod_level eq 5"}selected{/if}>推荐5</option>
+                                <option value="6" {if condition="$info.vod_level eq 6"}selected{/if}>推荐6</option>
+                                <option value="7" {if condition="$info.vod_level eq 7"}selected{/if}>推荐7</option>
+                                <option value="8" {if condition="$info.vod_level eq 8"}selected{/if}>推荐8</option>
                             </select>
-                    </div>
-                    <div class="layui-input-inline w120">
+                        </div>
+                        <div class="layui-input-inline w120">
                             <select name="vod_status">
                                 <option value="1" >已审核</option>
                                 <option value="0" {if condition="$info.vod_status eq '0'"}selected{/if}>未审核</option>
                             </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="vod_lock">
+                                <option value="0">未锁</option>
+                                <option value="1" {if condition="$info.vod_lock eq 1"}selected{/if}>锁定</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="vod_isend">
+                                <option value="1" {if condition="$info.vod_isend eq 1"}selected{/if}>已完结</option>
+                                <option value="0" {if condition="$info.vod_isend eq 0"}selected{/if}>未完结</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="vod_copyright">
+                                <option value="0" {if condition="$info.vod_copyright eq '0'"}selected{/if}>关闭版权处理</option>
+                                <option value="1" {if condition="$info.vod_copyright eq '1'"}selected{/if}>开启版权处理</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w110">
+                            <input type="checkbox" name="uptime" title="更新时间" value="1" checked class="layui-checkbox checkbox-ids" lay-skin="primary">
+                        </div>
                     </div>
-                    <div class="layui-input-inline w120">
-                        <select name="vod_lock">
-                            <option value="0">未锁</option>
-                            <option value="1" {if condition="$info.vod_lock eq 1"}selected{/if}>锁定</option>
-                        </select>
-                    </div>
-                    <div class="layui-input-inline w120">
-                        <select name="vod_isend">
-                            <option value="1" {if condition="$info.vod_isend eq 1"}selected{/if}>已完结</option>
-                            <option value="0" {if condition="$info.vod_isend eq 0"}selected{/if}>未完结</option>
-                        </select>
-                    </div>
-                    <div class="layui-input-inline w120">
-                        <select name="vod_copyright">
-                            <option value="0" {if condition="$info.vod_copyright eq '0'"}selected{/if}>关闭版权处理</option>
-                            <option value="1" {if condition="$info.vod_copyright eq '1'"}selected{/if}>开启版权处理</option>
-                        </select>
-                    </div>
-                </div>
 
-                <div class="layui-form-item ">
-                    <label class="layui-form-label">标题：</label>
-                    <div class="layui-input-inline w500">
-                        <input type="text" class="layui-input" value="{$info.vod_name}" placeholder="请输入" name="vod_name" id="vod_name">
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">标题：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.vod_name}" placeholder="请输入" name="vod_name" id="vod_name">
+                        </div>
+                        <label class="layui-form-label">副标：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_sub}" placeholder="" name="vod_sub" id="vod_sub">
+                        </div>
                     </div>
-                    <label class="layui-form-label">副标：</label>
-                    <div class="layui-input-inline ">
-                        <input type="text" class="layui-input" value="{$info.vod_sub}" placeholder="" name="vod_sub" id="vod_sub">
-                    </div>
-                </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">别名：</label>
-                    <div class="layui-input-inline w500">
-                        <input type="text" class="layui-input" value="{$info.vod_en}" placeholder="" name="vod_en">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">别名：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.vod_en}" placeholder="" name="vod_en">
+                        </div>
+                        <label class="layui-form-label">首字母：</label>
+                        <div class="layui-input-inline w70">
+                            <input type="text" class="layui-input" value="{$info.vod_letter}" placeholder="" name="vod_letter">
+                        </div>
+                        <label class="layui-form-label">高亮：</label>
+                        <div class="layui-input-inline w70">
+                            <input type="text" class="layui-input color" value="{$info.vod_color}" placeholder="" name="vod_color">
+                        </div>
                     </div>
-                    <label class="layui-form-label">首字母：</label>
-                    <div class="layui-input-inline w70">
-                        <input type="text" class="layui-input" value="{$info.vod_letter}" placeholder="" name="vod_letter">
-                    </div>
-                    <label class="layui-form-label">高亮：</label>
-                    <div class="layui-input-inline w70">
-                        <input type="text" class="layui-input color" value="{$info.vod_color}" placeholder="" name="vod_color">
-                    </div>
-                </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">TAG：</label>
@@ -271,15 +266,15 @@
                     </div>
 
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">图片：</label>
-                    <div class="layui-input-inline w500 upload">
-                        <input type="text" class="layui-input upload-input" style="max-width:100%;" value="{$info.vod_pic}" placeholder="" id="vod_pic" name="vod_pic">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图片：</label>
+                        <div class="layui-input-inline w500 upload">
+                            <input type="text" class="layui-input upload-input" style="max-width:100%;" value="{$info.vod_pic}" placeholder="" id="vod_pic" name="vod_pic">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload1">上传图片</button>
+                        </div>
                     </div>
-                    <div class="layui-input-inline ">
-                        <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload1">上传图片</button>
-                    </div>
-                </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">缩略图：</label>
                         <div class="layui-input-inline w500 upload">
@@ -298,12 +293,12 @@
                             <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'upload-thumb'}}" id="upload3">上传图片</button>
                         </div>
                     </div>
-                <div class="layui-form-item">
+                    <div class="layui-form-item">
                         <label class="layui-form-label">简介：</label>
-                    <div class="layui-input-block">
-                        <textarea name="vod_blurb" cols="" rows="3" class="layui-textarea"  placeholder="不填写将自动从第一页详情里获取前100个字" style="height:40px;">{$info.vod_blurb}</textarea>
+                        <div class="layui-input-block">
+                            <textarea name="vod_blurb" cols="" rows="3" class="layui-textarea"  placeholder="不填写将自动从第一页详情里获取前100个字" style="height:40px;">{$info.vod_blurb}</textarea>
+                        </div>
                     </div>
-                </div>
 
 
                     <script>
@@ -315,7 +310,7 @@
                     <div id="player_list" class="contents">
                         {volist name="$vod_play_list" id="vo"}
                         <div class="layui-form-item" data-i="{$key}">
-                        <label class="layui-form-label">播放{$key}：</label>
+                            <label class="layui-form-label">播放{$key}：</label>
                             <div class="layui-input-inline w150"><select name="vod_play_from[]"><option value="no">请选择播放器.</option>{volist name="player_list" id="vo1"}{if condition="$vo1.status eq '1'"}<option value="{$vo1.from}" {if condition="$vo1.from eq $vo.from"} selected {/if}>{$vo1.show}</option>{/if}{/volist}</select></div>
                             <div class="layui-input-inline w150"><select name="vod_play_server[]"><option value="no">请选择服务器组.</option>{volist name="server_list" id="vo2"}{if condition="$vo2.status eq '1'"}<option value="{$vo2.from}" {if condition="$vo2.from eq $vo.server"} selected {/if}>{$vo2.show}</option>{/if}{/volist}</select></div>
                             <div class="layui-input-inline w150"><input type="text" name="vod_play_note[]" class="layui-input" value="{$vo.note}" placeholder="备注信息"></div>
@@ -361,107 +356,107 @@
                             <textarea id="vod_content" name="vod_content" type="text/plain" style="width:99%;height:250px">{$info.vod_content|mac_url_content_img}</textarea>
                         </div>
                     </div>
-        </div>
+                </div>
 
                 <div class="layui-tab-item">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">顶数量：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_up}" placeholder="" id="vod_up" name="vod_up">
-                            </div>
-                            <label class="layui-form-label">踩数量：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_down}" placeholder="" id="vod_down" name="vod_down">
-                            </div>
-                            <button class="layui-btn" type="button" id="btn_rnd">随机生成</button>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">顶数量：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_up}" placeholder="" id="vod_up" name="vod_up">
                         </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">总人气：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_hits}" placeholder="" id="vod_hits" name="vod_hits">
-                            </div>
-                            <label class="layui-form-label">月人气：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_hits_month}" placeholder="" id="vod_hits_month" name="vod_hits_month" >
-                            </div>
-                            <label class="layui-form-label">编辑人：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_author}" placeholder="" name="vod_author" id="vod_author">
-                            </div>
+                        <label class="layui-form-label">踩数量：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_down}" placeholder="" id="vod_down" name="vod_down">
                         </div>
+                        <button class="layui-btn" type="button" id="btn_rnd">随机生成</button>
+                    </div>
 
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">周人气：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_hits_week}" placeholder="" id="vod_hits_week" name="vod_hits_week">
-                            </div>
-                            <label class="layui-form-label">日人气：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input " value="{$info.vod_hits_day}" placeholder="" id="vod_hits_day" name="vod_hits_day">
-                            </div>
-                            <label class="layui-form-label">跳转URL：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_jumpurl}" placeholder="" name="vod_jumpurl" id="vod_jumpurl">
-                            </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">总人气：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_hits}" placeholder="" id="vod_hits" name="vod_hits">
                         </div>
-
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">平均分：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_score}" placeholder="" id="vod_score" name="vod_score">
-                            </div>
-                            <label class="layui-form-label">总评分：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_score_all}" placeholder="" id="vod_score_all" name="vod_score_all">
-                            </div>
-                            <label class="layui-form-label">总评次：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_score_num}" placeholder="" id="vod_score_num" name="vod_score_num">
-                            </div>
+                        <label class="layui-form-label">月人气：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_hits_month}" placeholder="" id="vod_hits_month" name="vod_hits_month" >
                         </div>
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">整数据积分：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_points}" placeholder="" name="vod_points">
-                            </div>
-                            <label class="layui-form-label">点播积分：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_points_play}" placeholder="" name="vod_points_play">
-                            </div>
-                            <label class="layui-form-label">下载积分：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_points_down}" placeholder="" name="vod_points_down">
-                            </div>
+                        <label class="layui-form-label">编辑人：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_author}" placeholder="" name="vod_author" id="vod_author">
                         </div>
+                    </div>
 
-                        <div class="layui-form-item">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">周人气：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_hits_week}" placeholder="" id="vod_hits_week" name="vod_hits_week">
+                        </div>
+                        <label class="layui-form-label">日人气：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input " value="{$info.vod_hits_day}" placeholder="" id="vod_hits_day" name="vod_hits_day">
+                        </div>
+                        <label class="layui-form-label">跳转URL：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_jumpurl}" placeholder="" name="vod_jumpurl" id="vod_jumpurl">
+                        </div>
+                    </div>
 
-                            <label class="layui-form-label">内容页模板：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_tpl}" placeholder="" name="vod_tpl">
-                            </div>
-                            <label class="layui-form-label">播放页模板：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_tpl_play}" placeholder="" name="vod_tpl_play">
-                            </div>
-                            <label class="layui-form-label">下载页模板：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_tpl_down}" placeholder="" name="vod_tpl_down">
-                            </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">平均分：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_score}" placeholder="" id="vod_score" name="vod_score">
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">内容页密码：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_pwd}" placeholder="非静态模式下可用" name="vod_pwd">
-                            </div>
-                            <label class="layui-form-label">密码链接：</label>
-                            <div class="layui-input-inline ">
-                                <input type="text" class="layui-input" value="{$info.vod_pwd_url}" placeholder="" name="vod_pwd_url">
-                            </div>
+                        <label class="layui-form-label">总评分：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_score_all}" placeholder="" id="vod_score_all" name="vod_score_all">
                         </div>
+                        <label class="layui-form-label">总评次：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_score_num}" placeholder="" id="vod_score_num" name="vod_score_num">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">整数据积分：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_points}" placeholder="" name="vod_points">
+                        </div>
+                        <label class="layui-form-label">点播积分：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_points_play}" placeholder="" name="vod_points_play">
+                        </div>
+                        <label class="layui-form-label">下载积分：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_points_down}" placeholder="" name="vod_points_down">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+
+                        <label class="layui-form-label">内容页模板：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_tpl}" placeholder="" name="vod_tpl">
+                        </div>
+                        <label class="layui-form-label">播放页模板：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_tpl_play}" placeholder="" name="vod_tpl_play">
+                        </div>
+                        <label class="layui-form-label">下载页模板：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_tpl_down}" placeholder="" name="vod_tpl_down">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">内容页密码：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_pwd}" placeholder="非静态模式下可用" name="vod_pwd">
+                        </div>
+                        <label class="layui-form-label">密码链接：</label>
+                        <div class="layui-input-inline ">
+                            <input type="text" class="layui-input" value="{$info.vod_pwd_url}" placeholder="" name="vod_pwd_url">
+                        </div>
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">播放页密码：</label>
                         <div class="layui-input-inline ">
@@ -483,7 +478,7 @@
                         </div>
                     </div>
 
-                    </div>
+                </div>
 
                 <div class="layui-tab-item">
                     <div id="plot_list" class="contents">
@@ -505,7 +500,6 @@
                     </div>
                 </div>
 
-
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
                         <label class="layui-form-label">采集网址：</label>
@@ -519,22 +513,24 @@
                     <iframe src="{:url('role/data')}?select=1&tab=vod&rid={$info.vod_id}" marginwidth="0" marginheight="0" style="width:100%;height:600px;"></iframe>
                     {/notempty}
                 </div>
+
+
             </div>
         </div>
 
-                <div class="layui-form-item center">
-                    <div class="layui-input-block">
-                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">保 存</button>
-                        <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
-                    </div>
-                </div>
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
     </form>
 
 </div>
 {include file="../../../application/admin/view/public/foot" /}
 
 <script type="text/javascript">
-    //ue = editor_getEditor('vod_content');
+    ue = editor_getEditor('vod_content');
     var player_select='{volist name="player_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var downer_select='{volist name="downer_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var server_select='{volist name="server_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
@@ -542,9 +538,9 @@
     layui.use(['form','upload', 'layer'], function () {
         // 操作对象
         var form = layui.form
-                , layer = layui.layer
-                , $ = layui.jquery
-                , upload = layui.upload;;
+            , layer = layui.layer
+            , $ = layui.jquery
+            , upload = layui.upload;;
 
         // 验证
         form.verify({
@@ -699,9 +695,8 @@
                 type: 'post',
                 dataType: "jsonp",
                 jsonp: "callback",
-                jsonpCallback:"douban",
                 timeout: 5000,
-                url: '//api.maccms.com/douban/?callback=douban&id=' + id,
+                url: '//' + 'api' + '.' + 'mac'+ 'cms' + '.'+ 'com' + '/douban/index/id/' + id,
                 error: function(){
                     alert('请求解析服务器失败');
                 },
@@ -730,7 +725,7 @@
                             $('#vod_sub').val(r.data.vod_sub);
                         }
                         if(r.data.vod_pic){
-                            //$('#vod_pic').val(r.data.vod_pic);
+                            $('#vod_pic').val(r.data.vod_pic);
                         }
                         if(r.data.vod_year){
                             $('#vod_year').val(r.data.vod_year);
@@ -1009,7 +1004,7 @@
         getExtend('{$info.type_id}')
     },1000);
     {/if}
-    
+
 </script>
 
 </body>
