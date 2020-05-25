@@ -2,6 +2,7 @@
 namespace app\api\controller;
 use think\Controller;
 use think\Cache;
+use think\Db;
 
 class Index extends Base{
 
@@ -355,16 +356,22 @@ class Index extends Base{
 
         $info = $info['list'] ?? [];
         $array = array();
-        foreach($info as $r){
-            $d = array(
-                'img'   => mac_url_img($r['vod_pic']),
-                'id'    => $r['vod_id'],
-                'name'  => $r['vod_name'],
-                'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
-                'msg'   => vodRemark($r),
-            );
-            array_push($array,$d);
+
+        foreach($vodIds as $item){
+            foreach($info as $r) {
+                if ($item == $r['vod_id'] ){
+                    $d = array(
+                        'img'   => mac_url_img($r['vod_pic']),
+                        'id'    => $r['vod_id'],
+                        'name'  => $r['vod_name'],
+                        'score' => $r['vod_douban_score'] == 0 ? randomFloat(5,8) : $r['vod_douban_score'],
+                        'msg'   => vodRemark($r),
+                    );
+                    array_push($array,$d);
+                }
+            }
         }
+
         return $array;
     }
 
@@ -397,6 +404,7 @@ class Index extends Base{
     public function search(){
         $key  = $this->_param['key'] ?? "";
         $page = $this->_param['page'] ?? 1;
+
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
@@ -415,6 +423,12 @@ class Index extends Base{
             );
             array_push($data,$d);
         }
+
+        // 记录用户搜索数据
+        $time = time();
+        $sql = "insert into search_keyword(name,times,create_time) values('".$key."','1','".$time."') ON DUPLICATE KEY UPDATE times = times + 1 ";
+        Db::query($sql);
+
         return json_return($data);
     }
 
