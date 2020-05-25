@@ -91,7 +91,7 @@ class CmsDouban extends Common
     public function getFeiFeiApi($douban_id){
         $url =$this->get_feifei_id. $douban_id;
         $this->get_zm_port();//开启芝麻代理
-        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'',true);
+        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'',false);
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,'',true,false);
 //        $get_url_data = json_decode(mac_curl_get($url),true);
         if(isset($get_url_data['data']) && isset($get_url_data['status']) && $get_url_data['status'] == 200 && !empty($get_url_data['data'])){
@@ -111,7 +111,7 @@ class CmsDouban extends Common
 //        sleep(1);
         $url = $this->get_mac_id. $douban_id;
         $this->get_zm_port();//开启芝麻代理
-        $get_url_data =  $this->queryListUrl($this->ql,$url,'',true,false);
+        $get_url_data =  $this->queryListUrl($this->ql,$url,'',false,false);
 //        $get_url_data =  $this->queryListUrl($this->ql,$url,'',false,false);
         //        $get_url_data = json_decode(mac_curl_get($url),true);
         $get_url_data = str_replace('douban(', '', $get_url_data);
