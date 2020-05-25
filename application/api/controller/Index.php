@@ -2,6 +2,7 @@
 namespace app\api\controller;
 use think\Controller;
 use think\Cache;
+use think\Db;
 
 class Index extends Base{
 
@@ -403,6 +404,7 @@ class Index extends Base{
     public function search(){
         $key  = $this->_param['key'] ?? "";
         $page = $this->_param['page'] ?? 1;
+
         $where = [
             "vod_name|vod_sub|vod_actor|vod_director"  => ["like", '%'.$key.'%'],
             "vod_play_from" => ["like", '%3u8%']
@@ -421,6 +423,12 @@ class Index extends Base{
             );
             array_push($data,$d);
         }
+
+        // 记录用户搜索数据
+        $time = time();
+        $sql = "insert into search_keyword(name,times,create_time) values('".$key."','1','".$time."') ON DUPLICATE KEY UPDATE times = times + 1 ";
+        Db::query($sql);
+
         return json_return($data);
     }
 
