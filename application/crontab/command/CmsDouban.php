@@ -65,7 +65,7 @@ class CmsDouban extends Common
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
-          sleep(rand(1,5));
+
           $cookie = $this->newCookie($this->getCookie('',false));
           $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
@@ -195,6 +195,7 @@ class CmsDouban extends Common
                     foreach ($douBanScoreData['list'] as $k => $v) {
                         $douban_id =  $v['douban_id'];
                         if($type == 1 || $type == 6){
+                            sleep(rand(1,5));
                             $this->getDouBanApi($douban_id,$type,$code);//7
                         }else if($type ==2){
                             $this->getFeiFeiApi($douban_id);//8
