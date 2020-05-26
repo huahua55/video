@@ -17,23 +17,58 @@ class Urlsend extends Base
 
     public function index()
     {
+        $param = input();
+        $urlsend_config = config('urlsend');
 
+
+        $key =  $param['domain_key']??0;
+        //获取域名
+        $domain_conf = config('domain');
+        $domain_conf = array_keys($domain_conf);
+        if (!isset($domain_conf[$key])){
+            return $this->error('打开失败，请联系技术人员');
+        }
         if (Request()->isPost()) {
             $config = input();
             $config_new['urlsend'] = $config['urlsend'];
-
-            $config_old = config('maccms');
-            $config_new = array_merge($config_old, $config_new);
-
-            $res = mac_arr2file(APP_PATH . 'extra/maccms.php', $config_new);
+            foreach ($domain_conf as $k => $v){
+                if(!isset($urlsend_config[$v])){
+                    $urlsend_config[$v] = [
+                        'sm_push_token'=>'',
+                        'baidu_push_token'=>'',
+                    ];
+                }
+                if($domain_conf[$key] == $v){
+                    $urlsend_config[$v] = $config_new['urlsend'];
+                }
+            }
+            $res = mac_arr2file(APP_PATH . 'extra/urlsend.php', $urlsend_config);
             if ($res === false) {
                 return $this->error('保存失败，请重试!');
             }
             return $this->success('保存成功!');
         }
 
-        $urlsend_config = $GLOBALS['config']['urlsend'];
+
+        foreach ($domain_conf as $k => $v){
+            if(!isset($urlsend_config[$v])){
+                $urlsend_config[$v] = [
+                    'sm_push_token'=>'',
+                    'baidu_push_token'=>'',
+                ];
+            }
+        }
+
+        $res = mac_arr2file(APP_PATH . 'extra/urlsend.php', $urlsend_config);
+//        if ($res === false) {
+//            return $this->error('保存失败，请重试!');
+//        }
+
         $this->assign('config',$urlsend_config);
+
+        $this->assign('domain_list',$domain_conf);
+        $this->assign('domain_key',$domain_conf[$key]);
+        $this->assign('urlsend_list',$urlsend_config[$domain_conf[$key]]);
 
         $urlsend_break_baidu_push = Cache::get('urlsend_break_baidu_push');
         $urlsend_break_baidu_bear = Cache::get('urlsend_break_baidu_bear');
@@ -52,12 +87,11 @@ class Urlsend extends Base
         if(!empty($pp)){
             $this->_param = $pp;
         }
-
         if($this->_param['ac']=='baidu_push'){
             $this->baidu_push();
         }
-        elseif($this->_param['ac']=='baidu_bear'){
-            $this->baidu_bear();
+        elseif($this->_param['ac']=='sm_push'){
+            $this->sm_push();
         }
         else{
             $this->error('参数错误');
@@ -74,6 +108,7 @@ class Urlsend extends Base
         $this->_param['limit'] = intval($this->_param['limit']) <1 ? 500 : $this->_param['limit'];
         $ids = $this->_param['ids'];
         $ac2 = $this->_param['ac2'];
+        $site = $this->_param['site']??'';
 
         $today = strtotime(date('Y-m-d'));
         $where = [];
@@ -200,12 +235,16 @@ class Urlsend extends Base
         }
 
         mac_echo('共'.$res['total'].'条数据等待推送，分'.$res['pagecount'].'页推送，当前第'.$res['page'].'页');
+        $maccms = config('maccms');
 
         $urls = [];
         foreach($res['list'] as $k=>$v){
-            $urls[$v[$col.'_id']] =  $GLOBALS['http_type'] . $GLOBALS['config']['site']['site_url'] . $fun($v);
+            $val =   $fun($v);
+            if(!empty($site)){
+                $val = str_replace($maccms['site']['site_url'],$site,$val);
+            }
+            $urls[$v[$col.'_id']] =  $val;
             $this->_lastid = $v[$col.'_id'];
-
             mac_echo($v[$col.'_id'] . '、'. $v[$col . '_name'] . '&nbsp;<a href="'.$urls[$v[$col.'_id']].'">'.$urls[$v[$col.'_id']].'</a>');
         }
 
@@ -215,21 +254,24 @@ class Urlsend extends Base
 
     public function baidu_push()
     {
+
         $res = $this->data();
         Cache::set('urlsend_break_baidu_push', url('urlsend/push').'?'. http_build_query($this->_param) );
 
 
         if (!empty($res['urls'])) {
             $type = $this->_param['type']; //urls: 添加, update: 更新, del: 删除
-            $token = $GLOBALS['config']['urlsend']['baidu_push_token'];
-            $site = $GLOBALS['http_type'] . $GLOBALS['config']['site']['site_url'];
+            $site =  $this->_param['site'];
+            $urlsend_config = config('urlsend');
+            $urlsend_val = $urlsend_config[$site]??[];
+            $site =  $GLOBALS['http_type'] .$this->_param['site'];
+            $token = $urlsend_val['baidu_push_token']??'';
             if (empty($type)) {
                 $type = 'urls';
             }
             $api = 'http://data.zz.baidu.com/' . $type . '?site=' . $site . '&token=' . $token;
             $head = ['Content-Type: text/plain'];
             $data = implode("\n", $res['urls']);
-
             $r = mac_curl_post($api, $data, $head);
             $json = json_decode($r,true);
             if(!$json){
@@ -261,60 +303,39 @@ class Urlsend extends Base
 
     }
 
-    public function baidu_bear()
+    public function sm_push()
     {
         $res = $this->data();
         Cache::set('urlsend_break_baidu_bear', url('urlsend/push').'?'. http_build_query($this->_param) );
 
+
         if(!empty($res['urls'])){
             $type = $this->_param['type']; //realtime实时, batch历史
-            $appid = $GLOBALS['config']['urlsend']['baidu_bear_appid'];
-            $token = $GLOBALS['config']['urlsend']['baidu_bear_token'];
+            $site = $this->_param['site']; //realtime实时, batch历史
+            $urlsend_config = config('urlsend');
+            $urlsend_val = $urlsend_config[$site]??[];
+            $token = $urlsend_val['sm_push_token']??'';
             if(empty($type)){
                 $type = 'realtime';
             }
-            $api = 'http://data.zz.baidu.com/urls?appid='.$appid.'&token='.$token.'&type='.$type;
-
+            $api = 'http://data.zhanzhang.sm.cn/push?site='.$site.'&user_name=pzz2364@outlook.com&resource_name=mip_add&token='.$token.'';
             $head = ['Content-Type: text/plain'];
             $data = implode("\n", $res['urls']);
-
-
-
             $r = mac_curl_post($api, $data, $head);
             $json = json_decode($r,true);
-
             if(!$json){
                 mac_echo('请求失败，请重试');
                 return;
-            }
-            elseif($json['error']){
-                mac_echo('发生错误：'. $json['message'] );
+            }else if($json['returnCode'] != 200){
+                mac_echo('发生错误：'. $json['errorMsg'] );
                 return;
             }
-            elseif($json['success_realtime'] ==0 && $json['remain_realtime']>0){
-                $data = array_slice($res['urls'], 0, $json['remain_realtime'],true );
-                $keys = array_keys($data);
-                $this->_lastid = end($keys);
-                
-                $data = implode("\n", $data);
-                $r = mac_curl_post($api, $data, $head);
-                $json = json_decode($r,true);
-                if(!$json){
-                    mac_echo('请求失败，请重试2');
-                    return;
-                }
-                elseif($json['error']){
-                    mac_echo('发生错误2：'. $json['message'] );
-                    return;
-                }
-            }
-
             Cache::set($this->_cache_name, $this->_lastid);
             if($type=='realtime'){
-                mac_echo('熊掌号实时推送'.$json['success_realtime'].'条；熊掌号实时剩余可推送'.$json['remain_realtime'].'条.');
+                mac_echo('实时推送'.$json['success_realtime'].'条；实时剩余可推送'.$json['remain_realtime'].'条.');
             }
             else{
-                mac_echo('熊掌号历史推送'.$json['success_batch'].'条；熊掌号历史剩余可推送'.$json['remain_batch'].'条；');
+                mac_echo('历史推送'.$json['success_batch'].'条；历史剩余可推送'.$json['remain_batch'].'条；');
             }
         }
 
@@ -326,7 +347,7 @@ class Urlsend extends Base
             }
         }
         else {
-            $url = url('urlsend/baidu_bear') . '?' . http_build_query($this->_param);
+            $url = url('urlsend/sm_push') . '?' . http_build_query($this->_param);
             if(ENTRANCE=='admin') {
                 mac_jump($url, 3);
             }
