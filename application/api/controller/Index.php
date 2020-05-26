@@ -837,14 +837,21 @@ class Index extends Base{
         $limit = 10;
         $pageSize = ($page - 1) * $limit;
 
+        $where = [
+            'r.states' => ['eq',0],
+            'r.image' => ['neq',""],
+            'r.url' => ['neq',""],
+        ];
+
         $list =  model("Recom")
             ->alias('r')
             ->field('r.id,r.vod_id,v.vod_name,r.name,r.image,r.url,r.intro')
             ->join('vod v','v.vod_id = r.vod_id')
-            ->where(['r.states' => ['eq',0]])
+            ->where($where)
             ->limit($pageSize,$limit)
             ->select();
         $list = objectToArray($list);
+       
         foreach($list as &$item){
             $item['image']  = mac_url_img($item['image']);
             $item['url']    = mac_url_img($item['url']);
