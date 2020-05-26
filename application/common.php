@@ -2252,6 +2252,15 @@ function mac_url($model,$param=[],$info=[])
     }
     return $url;
 }
+
+function mac_array_del_column($data,$del){
+    foreach ($data as $k=>$v){
+        foreach ($del as $key=>$val){
+            unset($data[$k][$val]);
+        }
+    }
+    return $data;
+}
 function mac_url_page($url,$num)
 {
     $url = str_replace(MAC_PAGE_SP.'PAGELINK',($num>1 ? MAC_PAGE_SP.$num : ''),$url);
