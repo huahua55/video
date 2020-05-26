@@ -20,4 +20,5 @@ return [
     'app\crontab\command\VodCode',
     'app\crontab\command\EditVod',//修改视频表数据
     'app\crontab\command\CjUpdateTime',//修改视频表更新时间
+    'app\crontab\command\RecomVodList',//定时修改 推荐短视频
 ];
