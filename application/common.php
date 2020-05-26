@@ -705,6 +705,12 @@ function mac_trim_all($str)//删除空格
     $hou=array("","","","","");
     return str_replace($qian,$hou,$str);
 }
+//删除空格
+function mac_trim_del($str)//删除空格
+{
+    $qian=array(" ","　","\t","\n","\r");
+    return str_replace($qian,"",$str);
+}
 //交集相似度
 function mac_intersect($str1,$str2)
 {
@@ -1469,7 +1475,17 @@ function mac_sort_arr($arrays,$sort_key,$sort_order=SORT_ASC,$sort_type=SORT_NUM
     array_multisort($key_arrays,$sort_order,$sort_type,$arrays);
     return $arrays;
 }
-
+//查看是否存在html字符
+function mac_str_is_html($str){
+    $strip_str = htmlspecialchars_decode($str);
+    $strip_str = mac_trim_del($strip_str);
+    $strip_str=  strip_tags($strip_str);
+    if($str != $strip_str){
+        return $strip_str;
+    }else{
+        return false;
+    }
+}
 function mac_play_list_one($url_one, $from_one, $server_one=''){
 
     $url_list = array();
