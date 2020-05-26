@@ -222,6 +222,38 @@ class DoubanScoreCopy extends Common
                                             }
 
                                             if (!empty($get_url_search_id_data)) {
+
+                                                if(!empty($as_k['id'])){
+                                                    //获取名称
+                                                    $vod_data_list_data = $this->getDouBanApiData($get_url_search_id_data);
+                                                    $upDetails = [];
+                                                    $upDetails['text'] = json_encode($vod_data_list_data,true);
+                                                    $upDetails['type'] = 7;
+                                                    $upDetails['name'] = $upDetails['title'] = $vod_data_list_data['vod_name']??'';
+                                                    $upDetails['link'] = $vod_data_list_data['vod_reurl']??'';
+                                                    $upDetails['abstract'] = '';
+                                                    $upDetails['abstract_2'] = '';
+                                                    $upDetails['score'] =  $upDetails['rating_nums'] = $vod_data_list_data['vod_douban_score']??0;
+                                                    $upDetails['time'] = date("Y-m-d H:i:s",time());
+                                                    $upDetails['name_as'] =$vod_data_list_data['vod_sub']??'';
+                                                    $upDetails['vod_director'] =$vod_data_list_data['vod_director']??'';
+                                                    $upDetails['vod_actor'] =$vod_data_list_data['vod_actor']??'';
+                                                    $upDetails['trailer_urls'] =$get_url_search_id_data['trailer_urls']??'';
+                                                    if(!empty($upDetails['trailer_urls'])){
+                                                        $upDetails['type'] = 6;
+                                                        $upDetails['trailer_urls'] =json_encode( $upDetails['trailer_urls'],true);
+                                                        $upDetails['douban_json'] =json_encode($get_url_search_id_data,true);
+                                                    }else{
+                                                        $upDetails['trailer_urls'] = json_encode([],true);
+                                                        $upDetails['douban_json'] = json_encode([],true);
+                                                    }
+
+                                                    $this-> upDetails($as_k['id'],$upDetails);
+                                                }
+
+
+
+
                                                 $vod_data = $this->getDouBanApiData($get_url_search_id_data);
 
                                                 $vod_director = $vod_data['vod_director'] ?? '';
@@ -302,11 +334,20 @@ class DoubanScoreCopy extends Common
             $output->writeln("end.3." . $e);
             $output->writeln("end.311." . $this->vodDb->getlastsql());
             file_put_contents('log.txt', 'close_url||' . $e . PHP_EOL, FILE_APPEND);
-
         }
         $output->writeln("end....");
     }
 
+    //修改详情表
+    public function upDetails($douban_id,$data){
+
+        $res =  $this->cmsDb->where(['douban_id'=>$douban_id])->update($data);
+        if($res){
+            log::info('优化：详情表-up-succ' .$res);
+        }else{
+            log::info('优化：详情表-up-error' .$res);
+        }
+    }
     //暂时废弃
     public function headers()
     {
