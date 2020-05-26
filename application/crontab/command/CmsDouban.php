@@ -52,7 +52,7 @@ class CmsDouban extends Common
     //从豆瓣接口获取内容
     public function getDouBanApi($douban_id,$type,$code =''){
         $url = sprintf($this->get_douban_id, $douban_id);
-        if($type == 6){
+        if($type == 6 && !empty($code)){
             $this->get_zm_port(true,$code);//开启芝麻代理
         }else{
             $this->get_zm_port(false,$code);//开启芝麻代理
