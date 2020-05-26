@@ -42,6 +42,7 @@ class CmsDouban extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
 
+
         $total = $this->detailsDb->where($where)->count();
         $list = $this->detailsDb->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
@@ -49,13 +50,13 @@ class CmsDouban extends Common
 
 
     //从豆瓣接口获取内容
-    public function getDouBanApi($douban_id){
+    public function getDouBanApi($douban_id,$type,$code =''){
         $url = sprintf($this->get_douban_id, $douban_id);
-        $this->get_zm_port();//开启芝麻代理
-        $str_data = $this->getUrl($url);
-//        print_r($str_data);die;
-        $get_url_data = array_pop(explode("\r\n", $str_data));
-        $get_url_data = json_decode($get_url_data,true);
+        $this->get_zm_port(false,$code);//开启芝麻代理
+//        $str_data = $this->getUrl($url);
+////        print_r($str_data);die;
+//        $get_url_data_json = array_pop(explode("\r\n", $str_data));
+//        $get_url_data = json_decode($get_url_data_json,true);
 //        print_r($str_data);die;
         //开启飞蚁代理
 //        $this->getPortData();
@@ -64,6 +65,9 @@ class CmsDouban extends Common
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
+
+          $cookie = $this->newCookie($this->getCookie('',false));
+          $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
         if(!empty($get_url_data)){
             //获取名称
@@ -80,9 +84,20 @@ class CmsDouban extends Common
             $upDetails['name_as'] =$vod_data['vod_sub']??'';
             $upDetails['vod_director'] =$vod_data['vod_director']??'';
             $upDetails['vod_actor'] =$vod_data['vod_actor']??'';
+            $upDetails['trailer_urls'] =$get_url_data['trailer_urls']??'';
+            if(!empty($upDetails['trailer_urls'])){
+                $upDetails['type'] = 6;
+                $upDetails['trailer_urls'] =json_encode( $upDetails['trailer_urls'],true);
+                $upDetails['douban_json'] =$get_url_data_json;
+            }else{
+                $upDetails['trailer_urls'] = json_encode([],true);
+                $upDetails['douban_json'] = json_encode([],true);
+            }
             $this-> upDetails($douban_id,$upDetails);
         }else{
-            $this->getFeiFeiApi($douban_id);
+            if($type != 6){
+                $this->getFeiFeiApi($douban_id);
+            }
         }
         return true;
     }
@@ -145,6 +160,7 @@ class CmsDouban extends Common
         //参数转义解析
         $param = $this->ParSing($parameter);
         $type = $param['type'] ?? 1;
+        $code = $param['code'] ?? '';
         $id = $param['id'] ?? '';
         try {
             $start = 0;
@@ -153,7 +169,12 @@ class CmsDouban extends Common
             $is_true = true;
             $where = [];
 //            $where['type'] = 1;
-            $where['name'] = '';
+            if($type == 6){
+                $where['type'] = ['neq',6];
+            }else{
+                $where['name'] = '';
+            }
+
             if (!empty($id)) {
                 $where['id'] = ['gt', $id];
             }
@@ -172,10 +193,9 @@ class CmsDouban extends Common
                         break;
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
-
                         $douban_id =  $v['douban_id'];
-                        if($type == 1 ){
-                            $this->getDouBanApi($douban_id);//7
+                        if($type == 1 || $type == 6){
+                            $this->getDouBanApi($douban_id,$type,$code);//7
                         }else if($type ==2){
                             $this->getFeiFeiApi($douban_id);//8
                         }else if($type ==3){

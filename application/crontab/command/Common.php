@@ -108,13 +108,17 @@ class Common extends Command
     }
 
     //获取芝麻代理ip
-    public function get_zm_port($i = false)
+    public function get_zm_port($i = false,$code ='')
     {
         //查找是否存在ip
         $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
-            $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            if(!empty($code)){
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=';
+            }else{
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            }
             $data = mac_curl_get($url);
             $data = json_decode($data, true);
             if ($data['code'] == 0 && !empty($data['data'])) {

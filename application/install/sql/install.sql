@@ -1025,6 +1025,8 @@ CREATE TABLE `douban_vod_details` (
     `score` varchar(255) NOT NULL DEFAULT '' COMMENT '评分',
   `text` json DEFAULT NULL,
   `error_count` tinyint(3) DEFAULT '0' COMMENT '错误总数',
+  `douban_json` json DEFAULT NULL COMMENT '豆瓣json 详情数据',
+  `trailer_urls` json DEFAULT NULL COMMENT '预告片 json url MP4格式',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `douban_id` (`douban_id`) USING BTREE,
   KEY `name` (`name`,`name_as`) USING BTREE
