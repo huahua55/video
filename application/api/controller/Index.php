@@ -859,12 +859,11 @@ class Index extends Base{
 
         $model = model("Vod");
         $order = $this->sort[2];
-        $list = $model->field('vod_name')->where([
+        $list = $model->field('vod_id,vod_name')->where([
                 "vod_name" => ['like',$word."%"],
             ])->order($order)->limit(10)->select();
         $list = objectToArray($list);
-        $list = array_column($list,"vod_name");
-
+        
         return json_return($list);
     }
 
