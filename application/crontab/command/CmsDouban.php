@@ -65,9 +65,9 @@ class CmsDouban extends Common
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
-          sleep(rand(1,5));
-          $cookie = $this->newCookie($this->getCookie('',false));
-          $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
+
+        $cookie = $this->newCookie($this->getCookie('',false));
+        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
         if(!empty($get_url_data)){
             //获取名称
@@ -162,6 +162,7 @@ class CmsDouban extends Common
         $type = $param['type'] ?? 1;
         $code = $param['code'] ?? '';
         $id = $param['id'] ?? '';
+        $s = $param['s'] ?? '';
         try {
             $start = 0;
             $page = 1;
@@ -194,6 +195,7 @@ class CmsDouban extends Common
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
                         $douban_id =  $v['douban_id'];
+                        if($s== 1){ sleep(rand(1,5));}
                         if($type == 1 || $type == 6){
                             $this->getDouBanApi($douban_id,$type,$code);//7
                         }else if($type ==2){
