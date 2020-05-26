@@ -391,6 +391,8 @@ class Index extends Base{
             'msg'       => vodRemark($info),
             'score'     => $info['vod_douban_score'] == 0 ? randomFloat(5,8) : $info['vod_douban_score'],
             'type'      => $info["vod_area"] ,
+            'director'  => $info["vod_director"],
+            'actor'     => $info["vod_actor"],
             'info'      => $info["vod_content"],
             'playcode'  => $info["vod_play_from"],
             'playlist'  => $info["vod_play_url"],
@@ -847,6 +849,21 @@ class Index extends Base{
             $item['image']  = mac_url_img($item['image']);
             $item['url']    = mac_url_img($item['url']);
         }
+
+        return json_return($list);
+    }
+
+    // 联想词汇查询
+    public function relationWord(){
+        $word  = $this->_param['word'] ?? "";
+
+        $model = model("Vod");
+        $order = $this->sort[2];
+        $list = $model->field('vod_name')->where([
+                "vod_name" => ['like',$word."%"],
+            ])->order($order)->limit(10)->select();
+        $list = objectToArray($list);
+        $list = array_column($list,"vod_name");
 
         return json_return($list);
     }
