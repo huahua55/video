@@ -45,8 +45,8 @@ class RecomVodList extends Common{
             $data = [];
             foreach($list as $item){
                 $json   = json_decode($item['trailer_urls'], true);
-                $image  = $json[0]['image'] ?? "";
-                $url    = $json[0]['url'] ?? "";
+                $image  = $json[0]['medium'] ?? "";
+                $url    = $json[0]['resource_url'] ?? "";
 
                 $data[] = [
                     'vod_id'    => $item['vod_id'],
