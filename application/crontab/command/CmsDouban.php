@@ -53,7 +53,7 @@ class CmsDouban extends Common
     public function getDouBanApi($douban_id,$type,$code =''){
         $url = sprintf($this->get_douban_id, $douban_id);
         if($type == 6 && !empty($code)){
-            $this->get_zm_port(true,$code);//开启芝麻代理
+            $this->get_zm_port(true,$code,true);//开启芝麻代理
         }else{
             $this->get_zm_port(false,$code);//开启芝麻代理
         }
@@ -89,10 +89,14 @@ class CmsDouban extends Common
             $upDetails['name_as'] =$vod_data['vod_sub']??'';
             $upDetails['vod_director'] =$vod_data['vod_director']??'';
             $upDetails['vod_actor'] =$vod_data['vod_actor']??'';
-            $upDetails['trailer_urls'] =$get_url_data['trailer_urls']??'';
+            $upDetails['trailer_urls'] =   $get_url_data['trailers']??[];
             if(!empty($upDetails['trailer_urls'])){
                 $upDetails['type'] = 6;
-                $upDetails['trailer_urls'] =json_encode( $upDetails['trailer_urls'],true);
+                $get_trailers =  $get_url_data['trailers'];
+                if(!empty($get_trailers)){
+                    $get_trailers =  mac_array_del_column($get_trailers,['subject_id','alt','small','id']);
+                }
+                $upDetails['trailer_urls'] =json_encode( $get_trailers,true);
                 $upDetails['douban_json'] =json_encode( $get_url_data,true);
             }else{
                 $upDetails['trailer_urls'] = json_encode([],true);

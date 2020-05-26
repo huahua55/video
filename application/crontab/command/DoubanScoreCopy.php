@@ -238,10 +238,14 @@ class DoubanScoreCopy extends Common
                                                     $upDetails['name_as'] =$vod_data_list_data['vod_sub']??'';
                                                     $upDetails['vod_director'] =$vod_data_list_data['vod_director']??'';
                                                     $upDetails['vod_actor'] =$vod_data_list_data['vod_actor']??'';
-                                                    $upDetails['trailer_urls'] =$get_url_search_id_data['trailer_urls']??'';
+                                                    $upDetails['trailer_urls'] =$get_url_search_id_data['trailers']??[];
                                                     if(!empty($upDetails['trailer_urls'])){
                                                         $upDetails['type'] = 6;
-                                                        $upDetails['trailer_urls'] =json_encode( $upDetails['trailer_urls'],true);
+                                                        $get_trailers =  $get_url_search_id_data['trailers'];
+                                                        if(!empty($get_trailers)){
+                                                            $get_trailers =  mac_array_del_column($get_trailers,['subject_id','alt','small','id']);
+                                                        }
+                                                        $upDetails['trailer_urls'] =json_encode($get_trailers,true);
                                                         $upDetails['douban_json'] =json_encode($get_url_search_id_data,true);
                                                     }else{
                                                         $upDetails['trailer_urls'] = json_encode([],true);

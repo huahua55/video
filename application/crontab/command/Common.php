@@ -108,16 +108,19 @@ class Common extends Command
     }
 
     //获取芝麻代理ip
-    public function get_zm_port($i = false,$code ='')
+    public function get_zm_port($i = false,$code ='',$s=false)
     {
         //查找是否存在ip
         $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
             if(!empty($code)){
-                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=';
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
             }else{
                 $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            }
+            if($s==true){
+                $url = 'http://api.shenlongip.com/ip?key=klgzvieo&pattern=json&count=10&need=1111';
             }
             $data = mac_curl_get($url);
             $data = json_decode($data, true);
@@ -125,7 +128,7 @@ class Common extends Command
                 foreach ($data['data'] as $k => $v) {
                     $port_data[$k]['ip'] = trim($v['ip']);
                     $port_data[$k]['port'] = trim($v['port']);
-                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])) - 1*60);;
+                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])));;
                     $port_data[$k]['type'] = 1;
                     $port_data[$k]['state'] = 1;
                 }
