@@ -65,7 +65,7 @@ class CmsDouban extends Common
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
-
+          sleep(rand(1,5));
           $cookie = $this->newCookie($this->getCookie('',false));
           $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
@@ -88,7 +88,7 @@ class CmsDouban extends Common
             if(!empty($upDetails['trailer_urls'])){
                 $upDetails['type'] = 6;
                 $upDetails['trailer_urls'] =json_encode( $upDetails['trailer_urls'],true);
-                $upDetails['douban_json'] =$get_url_data_json;
+                $upDetails['douban_json'] =json_encode( $get_url_data,true);
             }else{
                 $upDetails['trailer_urls'] = json_encode([],true);
                 $upDetails['douban_json'] = json_encode([],true);
