@@ -100,7 +100,10 @@ class CmsDouban extends Common
             }
             $this-> upDetails($douban_id,$upDetails);
         }else{
-            if($type != 6){
+            $ime = strtotime('2020-04-26 14:40:00');
+            if($type == 6 && time() < $ime){
+                $this->get_zm_port(true,$code);
+            }else{
                 $this->getFeiFeiApi($douban_id);
             }
         }
