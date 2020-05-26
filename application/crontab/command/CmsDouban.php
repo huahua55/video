@@ -65,7 +65,7 @@ class CmsDouban extends Common
         //不用代理
 //        $cookie = $this->newCookie($this->getCookie('',false));
 //        $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie);
-          sleep(rand(1,10));
+          sleep(rand(1,5));
           $cookie = $this->newCookie($this->getCookie('',false));
           $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
