@@ -200,7 +200,7 @@ class CmsDouban extends Common
                     }
                     foreach ($douBanScoreData['list'] as $k => $v) {
                         $douban_id =  $v['douban_id'];
-                        if($s== 1){ sleep(rand(1,5));}
+                        if($s== 1){ sleep(rand(1,3));}
                         if($type == 1 || $type == 6){
                             $this->getDouBanApi($douban_id,$type,$code);//7
                         }else if($type ==2){
