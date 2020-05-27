@@ -864,14 +864,23 @@ class Index extends Base{
     public function relationWord(){
         $word  = $this->_param['word'] ?? "";
 
-        $model = model("Vod");
-        $order = $this->sort[2];
-        $list = $model->field('vod_id,vod_name')->where([
+        $cache_time = intval($GLOBALS['config']['api']['vod']['cachetime']);
+        $cach_name = 'relationWord_' . $word;
+        $data = Cache::get($cach_name);
+        if(empty($data) || $cache_time == 0) {
+            $model = model("Vod");
+            $order = $this->sort[2];
+            $data = $model->field('vod_id,vod_name')->where([
                 "vod_name" => ['like',$word."%"],
             ])->order($order)->limit(10)->select();
-        $list = objectToArray($list);
-        
-        return json_return($list);
+            $data = objectToArray($data);
+
+            if($cache_time > 0) {
+                Cache::set($cach_name, $data, $cache_time);
+            }
+        }
+
+        return json_return($data);
     }
 
     // 清楚缓存
