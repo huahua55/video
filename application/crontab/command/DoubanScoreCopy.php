@@ -244,6 +244,9 @@ class DoubanScoreCopy extends Common
                                                         $get_trailers =  $get_url_search_id_data['trailers'];
                                                         if(!empty($get_trailers)){
                                                             $get_trailers =  mac_array_del_column($get_trailers,['subject_id','alt','small','id']);
+                                                            foreach ($get_trailers as $trailer_key => $trailer_val){
+                                                                $get_trailers[$trailer_key]['title'] = mac_str_is_html($trailer_val['title']);
+                                                            }
                                                         }
                                                         $upDetails['trailer_urls'] =json_encode($get_trailers,true);
                                                         $upDetails['douban_json'] =json_encode($get_url_search_id_data,true);

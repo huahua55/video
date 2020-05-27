@@ -82,6 +82,10 @@ class CjUpdateTime extends Common
                     if($vod_blurb != false){
                         $upWhere['vod_blurb'] = $vod_blurb;
                     }
+                    $vod_content = mac_str_is_html($v['vod_content']);
+                    if($vod_content != false){
+                        $upWhere['vod_content'] = $vod_content;
+                    }
                     if (strpos($v['vod_reurl'], ',') !== false) {
                         $upWhere['vod_reurl'] = str_replace(',', '/', $v['vod_reurl']);
                     }

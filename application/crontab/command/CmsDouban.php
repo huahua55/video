@@ -74,6 +74,7 @@ class CmsDouban extends Common
         $cookie = $this->newCookie($this->getCookie('',false));
         $get_url_data =  $this->queryListUrl( $this->ql ,$url,$cookie,true);
 //        var_dump($this->add_whitelist('23.224.163.201'));die;
+
         if(!empty($get_url_data)){
             //获取名称
             $vod_data = $this->getDouBanApiData($get_url_data);
@@ -95,6 +96,9 @@ class CmsDouban extends Common
                 $get_trailers =  $get_url_data['trailers'];
                 if(!empty($get_trailers)){
                     $get_trailers =  mac_array_del_column($get_trailers,['subject_id','alt','small','id']);
+                    foreach ($get_trailers as $trailer_key => $trailer_val){
+                        $get_trailers[$trailer_key]['title'] = mac_str_is_html($trailer_val['title']);
+                    }
                 }
                 $upDetails['trailer_urls'] =json_encode( $get_trailers,true);
                 $upDetails['douban_json'] =json_encode( $get_url_data,true);
