@@ -209,7 +209,7 @@ class CjUpdateTime extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,type_id,vod_reurl,type_id_1,vod_year,vod_remarks,vod_pubdate,vod_total,vod_serial,vod_tv,vod_weekday,vod_isend,vod_time,vod_time_add,vod_time_hits,vod_time_make,vod_plot,vod_blurb,vod_plot_name,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,type_id,vod_reurl,vod_content,type_id_1,vod_year,vod_remarks,vod_pubdate,vod_total,vod_serial,vod_tv,vod_weekday,vod_isend,vod_time,vod_time_add,vod_time_hits,vod_time_make,vod_plot,vod_blurb,vod_plot_name,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
