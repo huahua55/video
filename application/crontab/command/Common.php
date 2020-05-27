@@ -114,21 +114,22 @@ class Common extends Command
         $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
-            if(!empty($code)){
-                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
-            }else{
-                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
-            }
-            if($s==true){
-                $url = 'http://api.shenlongip.com/ip?key=klgzvieo&pattern=json&count=10&need=1111';
-            }
+//            if(!empty($code)){
+//                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+//            }else{
+//                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+//            }
+//            if($s==true){
+                $url = 'http://api.shenlongip.com/ip?key=erysr7kz&pattern=json&count=5&need=1111';
+//            }
             $data = mac_curl_get($url);
             $data = json_decode($data, true);
-            if ($data['code'] == 0 && !empty($data['data'])) {
+            if (!empty($data['data'])) {
                 foreach ($data['data'] as $k => $v) {
                     $port_data[$k]['ip'] = trim($v['ip']);
                     $port_data[$k]['port'] = trim($v['port']);
-                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])));;
+                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire'])));;
+//                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])));;
                     $port_data[$k]['type'] = 1;
                     $port_data[$k]['state'] = 1;
                 }
@@ -145,7 +146,7 @@ class Common extends Command
         $port_log_data = array_merge($port_log_data,$port_data);
 
         $count = count($port_log_data);//数量
-        if($count < 2){
+        if($count < 5){
             $this->get_zm_port(true);
         }
         $count = count($port_log_data);//数量

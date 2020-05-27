@@ -147,8 +147,8 @@ class DoubanTopList extends Common
 //                    $vodDouBanFindWhere['vod_name'] =mac_trim_all(mac_characters_format($sub_val['title']));
                     $vodDouBanFindWhere['vod_douban_id'] = $sub_val['id'];
                     $vodDouBanFindWhere['vod_name'] = mac_trim_all(mac_characters_format($sub_val['title']));
-                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name,vod_play_from,vod_play_url,vod_area')->whereOr($vodDouBanFindWhere)->select();
-                    $vodDouBanFindNewData = $this->getVodDouBanFindDataList($vodDouBanFindData);//处理
+                    $vodDouBanFindData = $this->vodDb->field('vod_id,type_id_1,type_id,vod_name as name,vod_play_from,vod_play_url,vod_area,vod_douban_id')->whereOr($vodDouBanFindWhere)->select();
+                    $vodDouBanFindNewData = $this->getVodDouBanFindDataList($vodDouBanFindData,$sub_val['id']);//处理
                     //查询推荐表 豆瓣id不等于空
                     $getDouBanRecommendFindWhere['douban_id'] = $sub_val['id'];
                     $douBanRecommendFindData = $this->getDouBanRecommendFindData($getDouBanRecommendFindWhere);
@@ -321,10 +321,15 @@ class DoubanTopList extends Common
 
 
     //处理数组
-    protected function getVodDouBanFindDataList($vodDouBanFindData)
+    protected function getVodDouBanFindDataList($vodDouBanFindData,$douban_id = '')
     {
         $DouBanRes = [];
         foreach ($vodDouBanFindData as $ky => $v) {
+            if(!empty($douban_id)){
+                 if($v['vod_douban_id'] == $douban_id){
+                     $vodDouBanFindData[$ky]['count'] = 100;
+                 }
+            }
             $vod_play_from_list = [];
             $vod_play_url_list = [];
             $count = [];
