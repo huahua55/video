@@ -1,6 +1,6 @@
 <?php
 
-//echo 'ok';/
+echo 'ok';die;
 
 //composer  require php-ffmpeg/php-ffmpeg
 
