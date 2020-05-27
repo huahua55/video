@@ -845,7 +845,7 @@ class Index extends Base{
 
         $list =  model("Recom")
             ->alias('r')
-            ->field('r.id,r.vod_id,v.vod_name,r.name,r.image,r.url,r.intro')
+            ->field('r.id,r.vod_id,v.vod_name,v.vod_actor,v.vod_pic,r.name,r.image,r.url,r.intro')
             ->join('vod v','v.vod_id = r.vod_id')
             ->where($where)
             ->limit($pageSize,$limit)
@@ -853,8 +853,9 @@ class Index extends Base{
         $list = objectToArray($list);
        
         foreach($list as &$item){
-            $item['image']  = mac_url_img($item['image']);
-            $item['url']    = mac_url_img($item['url']);
+            $item['image']      = mac_url_img($item['image']);
+            $item['url']        = mac_url_img($item['url']);
+            $item['vod_pic']    = mac_url_img($item['vod_pic']);
         }
 
         return json_return($list);
