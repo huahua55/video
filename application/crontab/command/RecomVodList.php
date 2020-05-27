@@ -39,7 +39,7 @@ class RecomVodList extends Common{
         for($i = 0; $i < $page; $i++){
             $pageSize = $i * $limit;
 
-            $listSql = "SELECT v.vod_id,v.vod_name as name,v.type_id_1 as type_id,v.vod_blurb,d.trailer_urls FROM `douban_vod_details` d JOIN vod v on d.douban_id = v.vod_douban_id WHERE JSON_EXTRACT(trailer_urls,'$[0]') is not null limit " .$pageSize . "," . $limit;
+            $listSql = "SELECT v.vod_id,v.vod_name as name,v.type_id_1 as type_id,v.vod_blurb,d.trailer_urls FROM `douban_vod_details` d JOIN vod v on d.douban_id = v.vod_douban_id LEFT JOIN recom r on r.vod_id = v.vod_id WHERE JSON_EXTRACT(trailer_urls,'$[0]') is not null AND r.id IS NULL limit " .$pageSize . "," . $limit;
 
             $list = Db::query($listSql);
             $data = [];
