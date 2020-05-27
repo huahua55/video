@@ -261,7 +261,7 @@ class Index extends Base{
             ->field('d.vod_id')
             ->join('vod v','d.vod_id = v.vod_id','left')
             ->where(array_merge($where,['d.type_id'=>['eq',1]]))
-            ->order('d.id asc,country_sort desc')
+            ->order('d.country_sort desc,d.id asc')
             ->limit($limit)
             ->select();
         $ids2 = $model
@@ -269,7 +269,7 @@ class Index extends Base{
             ->field('d.vod_id')
             ->join('vod v','d.vod_id = v.vod_id','left')
             ->where(array_merge($where,['d.type_id'=>['eq',2]]))
-            ->order('d.id asc,country_sort desc')
+            ->order('d.country_sort desc,d.id asc')
             ->limit($limit)
             ->select();
         $ids  = objectToArray($ids);
@@ -731,7 +731,7 @@ class Index extends Base{
                 ->field('r.vod_id,r.name,v.vod_pic,r.type_id as r_type_id,v.vod_score,v.type_id,v.type_id_1,v.vod_total,v.vod_serial,v.vod_douban_score,v.vod_remarks')
                 ->join('vod v','r.vod_id = v.vod_id','left')
                 ->where($where)
-                ->order('id asc,country_sort desc')
+                ->order('r.country_sort desc,r.id asc')
                 ->select();
             $list = objectToArray($list);
             $data = [];
