@@ -16,7 +16,7 @@ use GuzzleHttp\Client;
 class RecomVodList extends Common{
 
     protected function configure(){
-        $this->setName('VecomVodList')->addArgument('parameter')
+        $this->setName('RecomVodList')->addArgument('parameter')
             ->setDescription('定时计划：推荐短视频');
     }
 
