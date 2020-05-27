@@ -109,7 +109,8 @@ class CmsDouban extends Common
             $this-> upDetails($douban_id,$upDetails);
         }else{
             if($type == 6){
-                $this->get_zm_port(true);
+
+                $this->get_zm_port();
             }else{
                 $this->getFeiFeiApi($douban_id);
             }
