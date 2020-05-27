@@ -8,3 +8,5 @@ cd /data/www/video/
 ps -ef | grep cmsDouban | grep -v grep | awk '{print $2}' | xargs kill -9
 sleep 5
 php think cmsDouban
+
+php think cmsDouban type=6#id=5000
