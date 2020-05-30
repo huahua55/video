@@ -31,6 +31,7 @@ class Domain extends Base
                     'html_dir'=>$tmp['html_dir'][$k],
                     'mob_template_dir'=>$tmp['mob_template_dir'][$k],
                     'site_email'=>$tmp['site_email'][$k],
+                    'remoteurl'=>$tmp['remoteurl'][$k],
                     'ads_dir'=>$tmp['ads_dir'][$k],
                     'site_logo'=>$tmp['site_logo'][$k],
                 ];
@@ -105,7 +106,9 @@ class Domain extends Base
                             'template_dir' => $one[4],
                             'html_dir' => $one[5],
                             'site_email' => $one[6],
-                            'ads_dir'=>$one[7],
+                            'remoteurl' => $one[7],
+                            'ads_dir'=>$one[8],
+                            'site_logo'=>$one[9],
                         ];
                     }
                 }
