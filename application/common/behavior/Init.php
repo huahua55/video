@@ -22,7 +22,12 @@ class Init
         $host = $request->host();
         $isDomain=0;
         if( is_array($domain) && isset($domain[$host]) && !empty($domain[$host])){
-            $config['site'] = array_merge($config['site'],$domain[$host]);
+            $host_data = $domain[$host];
+            if(isset($host_data['remoteurl'])){
+                $config['upload']['remoteurl'] = $host_data['remoteurl'];
+                unset($host_data['remoteurl']);
+            }
+            $config['site'] = array_merge($config['site'],$host_data);
             $isDomain=1;
             if(empty($config['site']['mob_template_dir']) || $config['site']['mob_template_dir'] =='no'){
                 $config['site']['mob_template_dir'] = $config['site']['template_dir'];
