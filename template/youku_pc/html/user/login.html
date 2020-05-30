@@ -5,7 +5,7 @@
 <title>用户登录 - {$maccms.site_name}</title>
 <meta name="keywords" content="{$maccms.site_keywords}"/>
 <meta name="description" content="{$maccms.site_description}"/>
- <link rel="stylesheet" href="{$maccms.path_tpl}youku/css/user.css?3.7.180327">
+ <link rel="stylesheet" href="{:asset('/template/youku_pc/youku/css/user.css?3.7.180327')}">
  {include file="public/include" /}
 </head>
 <body>
@@ -43,9 +43,9 @@
 				 
 				  </form>
 				   <p class="b-registe-txtbtns">
-				  <span class="js-signin"><a href="/user/oauth/?type=qq"><img src="{$maccms.path_tpl}youku/images/qq.png" style="width: 34px;height:34px;"></a></a></span>
-				  <span class="js-signin"><a href="/user/oauth/?type=weixin"><img src="{$maccms.path_tpl}youku/images/weixin.png" style="width: 34px;height:34px;"></a></span>
-                  <span class="js-signin"><a href="/user/oauth/?type=weibo"><img src="{$maccms.path_tpl}youku/images/weibo.png" style="width: 34px;height:34px;"></a></span>
+				  <span class="js-signin"><a href="/user/oauth/?type=qq"><img src="{:asset('/template/youku_pc/youku/images/qq.png')}" style="width: 34px;height:34px;"></a></a></span>
+				  <span class="js-signin"><a href="/user/oauth/?type=weixin"><img src="{:asset('/template/youku_pc/youku/images/weixin.png')}" style="width: 34px;height:34px;"></a></span>
+                  <span class="js-signin"><a href="/user/oauth/?type=weibo"><img src="{:asset('/template/youku_pc/youku/images/weibo.png')}" style="width: 34px;height:34px;"></a></span>
                   <span class="b-registe-login js-signin"><a href="{:url('user/reg')}">立即注册</a></span>
                   <span class="b-registe-forgetpwd js-forgetpwd"><a href="{:url('user/findpass')}">找回密码</a></span>
                    </p>
