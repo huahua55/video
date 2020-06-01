@@ -889,4 +889,12 @@ class Index extends Base{
         $name = $this->_param['name'] ?? 0;
         Cache::rm($name);
     }
+
+    public function conf(){
+        $data  = [
+            'cdn_domain'=>'https://spws1.vknlynd.cn/',
+            'api_domain'=>'https://api.lanhu.tv/',
+        ];
+        return json_return($data);
+    }
 }
