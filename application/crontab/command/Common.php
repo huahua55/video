@@ -114,13 +114,79 @@ class Common extends Command
         $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
+            if(!empty($code)){
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            }else{
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+            }
+//            if($s==true){
+//                $url = 'http://api.shenlongip.com/ip?key=erysr7kz&pattern=json&count=5&need=1111';
+//            }
+            $data = mac_curl_get($url);
+            $data = json_decode($data, true);
+            if (!empty($data['data'])) {
+                foreach ($data['data'] as $k => $v) {
+                    $port_data[$k]['ip'] = trim($v['ip']);
+                    $port_data[$k]['port'] = trim($v['port']);
+//                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire'])));;
+                    $port_data[$k]['expire_time'] = date("Y-m-d H:i:s",strtotime(trim($v['expire_time'])));;
+                    $port_data[$k]['type'] = 1;
+                    $port_data[$k]['state'] = 1;
+                }
+                Db::name('port_log')->insertAll($port_data);
+            }
+        } else {
+            foreach ($port_log_data as $k => $v) {
+                if (time() > strtotime($v['expire_time'])) {
+                    unset($port_log_data[$k]);
+                    Db::name('port_log')->where(['id' => $v['id']])->update(['state'=>2]);
+                }
+            }
+        }
+        $port_log_data = array_merge($port_log_data,$port_data);
+
+        $count = count($port_log_data);//数量
+        if($count < 2){
+            $this->get_zm_port(true);
+        }
+        $count = count($port_log_data);//数量
+        $rand = rand(1, $count);
+        $rand = $rand - 1;
+        if ($rand < 0) {
+            $rand = 0;
+        }
+        if(isset($port_log_data[$rand])){
+            if($i == true){
+                $this->proxy_server = $port_data[1]['ip']??'';
+                $this->get_port = $port_data[1]['port']??'';
+                $this->times = strtotime($port_data[1]['expire_time']);
+            }else{
+                $this->proxy_server = $port_log_data[$rand]['ip']??'';
+                $this->get_port = $port_log_data[$rand]['port']??'';
+                $this->times = strtotime($port_log_data[$rand]['expire_time']);
+            }
+        }else{
+//            exit;
+        }
+//        echo 'httpCode:' . json_encode($port_log_data[$rand], true) . "\n <br>";
+
+    }
+
+
+    //获取芝麻代理ip
+    public function get_zm_portiii($i = false,$code ='',$s=false)
+    {
+        //查找是否存在ip
+        $port_log_data = Db::name('port_log')->where(['state' => 1, 'type' => 1])->select();
+        $port_data = [];
+        if (empty($port_log_data) || $i == true) {
 //            if(!empty($code)){
 //                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
 //            }else{
 //                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
 //            }
 //            if($s==true){
-                $url = 'http://api.shenlongip.com/ip?key=erysr7kz&pattern=json&count=5&need=1111';
+            $url = 'http://api.shenlongip.com/ip?key=erysr7kz&pattern=json&count=5&need=1111';
 //            }
             $data = mac_curl_get($url);
             $data = json_decode($data, true);
@@ -146,7 +212,7 @@ class Common extends Command
         $port_log_data = array_merge($port_log_data,$port_data);
 
         $count = count($port_log_data);//数量
-        if($count < 5){
+        if($count < 3){
             $this->get_zm_port(true);
         }
         $count = count($port_log_data);//数量
