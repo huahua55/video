@@ -12,7 +12,7 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '127.0.0.1',
+    'hostname'        => '192.168.1.216',
     // 数据库名
     'database'        => 'video',
     // 用户名
@@ -20,6 +20,7 @@ return [
     // 密码
     'password'        => \think\Env::get('database.password'),
     // 端口
+//    'hostport'        => '8889',
     'hostport'        => '3306',
     // 连接dsn
     'dsn'             => '',
