@@ -162,7 +162,8 @@ class Redis extends Driver
      */
     public function rm($name)
     {
-        return $this->handler->delete($this->getCacheKey($name));
+//        return $this->handler->delete($this->getCacheKey($name));
+        return $this->handler->del($this->getCacheKey($name));
     }
 
     /**
