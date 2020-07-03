@@ -380,12 +380,12 @@ class Collect extends Base {
             $img_url = model('Image')->down_load($pic_url, $GLOBALS['config']['upload'], $flag);
             $link = MAC_PATH . $img_url;
             $link = str_replace('mac:', $GLOBALS['config']['upload']['protocol'].':', $img_url);
-
+            $des = $img_url .'--'. $pic_url.'--';
             if ($img_url == $pic_url) {
-                $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=red>下载失败!</font>';
+                $des .= '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=red>下载失败!</font>';
             } else {
                 $pic_url = $img_url;
-                $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
+                $des .= '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
             }
         }
         return ['pic'=>$pic_url,'msg'=>$des];
