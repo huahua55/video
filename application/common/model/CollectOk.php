@@ -5,7 +5,7 @@ use think\Cache;
 use app\common\util\Pinyin;
 use think\Request;
 
-class Collect extends Base {
+class CollectOk extends Base {
 
     // 设置数据表（不含前缀）
     protected $name = 'collect';
