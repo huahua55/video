@@ -120,7 +120,7 @@
             , id: 'testReload'
             , page: true
             // , even: 10
-            , limit: 15
+            , limit: 10
             ,toolbar: '#toolbarDemo'
             // , height: 310
             , cols: [[
@@ -161,7 +161,8 @@
                         title: '编辑',
                         closeBtn: 1, //不显示关闭按钮
                         anim: 2,
-                        area: ['893px', '600px'],
+                        area: ['100%', '100%'],
+                        offset:['0px','0px'],
                         shadeClose: true, //开启遮罩关闭
                         content: '/admin/video_vod/info'
                     });
@@ -186,7 +187,8 @@
                     title: '编辑',
                     closeBtn: 1, //不显示关闭按钮
                     anim: 2,
-                    area: ['893px', '600px'],
+                    area: ['100%', '100%'],
+                    offset:['0px','0px'],
                     shadeClose: true, //开启遮罩关闭
                     content: '/admin/video_vod/info?id='+data.b_id
                 });
