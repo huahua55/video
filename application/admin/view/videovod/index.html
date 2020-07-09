@@ -97,6 +97,16 @@
     {{#  } }}
 </script>
 
+<script type="text/html" id="is_nameTpl">
+    {{#  if(d.mu_url == ''){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.location.href='{{d.mu_url}}'">{{d.vod_name}}</button>
+    {{#  } }}
+</script>
+
+
+
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
@@ -131,13 +141,14 @@
                 , {field: 'b_id', title: 'ID', width: 80, sort: true, fixed: true}
                 , {field: 'b_vod_id', title: '视频ID', width: 80}
                 , {field: 'b_code', title: '机器编号', width: 80}
-                , {field: 'vod_name', title: '视频名称', width: 100,templet: function (d) {
-                        if(d.mu_url == ""){
-                            return d.vod_name;
-                        }else{
-                           return "<a  href='"+d.mu_url+"' target='_blank'></a></a><span style='color: #00b269'>"+d.vod_name+"</span>"
-                        }
-                    }}
+                // , {field: 'vod_name', title: '视频名称', width: 150,templet: function (d) {
+                //         if(d.mu_url == ""){
+                //             return d.vod_name;
+                //         }else{
+                //            return "<a  href='"+d.mu_url+"' target='_blank'></a></a><span style='color: #00b269'>"+d.vod_name+"</span>"
+                //         }
+                //     }}
+                , {field: 'vod_name', title: '视频名称', width: 150,  templet: '#is_nameTpl'}
                 , {field: 'b_is_down', title: '下载状态', width: 100,  templet: '#is_downTpl'}
                 , {field: 'b_is_section', title: '切片状态', width: 100, templet: '#is_sectionTpl'}
                 , {field: 'b_is_sync', title: '上传状态', width: 100, templet: '#is_syncTpl'}
