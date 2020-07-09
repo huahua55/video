@@ -77,7 +77,7 @@ layui.define(['element', 'form'], function(exports) {
 	}
 	if (typeof(LAYUI_OFFSET) == 'undefined') {
 		layer.config({
-			offset: '60px'
+			offset: '0px'
 		});
 	} else {
 		layer.config({
@@ -204,8 +204,8 @@ layui.define(['element', 'form'], function(exports) {
 		var that = $(this),
 			_url = that.attr('data-href'),
 			_title = that.attr('data-title'),
-			_width = that.attr('data-width') ? that.attr('data-width') + '' : '85%',
-			_height = that.attr('data-height') ? that.attr('data-height') + '' : '80%',
+			_width = that.attr('data-width') ? that.attr('data-width') + '' : '100%',
+			_height = that.attr('data-height') ? that.attr('data-height') + '' : '100%',
 			_full = that.attr('data-full'),
 			_checkbox = that.attr('data-checkbox');
 
