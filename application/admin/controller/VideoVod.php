@@ -46,20 +46,24 @@ class VideoVod extends Base
         $where=[];
         $whereOr=[];
 
-        if(!empty($param['idName'])){
+        if(!empty($param['idName']) ){
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
             $whereOr['a.vod_name'] = ['like','%'.$param['idName'].'%'];
             $whereOr['b.id'] = $param['idName'];
         }
-        if(!empty($param['b_is_down'])){
+        if(isset($param['b_is_down']) && $param['b_is_down'] != ""){
             $where['b.is_down'] = $param['b_is_down'];
         }
-        if(!empty($param['b_is_section'])){
+        if(isset($param['b_is_section']) && $param['b_is_section'] != ""){
             $where['b.is_section'] = $param['b_is_section'];
         }
-        if(!empty($param['b_is_sync'])){
+        if(isset($param['b_is_sync']) && $param['b_is_sync'] != ""){
             $where['b.is_sync'] = $param['b_is_sync'];
         }
+        if(isset($param['b_code']) && $param['b_code'] != ""){
+            $where['b.code'] = $param['b_code'];
+        }
+//        p($where);
 
         $order='b.weight desc';
 

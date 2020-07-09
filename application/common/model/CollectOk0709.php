@@ -5,7 +5,7 @@ use think\Cache;
 use app\common\util\Pinyin;
 use think\Request;
 
-class Collect extends Base {
+class CollectOk extends Base {
 
     // 设置数据表（不含前缀）
     protected $name = 'collect';
@@ -430,7 +430,6 @@ class Collect extends Base {
                     }
                 }
                 $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
-
                 $v['type_id_1'] = intval($type_list[$v['type_id']]['type_pid']);
                 $v['vod_en'] = Pinyin::get($v['vod_name']);
                 $v['vod_letter'] = strtoupper(substr($v['vod_en'],0,1));
@@ -450,13 +449,14 @@ class Collect extends Base {
                 $v['vod_stint_play'] = intval($v['vod_stint_play']);
                 $v['vod_stint_down'] = intval($v['vod_stint_down']);
 
+
                 $v['vod_total'] = intval($v['vod_total']);
+                $v['vod_serial'] = intval($v['vod_serial']);
 
                 $tid = intval($type_list[$v['type_id']]['type_pid']);
                 if($tid == 2){
                     $v['vod_serial']  = mac_vod_remarks($v['vod_remarks'], $v['vod_total']);
                 }
-//                $v['vod_serial'] = intval($v['vod_serial']);
                 $v['vod_isend'] = intval($v['vod_isend']);
                 $v['vod_up'] = intval($v['vod_up']);
                 $v['vod_down'] = intval($v['vod_down']);
@@ -621,7 +621,7 @@ class Collect extends Base {
                     $info = model('Vod')->where($where)
                         ->where(function($query){
                             $query->where('vod_director',$GLOBALS['blend']['vod_director'])
-                                    ->whereOr('vod_actor',$GLOBALS['blend']['vod_actor']);
+                                ->whereOr('vod_actor',$GLOBALS['blend']['vod_actor']);
                         })
                         ->find();
                 }
@@ -647,9 +647,30 @@ class Collect extends Base {
                         $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                         $v['vod_pic'] = (string)$tmp['pic'];
                         $msg = $tmp['msg'];
-                        $res = model('Vod')->insert($v);
-                        if ($res === false) {
+//                        $res = model('Vod')->insert($v);
+//                        if ($res === false) {
+//
+//                        }
+                        if($blend===false){
+                            $infos = model('Vod')->where($where)->find();
+                        }
+                        else{
+                            $infos = model('Vod')->where($where)
+                                ->where(function($query){
+                                    $query->where('vod_director',$GLOBALS['blend']['vod_director'])
+                                        ->whereOr('vod_actor',$GLOBALS['blend']['vod_actor']);
+                                })
+                                ->find();
+                        }
+                        if(empty($infos)){
 
+                            $res = model('Vod')->insert($v);
+                            if ($res === false) {
+                            }
+                            $del_where['vod_name']= $v['vod_name'];
+                            $del_where['vod_down_url']= ['neq',''];
+                            $del_where['vod_play_url']= ['eq',''];
+                            model('Vod')->where($del_where)->delete();
                         }
                         $color = 'green';
                         $des = '新加入库，成功ok。';
@@ -916,7 +937,7 @@ class Collect extends Base {
                 $url = url('api') . '?' . http_build_query($param);
                 $ref = $_SERVER["HTTP_REFERER"];
                 if(!empty($ref)){
-                   $url = $ref;
+                    $url = $ref;
                 }
 
                 mac_jump($url, $GLOBALS['config']['app']['collect_timespan']);

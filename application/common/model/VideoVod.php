@@ -33,6 +33,9 @@ class videoVod extends Base {
 
         }
 
+//        $list = Db::name('Vod')->getLastSql();
+//        p($list);
+
         foreach ($list as &$v){
             $b_set_down_url =  mac_json_decode($v['b_set_down_url']);
             $v['surl']=  implode("@@@",$b_set_down_url);

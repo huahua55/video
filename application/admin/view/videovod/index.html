@@ -2,9 +2,18 @@
 <div class="page-container p10">
 
     <div class="demoTable">
-        搜索ID：
+        搜索：
         <div class="layui-inline">
-            <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+            <input class="layui-input" placeholder="视频名称或ID" name="id" id="demoReload" autocomplete="off">
+        </div>
+        &nbsp;
+        机器编码：
+        <div class="layui-inline">
+            <select class="layui-select" name="b_code">
+                <option  value="">选择状态</option>
+                <option value="1" {if condition="$param['b_code'] eq '1'"}selected {/if}>1号机器</option>
+                <option value="2" {if condition="$param['b_code'] eq '2'"}selected {/if}>2号机器</option>
+            </select>
         </div>
         &nbsp;
         下载状态：
@@ -202,6 +211,7 @@
                 // alert(b_is_down)
                 var  b_is_section =     $("select[name='b_is_section']").val();
                 var  b_is_sync =     $("select[name='b_is_sync']").val();
+                var  b_code =     $("select[name='b_code']").val();
 
                 //执行重载
                 table.reload('testReload', {
@@ -212,6 +222,7 @@
                         // key: {
                             idName: demoReload.val(),
                             b_is_down: b_is_down,
+                             b_code: b_code,
                             b_is_section: b_is_section,
                             b_is_sync: b_is_sync,
                         // }

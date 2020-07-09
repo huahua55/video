@@ -5,7 +5,7 @@ use think\Cache;
 use app\common\util\Pinyin;
 use think\Request;
 
-class Collect extends Base {
+class Collect0709 extends Base {
 
     // 设置数据表（不含前缀）
     protected $name = 'collect';
@@ -288,11 +288,11 @@ class Collect extends Base {
     {
         $url_param = [];
         $url_param['ac'] = $param['ac'];
-        $url_param['t'] = $param['t'];
+        $url_param['t'] = $param['t']; // 分类ID
         $url_param['pg'] = is_numeric($param['page']) ? $param['page'] : '';
-        $url_param['h'] = $param['h'];
+        $url_param['h'] = $param['h']; // 小时
         $url_param['ids'] = $param['ids'];
-        $url_param['wd'] = $param['wd'];
+        $url_param['wd'] = $param['wd'];// 搜索关键词
 
         if($param['ac']!='list'){
             $url_param['ac'] = 'videolist';
@@ -380,7 +380,7 @@ class Collect extends Base {
             $img_url = model('Image')->down_load($pic_url, $GLOBALS['config']['upload'], $flag);
             $link = MAC_PATH . $img_url;
             $link = str_replace('mac:', $GLOBALS['config']['upload']['protocol'].':', $img_url);
-
+//            $des = $img_url .'--'. $pic_url.'--';
             if ($img_url == $pic_url) {
                 $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=red>下载失败!</font>';
             } else {
@@ -431,6 +431,7 @@ class Collect extends Base {
                 }
                 $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
 
+
                 $v['type_id_1'] = intval($type_list[$v['type_id']]['type_pid']);
                 $v['vod_en'] = Pinyin::get($v['vod_name']);
                 $v['vod_letter'] = strtoupper(substr($v['vod_en'],0,1));
@@ -451,12 +452,14 @@ class Collect extends Base {
                 $v['vod_stint_down'] = intval($v['vod_stint_down']);
 
                 $v['vod_total'] = intval($v['vod_total']);
+                $v['vod_serial'] = intval($v['vod_serial']);
 
                 $tid = intval($type_list[$v['type_id']]['type_pid']);
                 if($tid == 2){
                     $v['vod_serial']  = mac_vod_remarks($v['vod_remarks'], $v['vod_total']);
                 }
-//                $v['vod_serial'] = intval($v['vod_serial']);
+
+
                 $v['vod_isend'] = intval($v['vod_isend']);
                 $v['vod_up'] = intval($v['vod_up']);
                 $v['vod_down'] = intval($v['vod_down']);
@@ -571,6 +574,9 @@ class Collect extends Base {
                 foreach($cj_play_from_arr as $kk=>$vv){
                     if(empty($vv)){
                         unset($cj_play_from_arr[$kk]);
+                        unset($cj_play_url_arr[$kk]);
+                        unset($cj_play_server_arr[$kk]);
+                        unset($cj_play_note_arr[$kk]);
                         continue;
                     }
 
@@ -590,8 +596,12 @@ class Collect extends Base {
                 foreach($cj_down_from_arr as $kk=>$vv){
                     if(empty($vv)){
                         unset($cj_down_from_arr[$kk]);
+                        unset($cj_down_url_arr[$kk]);
+                        unset($cj_down_server_arr[$kk]);
+                        unset($cj_down_note_arr[$kk]);
                         continue;
                     }
+
                     $cj_down_url_arr[$kk] = rtrim($cj_down_url_arr[$kk]);
                     $cj_down_server_arr[$kk] = $cj_down_server_arr[$kk];
                     $cj_down_note_arr[$kk] = $cj_down_note_arr[$kk];
@@ -647,9 +657,30 @@ class Collect extends Base {
                         $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                         $v['vod_pic'] = (string)$tmp['pic'];
                         $msg = $tmp['msg'];
-                        $res = model('Vod')->insert($v);
-                        if ($res === false) {
+//                        $res = model('Vod')->insert($v);
+//                        if ($res === false) {
+//
+//                        }
+                        if($blend===false){
+                            $infos = model('Vod')->where($where)->find();
+                        }
+                        else{
+                            $infos = model('Vod')->where($where)
+                                ->where(function($query){
+                                    $query->where('vod_director',$GLOBALS['blend']['vod_director'])
+                                        ->whereOr('vod_actor',$GLOBALS['blend']['vod_actor']);
+                                })
+                                ->find();
+                        }
+                        if(empty($infos)){
 
+                            $res = model('Vod')->insert($v);
+                            if ($res === false) {
+                            }
+                            $del_where['vod_name']= $v['vod_name'];
+                            $del_where['vod_down_url']= ['neq',''];
+                            $del_where['vod_play_url']= ['eq',''];
+                            model('Vod')->where($del_where)->delete();
                         }
                         $color = 'green';
                         $des = '新加入库，成功ok。';
@@ -1702,6 +1733,7 @@ class Collect extends Base {
 
                 if($blend===false){
                     $vod_info = model('Vod')->where($where2)->find();
+
                 }
                 else{
                     $vod_info = model('Vod')->where($where2)
@@ -1717,7 +1749,7 @@ class Collect extends Base {
                 }
                 else {
                     $v['role_rid'] = $vod_info['vod_id'];
-
+                    $where['role_rid'] = $vod_info['vod_id'];
                     $info = model('Role')->where($where)->find();
                     if (!$info) {
                         $tmp = $this->syncImages($config['pic'], $v['role_pic'], 'role');
