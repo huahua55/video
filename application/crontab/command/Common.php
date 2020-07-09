@@ -705,7 +705,7 @@ class Common extends Command
         }
         //视频标签
         if (isset($res['vod_tag'])) {
-            $vod_data['vod_tag'] = mac_format_text(trim($res['vod_class']));
+            $vod_data['vod_tag'] = mac_format_text(trim($res['vod_tag']));
         }
 
         //发行地区
