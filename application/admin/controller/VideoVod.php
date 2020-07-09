@@ -65,10 +65,9 @@ class VideoVod extends Base
         }
 //        p($where);
 
-        $order='b.weight desc';
+        $order='b.weight desc,b.down_time desc';
 
         $res = model('VideoVod')->listData($whereOr,$where,$order,$param['page'],$param['limit']);
-//        p($res);
         $this->assign('list',$res['list']);
         $this->assign('total',$res['total']);
         $this->assign('page',$res['page']);

@@ -103,6 +103,9 @@
     </div>
 </script>
 
+<script>
+
+</script>
 <!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
@@ -128,7 +131,13 @@
                 , {field: 'b_id', title: 'ID', width: 80, sort: true, fixed: true}
                 , {field: 'b_vod_id', title: '视频ID', width: 80}
                 , {field: 'b_code', title: '机器编号', width: 80}
-                , {field: 'vod_name', title: '视频名称', width: 100}
+                , {field: 'vod_name', title: '视频名称', width: 100,templet: function (d) {
+                        if(d.mu_url == ""){
+                            return d.vod_name;
+                        }else{
+                           return "<a  href='"+d.mu_url+"' target='_blank'></a></a><span style='color: #00b269'>"+d.vod_name+"</span>"
+                        }
+                    }}
                 , {field: 'b_is_down', title: '下载状态', width: 100,  templet: '#is_downTpl'}
                 , {field: 'b_is_section', title: '切片状态', width: 100, templet: '#is_sectionTpl'}
                 , {field: 'b_is_sync', title: '上传状态', width: 100, templet: '#is_syncTpl'}

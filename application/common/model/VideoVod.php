@@ -24,20 +24,31 @@ class videoVod extends Base {
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
         if(empty($whereOr)){
-            $total = Db::name('Vod')->alias('a')->field('a.*,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->count();
-            $list = Db::name('Vod')->alias('a')->field('a.*,b.id as b_id,b.set_down_url as b_set_down_url,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->select();
+            $total = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->count();
+            $list = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.set_down_url as b_set_down_url,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->select();
 
         }else{
-            $total = Db::name('Vod')->alias('a')->field('a.*,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->whereOr($whereOr)->order($order)->limit($limit_str)->count();
-            $list = Db::name('Vod')->alias('a')->field('a.*,b.id as b_id,b.set_down_url as b_set_down_url,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
+            $total = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->whereOr($whereOr)->order($order)->limit($limit_str)->count();
+            $list = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.set_down_url as b_set_down_url,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
 
         }
 
-//        $list = Db::name('Vod')->getLastSql();
-//        p($list);
+//        $list = Db::name('Vod')->getLas
+//        p( Db::name('Vod')->getLastSql());
+         $video_domain = Db::table('video_domain')->find();
 
+//        p($list);
         foreach ($list as &$v){
             $b_set_down_url =  mac_json_decode($v['b_set_down_url']);
+            $where_collection = [];
+            $where_collection['video_id'] = $v['b_video_id'];
+            $where_collection['collection'] = 1;
+            $video_collection =   Db::table('video_collection')->where($where_collection)->find();
+            if(empty($video_collection)){
+                $v['mu_url'] = '';
+            }else{
+                $v['mu_url'] = $video_domain['vod_domain'] . $video_collection['vod_url'];
+            }
             $v['surl']=  implode("@@@",$b_set_down_url);
         }
 //        p($list);
