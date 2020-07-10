@@ -105,8 +105,8 @@ class VideoVod extends Base
     public function updateExamine(){
         $param = input();
         $id = $param['id']??'';
-        $examine_id = $param['examine_id']??'0';
-        $is_examine= $param['is_examine']??'0';
+        $examine_id = $param['examine_id']??'';
+        $is_examine= $param['is_examine']??'';
         $data['code'] = 0;
         $data['msg'] = 'error';
         $data['data'] = [];
