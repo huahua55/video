@@ -101,7 +101,7 @@
     {{#  if(d.mu_url == ''){ }}
     <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
     {{#  } else{ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.location.href='{{d.mu_url}}'">{{d.vod_name}}</button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.mu_url}}','_blank')">{{d.vod_name}}</button>
     {{#  } }}
 </script>
 
