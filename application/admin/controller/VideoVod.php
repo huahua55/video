@@ -110,11 +110,15 @@ class VideoVod extends Base
         $data['code'] = 0;
         $data['msg'] = 'error';
         $data['data'] = [];
-        if(!empty($examine_id)){
+        if(!empty($id)){
             $where['id'] = $id;
             $update = [];
-            $update['examine_id'] = $examine_id;
-            $update['is_examine'] = $is_examine;
+            if(!empty($examine_id)){
+                $update['examine_id'] = $examine_id;
+            }
+            if(!empty($is_examine)){
+                $update['is_examine'] = $is_examine;
+            }
             $res = Db::table('video_examine')->where($where)->updae($update);
             if($res){
                 $data['msg'] = 'succ';
