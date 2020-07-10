@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use think\Db;
 class VideoVod extends Base
 {
     public function __construct()
@@ -98,6 +99,27 @@ class VideoVod extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
+        return $data;
+    }
+
+    public function updateExamine(){
+        $param = input();
+        $id = $param['id']??'';
+        $examine_id = $param['examine_id']??'';
+        $is_examine= $param['is_examine']??'';
+        $data['code'] = 0;
+        $data['msg'] = 'succ';
+        $data['data'] = [];
+        if(!empty($examine_id)){
+            $where['id'] = $id;
+            $update = [];
+            $update['examine_id'] = $examine_id;
+            $update['is_examine'] = $is_examine;
+            $res = Db::table('video_examine')->where($where)->updae($update);
+            if($res){
+                $data['msg'] = 'succ';
+            }
+        }
         return $data;
     }
 
