@@ -119,7 +119,7 @@ class VideoVod extends Base
             if(!empty($is_examine)){
                 $update['is_examine'] = $is_examine;
             }
-            $res = Db::table('video_vod')->where($where)->updae($update);
+            $res = Db::table('video_vod')->where($where)->update($update);
             if($res){
                 $data['msg'] = 'succ';
             }
