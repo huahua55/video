@@ -37,6 +37,7 @@ class videoVod extends Base {
 //        p( Db::name('Vod')->getLastSql());
          $video_domain = Db::table('video_domain')->find();
 
+
 //        p($list);
         foreach ($list as &$v){
             $b_set_down_url =  mac_json_decode($v['b_set_down_url']);
@@ -45,10 +46,12 @@ class videoVod extends Base {
             $where_collection['collection'] = 1;
             $video_collection =   Db::table('video_collection')->where($where_collection)->find();
             $v['examine_txt'] = '';
+
             if($v['b_examine_id'] != 0){
                 $video_examine = [];
                 $video_examine['id']= $v['b_examine_id'];
-                $video_examine_data =   Db::table('video_examine')->where($where_collection)->find();
+                $video_examine_data =   Db::table('video_examine')->where($video_examine)->find();
+//                p(Db::table('video_examine')->getLastSql());
                 if(!empty($video_examine_data)){
                     $v['examine_txt'] = $video_examine_data['reasons'];
                 }
@@ -62,7 +65,6 @@ class videoVod extends Base {
         }
 //        p($list);
         //分类
-
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }
 
