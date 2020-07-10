@@ -113,10 +113,10 @@ class VideoVod extends Base
         if(!empty($id)){
             $where['id'] = $id;
             $update = [];
-            if(!empty($examine_id)){
+            if(!empty($examine_id)  || $examine_id == 0){
                 $update['examine_id'] = $examine_id;
             }
-            if(!empty($is_examine)){
+            if(!empty($is_examine) || $is_examine == 0){
                 $update['is_examine'] = $is_examine;
             }
             $res = Db::table('video_vod')->where($where)->update($update);
