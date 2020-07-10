@@ -87,6 +87,7 @@ class VideoVod extends Base
     public function info()
     {
 //        p(11);
+
         if (Request()->isPost()) {
             $param = input();
              $count = count(explode(',',$param['rel_ids']));
