@@ -67,6 +67,7 @@ class VideoVod extends Base
 
         $order='b.weight desc,b.down_time desc';
 
+
         $res = model('VideoVod')->listData($whereOr,$where,$order,$param['page'],$param['limit']);
         $this->assign('list',$res['list']);
         $this->assign('total',$res['total']);
@@ -75,6 +76,24 @@ class VideoVod extends Base
         $this->assign('param',$param);
         $this->assign('title','迅雷下载任务');
 
+        $data['code'] = 0;
+        $data['count'] = $res['total'];
+        $data['msg'] = 'succ';
+        $data['data'] = $res['list'];
+        return $data;
+    }
+
+    public function getExamine(){
+        $param = input();
+        $param['page'] = intval($param['page']) <1 ? 1 : $param['page'];
+        $param['limit'] = intval($param['limit']) <1 ? $this->_pagesize : $param['limit'];
+        $where=[];
+
+        if(!empty($param['name']) ){;
+            $where['reasons'] = ['like','%'.$param['name'].'%'];
+        }
+        $order='id desc';
+        $res = model('VideoVod')->listData1($where,$order,$param['page'],$param['limit']);
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';

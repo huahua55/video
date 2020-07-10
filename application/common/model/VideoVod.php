@@ -66,6 +66,17 @@ class videoVod extends Base {
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }
 
+    public function listData1($where,$order,$page=1,$limit=20,$start=0)
+    {
+        if(!is_array($where)){
+            $where = json_decode($where,true);
+        }
+        $limit_str = ($limit * ($page-1) + $start) .",".$limit;
+        $total = Db::table('video_examine')->where($where)->order($order)->count();
+        $list = Db::table('video_examine')->where($where)->order($order)->limit($limit_str)->select();
+        return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
+    }
+
     public function listCacheData($lp)
     {
         if (!is_array($lp)) {
