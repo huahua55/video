@@ -95,6 +95,9 @@ class VideoVod extends Base
              }
             $param['vod_id'] =   $param['rel_ids'];
              unset($param['rel_ids']);
+             if($param['is_down'] == 0){
+                 $param['code'] = 0;
+             }
             $res = model('VideoVod')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
