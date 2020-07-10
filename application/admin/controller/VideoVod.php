@@ -108,7 +108,7 @@ class VideoVod extends Base
         $examine_id = $param['examine_id']??'';
         $is_examine= $param['is_examine']??'';
         $data['code'] = 0;
-        $data['msg'] = 'succ';
+        $data['msg'] = 'error';
         $data['data'] = [];
         if(!empty($examine_id)){
             $where['id'] = $id;
