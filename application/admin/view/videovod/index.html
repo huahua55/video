@@ -134,7 +134,7 @@
     <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
     <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" checked lay-filter="shenhe">
     <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" lay-filter="shenhe">
-    {{#  }else{ }}
+    {{#  }else if(d.b_is_examine == 2){ }}
     <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
     <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" lay-filter="shenhe">
     <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" checked lay-filter="shenhe">
@@ -180,7 +180,7 @@
                 }, {
                     field: 'b_id',
                     title: 'ID',
-                    width: 80,
+                    width: 60,
                     sort: true,
                     fixed: true
                 }, {
@@ -190,7 +190,7 @@
                 }, {
                     field: 'b_code',
                     title: '机器编号',
-                    width: 80
+                    width: 88
                 }
                     // , {field: 'vod_name', title: '视频名称', width: 150,templet: function (d) {
                     //         if(d.mu_url == ""){
@@ -207,17 +207,17 @@
                 }, {
                     field: 'b_is_down',
                     title: '下载状态',
-                    width: 88,
+                    width: 90,
                     templet: '#is_downTpl'
                 }, {
                     field: 'b_is_section',
                     title: '切片状态',
-                    width: 88,
+                    width: 90,
                     templet: '#is_sectionTpl'
                 }, {
                     field: 'b_is_sync',
                     title: '上传状态',
-                    width: 88,
+                    width: 90,
                     templet: '#is_syncTpl'
                 }, {
                     field: 'b_weight',
@@ -240,7 +240,8 @@
                     title: '理由'
                 }, {
                     field: 'b_down_url',
-                    title: '下载URL'
+                    title: '下载URL',
+					width: 85
                 }, {
                     field: 'b_to_examine',
                     title: '审核状态',
@@ -249,6 +250,7 @@
                 }, {
                     field: 'examine_txt',
                     title: '审核理由',
+					width: 90
                 }, {
                     fixed: 'right',
                     title: '操作',
