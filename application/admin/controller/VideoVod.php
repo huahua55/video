@@ -144,6 +144,8 @@ class VideoVod extends Base
              if($param['is_down'] == 0){
                  $param['code'] = 0;
              }
+             $param['down_add_time']=time();
+             $param['down_time']=time();
             $res = model('VideoVod')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
