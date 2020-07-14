@@ -64,6 +64,7 @@ class VideoVod extends Base
         if(isset($param['b_code']) && $param['b_code'] != ""){
             $where['b.code'] = $param['b_code'];
         }
+        $order='b.weight desc,b.down_time desc';
         if(isset($param['field']) && $param['field'] != ""){
             if($param['field'] == 'b_weight'){
                 $order='b.weight '.$param['order'].'';
@@ -71,8 +72,9 @@ class VideoVod extends Base
             if($param['field'] == 'b_down_time'){
                 $order='b.down_time '.$param['order'].'';
             }
-        }else{
-            $order='b.weight desc,b.down_time desc';
+            if($param['field'] == 'b_id'){
+                $order='b.id '.$param['order'].'';
+            }
         }
         $res = model('VideoVod')->listData($whereOr,$where,$order,$param['page'],$param['limit']);
         $this->assign('list',$res['list']);
