@@ -55,6 +55,10 @@ class VideoVod extends Base
         if(isset($param['b_is_down']) && $param['b_is_down'] != ""){
             $where['b.is_down'] = $param['b_is_down'];
         }
+        if(isset($param['b_is_examine']) && $param['b_is_examine'] != ""){
+            $where['b.is_examine'] = $param['b_is_examine'];
+        }
+
         if(isset($param['b_is_section']) && $param['b_is_section'] != ""){
             $where['b.is_section'] = $param['b_is_section'];
         }
