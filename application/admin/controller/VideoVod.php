@@ -126,7 +126,7 @@ class VideoVod extends Base
             if(!empty($is_examine) || $is_examine == 0){
                 $update['is_examine'] = $is_examine;
             }
-            $update['down_time']=time();
+            $update['up_time']=time();
             $res = Db::table('video_vod')->where($where)->update($update);
             if($res){
                 $data['msg'] = 'succ';
@@ -169,7 +169,8 @@ class VideoVod extends Base
              }
              $param['down_add_time']=time();
              $param['down_time']=time();
-            $res = model('VideoVod')->saveData($param);
+             $param['up_time']=time();
+             $res = model('VideoVod')->saveData($param);
             if($res['code']>1){
                 return $this->error($res['msg']);
             }

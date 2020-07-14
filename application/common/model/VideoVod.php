@@ -171,6 +171,7 @@ class videoVod extends Base {
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
+            unset($data['down_time']);
             $res = $this->allowField(true)->where($where)->update($data);
         }
         else{
