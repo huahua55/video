@@ -1,5 +1,22 @@
 {include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+	.layui-form-label {
+		width: 122px !important;
+	}
 
+	.layui-form-pane .layui-input-block {
+		margin-left: 122px !important;
+	}
+
+	.layui-radio-disbaled>i {
+		color: #5FB878 !important;
+	}
+
+	.layui-disabled,
+	.layui-disabled:hover {
+		color: #333 !important;
+	}
+</style>
 <div class="page-container p10">
     <form class="layui-form layui-form-pane" method="post" action="">
         <input id="id" name="id" type="hidden" value="{$info.id}">
@@ -40,6 +57,13 @@
                 <input name="is_sync" type="radio" id="is_sync-3" value="3" title="上传失败" {if condition="$info['is_sync'] eq 3"}checked {/if}>
             </div>
         </div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">下载标记：</label>
+			<div class="layui-input-block">
+				<input name="is_down_mp4" type="radio" id="is_sync-0" value="0" title="mp4下载" disabled="" {if condition="$info['is_down_mp4'] eq 1" }checked {/if}> 
+				<input name="is_down_m3u8" type="radio" id="is_sync-1" value="1" title="m3u8下载" disabled="" {if condition="$info['is_down_m3u8'] eq 1" }checked {/if}> 
+			</div> 
+		</div>
         <div class="layui-form-item">
             <label class="layui-form-label">权重顺序：</label>
             <div class="layui-input-inline w100">
@@ -58,11 +82,31 @@
                 <input type="text" class="layui-input" value="{$info.down_mp4_url}" lay-verify="down_mp4_url"  id="down_mp4_url" name="down_mp4_url">
             </div>
         </div>
+        <!-- <div class="layui-form-item">
+        <label class="layui-form-label">下载链接：</label>
+        	<div class="layui-input-block">
+        		<textarea class="layui-textarea" name="down_url" rows="3" cols="20">{$info.down_url}</textarea>
+        	</div>
+        </div> -->
+        <!-- 下载链接 -->
         <div class="layui-form-item">
-            <label class="layui-form-label">下载链接：</label>
-            <div class="layui-input-block">
-                <textarea class="layui-textarea"  name="down_url" rows="3" cols="20">{$info.down_url}</textarea>
-            </div>
+        	<label class="layui-form-label">mp4下载链接：</label>
+        	<div class="layui-input-block">
+        		<textarea class="layui-textarea" name="down_url" rows="3" cols="20">{$info.down_url}</textarea>
+        	</div>
+        </div>
+        <div class="layui-form-item">
+        	<label class="layui-form-label">m3u8下载链接：</label>
+        	<div class="layui-input-block">
+        		<textarea class="layui-textarea" name="m3u8_url" rows="3" cols="20">{$info.m3u8_url}</textarea>
+        	</div>
+        </div>
+        <!--  -->
+        <div class="layui-form-item">
+        	<label class="layui-form-label">历史下载记录：</label>
+        	<div class="layui-input-block">
+        		<textarea class="layui-textarea" name="m3u8_url" rows="3" cols="20">{$info.history_down_url}</textarea>
+        	</div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">失败理由：</label>
