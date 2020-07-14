@@ -22,51 +22,31 @@
         <div class="layui-inline">
             <select class="layui-select" name="b_is_down">
                 <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_down'] eq '0'" }selected {
-                /if}>未下载 </option>
-                <option value="1" {if
-                        condition="$param['b_is_down'] eq '1'" }selected {
-                /if}>下载成功 </option>
-                <option value="2" {if condition="$param['b_is_down'] eq '2'"
-                        }selected {
-                /if}>下载中 </option>
-                <option value="3" {if condition="$param['b_is_down'] eq '3'" }selected {
-                /if}>下载失败
-                </option>
-                <option value="4" {if condition="$param['b_is_down'] eq '4'" }selected {
-                /if}>异常
-                </option>
+                <option value="0" {if condition="$param['b_is_down'] eq '0'" }selected {/if}>未下载 </option>
+                <option value="1" {if condition="$param['b_is_down'] eq '1'" }selected {/if}>下载成功 </option>
+                <option value="2" {if condition="$param['b_is_down'] eq '2'" }selected {/if}>下载中 </option>
+                <option value="3" {if condition="$param['b_is_down'] eq '3'" }selected {/if}>下载失败</option>
+                <option value="4" {if condition="$param['b_is_down'] eq '4'" }selected {/if}>异常</option>
             </select>
 
         </div> &nbsp; 切片状态：
         <div class="layui-inline">
             <select class="layui-select" name="b_is_section">
                 <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_section'] eq '0'" }selected {
-                /if}>未切片 </option>
-                <option value="1"
-                        {if condition="$param['b_is_section'] eq '1'" }selected {
-                /if}>切片成功 </option>
-                <option value="2" {if condition="$param['b_is_section'] eq '2'"
-                        }selected {
-                /if}>切片中 </option>
-                <option value="3" {if condition="$param['b_is_section'] eq '3'" }selected {
-                /if}>切片失败
-                </option> </select></div> &nbsp; 上传状态：
+                <option value="0" {if condition="$param['b_is_section'] eq '0'" }selected {/if}>未切片 </option>
+                <option value="1" {if condition="$param['b_is_section'] eq '1'" }selected {/if}>切片成功 </option>
+                <option value="2" {if condition="$param['b_is_section'] eq '2'" }selected {/if}>切片中 </option>
+                <option value="3" {if condition="$param['b_is_section'] eq '3'" }selected {/if}>切片失败
+                </option> </select></div>
+        &nbsp; 上传状态：
         <div class="layui-inline">
             <select class="layui-select" name="b_is_sync">
                 <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_sync'] eq '0'" }selected {
-                /if}>未上传 </option>
-                <option value="1"
-                        {if condition="$param['b_is_sync'] eq '1'" }selected {
-                /if}>上传成功 </option>
-                <option value="2" {if condition="$param['b_is_sync'] eq '2'"
-                        }selected {
-                /if}>上传中 </option>
-                <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {
-                /if}>上传失败
-                </option> </select></div>
+                <option value="0" {if condition="$param['b_is_sync'] eq '0'" }selected {/if}>未上传 </option>
+                <option value="1" {if condition="$param['b_is_sync'] eq '1'" }selected {/if}>上传成功 </option>
+                <option value="2" {if condition="$param['b_is_sync'] eq '2'" }selected {/if}>上传中 </option>
+                <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {/if}>上传失败</option>
+            </select></div>
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
 
