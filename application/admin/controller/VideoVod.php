@@ -64,11 +64,16 @@ class VideoVod extends Base
         if(isset($param['b_code']) && $param['b_code'] != ""){
             $where['b.code'] = $param['b_code'];
         }
-//        p($where);
-
-        $order='b.weight desc,b.down_time desc';
-
-
+        if(isset($param['field']) && $param['field'] != ""){
+            if($param['field'] == 'b_weight'){
+                $order='b.weight '.$param['order'].'';
+            }
+            if($param['field'] == 'b_down_time'){
+                $order='b.down_time '.$param['order'].'';
+            }
+        }else{
+            $order='b.weight desc,b.down_time desc';
+        }
         $res = model('VideoVod')->listData($whereOr,$where,$order,$param['page'],$param['limit']);
         $this->assign('list',$res['list']);
         $this->assign('total',$res['total']);
@@ -136,11 +141,24 @@ class VideoVod extends Base
 
         if (Request()->isPost()) {
             $param = input();
+
+            if(empty($param)){
+                return $this->error('参数错误');
+            }
              $count = count(explode(',',$param['rel_ids']));
              if($count > 1){
                 return $this->error('只能选择一个视频');
              }
-            $param['vod_id'] =   $param['rel_ids'];
+             if (!empty($param['history_down_url'])){
+                $history_down_url =  array_unique(array_filter(explode("\n",$param['history_down_url'])));
+                 $param['history_down_url'] = json_encode($history_down_url,true);
+             }else{
+                 $param['history_down_url'] = json_encode([],true);
+             }
+             if(empty($param['resolution'])){
+                 unset($param['resolution']);
+             }
+             $param['vod_id'] =   $param['rel_ids'];
              unset($param['rel_ids']);
              if($param['is_down'] == 0){
                  $param['code'] = 0;
@@ -165,6 +183,13 @@ class VideoVod extends Base
         if( $res['info']['rel_ids'] == 0){
             $res['info']['rel_ids'] = '';
         }
+        $history_down_url = json_decode($res['info']['history_down_url'],true);
+//        p($history_down_url);
+        if(!empty($history_down_url)){
+//            p(implode("\n",$history_down_url));
+            $res['info']['history_down_url'] = implode("\n",$history_down_url);
+        }
+//        p($res);die;
         $this->assign('info',$res['info']);
         $this->assign('title','编辑');
         return $this->fetch('admin@videovod/info');

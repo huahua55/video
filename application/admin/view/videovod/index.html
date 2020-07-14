@@ -32,7 +32,13 @@
                 /if}>下载中 </option>
                 <option value="3" {if condition="$param['b_is_down'] eq '3'" }selected {
                 /if}>下载失败
-                </option> </select></div> &nbsp; 切片状态：
+                </option>
+                <option value="4" {if condition="$param['b_is_down'] eq '4'" }selected {
+                /if}>异常
+                </option>
+            </select>
+
+        </div> &nbsp; 切片状态：
         <div class="layui-inline">
             <select class="layui-select" name="b_is_section">
                 <option value="">选择状态</option>
@@ -84,8 +90,10 @@
     <button class="layui-btn ayui-btn-sm layui-btn-xs">下载成功</button>
     {{#  } else if(d.b_is_down == '2'){ }}
     <button class="layui-btn layui-btn-warm layui-btn-xs">下载中</button>
+    {{#  } else if(d.b_is_down == '3'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">下载失败</button>
     {{#  } else{ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs">下载失败</button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs">异常</button>
     {{#  } }}
 </script>
 
