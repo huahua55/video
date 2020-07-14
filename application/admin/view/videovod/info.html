@@ -7,15 +7,6 @@
 	.layui-form-pane .layui-input-block {
 		margin-left: 122px !important;
 	}
-
-	.layui-radio-disbaled>i {
-		color: #5FB878 !important;
-	}
-
-	.layui-disabled,
-	.layui-disabled:hover {
-		color: #333 !important;
-	}
 </style>
 <div class="page-container p10">
     <form class="layui-form layui-form-pane" method="post" action="">
@@ -58,10 +49,19 @@
             </div>
         </div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">下载标记：</label>
+			<label class="layui-form-label">mp4下载标记：</label>
 			<div class="layui-input-block">
-				<input name="is_down_mp4" type="radio" id="is_sync-0" value="0" title="mp4下载" disabled="" {if condition="$info['is_down_mp4'] eq 1" }checked {/if}> 
-				<input name="is_down_m3u8" type="radio" id="is_sync-1" value="1" title="m3u8下载" disabled="" {if condition="$info['is_down_m3u8'] eq 1" }checked {/if}> 
+				<input name="is_down_mp4" type="radio" id="is_mp4-0" value="0" title="未下载过" {if condition="$info['is_down_mp4'] eq 0" }checked {/if}> 
+				<input name="is_down_mp4" type="radio" id="is_mp4-1" value="1" title="下载过" {if condition="$info['is_down_mp4'] eq 1" }checked {/if}> 
+				<input name="is_down_mp4" type="radio" id="is_mp4-2" value="2" title="下载失败" {if condition="$info['is_down_mp4'] eq 2" }checked {/if}> 
+			</div> 
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">m3u8下载标记：</label>
+			<div class="layui-input-block">
+				<input name="is_down_m3u8" type="radio" id="is_m3u8-0" value="0" title="未下载过" {if condition="$info['is_down_m3u8'] eq 0" }checked {/if}> 
+				<input name="is_down_m3u8" type="radio" id="is_m3u8-1" value="1" title="下载过" {if condition="$info['is_down_m3u8'] eq 1" }checked {/if}> 
+				<input name="is_down_m3u8" type="radio" id="is_m3u8-2" value="2" title="下载失败" {if condition="$info['is_down_m3u8'] eq 2" }checked {/if}> 
 			</div> 
 		</div>
         <div class="layui-form-item">
