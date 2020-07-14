@@ -151,7 +151,9 @@ class VideoVod extends Base
              }
              if (!empty($param['history_down_url'])){
                 $history_down_url =  array_unique(array_filter(explode("\n",$param['history_down_url'])));
-                 $param['history_down_url'] = json_encode($history_down_url,true);
+                if(!empty($history_down_url)){
+                    $param['history_down_url'] = json_encode($history_down_url,true);
+                }
              }else{
                  $param['history_down_url'] = json_encode([],true);
              }
