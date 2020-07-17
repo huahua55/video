@@ -16,6 +16,7 @@ layui.define(['element', 'form'], function(exports) {
 	var $ = layui.jquery,
 		element = layui.element,
 		layer = layui.layer,
+		table = layui.table,
 		form = layui.form;
 
 	form.render();
@@ -302,11 +303,14 @@ layui.define(['element', 'form'], function(exports) {
 					time: 800
 				}, function() {
 					if (res.code == 1) {
-
+						var index = parent.layer.getFrameIndex(window.name);
 						if (refresh == 'yes') {
 							if (_child == 'true') {
-								parent.location.reload();
+								// parent.location.reload();
+								// 关闭弹窗
 								parent.layer.close(index);
+								// 重载数据表格
+								parent.layui.table.reload("testReload");
 							} else {
 								if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
 									location.href = res.url;
@@ -315,7 +319,6 @@ layui.define(['element', 'form'], function(exports) {
 								}
 							}
 						} else {
-							var index = parent.layer.getFrameIndex(window.name);
 							layer.closeAll();
 							onSubmitResult(res);
 						}

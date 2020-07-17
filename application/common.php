@@ -10,6 +10,7 @@
 */
 error_reporting(E_ERROR | E_PARSE );
 
+use think\Db;
 // 打印函数
 function p($array, $ext = 0){
     echo "<pre>";
@@ -1329,6 +1330,24 @@ function mac_filter_html($str)
     return strip_tags($str);
 }
 
+//推算主级id
+function getTypePid($id, $i = 1)
+{
+    $data = Db::table('type')->field('type_pid,type_id')->where(['type_id' => $id])->find();
+    if(empty($data)){
+        return 0;
+    }
+    if ($data['type_pid'] != 0) {
+        $i = $i + 1;
+        if ($i > 3) {
+            return 0;//最后默认先给0 有问题的数据
+        } else {
+            return  getTypePid($data['type_pid'], $i);
+        }
+    } else {
+        return $data['type_id'];
+    }
+}
 function mac_format_text($str)
 {
     return str_replace(array('/','，','|','、',' ',',,,'),',',$str);
