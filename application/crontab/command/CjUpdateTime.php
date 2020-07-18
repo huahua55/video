@@ -49,7 +49,8 @@ class CjUpdateTime extends Common
 
         $where = [];
         $where['vod_douban_id'] = ['neq', 3];
-        $where['vod_id'] = ['gt', 317360];
+//        $where['vod_id'] = ['gt', 317360];
+//        $where['vod_content'] = ['like', "%<b%"];
 
         $order = 'vod_id asc';
         //进入循环 取出数据
@@ -57,6 +58,7 @@ class CjUpdateTime extends Common
             //取出数据
 //            usleep(50000);
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+//            p($douBanScoreData);
             if (!empty($douBanScoreData)) {
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
                 if ($page > $pagecount) {
@@ -72,13 +74,14 @@ class CjUpdateTime extends Common
                         unset($vod_actor);
                     }
                     $vod_blurb = mac_str_is_html($v['vod_blurb']);
-                    if($vod_blurb != false){
-                        $upWhere['vod_blurb'] = $vod_blurb;
-                    }
+//                    if($vod_blurb != false){
+                    $upWhere['vod_blurb'] = $vod_blurb;
+//                    }
                     $vod_content = mac_str_is_html($v['vod_content']);
-                    if($vod_content != false){
-                        $upWhere['vod_content'] = $vod_content;
-                    }
+//                    if($vod_content != false){
+                    $upWhere['vod_content'] = $vod_content;
+//                    }
+//                    p($upWhere);
 //                    if (strpos($v['vod_reurl'], ',') !== false) {
 //                        $upWhere['vod_reurl'] = str_replace(',', '/', $v['vod_reurl']);
 //                    }
@@ -205,7 +208,7 @@ class CjUpdateTime extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,type_id,vod_reurl,vod_content,type_id_1,vod_year,vod_remarks,vod_pubdate,vod_total,vod_serial,vod_tv,vod_weekday,vod_isend,vod_time,vod_time_add,vod_time_hits,vod_time_make,vod_plot,vod_blurb,vod_plot_name,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,type_id,vod_reurl,vod_content,vod_content,type_id_1,vod_year,vod_remarks,vod_pubdate,vod_total,vod_serial,vod_tv,vod_weekday,vod_isend,vod_time,vod_time_add,vod_time_hits,vod_time_make,vod_plot,vod_blurb,vod_plot_name,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 

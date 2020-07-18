@@ -12,7 +12,7 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '192.168.1.216',
+    'hostname'        => 'rm-j6c57u1v6upihhwqq.mysql.rds.aliyuncs.com',
     // 数据库名
     'database'        => 'video',
     // 用户名
