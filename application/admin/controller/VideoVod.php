@@ -196,7 +196,7 @@ class VideoVod extends Base
             $param['vod_id'] = $param['rel_ids'];
             unset($param['rel_ids']);
             if ($param['is_down'] == 0) {
-                $param['code'] = 0;
+                $param['code'] = -1;
             }
             $param['down_add_time'] = time();
             $param['down_time'] = time();
