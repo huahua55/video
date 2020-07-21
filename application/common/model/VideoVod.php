@@ -36,6 +36,7 @@ class videoVod extends Base {
         $listId= array_diff($listId, [0]);
         $where_collection = [];
         $where_collection['task_id'] = ['in',$listId];
+//        p(1);
         $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'task_id');
         foreach ($list as $k=>$v){
             $list[$k]['examine_txt'] = '';
