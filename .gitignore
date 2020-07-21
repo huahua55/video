@@ -9,7 +9,7 @@ node_modules/
 /npm-shrinkwrap.json
 /.idea
 composer.lock
-vendor
+#vendor
 
 assets.json
 runtime
