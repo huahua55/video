@@ -19,6 +19,8 @@ class videoVod extends Base {
 
     public function listData($whereOr =[],$where,$order,$page=1,$limit=20,$start=0)
     {
+        $video_domain = Db::table('video_domain')->find();
+        $video_examine = Db::table('video_examine')->column(null,'id');
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
@@ -26,44 +28,28 @@ class videoVod extends Base {
         if(empty($whereOr)){
             $total = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->count();
             $list = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->order($order)->limit($limit_str)->select();
-
         }else{
             $total = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->whereOr($whereOr)->order($order)->limit($limit_str)->count();
             $list = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
-
         }
-
-//        $list = Db::name('Vod')->getLas
-//        p( Db::name('Vod')->getLastSql());
-         $video_domain = Db::table('video_domain')->find();
-
-
-//        p($list);
+        $listId= array_column($list,'b_video_id');
+        $listId= array_diff($listId, [0]);
+        $where_collection = [];
+        $where_collection['collection'] = 1;
+        $where_collection['video_id'] = ['in',$listId];
+        $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'video_id');
         foreach ($list as &$v){
-//            $b_set_down_url =  mac_json_decode($v['b_set_down_url']);
-            $where_collection = [];
-            $where_collection['video_id'] = $v['b_video_id'];
-            $where_collection['collection'] = 1;
-            $video_collection =   Db::table('video_collection')->where($where_collection)->find();
             $v['examine_txt'] = '';
-
+            $v['mu_url'] = '';
+            if (isset($collection_list[$v['b_video_id']])){
+                $v['mu_url'] = $video_domain['vod_domain'] . $collection_list[$v['b_video_id']]['vod_url'];
+            }
             if($v['b_examine_id'] != 0){
-                $video_examine = [];
-                $video_examine['id']= $v['b_examine_id'];
-                $video_examine_data =   Db::table('video_examine')->where($video_examine)->find();
-//                p(Db::table('video_examine')->getLastSql());
-                if(!empty($video_examine_data)){
-                    $v['examine_txt'] = $video_examine_data['reasons'];
+                if(isset($video_examine[$v['b_examine_id']])){
+                    $v['examine_txt'] = $video_examine[$v['b_examine_id']];
                 }
             }
-            if(empty($video_collection)){
-                $v['mu_url'] = '';
-            }else{
-                $v['mu_url'] = $video_domain['vod_domain'] . $video_collection['vod_url'];
-            }
-//            $v['surl']=  implode("@@@",$b_set_down_url);
         }
-//        p($list);
         //分类
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }
