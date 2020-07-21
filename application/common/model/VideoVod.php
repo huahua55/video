@@ -38,15 +38,15 @@ class videoVod extends Base {
         $where_collection['collection'] = 1;
         $where_collection['video_id'] = ['in',$listId];
         $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'video_id');
-        foreach ($list as &$v){
-            $v['examine_txt'] = '';
-            $v['mu_url'] = '';
+        foreach ($list as $k=>$v){
+            $list[$k]['examine_txt'] = '';
+            $list[$k]['mu_url'] = '';
             if (isset($collection_list[$v['b_video_id']])){
-                $v['mu_url'] = $video_domain['vod_domain'] . $collection_list[$v['b_video_id']]['vod_url'];
+                $list[$k]['mu_url'] = $video_domain['vod_domain'] . $collection_list[$v['b_video_id']]['vod_url'];
             }
             if($v['b_examine_id'] != 0){
                 if(isset($video_examine[$v['b_examine_id']])){
-                    $v['examine_txt'] = $video_examine[$v['b_examine_id']];
+                    $list[$k]['examine_txt'] = $video_examine[$v['b_examine_id']];
                 }
             }
         }
