@@ -184,11 +184,16 @@ class Upload extends Base
 
         $savename = $n_dir . '/' . md5(microtime(true));
 
-        $upfile = $file->move($_upload_path,$savename);
+        try {
+            $upfile = $file->move($_upload_path,$savename);
 
-        if (!is_file($_upload_path.$upfile->getSaveName())) {
-            return self::upload_return('文件上传失败！', $param['from']);
+            if (!is_file($_upload_path.$upfile->getSaveName())) {
+                return self::upload_return('文件上传失败！', $param['from']);
+            }
+        } catch (\Exception $e) {
+              print_r($e->getMessage());
         }
+
 
         //附件访问地址
         //$_file_path = $_save_path.$upfile->getSaveName();
