@@ -183,17 +183,17 @@
 </script>
 <script type="text/html" id="is_examineTpl">
     {{#  if(d.m_eid == 0){ }}
-    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" checked lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="0" title="未审核" checked lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="1" title="审核通过" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="2" title="审核失败" lay-filter="shenhe">
     {{#  } else if(d.m_eid == 1){ }}
-    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" checked lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="0" title="未审核" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="1" title="审核通过" checked lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="2" title="审核失败" lay-filter="shenhe">
     {{#  }else if(d.m_eid == 2){ }}
-    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" lay-filter="shenhe">
-    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" checked lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="0" title="未审核" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="1" title="审核通过" lay-filter="shenhe">
+    <input type="radio" name="{{d.bid}}" value="2" title="审核失败" checked lay-filter="shenhe">
     {{#  } }}
 </script>
 
@@ -272,7 +272,7 @@
                     width: 90,
                     templet: '#vod_statusTpl'
                 }, {
-                    field: 'vod_time_auto_up',
+                    field: 'm_time_auto_up',
                     title: '时间',
                     width: 180,
                     sort: true,

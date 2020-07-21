@@ -57,6 +57,7 @@ class Video extends Base
             if ($v_list['collection'] <= 1) {
                 $v_list['pid'] = 0;
                 $v_list['m_reasons'] = $v_list['a_reasons'];
+                $v_list['m_time_auto_up'] = $v_list['vod_time_auto_up'];
                 $v_list['m_eid'] = $v_list['b_eid'];
                 $v_list['m_status'] = $v_list['vod_status'];
             } else {
@@ -66,7 +67,8 @@ class Video extends Base
                 }
                 $v_list['pid'] = $pid;
                 $v_list['m_eid'] = $v_list['e_id'];
-                $v_list['m_reasons'] = $v_list['a_reasons'];
+                $v_list['m_time_auto_up'] = $v_list['time_auto_up'];
+                $v_list['m_reasons'] = $v_list['b_reasons'];
                 $v_list['m_status'] = $v_list['status'];
             }
         }
