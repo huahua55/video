@@ -170,7 +170,7 @@
 </script>
 
 <script type="text/html" id="is_nameTpl">
-    {{#  if(d.vod_url == ''){ }}
+    {{#  if(d.vod_url == '' || d.vod_url == null){ }}
     <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
     {{#  } else{ }}
     <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.vod_url}}','_blank')">
