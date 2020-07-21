@@ -32,17 +32,16 @@ class videoVod extends Base {
             $total = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->whereOr($whereOr)->order($order)->limit($limit_str)->count();
             $list = Db::name('Vod')->alias('a')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
         }
-        $listId= array_column($list,'b_video_id');
+        $listId= array_column($list,'b_id');
         $listId= array_diff($listId, [0]);
         $where_collection = [];
-        $where_collection['collection'] = 1;
-        $where_collection['video_id'] = ['in',$listId];
-        $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'video_id');
+        $where_collection['task_id'] = ['in',$listId];
+        $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'task_id');
         foreach ($list as $k=>$v){
             $list[$k]['examine_txt'] = '';
             $list[$k]['mu_url'] = '';
-            if (isset($collection_list[$v['b_video_id']])){
-                $list[$k]['mu_url'] = $video_domain['vod_domain'] . $collection_list[$v['b_video_id']]['vod_url'];
+            if (isset($collection_list[$v['b_id']])){
+                $list[$k]['mu_url'] = $video_domain['vod_domain'] . $collection_list[$v['b_id']]['vod_url'];
             }
             if($v['b_examine_id'] != 0){
                 if(isset($video_examine[$v['b_examine_id']])){
