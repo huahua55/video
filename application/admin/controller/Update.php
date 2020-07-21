@@ -31,7 +31,10 @@ class Update extends Base
 
         echo $this->fetch('admin@public/head');
         echo "<div class='update'><h1>在线升级进行中第一步【文件升级】,请稍后......</h1><textarea rows=\"25\" class='layui-textarea' readonly>正在下载升级文件包...\n";
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }
+        flush();
         sleep(1);
 
         $save_file = $version.'.zip';
@@ -51,7 +54,9 @@ class Update extends Base
 
         echo "下载升级包完毕...\n";
         echo "正在处理升级包的文件...\n";
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }flush();
         sleep(1);
 
         $archive = new PclZip();
@@ -77,7 +82,10 @@ class Update extends Base
 
         echo $this->fetch('admin@public/head');
         echo "<div class='update'><h1>在线升级进行中第二步【数据升级】,请稍后......</h1><textarea rows=\"25\" class='layui-textarea' readonly>\n";
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }
+        flush();
         sleep(1);
 
         $res=true;
@@ -86,7 +94,10 @@ class Update extends Base
 
         if (is_file($sql_file)) {
             echo "发现数据库升级脚本文件，正在处理...\n";
-            ob_flush();flush();
+            if(ob_get_level()>0){
+                ob_flush();
+            }
+            flush();
             $pre = config('database.prefix');
             $schema = Db::query('select * from information_schema.columns where table_schema = ?',[ config('database.database') ]);
             $col_list = [];
@@ -115,7 +126,10 @@ class Update extends Base
                         } catch (\Exception $e) {
                             echo "    ---失败"."\n\n";
                         }
-                        ob_flush();flush();
+                        if(ob_get_level()>0){
+                            ob_flush();
+                        }
+                        flush();
                     }
                 }
             }
@@ -135,14 +149,20 @@ class Update extends Base
     {
         echo $this->fetch('admin@public/head');
         echo "<div class='update'><h1>在线升级进行中第三步【更新缓存】,请稍后......</h1><textarea rows=\"25\" class='layui-textarea' readonly>\n";
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }
+        flush();
         sleep(1);
 
         $this->_cache_clear();
 
         echo "更新数据缓存文件...\n";
         echo "恭喜您，系统升级完毕...";
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }
+        flush();
         echo '</textarea></div>';
     }
 

@@ -26,7 +26,6 @@ class Cj extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         // 输出到日志文件
         $output->writeln("CjCommand:");
         $myparme = $input->getArguments();
@@ -37,9 +36,7 @@ class Cj extends Command
         //执行对应的方法
         // 定时器需要执行的内容
         $list = config('timming');
-
         foreach ($list as $k => $v) {
-
             if (!empty($name) && $v['name'] != $name) {
                 continue;
             }
@@ -63,9 +60,9 @@ class Cj extends Command
 
             /*    if( ($v['status']=='1' && ( empty($v['runtime']) || ($oldweek."-".$oldhours) != ($curweek."-".$curhours)
                         && strpos($v['weeks'],$curweek)!==false && strpos($v['hours'],$curhours)!==false)) ) {*/
-
-            if ((isset($param['force']) && !empty($param['force'])) || ($v['status'] == '1' && (empty($v['runtime']) || ($oldweek . "-" . $oldhours) != ($curweek . "-" . $curhours)
-                        && strpos($v['weeks'], $curweek) !== false && strpos($v['hours'], $curhours) !== false))) {
+//
+//            if ((isset($param['force']) && !empty($param['force'])) || ($v['status'] == '1' && (empty($v['runtime']) || ($oldweek . "-" . $oldhours) != ($curweek . "-" . $curhours)
+//                        && strpos($v['weeks'], $curweek) !== false && strpos($v['hours'], $curhours) !== false))) {
                 $output->writeln('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---执行');
                 $list[$k]['runtime'] = time();
 
@@ -77,9 +74,9 @@ class Cj extends Command
                 $file = $v['file'];
                 $this->$file($v['param']);
                 die;
-            } else {
-                mac_echo('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---跳过');
-            }
+//            } else {
+//                mac_echo('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---跳过');
+//            }
         }
 
         $output->writeln("end....");
