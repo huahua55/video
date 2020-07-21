@@ -11,6 +11,7 @@
         <div class="layui-inline">
             <select class="layui-select" name="b_code">
                 <option value="">选择状态</option>
+                <option value="0" {if condition="$param['b_code'] eq '0'" }selected {/if}>0号机器</option>
                 <option value="1" {if condition="$param['b_code'] eq '1'" }selected {/if}>1号机器</option>
                 <option value="2" {if condition="$param['b_code'] eq '2'" }selected {/if}>2号机器 </option>
                 <option value="3" {if condition="$param['b_code'] eq '3'" }selected {/if}>3号机器 </option>
