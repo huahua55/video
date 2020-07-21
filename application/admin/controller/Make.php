@@ -51,7 +51,10 @@ class Make extends Base
         else{
             echo  '<a target="_blank" href="'. $url .'">'. "<font color=$color>" . $des .'</font></a>'. ($wrap==1? '<br>':'&nbsp;');
         }
-        ob_flush();flush();
+        if(ob_get_level()>0){
+            ob_flush();
+        }
+        flush();
     }
 
     public function opt()
