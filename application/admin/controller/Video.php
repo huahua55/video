@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\console\command\make\Model;
 use think\Db;
 
-class VideoVod extends Base
+class Video extends Base
 {
     public function __construct()
     {
@@ -14,8 +14,8 @@ class VideoVod extends Base
 
     public function index()
     {
-        $this->assign('title', '下载任务管理');
-        return $this->fetch('admin@videovod/index');
+        $this->assign('title', '视频数据管理');
+        return $this->fetch('admin@video/index');
     }
 
     public function index1()
@@ -28,46 +28,16 @@ class VideoVod extends Base
         $where = [];
         $whereOr = [];
 
-        if (!empty($param['idName'])) {
-            $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = ['like', '%' . $param['idName'] . '%'];
-            $whereOr['b.id'] = $param['idName'];
-        }
-        if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
-            $where['b.is_down'] = $param['b_is_down'];
-        }
-        if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
-            $where['b.is_examine'] = $param['b_is_examine'];
-        }
+        $order = 'vod_time_auto_up desc';
 
-        if (isset($param['b_is_section']) && $param['b_is_section'] != "") {
-            $where['b.is_section'] = $param['b_is_section'];
-        }
-        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
-            $where['b.is_sync'] = $param['b_is_sync'];
-        }
-        if (isset($param['b_code']) && $param['b_code'] != "") {
-            $where['b.code'] = $param['b_code'];
-        }
-        $order = 'b.weight desc,b.down_time desc';
-        if (isset($param['field']) && $param['field'] != "") {
-            if ($param['field'] == 'b_weight') {
-                $order = 'b.weight ' . $param['order'] . '';
-            }
-            if ($param['field'] == 'b_down_time') {
-                $order = 'b.down_time ' . $param['order'] . '';
-            }
-            if ($param['field'] == 'b_id') {
-                $order = 'b.id ' . $param['order'] . '';
-            }
-        }
-        $res = model('VideoVod')->listData($whereOr, $where, $order, $param['page'], $param['limit']);
+        $res = model('video')->listData($whereOr, $where, $order, $param['page'], $param['limit']);
+//        p($res);
         $this->assign('list', $res['list']);
         $this->assign('total', $res['total']);
         $this->assign('page', $res['page']);
         $this->assign('limit', $res['limit']);
         $this->assign('param', $param);
-        $this->assign('title', '下载任务管理');
+        $this->assign('title', '视频数据管理');
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
@@ -88,7 +58,7 @@ class VideoVod extends Base
             $where['reasons'] = ['like', '%' . $param['name'] . '%'];
         }
         $order = 'id desc';
-        $res = model('VideoVod')->listData1($where, $order, $param['page'], $param['limit']);
+        $res = model('video')->listData1($where, $order, $param['page'], $param['limit']);
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
@@ -179,7 +149,7 @@ class VideoVod extends Base
             $param['down_add_time'] = time();
             $param['down_time'] = time();
             $param['up_time'] = time();
-            $res = model('VideoVod')->saveData($param);
+            $res = model('video')->saveData($param);
             if ($res['code'] > 1) {
                 return $this->error($res['msg']);
             }
@@ -189,7 +159,7 @@ class VideoVod extends Base
         $id = input('id');
         $where = [];
         $where['id'] = ['eq', $id];
-        $res = model('VideoVod')->infoData($where);
+        $res = model('video')->infoData($where);
 
         $weight = $res['info']['weight'] ?? 99;
         $res['info']['weight'] = $weight;
@@ -206,7 +176,7 @@ class VideoVod extends Base
 //        p($res);die;
         $this->assign('info', $res['info']);
         $this->assign('title', '编辑');
-        return $this->fetch('admin@videovod/info');
+        return $this->fetch('admin@video/info');
     }
 
     public function del()

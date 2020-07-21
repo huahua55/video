@@ -9,7 +9,8 @@ return array(
         '15' => array("show"=>1,"name" => '视频解析', 'controller' => 'jx', 'action' => 'index'),
         '16' => array("show"=>1,"name" => '渠道配置', 'controller' => 'channel', 'action' => 'index'),
         '17' => array("show"=>1,"name" => '推荐短视频', 'controller' => 'Recom', 'action' => 'index'),
-        '18' => array("show"=>1,"name" => '迅雷下载任务', 'controller' => 'videoVod', 'action' => 'index'),
+        '18' => array("show"=>1,"name" => '下载任务管理', 'controller' => 'videoVod', 'action' => 'index'),
+        '19' => array("show"=>1,"name" => '视频数据管理', 'controller' => 'video', 'action' => 'index'),
         //'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
         '1001' => array("show"=>0,"name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
