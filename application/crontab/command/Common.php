@@ -25,7 +25,10 @@ class Common extends Command
 
     protected $times;//超时time
     protected $get_port;//port
-
+    protected $vodModel;
+    protected $videoModel;
+    protected $videoVodModel;
+    protected $videoCollectionModel;
     //代理使用
     protected $proxy_username = 'zhangshanap3';
     protected $proxy_passwd = '64343975';

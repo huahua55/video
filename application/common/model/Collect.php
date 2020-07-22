@@ -390,8 +390,6 @@ class Collect extends Base
     public function vod_data($param, $data, $show = 1)
     {
         try {
-
-
             if ($show == 1) {
                 mac_echo('当前采集任务<strong class="green">' . $data['page']['page'] . '</strong>/<span class="green">' . $data['page']['pagecount'] . '</span>页 采集地址&nbsp;' . $data['page']['url'] . '');
             }
