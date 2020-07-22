@@ -400,6 +400,12 @@ function switchChnNumber($time)
     }
 }
 
+function msectime() {
+    list($t1, $t2) = explode(' ', microtime());
+    return (float)sprintf('%.3f',(floatval($t1)+floatval($t2)));
+}
+
+
 function findNumAll($str = '')
 {
     $str = switchChnNumber($str);

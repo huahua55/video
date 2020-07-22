@@ -3,6 +3,7 @@ namespace app\common\model;
 use think\Db;
 use think\Cache;
 use think\helper\Arr;
+use think\Log;
 
 class videoVod extends Base {
     // 设置数据表（不含前缀）
@@ -19,12 +20,21 @@ class videoVod extends Base {
 
     public function listData($whereOr =[],$where,$order,$page=1,$limit=20,$start=0)
     {
+        log::write('点击事件'.msectime());
+
+        log::write('域名表开始--'.msectime());
         $video_domain = Db::table('video_domain')->find();
+        log::write('域名表结束-'.Db::table('video_domain')->getLastSql().'-'.msectime());
+
+        log::write('审核表开始--'.msectime());
         $video_examine = Db::table('video_examine')->column(null,'id');
+        log::write('审核表结束-'.Db::table('video_examine')->getLastSql().'-'.msectime());
+
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
+        log::write('两表联查sql开始--'.msectime());
         if(empty($whereOr)){
             $total = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->where($where)->order($order)->limit($limit_str)->count();
             $list = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->where($where)->order($order)->limit($limit_str)->select();
@@ -32,13 +42,17 @@ class videoVod extends Base {
             $total = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->count();
             $list = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
         }
+        log::write('两表联查sql开始-'.Db::table('video_vod')->getLastSql().'-'.msectime());
 //        p(Db::table('video_vod')->getLastSql());
         $listId= array_column($list,'b_id');
         $listId= array_diff($listId, [0]);
         $where_collection = [];
         $where_collection['task_id'] = ['in',$listId];
 //        p(1);
+        log::write('集的表查询sql开始-'.msectime());
         $collection_list =  Db::table('video_collection')->where($where_collection)->column(null,'task_id');
+        log::write('集的表查询sql结束-'.Db::table('video_collection')->getLastSql().'-'.msectime());
+        log::write('数组处理开始-'.'-'.msectime());
         foreach ($list as $k=>$v){
             $list[$k]['examine_txt'] = '';
             $list[$k]['mu_url'] = '';
@@ -51,6 +65,7 @@ class videoVod extends Base {
                 }
             }
         }
+        log::write('数组处理结束-'.'-'.msectime());
         //分类
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
     }
