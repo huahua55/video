@@ -21,15 +21,19 @@ class videoVod extends Base {
     public function listData($whereOr =[],$where,$order,$page=1,$limit=20,$start=0)
     {
         log::write('点击事件'.msectime());
+
+
         $video_domain = Db::table('video_domain')->find();
         log::write('sql-'.Db::table('video_domain')->getLastSql().'-'.msectime());
+
         $video_examine = Db::table('video_examine')->column(null,'id');
         log::write('sql-'.Db::table('video_examine')->getLastSql().'-'.msectime());
+
         if(!is_array($where)){
             $where = json_decode($where,true);
         }
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
-        log::write('sql开始-'.Db::table('video_vod')->getLastSql().'-'.msectime());
+        log::write('sql开始--'.msectime());
         if(empty($whereOr)){
             $total = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->where($where)->order($order)->limit($limit_str)->count();
             $list = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('vod a', 'b.vod_id=a.vod_id', 'left')->where($where)->order($order)->limit($limit_str)->select();
