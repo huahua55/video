@@ -6,7 +6,7 @@ cd /data/www/video/
 
 #最大采集所有天
 php think Cj name=zuidacjday#force=1
-#sleep 360
-#php think Cj name=zuidaicjxlday#force=1
-### 强制采集 #force=1
-###001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
+sleep 360
+php think Cj name=zuidaicjxlday#force=1
+## 强制采集 #force=1
+##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
