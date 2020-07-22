@@ -661,11 +661,36 @@ class Collect extends Base
                         })->find();
                     }
 
+
                     if (!$info) {
                         if ($param['opt'] == 2) {
                             $des = '数据操作没有勾选新增，跳过。';
                         } else {
                             if ($param['filter'] == 1 || $param['filter'] == 2) {
+                                if(!is_array($collect_filter['play'][$param['filter']]['cj_play_from_arr'])){
+                                    mac_echo('cj_play_from_arr'.$collect_filter['play'][$param['filter']]['cj_play_from_arr']);
+                                }
+                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_url'])){
+                                    mac_echo('vod_play_url'.$collect_filter['play'][$param['filter']]['vod_play_url']);
+                                }
+                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_server'])){
+                                    mac_echo('vod_play_server'.$collect_filter['play'][$param['filter']]['vod_play_server']);
+                                }
+                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_note'])){
+                                    mac_echo('vod_play_note'.$collect_filter['play'][$param['filter']]['vod_play_note']);
+                                }
+                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_from'])){
+                                    mac_echo('vod_down_from'.$collect_filter['down'][$param['filter']]['vod_down_from']);
+                                }
+                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_url'])){
+                                    mac_echo('vod_down_url'.$collect_filter['down'][$param['filter']]['vod_down_url']);
+                                }
+                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_server'])){
+                                    mac_echo('vod_down_server'.$collect_filter['down'][$param['filter']]['vod_down_server']);
+                                }
+                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_note'])){
+                                    mac_echo('vod_down_note'.$collect_filter['down'][$param['filter']]['vod_down_note']);
+                                }
                                 $v['vod_play_from'] = (string)join('$$$', $collect_filter['play'][$param['filter']]['cj_play_from_arr']);
                                 $v['vod_play_url'] = (string)join('$$$', $collect_filter['play'][$param['filter']]['cj_play_url_arr']);
                                 $v['vod_play_server'] = (string)join('$$$', $collect_filter['play'][$param['filter']]['cj_play_server_arr']);
@@ -749,16 +774,24 @@ class Collect extends Base
                                             $des .= '播放组(' . $cj_play_from . ')，更新ok。';
                                             if ($config['urlrole'] == 1) {
                                                 $tmp1 = explode('#', $arr1[$play_key] ?? '');
+
                                                 $tmp2 = explode('#', $cj_play_url);
                                                 $tmp1 = array_merge($tmp1, $tmp2);
                                                 $tmp1 = array_unique($tmp1);
                                                 $cj_play_url = join('#', $tmp1);
+                                                if(!is_array($cj_play_url)){
+                                                    mac_echo('$cj_play_url'.$cj_play_url);
+                                                }
                                                 unset($tmp1, $tmp2);
                                             }
                                             $arr1[$play_key] = $cj_play_url;
                                             $ec = true;
                                         }
+                                        if(!is_array($arr1)){
+                                            mac_echo('$arr1');
+                                        }
                                         $old_play_url = join('$$$', $arr1);
+
                                     }
                                 }
                                 if ($ec) {
@@ -813,6 +846,9 @@ class Collect extends Base
                                             $des .= '下载组(' . $cj_down_from . ')，更新ok。';
                                             $arr1[$down_key] = $cj_down_url;
                                             $ec = true;
+                                        }
+                                        if(!is_array($arr1)){
+                                            mac_echo('$arr1');
                                         }
                                         $old_down_url = join('$$$', $arr1);
                                     }

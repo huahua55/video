@@ -365,7 +365,7 @@ function mac_echo($str)
 {
     echo $str.'<br>';
     \think\Log::log($str);
-    if(ob_get_level()>0){
+    if(substr(PHP_SAPI_NAME(),0,3) !== 'cli'){
         ob_flush();
         flush();
     }

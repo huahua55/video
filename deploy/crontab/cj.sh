@@ -34,6 +34,6 @@ cd /data/www/video/
 #sleep 30
 ##最大下载
 php think Cj name=zuidacj
-#sleep 30
-###最大迅雷下载
-#php think Cj name=zuidaicjxl
+sleep 30
+##最大迅雷下载
+php think Cj name=zuidaicjxl
