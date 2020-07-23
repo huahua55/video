@@ -31,9 +31,7 @@ $sql = "SELECT `a`.`vod_name`,b.id as b_id,b.examine_id as b_examine_id,b.sum as
 
 $query = mysqli_query($conn,$sql);
 while($row = mysqli_fetch_array($query)){
-    print_r($row[1]??'');
-    print_r($row['vod_name']??'');
-
+    var_dump($row['vod_name']??'');
 }
 
 //查询代码
