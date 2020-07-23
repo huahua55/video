@@ -30,15 +30,35 @@ class Video extends Base
         //a.id,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up
         //b.id,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id,b.is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = Db::name('Video')->where($where)->order($order)->limit($limit_str)->count();
-//        $list = Db::name('Video')->where($where)->order($order)->limit($limit_str)->select();
-        $sql = 'SELECT a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up,b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up FROM  (
-            SELECT  *
-            FROM    video
-            LIMIT  ' . $limit_str . '
-        ) as `a` LEFT JOIN `video_collection` as  `b` ON `a`.`id`=`b`.`video_id` ORDER BY ' . $order . ' ';
-        $list = Db::query($sql);
-//        $id = 0;
+        
+        $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up';
+
+        $field_b_c = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,c.id as cid';
+
+        $total = Db::name('Video')
+                    ->alias( 'a' )
+                    ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
+        $videos = Db::name('Video')
+                ->alias( 'a' )
+                ->field( $field_a )
+                ->where( $where['where_a'] )
+                ->whereOr( $whereOr )
+                ->order( $order )->limit( $limit_str )->select();
+        $list = [];
+        foreach ($videos as $v) {
+            $where['where_c']['c.video_id'] = $v['aid'];
+            $video_collection = Db::name('video_collection')
+                ->alias( 'b' )
+                ->field( $field_b_c )
+                ->where( $where['where_c'] )
+                ->join('video_vod c', 'c.id=b.task_id', 'left')
+                ->select();
+            foreach ($video_collection as $v1) {
+                $list[] = array_merge( $v, $v1 );
+            }
+            
+        }
+        
         foreach ($list as $k_list => &$v_list) {
 
             if (substr_count($v_list['vod_pic'], 'http') == 0) {
@@ -48,10 +68,12 @@ class Video extends Base
                 $v_list['vod_url'] = $video_domain['vod_domain'] . $v_list['vod_url'];
             }
 
-            if(isset($video_examine[$v_list['b_eid']])){
+            $v_list['b_reasons'] = '';
+            if(isset($video_examine[$v_list['b_eid'] ])){
                 $v_list['b_reasons'] = $video_examine[$v_list['b_eid']];
             }
-            if(isset($video_examine[$v_list['e_id']])){
+            $v_list['a_reasons'] = '';
+            if(isset($video_examine[$v_list['e_id'] ])){
                 $v_list['a_reasons'] = $video_examine[$v_list['e_id']];
             }
 //            print_r($v_list['b_reasons']);
@@ -73,7 +95,7 @@ class Video extends Base
                 $v_list['m_status'] = $v_list['status'];
             }
         }
-//        p($list);
+
         return ['code' => 1, 'msg' => '数据列表', 'page' => $page, 'pagecount' => ceil($total / $limit), 'limit' => $limit, 'total' => $total, 'list' => $list];
     }
 
@@ -176,19 +198,72 @@ class Video extends Base
 
     public function saveData($data)
     {
-        $data['down_time'] = time();
-        if (!empty($data['id'])) {
-            $where = [];
-            $where['id'] = ['eq', $data['id']];
-            unset($data['down_time']);
+        $validate = \think\Loader::validate('video');
+        if(!$validate->check($data)){
+            return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
+        }
+        $key = 'video_detail_'.$data['video_id'];
+        Cache::rm($key);
+        $key = 'video_detail_'.$data['vod_en'];
+        Cache::rm($key);
+        $key = 'video_detail_'.$data['video_id'].'_'.$data['vod_en'];
+        Cache::rm($key);
+
+        //分类
+        if(mac_get_type_list() != false){
+            $new_table =  mac_get_type_list_model();
+            $model =  new \app\common\model\TypeSeo($new_table);
+            $type_list = $model->getCache();
+        }else{
+            $type_list = model('Type')->getCache('type_list');
+        }
+        $type_info = $type_list[$data['type_id']];
+        $data['type_pid'] = $type_info['type_pid'];
+
+        if(empty($data['vod_en'])){
+            $data['vod_en'] = Pinyin::get($data['vod_name']);
+        }
+
+        if(empty($data['vod_blurb'])){
+            $data['vod_blurb'] = mac_substring( strip_tags($data['vod_content']) ,100);
+        }
+
+        if($data['uptime']==1){
+            $data['vod_time'] = time();
+        }
+        if($data['uptag']==1){
+            $data['vod_tag'] = mac_get_tag($data['vod_name'], $data['vod_content']);
+        }
+        unset($data['uptime']);
+        unset($data['uptag']);
+
+        Db::startTrans();
+        $save_vod = true;
+        if(!empty($data['id'])){
+            $where=[];
+            $where['id'] = ['eq',$data['id']];
             $res = $this->allowField(true)->where($where)->update($data);
-        } else {
+
+            // 根据video_id获取任务标中的vod_id
+            $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $data['id']] )->find();
+
+            unset( $data['id'] );
+
+            // 更新主表数据 即vod表
+            $data['vod_id'] = $video_vod_data['vod_id'];
+            $save_vod = model('vod')->saveData( $data );
+        }
+        else{
+            $data['vod_time_add'] = time();
+            $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if (false === $res) {
-            return ['code' => 1002, 'msg' => '保存失败：' . $this->getError()];
+        if(false === $res && $save_vod === false){
+            Db::rollback();
+            return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
-        return ['code' => 1, 'msg' => '保存成功'];
+        Db::commit(); 
+        return ['code'=>1,'msg'=>'保存成功'];
     }
 
     public function delData($where)

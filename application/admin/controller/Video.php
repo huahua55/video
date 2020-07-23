@@ -24,25 +24,28 @@ class Video extends Base
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
 
-//        p($param);
-        $where = [];
-        $whereOr = [];
+        // 过滤搜索条件
+        $search_data = self::_filterSearchData( $param );
 
         $order = 'vod_time_auto_up desc';
 
-        $res = model('video')->listData($whereOr, $where, $order, $param['page'], $param['limit']);
-//        p($res);
-        $this->assign('list', $res['list']);
-        $this->assign('total', $res['total']);
-        $this->assign('page', $res['page']);
-        $this->assign('limit', $res['limit']);
-        $this->assign('param', $param);
-        $this->assign('title', '视频数据管理');
+        $res = model('video')->listData(
+                    $search_data['whereOr'],
+                    $search_data['where'],
+                    $order, 
+                    $param['page'],
+                    $param['limit']
+                );
+        $data['page'] = $res['page'];
+        $data['limit'] = $res['limit'];
+        $data['param'] = $param;
+
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
+
         return $data;
     }
 
@@ -66,50 +69,62 @@ class Video extends Base
         return $data;
     }
 
+    /**
+     * 审核状态修改
+     * @return [type] [description]
+     */
     public function updateExamine()
     {
         $param = input();
-        $id = $param['id'] ?? '';
+        // 集表主键id
+        $collection_id = $param['id'] ?? '';
+        // 审核理由表主键id
         $examine_id = $param['examine_id'] ?? '';
         $is_examine = $param['is_examine'] ?? '';
         $data['code'] = 0;
         $data['msg'] = 'error';
         $data['data'] = [];
-        if (!empty($id)) {
+        if ( !empty( $collection_id ) ) {
 
+            $collection_where['id'] = $collection_id;
+            // 根据集表主键id获取相关数据
+            $collention_info = self::_getCollectionData( $collection_where );
 
-            $where['id'] = $id;
-            $collection_where['task_id'] = $id;
-            $update = [];
-            $collection_update = [];
-            if (!empty($examine_id) || $examine_id == 0) {
-                $update['examine_id'] = $examine_id;
-                $collection_update['e_id'] = $examine_id;
-            }
-            if (!empty($is_examine) || $is_examine == 0) {
-                $update['is_examine'] = $is_examine;
-                $collection_update['is_examine'] = $is_examine;
-                $getDataListWhere['id'] = $id;
-                $vodVideoData = $this->getDataList($getDataListWhere);
-                if (!empty($vodVideoData) && $vodVideoData['b_video_id'] > 0) {
-                    $pid = getTypePid($vodVideoData['type_id']);
-//                    p($pid);
-                    if ($pid == 1) {
-                        $videoWhere = [];
-                        $videoWhere['id'] = $vodVideoData['b_video_id'];
-                        $videoDataUpdate['is_examine'] = $is_examine;
-                        Db::table('video')->where($videoWhere)->update($videoDataUpdate);
-                    }
-                }
+            Db::startTrans();
+
+            $video_edit = true;
+            if ( $collention_info['collection'] == 1 ) {
+                // 集为1时即是主集也是1集 此时需要修改video表
+                $video_where['id'] = $collention_info['video_id'];
+                $video_edit_data['is_examine'] = $is_examine;
+                $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+
+                // 根据视频id获取所有的集id
+                $video_collention_datas = Db::table('video_collection')->field('id,task_id')->where( ['video_id' => $collention_info['video_id']] )->select();
+
+                $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
+                $collention_info['task_id'] = ['in', array_column( $video_collention_datas, 'task_id')];
             }
 
+            // 修改集表
+            $collection_edit_data['is_examine'] = $is_examine;
+            $collection_edit_data['e_id'] = $examine_id;
+            $collection_edit_data['time_up'] = time();
+            $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
 
-            $update['up_time'] = time();
-            $collection_update['time_up'] = time();
-            $res = Db::table('video_vod')->where($where)->update($update);
-            $res_collection = Db::table('video_collection')->where($collection_where)->update($collection_update);
-            if ($res && $res_collection) {
+            // 修改任务表 即video_vod表
+            $video_vod_where['id'] = $collention_info['task_id'];
+            $video_vod_edit_data['examine_id'] = $examine_id;
+            $video_vod_edit_data['is_examine'] = $is_examine;
+            $video_vod_edit_data['up_time'] = time();
+            $video_vod_edit = Db::table('video_vod')->where( $video_vod_where )->update( $video_vod_edit_data );
+            
+            if ( $video_edit !== false && $video_collection_edit !== false && $video_vod_edit !== false ) {
+                Db::commit();
+
                 $data['msg'] = 'succ';
+            } else {
+                Db::rollback();
             }
         }
         return $data;
@@ -118,64 +133,42 @@ class Video extends Base
 
     public function info()
     {
-//        p(11);
-
         if (Request()->isPost()) {
-            $param = input();
-
-            if (empty($param)) {
-                return $this->error('参数错误');
+            $param = input('post.');
+            $save_video = model('video')->saveData( $param );
+            if($save_video['code']>1){
+                return $this->error($save_video['msg']);
             }
-            $count = count(explode(',', $param['rel_ids']));
-            if ($count > 1) {
-                return $this->error('只能选择一个视频');
-            }
-            if (!empty($param['history_down_url'])) {
-                $history_down_url = array_unique(array_filter(explode("\n", $param['history_down_url'])));
-                if (!empty($history_down_url)) {
-                    $param['history_down_url'] = json_encode($history_down_url, true);
-                }
-            } else {
-                $param['history_down_url'] = json_encode([], true);
-            }
-            if (empty($param['resolution'])) {
-                unset($param['resolution']);
-            }
-            $param['vod_id'] = $param['rel_ids'];
-            unset($param['rel_ids']);
-            if ($param['is_down'] == 0) {
-                $param['code'] = 0;
-            }
-            $param['down_add_time'] = time();
-            $param['down_time'] = time();
-            $param['up_time'] = time();
-            $res = model('video')->saveData($param);
-            if ($res['code'] > 1) {
-                return $this->error($res['msg']);
-            }
-            return $this->success($res['msg']);
+            return $this->success($save_video['msg']);
         }
 
         $id = input('id');
-        $where = [];
-        $where['id'] = ['eq', $id];
-        $res = model('video')->infoData($where);
+        $where=[];
+        $where['id'] = $id;
 
-        $weight = $res['info']['weight'] ?? 99;
-        $res['info']['weight'] = $weight;
-        $res['info']['rel_ids'] = $res['info']['vod_id'] ?? '';
-        if ($res['info']['rel_ids'] == 0) {
-            $res['info']['rel_ids'] = '';
-        }
-        $history_down_url = json_decode($res['info']['history_down_url'], true);
-//        p($history_down_url);
-        if (!empty($history_down_url)) {
-//            p(implode("\n",$history_down_url));
-            $res['info']['history_down_url'] = implode("\n", $history_down_url);
-        }
-//        p($res);die;
-        $this->assign('info', $res['info']);
-        $this->assign('title', '编辑');
+        // 获取集
+        $video_collection_data = Db::table('video_collection')->field('id,video_id')->where( $where )->find();
+
+        $video_where['id'] = $video_collection_data['video_id'];
+        $res = model('video')->infoData( $video_where );
+
+
+        $info = $res['info'];
+        $this->assign('info',$info);
+
+        //分类
+        $type_tree = model('Type')->getCache('type_tree');
+        $this->assign('type_tree',$type_tree);
+
+        //地区、语言
+        $config = config('maccms.app');
+        $area_list = explode(',',$config['vod_area']);
+        $lang_list = explode(',',$config['vod_lang']);
+        $this->assign('area_list',$area_list);
+        $this->assign('lang_list',$lang_list);
+
+
+        $this->assign('title','视频信息');
         return $this->fetch('admin@video/info');
     }
 
@@ -196,9 +189,14 @@ class Video extends Base
         return $this->error('参数错误');
     }
 
-    public function getDataList($where)
+    /**
+     * 根据集表主键id获取视频信息
+     * @param  [type] $where [description]
+     * @return [type]        [description]
+     */
+    private function _getCollectionData( $where )
     {
-        return Db::table('vod')->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.group_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_status,a.vod_letter,a.vod_color,a.vod_tag,a.vod_class,a.vod_plot_detail,b.id as b_id,b.is_section as b_is_section,b.reason as b_reason,a.vod_douban_id,a.vod_douban_score,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'right')->where($where)->find();
+        return Db::table('video_collection')->field('video_id,task_id,collection')->where( $where )->find();
     }
 
     public function batch()
@@ -243,4 +241,85 @@ class Video extends Base
         return $this->error('参数错误');
     }
 
+    public function updateStatus()
+    {
+        $param = input();
+        // 集表主键id
+        $collection_id = $param['id'] ?? '';
+        // 审核理由表主键id
+        $status = $param['status'] ?? '';
+        $data['code'] = 0;
+        $data['msg'] = 'error';
+        $data['data'] = [];
+        $collection_where['id'] = $collection_id;
+        // 根据集表主键id获取相关数据
+        $collention_info = self::_getCollectionData( $collection_where );
+
+        Db::startTrans();
+
+        $video_edit = true;
+        if ( $collention_info['collection'] == 1 ) {
+            // 集为1时即是主集也是1集 此时需要修改video表
+            $video_where['id'] = $collention_info['video_id'];
+            $video_edit_data['vod_status'] = $status;
+            $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+
+            // 根据视频id获取所有的集id
+            $video_collention_datas = Db::table('video_collection')->field('id,task_id')->where( ['video_id' => $collention_info['video_id']] )->select();
+
+            $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
+            $collention_info['task_id'] = ['in', array_column( $video_collention_datas, 'task_id')];
+        }
+
+        // 修改集表
+        $collection_edit_data['status'] = $status;
+        $collection_edit_data['time_up'] = time();
+        $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
+        
+        if ( $video_edit !== false && $video_collection_edit !== false ) {
+            Db::commit();
+
+            $data['msg'] = 'succ';
+        } else {
+            Db::rollback();
+        }
+        return $data;
+    }
+    /**
+     * 过滤搜索条件
+     * @param string $data [description]
+     */
+    private function _filterSearchData( $param='' )
+    {
+        $where_a = [];
+        $where_c = [];
+        $whereOr = [];
+        if (!empty($param['idName'])) {
+            $param['idName'] = htmlspecialchars(urldecode($param['idName']));
+            $whereOr['a.vod_name'] = ['like', '%' . $param['idName'] . '%'];
+            $whereOr['a.id'] = $param['idName'];
+        }
+        if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
+            $where_c['c.is_down'] = $param['b_is_down'];
+        }
+        if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
+            $where_a['a.is_examine'] = $param['b_is_examine'];
+        }
+
+        if (isset($param['b_is_section']) && $param['b_is_section'] != "") {
+            $where_c['c.is_section'] = $param['b_is_section'];
+        }
+        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
+            $where_c['c.is_sync'] = $param['b_is_sync'];
+        }
+        if (isset($param['b_code']) && $param['b_code'] != "") {
+            $where_c['c.code'] = $param['b_code'];
+        }
+        if (isset($param['vod_status']) && $param['vod_status'] != "") {
+            $where_a['a.vod_status'] = $param['vod_status'];
+        }
+
+
+        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a, 'where_c' => $where_c ]];
+    }
 }
