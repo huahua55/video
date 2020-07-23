@@ -12,8 +12,7 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    // 'hostname'        => 'rm-j6co0332808hbxpcw.mysql.rds.aliyuncs.com',
-    'hostname'        =>  \think\Env::get('database.host'),
+    'hostname'        => 'rm-j6co0332808hbxpcw.mysql.rds.aliyuncs.com',
     // 数据库名
     'database'        => 'video',
     // 用户名
