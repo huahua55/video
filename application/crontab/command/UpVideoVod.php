@@ -82,7 +82,7 @@ class UpVideoVod extends Common
                     }
                 }
             }
-//            $page = $page + 1;
+            $page = $page + 1;
         }
         $output->writeln("结束...");
     }

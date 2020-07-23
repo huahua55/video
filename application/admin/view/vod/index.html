@@ -11,6 +11,8 @@
         text-overflow: ellipsis;
     }
 </style>
+
+
 <div class="page-container p10">
 
     <div class="my-toolbar-box">
@@ -149,6 +151,10 @@
                     </select>
                 </div>
                 <div class="layui-input-inline w150">
+                    <input class="layui-input laydate-icon" name="vod_time" value="{$param['vod_time']}" placeholder="日期" id="LAY_demorange_s">
+                </div>
+
+                <div class="layui-input-inline w150">
                     <select name="order">
                         <option value="">选择排序</option>
                         <option value="vod_level,vod_time" {if condition="$param['order'] eq 'vod_level,vod_time'"}selected{/if}>权重+更新时间</option>
@@ -249,11 +255,35 @@
 
 <script type="text/javascript">
     var curUrl="{:url('vod/data',$param)}";
-    layui.use(['laypage', 'layer','form'], function() {
+    layui.use(['laypage', 'layer','form','laydate'], function() {
         var laypage = layui.laypage
-                , layer = layui.layer,
-                form = layui.form;
+                , layer = layui.layer
+                ,laydate = layui.laydate
+                , $ = layui.jquery
+                ,form = layui.form;
 
+
+
+        // var start = {
+        //     min: laydate.now()
+        //     ,max: '2099-06-16 23:59:59'
+        //     ,istoday: false
+        //     ,format: 'YYYY-MM-DD'//日期格式
+        //     ,istime:true
+        //     ,choose: function(datas){
+        //         end.min = datas; //开始日选好后，重置结束日的最小日期
+        //         end.start = datas //将结束日的初始值设定为开始日
+        //     }
+        // };
+        laydate.render({
+            elem: '#LAY_demorange_s'
+        });
+        // alert(laydate)
+
+        // document.getElementById('LAY_demorange_s').onclick = function(){
+        //     start.elem = this;
+        //     laydate(start);
+        // };
         laypage.render({
             elem: 'pages'
             ,count: {$total}
