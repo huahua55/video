@@ -20,6 +20,14 @@ class Vod extends Base
         if(!empty($param['type'])){
             $where['type_id'] = ['eq',$param['type']];
         }
+        if(!empty($param['vod_time'])){
+           $s =  strtotime(date("Y-m-d 00:00:00",strtotime($param['vod_time'])));
+           $e =  strtotime(date("Y-m-d 23:59:59",strtotime($param['vod_time'])));
+            $where['vod_time'] = ['between', [$s, $e]];
+        }
+
+
+
         if(!empty($param['level'])){
             $where['vod_level'] = ['eq',$param['level']];
         }
@@ -97,9 +105,11 @@ class Vod extends Base
         if(!empty($param['server'])){
             $where['vod_play_server|vod_down_server'] = ['like','%'.$param['server'].'%'];
         }
-        $order='vod_year desc,vod_time desc,vod_douban_score desc';
+        $order='vod_time desc,vod_douban_score desc';
         if(in_array($param['order'],['vod_id','vod_hits','vod_hits_month','vod_hits_week','vod_hits_day'])){
             $order = $param['order'] .' desc';
+        }else if($param['order'] == 'vod_time'){
+            $order = 'vod_time desc';
         } else {
             $by_arr = explode(',', $param['order']);
             foreach ($by_arr as $k => $v) {
