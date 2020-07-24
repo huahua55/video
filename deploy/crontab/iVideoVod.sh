@@ -4,6 +4,4 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 # 当天
 cd /data/www/video/
 ps -ef | grep pushData | grep -v grep | awk '{print $2}' | xargs kill -9
-sleep 5
-
 php think pushData name=i
