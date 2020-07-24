@@ -9,5 +9,6 @@ if [ ! -n "$a" ]; then
   php think pushData name=up
 else
   # 不是空的 先不杀死
+  echo 1
 #  ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
 fi
