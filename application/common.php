@@ -406,7 +406,7 @@ function msectime() {
 }
 
 //截取指定两个字符之间的字符串
- function cut($begin,$end,$str){
+function cut($begin,$end,$str){
     $b = mb_strpos($str,$begin) + mb_strlen($begin);
     $e = mb_strpos($str,$end) - $b;
     return mb_substr($str,$b,$e);

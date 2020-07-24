@@ -116,20 +116,20 @@ class PushData extends Common
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
         $vod_where['b.is_down'] = ['neq', 1];
-        $vod_where['b.vod_id'] = ['eq', 452786];//
+//        $vod_where['b.vod_id'] = ['eq', 452786];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         while ($is_true) {
 
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
-             log::write('页码-'.$page.'-共-'.$data['pagecount'] ?? 0);
-
-            $pagecount = $data['pagecount'] ?? 0;
-            if ($page > $pagecount) {
-                $is_true = false;
-                break;
-            }
+            log::write('页码-'.$page.'-共-'.$data['pagecount'] ?? 0);
+//                p($data);
             if (!empty($data)) {
+                $pagecount = $data['pagecount'] ?? 0;
+                if ($page > $pagecount) {
+                    $is_true = false;
+                    break;
+                }
                 if (!empty($data['list'])) {
                     foreach ($data['list'] as $key => $val) {
 //                        p($val);
