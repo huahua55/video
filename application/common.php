@@ -405,9 +405,24 @@ function msectime() {
     return (float)sprintf('%.3f',(floatval($t1)+floatval($t2)));
 }
 
+//截取指定两个字符之间的字符串
+function cut($begin,$end,$str){
+    $b = mb_strpos($str,$begin) + mb_strlen($begin);
+    $e = mb_strpos($str,$end) - $b;
+    return mb_substr($str,$b,$e);
+}
 
 function findNumAll($str = '')
 {
+    $count = substr_count($str, '集');
+    $count1 = substr_count($str, '第');
+    if ($count > 0 && $count1 > 0) {
+        $str = cut('第','集',$str);
+//        $count3 = substr_count($str, '-');
+//        if ($count3 > 0) {
+//            $str = explode('-',$str)[0]??$str;
+//        }
+    }
     $str = switchChnNumber($str);
     $str = trim($str);
     if (empty($str)) {

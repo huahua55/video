@@ -5,4 +5,5 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 cd /data/www/video/
 ps -ef | grep upVideoVod | grep -v grep | awk '{print $2}' | xargs kill -9
 sleep 5
+
 php think pushData name=up
