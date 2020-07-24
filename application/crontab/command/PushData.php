@@ -306,7 +306,8 @@ class PushData extends Common
         $new_url['down_time'] = time();
         $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
-        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
+        $new_url['weight'] = '0';
+//        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
         $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
         return $new_url;
