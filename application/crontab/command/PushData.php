@@ -116,7 +116,7 @@ class PushData extends Common
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
         $vod_where['b.is_down'] = ['neq', 1];
-//        $vod_where['b.vod_id'] = ['eq', 452786];//
+//        $vod_where['b.vod_id'] = ['eq', 363268];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         while ($is_true) {
@@ -245,11 +245,13 @@ class PushData extends Common
             $collect_push = [];
             foreach ($key_data_new as $itemKey => $itemVal) {
                 $key_url = $collect_filter[$type][$itemKey][$key_data] ?? '';
-                $count = substr_count($key_url, '$');
-                if ($count == 0) {
-                    $key_url = '第'.($key_data + 1).'集$'.$key_url;
+                if(!empty($key_url)){
+                    $count = substr_count($key_url, '$');
+                    if ($count == 0) {
+                        $key_url = '第'.($key_data + 1).'集$'.$key_url;
+                    }
+                    $collect_push[] = $key_url;
                 }
-                $collect_push[] = $key_url;
             }
             //down_url
             //m3u8_url
@@ -320,6 +322,7 @@ class PushData extends Common
         }
         if (!empty($collect_filter['play'])) {
             $new_play_url = $this->pingJieUrl($collect_filter, 'play');
+//            p($new_play_url);
             foreach ($new_play_url as $k_p_play => $k_p_val) {
                 if ($i == 'install') {
                     $title = $this->findTitle($k_p_val, 0);
