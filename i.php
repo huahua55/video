@@ -1,7 +1,6 @@
 <?php
 
 
-
 echo 'ok';die;
 
 
