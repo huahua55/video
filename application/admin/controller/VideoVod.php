@@ -196,10 +196,29 @@ class VideoVod extends Base
                 unset($param['resolution']);
             }
             $param['vod_id'] = $param['rel_ids'];
+            $findVod = Db::table('vod')->field('vod_name,type_id,type_id_1')->where(['vod_id'=>$param['vod_id']])->find();
+            if(empty($findVod)){
+                return $this->error('参数错误');
+            }
+            $title = findTitle($param);
+            if(empty($title)){
+                return $this->error('参数错误1');
+            }
+            $collection = findNumAll($title);
+            if ($findVod['type_id_1'] == 0) {
+                $findVod['type_id_1'] = getTypePid($findVod['type_id']);
+            }
+            if ($findVod['type_id_1'] == 1 || empty($v['type_id_1'])) {
+                $collection = 1;
+            }
             unset($param['rel_ids']);
             if ($param['is_down'] == 0) {
                 $param['code'] = -1;
             }
+            $param['vod_name'] = $findVod['vod_name']??"";
+            $param['collection'] = intval($collection);
+            $param['type_id_1'] = $findVod['type_id_1']??"0";
+            $param['type_id'] = $findVod['type_id_1']??"0";
             $param['down_add_time'] = time();
             $param['down_time'] = time();
             $param['up_time'] = time();
