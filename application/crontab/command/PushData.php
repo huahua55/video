@@ -78,7 +78,7 @@ class PushData extends Common
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
 //        $vod_where['a.vod_douban_score']  = ['gt',7];
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
-        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
+//        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['b.is_down'] = ['EXP', Db::raw('IS NULL')];
         while ($is_true) {
             $data = $this->getDataJoin($vod_where, $order, $page, $limit, $start);
@@ -120,7 +120,7 @@ class PushData extends Common
         $vod_where['b.is_down'] = ['neq', 1];
 //        $vod_where['b.vod_id'] = ['eq', 363268];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
-        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
+//        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         while ($is_true) {
 
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
