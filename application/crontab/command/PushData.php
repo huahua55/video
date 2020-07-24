@@ -118,7 +118,7 @@ class PushData extends Common
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
         $vod_where['b.is_down'] = ['neq', 1];
-//        $vod_where['b.vod_id'] = ['eq', 363268];//
+//        $vod_where['b.vod_id'] = ['eq', 322992];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         while ($is_true) {
@@ -319,6 +319,14 @@ class PushData extends Common
         return $new_url;
     }
 
+    protected function getFindVideo($id,$collection){
+        $where = [];
+        $where['vod_id']= $id;
+        $where['collection']= $collection;
+       return $this->videoVodModel->where($where)->find();
+
+   }
+
     public function getUrlLike($v, $type = '.m3u8', $i = 'install', $n = [])
     {
         //验证地址
@@ -329,7 +337,6 @@ class PushData extends Common
         }
         if (!empty($collect_filter['play'])) {
             $new_play_url = $this->pingJieUrl($collect_filter, 'play');
-//            p($new_play_url);
             foreach ($new_play_url as $k_p_play => $k_p_val) {
                 if ($i == 'install') {
                     $title = $this->findTitle($k_p_val, 0);
@@ -341,13 +348,16 @@ class PushData extends Common
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
-                        if (!empty($n_url)) {
-                            $res = $this->videoVodModel->insert($n_url);
-                            if ($res) {
-                                log::write('成功q3-' . $v['b_vod_id']);
-                            } else {
-                                log::write('失败q3-' . $v['b_vod_id']);
+                        $getFindVideo = $this->getFindVideo($v['vod_id'],intval($title));
+                        if(empty($getFindVideo)){
+                            $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
+                            if (!empty($n_url)) {
+                                $res = $this->videoVodModel->insert($n_url);
+                                if ($res) {
+                                    log::write('成功q3-' . $v['b_vod_id']);
+                                } else {
+                                    log::write('失败q3-' . $v['b_vod_id']);
+                                }
                             }
                         }
                     }
@@ -374,13 +384,16 @@ class PushData extends Common
                                 }
                             }
                         } else {
-                            $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
-                            if (!empty($n_url)) {
-                                $res = $this->videoVodModel->insert($n_url);
-                                if ($res) {
-                                    log::write('成功q1-' . $v['b_vod_id']);
-                                } else {
-                                    log::write('失败q2-' . $v['b_vod_id']);
+                            $getFindVideo = $this->getFindVideo($v['vod_id'],intval($title));
+                            if(empty($getFindVideo)){
+                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
+                                if (!empty($n_url)) {
+                                    $res = $this->videoVodModel->insert($n_url);
+                                    if ($res) {
+                                        log::write('成功q1-' . $v['b_vod_id']);
+                                    } else {
+                                        log::write('失败q2-' . $v['b_vod_id']);
+                                    }
                                 }
                             }
                         }
