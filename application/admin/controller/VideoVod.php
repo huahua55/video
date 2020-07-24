@@ -27,9 +27,15 @@ class VideoVod extends Base
         $where = [];
         $whereOr = [];
 
+        if (isset($param['b_code']) && $param['b_code'] != "") {
+            $where['b.code'] = $param['b_code'];
+        }
+        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
+            $where['b.is_sync'] = $param['b_is_sync'];
+        }
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = ['instr', $param['idName']];
+            $whereOr['b.vod_name'] = ['instr', $param['idName']];
             $whereOr['b.id'] = $param['idName'];
         }
         if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
@@ -38,12 +44,8 @@ class VideoVod extends Base
         if (isset($param['b_is_section']) && $param['b_is_section'] != "") {
             $where['b.is_section'] = $param['b_is_section'];
         }
-        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
-            $where['b.is_sync'] = $param['b_is_sync'];
-        }
-        if (isset($param['b_code']) && $param['b_code'] != "") {
-            $where['b.code'] = $param['b_code'];
-        }
+
+
         $order = 'b.weight desc,b.down_time desc';
         if (isset($param['field']) && $param['field'] != "") {
             if ($param['field'] == 'b_weight') {

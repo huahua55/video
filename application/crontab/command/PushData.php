@@ -93,7 +93,10 @@ class PushData extends Common
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
+            } else {
+                break;
             }
+            $page = $page + 1;
         }
     }
 
@@ -108,10 +111,9 @@ class PushData extends Common
         $order = 'a.vod_id desc';
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
-//        $s = strtotime(date("Y-m-d H:00:00",time()));
-//        $e = strtotime(date("Y-m-d H:59:59",time()));
-        $vod_where['a.vod_time'] = ['gt', 2000];//
-//        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        $s = strtotime(date("Y-m-d H:00:00",time()));
+        $e = strtotime(date("Y-m-d H:59:59",time()));
+        $vod_where['a.vod_time'] = ['between', [$s, $e]];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
@@ -281,7 +283,7 @@ class PushData extends Common
         return '';
     }
 
-    protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val)
+    protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,$i='i')
     {
         $new_url['vod_name'] = $v['vod_name'] ?? '';
         $new_url['type_id'] = $v['type_id'] ?? '';
@@ -303,12 +305,14 @@ class PushData extends Common
         $new_url['duration'] = '';
         $new_url['video_id'] = 0;
         $new_url['sum'] = 0;
-        $new_url['down_add_time'] = time();
+        if($i == 'i'){
+            $new_url['down_add_time'] = time();
+        }
         $new_url['up_time'] = time();
         $new_url['down_time'] = time();
         $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
-        $new_url['weight'] = '0';
+        $new_url['weight'] = '99';
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
         $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
@@ -359,7 +363,7 @@ class PushData extends Common
                         }
                         if (isset($n[$title])) {
                             if ($n[$title]['is_sync'] != 1) {
-                                $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
+                                $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = $this->videoVodModel->where(['id' => $n[$title]['id']])->update($up_data);
                                     if ($res) {
