@@ -69,10 +69,11 @@ class videoVod extends Base {
                     'vod_name' => $v['vod_name'],
                     'b_vod_id' => '',
                     'b_id' => $v['vod_id'],
-                    'b_sum' => $video_vod_count,
+                    'b_sum' => '',
                     'is_master' => 1,
                     'type_id_1' => $v['type_id_1'],
-                    'type_id' => $v['type_id']
+                    'type_id' => $v['type_id'],
+                    'collection' => $video_vod_count
                 ];
 
             // 集
@@ -83,7 +84,7 @@ class videoVod extends Base {
                 ->alias( 'b' )
                 ->field( $field_video_vod )
                 ->where( $video_vod_where )
-                ->order( $order )
+                ->order( 'b.collection asc' )
                 ->select();
             foreach ($video_vod_collection as $v1) {
                 $v1['is_master'] = 0;
@@ -262,6 +263,10 @@ class videoVod extends Base {
      */
     public function editWeight( $data )
     {
+        $validate = \think\Loader::validate('VideoVod');
+        if(!$validate->check($data)){
+            return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
+        }
         if(!empty($data['id'])){
             Db::startTrans();
             $where['vod_id'] = ['eq',$data['id']];

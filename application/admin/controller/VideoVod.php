@@ -44,7 +44,7 @@ class VideoVod extends Base
         if (isset($param['b_code']) && $param['b_code'] != "") {
             $where['b.code'] = $param['b_code'];
         }
-        $order = 'b.weight desc,b.down_time desc';
+        $order = 'b.up_time desc';
         if (isset($param['field']) && $param['field'] != "") {
             if ($param['field'] == 'b_weight') {
                 $order = 'b.weight ' . $param['order'] . '';
@@ -150,7 +150,7 @@ class VideoVod extends Base
             if (empty($param)) {
                 return $this->error('参数错误');
             }
-
+            
             if ( $is_master == 1 ) {
                 // 编辑主集
                 $res = model('VideoVod')->editWeight($param);
@@ -191,8 +191,9 @@ class VideoVod extends Base
         $where = [];
         $where['id'] = ['eq', $id];
         if ( $is_master == 1 ) {
+            $min_weight = Db::table('video_vod')->where('vod_id', $id)->min('weight');
             // 主集
-            $res['info']['weight'] = '';
+            $res['info']['weight'] = $min_weight;
             $res['info']['id'] = $id;
         } else {
             $res = model('VideoVod')->infoData($where);

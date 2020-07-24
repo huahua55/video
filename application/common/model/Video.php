@@ -33,7 +33,7 @@ class Video extends Base
         
         $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up';
 
-        $field_b_c = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,c.id as cid';
+        $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up';
 
         $total = Db::name('Video')
                     ->alias( 'a' )
@@ -46,15 +46,43 @@ class Video extends Base
                 ->order( $order )->limit( $limit_str )->select();
         $list = [];
         foreach ($videos as $v) {
-            $where['where_c']['c.video_id'] = $v['aid'];
+
+            // 主集
+            $video_collection_count = Db::name('video_collection')
+                ->alias( 'b' )
+                ->where( 'b.video_id', $v['aid'] )
+                ->count();
+
+            $list[] = [
+                    'vod_name' => $v['vod_name'],
+                    'video_id' => $v['aid'],
+                    'bid' => $v['aid'] . '_' . $v['aid'],
+                    'is_master' => 1,
+                    'collection' => $video_collection_count,
+                    'm_reasons' => isset($video_examine[$v['e_id']])?$video_examine[$v['e_id']]:'',
+                    'm_time_auto_up' => $v['vod_time_auto_up'],
+                    'm_eid' => $v['e_id'],
+                    'm_status' => $v['vod_status'],
+                    'pid' => 0,
+                    'type_pid' => $v['type_pid'],
+                    'vod_pic' => ''
+                ];
             $video_collection = Db::name('video_collection')
                 ->alias( 'b' )
-                ->field( $field_b_c )
-                ->where( $where['where_c'] )
-                ->join('video_vod c', 'c.id=b.task_id', 'left')
+                ->field( $field_b )
+                ->where( 'b.video_id', $v['aid'] )
                 ->select();
             foreach ($video_collection as $v1) {
-                $list[] = array_merge( $v, $v1 );
+                $v1['pid'] = $v['aid'] . '_' . $v['aid'];
+                $v1['m_eid'] = $v1['b_eid'];
+                $v1['m_time_auto_up'] = $v1['time_auto_up'];
+                $v1['m_reasons'] = isset($video_examine[$v1['b_eid']])?$video_examine[$v1['b_eid']]:'';
+                $v1['m_status'] = $v1['status'];
+                $v1['is_master'] = 0;
+                $v1['vod_pic'] = $v['vod_pic'];
+                $v1['vod_name'] = $v['vod_name'];
+                $v1['aid'] = $v['aid'];
+                $list[] = $v1;
             }
             
         }
@@ -66,33 +94,6 @@ class Video extends Base
             }
             if(!empty($v_list['vod_url'])){
                 $v_list['vod_url'] = $video_domain['vod_domain'] . $v_list['vod_url'];
-            }
-
-            $v_list['b_reasons'] = '';
-            if(isset($video_examine[$v_list['b_eid'] ])){
-                $v_list['b_reasons'] = $video_examine[$v_list['b_eid']];
-            }
-            $v_list['a_reasons'] = '';
-            if(isset($video_examine[$v_list['e_id'] ])){
-                $v_list['a_reasons'] = $video_examine[$v_list['e_id']];
-            }
-//            print_r($v_list['b_reasons']);
-            if ($v_list['collection'] <= 1) {
-                $v_list['pid'] = 0;
-                $v_list['m_reasons'] = $v_list['a_reasons'];
-                $v_list['m_time_auto_up'] = $v_list['vod_time_auto_up'];
-                $v_list['m_eid'] = $v_list['e_id'];
-                $v_list['m_status'] = $v_list['vod_status'];
-            } else {
-                $pid = $v_list['aid'];
-                if(empty($pid)){
-                    $pid = 0;
-                }
-                $v_list['pid'] = $pid;
-                $v_list['m_eid'] = $v_list['b_eid'];
-                $v_list['m_time_auto_up'] = $v_list['time_auto_up'];
-                $v_list['m_reasons'] = $v_list['b_reasons'];
-                $v_list['m_status'] = $v_list['status'];
             }
         }
 

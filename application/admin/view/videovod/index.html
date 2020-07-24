@@ -1,4 +1,9 @@
 {include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    td[data-field="vod_name"] .ew-tree-table-cell.single-line > .ew-tree-table-cell-content {
+        text-overflow: unset;
+    }
+</style>
 <div class="page-container p10">
 
     <div class="demoTable">
@@ -73,7 +78,7 @@
 
 {include file="../../../application/admin/view/public/foot" /}
 <script type="text/html" id="is_downTpl">
-    {{#  if(d.b_vod_id == ''){ }}
+    {{#  if(d.is_master == 1){ }}
     {{#  } else{ }}
         {{#  if(d.b_is_down == 0){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">未下载</button>
@@ -90,7 +95,7 @@
 </script>
 
 <script type="text/html" id="is_sectionTpl">
-    {{#  if(d.b_vod_id == ''){ }}
+    {{#  if(d.is_master == 1){ }}
     {{#  } else{ }}
         {{#  if(d.b_is_section == 0){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">未切片</button>
@@ -113,14 +118,26 @@
         {{# if(d.type_id == 4){ }}
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         {{#  } }}
+        {{# if(d.type_id >= 6){ }}
+            {{# if(d.type_id <= 12){ }}
+                {{# if(d.is_master == 0){ }}
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                {{#  } }}
+            {{#  } }}
+        {{#  } }}
         {{# if(d.type_id >= 13){ }}
             {{# if(d.type_id <= 16){ }}
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            {{#  } else if(d.type_id <= 22){ }}
+            {{#  } }}
+        {{#  } }}
+        {{# if(d.type_id >= 19){ }}
+            {{# if(d.type_id <= 22){ }}
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            {{#  } else if(d.type_id <= 28){ }}
+            {{#  } }}
+        {{#  } }}
+        {{# if(d.type_id >= 25){ }}
+            {{# if(d.type_id <= 28){ }}
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            {{#  } else{ }}
             {{#  } }}
         {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
@@ -134,7 +151,7 @@
 
 </script>
 <script type="text/html" id="is_syncTpl">
-    {{#  if(d.b_vod_id == ''){ }}
+    {{#  if(d.is_master == 1){ }}
     {{#  } else{ }}
         {{#  if(d.b_is_sync == 0){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">未上传</button>
@@ -150,9 +167,9 @@
 
 <script type="text/html" id="is_nameTpl">
     {{#  if(d.mu_url == ''){ }}
-    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
+    <button class="layui-btn layui-btn-normal layui-btn-xs text-overflow">{{d.vod_name}}</button>
     {{#  } else{ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.mu_url}}','_blank')">
+    <button class="layui-btn layui-btn-danger layui-btn-xs text-overflow" onclick="javascript:window.open('{{d.mu_url}}','_blank')">
         {{d.vod_name}}
     </button>
     {{#  } }}
@@ -163,7 +180,13 @@
         <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
     </div>
 </script>
-
+<script type="text/html" id="is_vodIdTpl">
+    {{#  if(d.is_master == 1){ }}
+        <div class="ew-tree-table-cell-content">{{d.b_id}}</div>
+    {{#  } else{ }}
+        <div class="ew-tree-table-cell-content">{{d.b_vod_id}}</div>
+    {{#  } }}
+</script>
 <script>
 
 </script>
@@ -173,7 +196,7 @@
     var ajax_url = '/admin/video_vod/index1';
 
     init_table();
-    function init_table( page = 1, limit = 20, param = '' ) { 
+    function init_table( page = 1, limit = 10, param = '' ) { 
         var data = {
                 'page' : page,
                 'limit' : limit
@@ -244,7 +267,7 @@
                 data: result_data,
                 id: 'testReload',
                 tree: {
-                    iconIndex: 3,
+                    iconIndex: 4,
                     isPidData: true,
                     idName: 'b_id',
                     pidName: 'b_vod_id'
@@ -261,6 +284,12 @@
                     //     fixed: true
                     // }, 
                     {
+                        fixed: 'right',
+                        title: '操作',
+                        width: 80,
+                        toolbar: '#barDemo'
+                    },
+                    {
                         field: 'b_id',
                         title: 'ID',
                         width: 72,
@@ -269,11 +298,8 @@
                     }, {
                         field: 'b_vod_id',
                         title: '视频ID',
-                        width: 80
-                    }, {
-                        field: 'b_code',
-                        title: '机器编号',
-                        width: 88
+                        width: 80,
+                        templet: '#is_vodIdTpl'
                     }
                         // , {field: 'vod_name', title: '视频名称', width: 150,templet: function (d) {
                         //         if(d.mu_url == ""){
@@ -283,11 +309,19 @@
                         //         }
                         //     }}
                         , {
+                        field: 'collection',
+                        title: '集',
+                        width: 20,
+                    }, {
                         field: 'vod_name',
                         title: '视频名称',
-                        width: 120,
+                        minWidth: 300,
                         templet: '#is_nameTpl'
-                    } , {
+                    }, {
+                        field: 'b_code',
+                        title: '机器编号',
+                        width: 88
+                    }, {
                         field: 'b_sum',
                         title: '视频数量',
                         width: 90,
@@ -330,11 +364,6 @@
                         field: 'b_down_url',
                         title: '下载URL',
     					width: 85
-                    }, {
-                        fixed: 'right',
-                        title: '操作',
-                        width: 80,
-                        toolbar: '#barDemo'
                     }
                     ]
                 ]
