@@ -91,7 +91,7 @@ class Video extends Base
             $collention_info = self::_getCollectionData( $collection_where );
             
             // 获取视频信息
-            $vedio_info = self::_getCollectionData( $collention_info['video_id'] ); 
+            $vedio_info = self::_getVedioData( $collention_info['video_id'] ); 
             
             Db::startTrans();
 
@@ -100,6 +100,7 @@ class Video extends Base
                 // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
+                $collection_edit_data['e_id'] = $examine_id;
                 $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
             }
 

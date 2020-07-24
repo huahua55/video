@@ -178,6 +178,8 @@
                 dataType : 'json',
                 success : function(result_data){
 
+                    $('.examine').css('display','none');
+                    
                     test(result_data['data']);
 
                     laypageRender( result_data );
@@ -260,7 +262,6 @@
                             title: '视频ID',
                             width: 72,
                             sort: true,
-                            fixed: true
                         }, {
                             field: 'bid',
                             title: '集数表ID',
@@ -285,18 +286,18 @@
                         }, {
                             field: 'm_status',
                             title: '视频状态',
-                            width: 90,
+                            width: 200,
                             templet: '#vod_statusTpl'
+                        },  {
+                            field: 'm_eid',
+                            title: '审核状态',
+                            templet: '#is_examineTpl',
+                            width: 380
                         }, {
                             field: 'm_time_auto_up',
                             title: '时间',
                             width: 180,
                             sort: true,
-                        }, {
-                            field: 'm_eid',
-                            title: '审核状态',
-                            templet: '#is_examineTpl',
-                            width: 255
                         }, {
                             field: 'm_reasons',
                             title: '审核理由',
