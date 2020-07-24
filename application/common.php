@@ -411,6 +411,17 @@ function cut($begin,$end,$str){
     $e = mb_strpos($str,$end) - $b;
     return mb_substr($str,$b,$e);
 }
+function findTitle($k_p_val, $type = 0)
+{
+    $array = explode('#', $k_p_val['m3u8_url']);
+    foreach ($array as $k => $v) {
+        $count = substr_count($v, '$');
+        if ($count > 0) {
+            return explode("$", $v)[0] ?? '';
+        }
+    }
+    return '';
+}
 
 function findNumAll($str = '')
 {

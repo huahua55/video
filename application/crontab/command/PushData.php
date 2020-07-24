@@ -284,17 +284,7 @@ class PushData extends Common
         return $new_play_url;
     }
 
-    protected function findTitle($k_p_val, $type = 0)
-    {
-        $array = explode('#', $k_p_val['m3u8_url']);
-        foreach ($array as $k => $v) {
-            $count = substr_count($v, '$');
-            if ($count > 0) {
-                return explode("$", $v)[0] ?? '';
-            }
-        }
-        return '';
-    }
+
 
     protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,$i='i')
     {
@@ -353,7 +343,7 @@ class PushData extends Common
 //            p($new_down_url);
             foreach ($new_play_url as $k_p_play => $k_p_val) {
                 if ($i == 'install') {
-                    $title = $this->findTitle($k_p_val, 0);
+                    $title = findTitle($k_p_val, 0);
                     if (!empty($title)) {
                         $title = findNumAll($title);
                         if ($v['type_id_1'] == 0) {
@@ -376,7 +366,7 @@ class PushData extends Common
                         }
                     }
                 } else {
-                    $title = $this->findTitle($k_p_val, 0);
+                    $title = findTitle($k_p_val, 0);
                     if (!empty($title)) {
                         $title = intval(findNumAll($title));
                         if ($v['type_id_1'] == 0) {

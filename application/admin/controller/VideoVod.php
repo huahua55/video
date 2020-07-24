@@ -14,7 +14,30 @@ class VideoVod extends Base
 
     public function index()
     {
-        $this->assign('title', '下载任务管理');
+//        $param = input();
+//        $param['page'] = intval($param['page']) <1 ? 1 : $param['page'];
+//        $param['limit'] = intval($param['limit']) <1 ? $this->_pagesize : $param['limit'];
+//        $where=[];
+//
+//        if(!empty($param['wd'])){
+//            $param['wd'] = htmlspecialchars(urldecode($param['wd']));
+//            $where['name'] = ['like','%'.$param['wd'].'%'];
+//        }
+//
+//        $order='b.weight desc';
+//
+//        $res = model('VideoVod')->listData($where,$order,$param['page'],$param['limit']);
+////        p($res);
+//        $this->assign('list',$res['list']);
+//        $this->assign('total',$res['total']);
+//        $this->assign('page',$res['page']);
+//        $this->assign('limit',$res['limit']);
+//
+//
+//        $param['page'] = '{page}';
+//        $param['limit'] = '{limit}';
+//        $this->assign('param',$param);
+        $this->assign('title', '迅雷下载任务');
         return $this->fetch('admin@videovod/index');
     }
 
@@ -24,6 +47,7 @@ class VideoVod extends Base
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
 
+//        p($param);
         $where = [];
         $whereOr = [];
 
@@ -40,6 +64,9 @@ class VideoVod extends Base
         }
         if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
             $where['b.is_down'] = $param['b_is_down'];
+        }
+        if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
+            $where['b.is_examine'] = $param['b_is_examine'];
         }
         if (isset($param['b_is_section']) && $param['b_is_section'] != "") {
             $where['b.is_section'] = $param['b_is_section'];
@@ -59,10 +86,12 @@ class VideoVod extends Base
             }
         }
         $res = model('VideoVod')->listData($whereOr, $where, $order, $param['page'], $param['limit']);
-
-        $data['page'] = $res['page'];
-        $data['limit'] = $res['limit'];
-        $data['param'] = $param;
+        $this->assign('list', $res['list']);
+        $this->assign('total', $res['total']);
+        $this->assign('page', $res['page']);
+        $this->assign('limit', $res['limit']);
+        $this->assign('param', $param);
+        $this->assign('title', '迅雷下载任务');
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
@@ -143,46 +172,57 @@ class VideoVod extends Base
 
     public function info()
     {
-        $param = input();
-        $is_master = $param['is_master'];
-        unset( $param['is_master'] );
+//        p(11);
 
         if (Request()->isPost()) {
+            $param = input();
 
             if (empty($param)) {
                 return $this->error('参数错误');
             }
-
-            if ( $is_master == 1 ) {
-                // 编辑主集
-                $res = model('VideoVod')->editWeight($param);
-            } else {
-                // 集
-                $count = count(explode(',', $param['rel_ids']));
-                if ($count > 1) {
-                    return $this->error('只能选择一个视频');
-                }
-                if (!empty($param['history_down_url'])) {
-                    $history_down_url = array_unique(array_filter(explode("\n", $param['history_down_url'])));
-                    if (!empty($history_down_url)) {
-                        $param['history_down_url'] = json_encode($history_down_url, true);
-                    }
-                } else {
-                    $param['history_down_url'] = json_encode([], true);
-                }
-                if (empty($param['resolution'])) {
-                    unset($param['resolution']);
-                }
-                $param['vod_id'] = $param['rel_ids'];
-                unset($param['rel_ids']);
-                if ($param['is_down'] == 0) {
-                    $param['code'] = -1;
-                }
-                $param['down_add_time'] = time();
-                $param['down_time'] = time();
-                $param['up_time'] = time();
-                $res = model('VideoVod')->saveData($param);
+            $count = count(explode(',', $param['rel_ids']));
+            if ($count > 1) {
+                return $this->error('只能选择一个视频');
             }
+            if (!empty($param['history_down_url'])) {
+                $history_down_url = array_unique(array_filter(explode("\n", $param['history_down_url'])));
+                if (!empty($history_down_url)) {
+                    $param['history_down_url'] = json_encode($history_down_url, true);
+                }
+            } else {
+                $param['history_down_url'] = json_encode([], true);
+            }
+            if (empty($param['resolution'])) {
+                unset($param['resolution']);
+            }
+            $param['vod_id'] = $param['rel_ids'];
+            $findVod = Db::table('vod')->field('vod_name,type_id,type_id_1')->where(['vod_id'=>$param['vod_id']])->find();
+            if(empty($findVod)){
+                return $this->error('参数错误');
+            }
+            $title = findTitle($param);
+            if(empty($title)){
+                return $this->error('参数错误1');
+            }
+            $collection = findNumAll($title);
+            if ($findVod['type_id_1'] == 0) {
+                $findVod['type_id_1'] = getTypePid($findVod['type_id']);
+            }
+            if ($findVod['type_id_1'] == 1 || empty($v['type_id_1'])) {
+                $collection = 1;
+            }
+            unset($param['rel_ids']);
+            if ($param['is_down'] == 0) {
+                $param['code'] = -1;
+            }
+            $param['vod_name'] = $findVod['vod_name']??"";
+            $param['collection'] = intval($collection);
+            $param['type_id_1'] = $findVod['type_id_1']??"0";
+            $param['type_id'] = $findVod['type_id_1']??"0";
+            $param['down_add_time'] = time();
+            $param['down_time'] = time();
+            $param['up_time'] = time();
+            $res = model('VideoVod')->saveData($param);
             if ($res['code'] > 1) {
                 return $this->error($res['msg']);
             }
@@ -192,13 +232,8 @@ class VideoVod extends Base
         $id = input('id');
         $where = [];
         $where['id'] = ['eq', $id];
-        if ( $is_master == 1 ) {
-            // 主集
-            $res['info']['weight'] = '';
-            $res['info']['id'] = $id;
-        } else {
-            $res = model('VideoVod')->infoData($where);
-        }
+        $res = model('VideoVod')->infoData($where);
+
         $weight = $res['info']['weight'] ?? 99;
         $res['info']['weight'] = $weight;
         $res['info']['rel_ids'] = $res['info']['vod_id'] ?? '';
@@ -206,10 +241,12 @@ class VideoVod extends Base
             $res['info']['rel_ids'] = '';
         }
         $history_down_url = json_decode($res['info']['history_down_url'], true);
+//        p($history_down_url);
         if (!empty($history_down_url)) {
+//            p(implode("\n",$history_down_url));
             $res['info']['history_down_url'] = implode("\n", $history_down_url);
         }
-        $this->assign('is_master', input('is_master'));
+//        p($res);die;
         $this->assign('info', $res['info']);
         $this->assign('title', '编辑');
         return $this->fetch('admin@videovod/info');
