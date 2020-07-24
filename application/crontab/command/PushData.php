@@ -93,7 +93,10 @@ class PushData extends Common
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
+            } else {
+                break;
             }
+            $page = $page + 1;
         }
     }
 
@@ -108,10 +111,9 @@ class PushData extends Common
         $order = 'a.vod_id desc';
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
-//        $s = strtotime(date("Y-m-d H:00:00",time()));
-//        $e = strtotime(date("Y-m-d H:59:59",time()));
-        $vod_where['a.vod_time'] = ['gt', 2000];//
-//        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        $s = strtotime(date("Y-m-d H:00:00",time()));
+        $e = strtotime(date("Y-m-d H:59:59",time()));
+        $vod_where['a.vod_time'] = ['between', [$s, $e]];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
@@ -310,7 +312,7 @@ class PushData extends Common
         $new_url['down_time'] = time();
         $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
-        $new_url['weight'] = '0';
+        $new_url['weight'] = '99';
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
         $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
