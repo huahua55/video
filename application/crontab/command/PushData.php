@@ -248,7 +248,9 @@ class PushData extends Common
                 if(!empty($key_url)){
                     $count = substr_count($key_url, '$');
                     if ($count == 0) {
-                        $key_url = '第'.($key_data + 1).'集$'.$key_url;
+                        if(substr_count($key_url, 'http') > 0){
+                            $key_url = '第'.($key_data + 1).'集$'.$key_url;
+                        }
                     }
                     $collect_push[] = $key_url;
                 }
