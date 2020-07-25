@@ -89,21 +89,19 @@ class Video extends Base
             $collection_where['id'] = $collection_id;
             // 根据集表主键id获取相关数据
             $collention_info = self::_getCollectionData( $collection_where );
-
+            
+            // 获取视频信息
+            $vedio_info = self::_getVedioData( $collention_info['video_id'] ); 
+            
             Db::startTrans();
 
             $video_edit = true;
-            if ( $collention_info['collection'] == 1 ) {
-                // 集为1时即是主集也是1集 此时需要修改video表
+            if ( $vedio_info['type_pid'] == 1 ) {
+                // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
+                $collection_edit_data['e_id'] = $examine_id;
                 $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
-
-                // 根据视频id获取所有的集id
-                $video_collention_datas = Db::table('video_collection')->field('id,task_id')->where( ['video_id' => $collention_info['video_id']] )->select();
-
-                $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
-                $collention_info['task_id'] = ['in', array_column( $video_collention_datas, 'task_id')];
             }
 
             // 修改集表
@@ -111,15 +109,8 @@ class Video extends Base
             $collection_edit_data['e_id'] = $examine_id;
             $collection_edit_data['time_up'] = time();
             $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
-
-            // 修改任务表 即video_vod表
-            $video_vod_where['id'] = $collention_info['task_id'];
-            $video_vod_edit_data['examine_id'] = $examine_id;
-            $video_vod_edit_data['is_examine'] = $is_examine;
-            $video_vod_edit_data['up_time'] = time();
-            $video_vod_edit = Db::table('video_vod')->where( $video_vod_where )->update( $video_vod_edit_data );
             
-            if ( $video_edit !== false && $video_collection_edit !== false && $video_vod_edit !== false ) {
+            if ( $video_edit !== false && $video_collection_edit !== false ) {
                 Db::commit();
 
                 $data['msg'] = 'succ';
@@ -199,6 +190,16 @@ class Video extends Base
         return Db::table('video_collection')->field('video_id,task_id,collection')->where( $where )->find();
     }
 
+    /**
+     * 根据集表主键id获取视频信息
+     * @param  [type] $where [description]
+     * @return [type]        [description]
+     */
+    private function _getVedioData( $where )
+    {
+        return Db::table('video')->field('type_pid')->where( $where )->find();
+    }
+
     public function batch()
     {
         $param = input();
@@ -252,31 +253,50 @@ class Video extends Base
         $data['msg'] = 'error';
         $data['data'] = [];
         $collection_where['id'] = $collection_id;
+
+        $is_master = $param['is_master'];
+        if ($is_master != 1 && $is_master != 0) {
+            return $data;
+        }
         // 根据集表主键id获取相关数据
         $collention_info = self::_getCollectionData( $collection_where );
 
         Db::startTrans();
 
         $video_edit = true;
-        if ( $collention_info['collection'] == 1 ) {
-            // 集为1时即是主集也是1集 此时需要修改video表
-            $video_where['id'] = $collention_info['video_id'];
+        if ( $is_master == 1 ) {
+            // 处理除电影以外的状态
+            // 主集 此时需要修改video表
+            $video_where['id'] = $collection_id;
             $video_edit_data['vod_status'] = $status;
+            $video_edit_data['vod_time'] = time();
             $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
 
             // 根据视频id获取所有的集id
-            $video_collention_datas = Db::table('video_collection')->field('id,task_id')->where( ['video_id' => $collention_info['video_id']] )->select();
+            $video_collention_datas = Db::table('video_collection')->field('id')->where( ['video_id' => $collention_info['video_id']] )->select();
 
             $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
-            $collention_info['task_id'] = ['in', array_column( $video_collention_datas, 'task_id')];
+        } else {
+            // 获取视频信息
+            $video_where['id'] = $collention_info['video_id'];
+
+            $vedio_info = self::_getVedioData( $video_where );
+            $video_is_film_edit = true;
+
+            if ( $vedio_info['type_pid'] == 1 ) {
+                // 是电影
+                $video_edit_data['vod_status'] = $status;
+                $video_edit_data['vod_time'] = time();
+                $video_is_film_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+            }
         }
 
         // 修改集表
         $collection_edit_data['status'] = $status;
         $collection_edit_data['time_up'] = time();
         $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
-        
-        if ( $video_edit !== false && $video_collection_edit !== false ) {
+
+        if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
             Db::commit();
 
             $data['msg'] = 'succ';
@@ -292,34 +312,19 @@ class Video extends Base
     private function _filterSearchData( $param='' )
     {
         $where_a = [];
-        $where_c = [];
         $whereOr = [];
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
             $whereOr['a.vod_name'] = ['like', '%' . $param['idName'] . '%'];
             $whereOr['a.id'] = $param['idName'];
         }
-        if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
-            $where_c['c.is_down'] = $param['b_is_down'];
-        }
         if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
             $where_a['a.is_examine'] = $param['b_is_examine'];
-        }
-
-        if (isset($param['b_is_section']) && $param['b_is_section'] != "") {
-            $where_c['c.is_section'] = $param['b_is_section'];
-        }
-        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
-            $where_c['c.is_sync'] = $param['b_is_sync'];
-        }
-        if (isset($param['b_code']) && $param['b_code'] != "") {
-            $where_c['c.code'] = $param['b_code'];
         }
         if (isset($param['vod_status']) && $param['vod_status'] != "") {
             $where_a['a.vod_status'] = $param['vod_status'];
         }
 
-
-        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a, 'where_c' => $where_c ]];
+        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a]];
     }
 }

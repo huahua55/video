@@ -1,5 +1,9 @@
 {include file="../../../application/admin/view/public/head" /}
-
+<style type="text/css">
+    td[data-field="vod_name"] .ew-tree-table-cell.single-line > .ew-tree-table-cell-content {
+        text-overflow: unset;
+    }
+</style>
 <script>
     function show_img(t) {
         var t = $(t).find("img");
@@ -23,75 +27,6 @@
         <div class="layui-inline">
             <input class="layui-input" placeholder="视频名称或ID" name="id" id="demoReload" autocomplete="off">
         </div>
-        &nbsp;
-        机器编码：
-        <div class="layui-inline">
-            <select class="layui-select" name="b_code">
-                <option value="">选择状态</option>
-                <option value="1" {if condition="$param['b_code'] eq '1'" }selected {
-                /if}>1号机器</option>
-                <option value="2" {if condition="$param['b_code'] eq '2'" }selected {
-                /if}>2号机器 </option>
-                <option value="3" {if condition="$param['b_code'] eq '3'" }selected {
-                /if}>3号机器 </option>
-                <option value="4" {if condition="$param['b_code'] eq '4'" }selected {
-                /if}>4号机器 </option>
-                <option value="5" {if condition="$param['b_code'] eq '5'" }selected {
-                /if}>5号机器 </option>
-                <option value="6" {if condition="$param['b_code'] eq '6'" }selected {
-                /if}>6号机器 </option>
-                <option value="100" {if condition="$param['b_code'] eq '100'" }selected {
-                /if}>100号机器 </option>
-                <option value="101" {if condition="$param['b_code'] eq '101'" }selected {
-                /if}>101号机器 </option>
-                <option value="102" {if condition="$param['b_code'] eq '102'" }selected {
-                /if}>102号机器 </option>
-                <option value="103" {if condition="$param['b_code'] eq '103'" }selected {
-                /if}>103号机器 </option>
-            </select>
-        </div>
-        &nbsp; 下载状态：
-        <div class="layui-inline">
-            <select class="layui-select" name="b_is_down">
-                <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_down'] eq '0'" }selected {
-                /if}>未下载 </option>
-                <option value="1" {if condition="$param['b_is_down'] eq '1'" }selected {
-                /if}>下载成功 </option>
-                <option value="2" {if condition="$param['b_is_down'] eq '2'" }selected {
-                /if}>下载中 </option>
-                <option value="3" {if condition="$param['b_is_down'] eq '3'" }selected {
-                /if}>下载失败</option>
-                <option value="4" {if condition="$param['b_is_down'] eq '4'" }selected {
-                /if}>异常</option>
-            </select>
-
-        </div> &nbsp; 切片状态：
-        <div class="layui-inline">
-            <select class="layui-select" name="b_is_section">
-                <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_section'] eq '0'" }selected {
-                /if}>未切片 </option>
-                <option value="1" {if condition="$param['b_is_section'] eq '1'" }selected {
-                /if}>切片成功 </option>
-                <option value="2" {if condition="$param['b_is_section'] eq '2'" }selected {
-                /if}>切片中 </option>
-                <option value="3" {if condition="$param['b_is_section'] eq '3'" }selected {
-                /if}>切片失败
-                </option> </select></div>
-        &nbsp; 上传状态：
-        <div class="layui-inline">
-            <select class="layui-select" name="b_is_sync">
-                <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_sync'] eq '0'" }selected {
-                /if}>未上传 </option>
-                <option value="1" {if condition="$param['b_is_sync'] eq '1'" }selected {
-                /if}>上传成功 </option>
-                <option value="2" {if condition="$param['b_is_sync'] eq '2'" }selected {
-                /if}>上传中 </option>
-                <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {
-                /if}>上传失败</option>
-            </select></div>
         &nbsp; 审核状态：
         <div class="layui-inline">
             <select class="layui-select" name="b_is_examine">
@@ -127,15 +62,19 @@
         </form>
     </div>
 </div>
-
 <input type="hidden" name="cur_page" id="cur_page" value="">
 <input type="hidden" name="cur_limit" id="cur_limit" value="">
 <input type="hidden" name="search_data" id="search_data" value="">
 
 {include file="../../../application/admin/view/public/foot" /}
 <script type="text/html" id="vod_statusTpl">
-    <input type="radio" name="{{d.aid}}_{{d.bid}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
-    <input type="radio" name="{{d.aid}}_{{d.bid}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+    {{#  if(d.is_master == 1){ }}
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+    {{#  } else{ }}
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+    {{#  } }}
 </script>
 <script type="text/html" id="is_downTpl">
     {{#  if(d.b_is_down == 0){ }}
@@ -164,7 +103,9 @@
 </script>
 
 <script type="text/html" id="barDemo">
+    {{#  if(d.is_master == 1){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 <script type="text/html" id="is_syncTpl">
@@ -189,14 +130,24 @@
     {{#  } }}
 </script>
 <script type="text/html" id="img">
+    {{#  if(d.is_master == 0){ }}
     <div onclick="show_img(this)"><img src="{{ d.vod_pic }}" style="width: 40px; height: 40px;"></div>
+    {{#  } }}
 </script>
 <script type="text/html" id="is_examineTpl">
-    <input type="radio" name="{{d.bid}}" value="0" title="未审核" {{#  if(d.b_is_examine == 0){ }} checked {{# } }} lay-filter="shenhe">
-    <input type="radio" name="{{d.bid}}" value="1" title="审核通过" {{#  if(d.b_is_examine == 1){ }} checked {{# } }} lay-filter="shenhe">
-    <input type="radio" name="{{d.bid}}" value="2" title="审核失败" {{#  if(d.b_is_examine == 2){ }} checked {{# } }} lay-filter="shenhe">
+    {{#  if(d.is_master == 0){ }}
+        <input type="radio" name="{{d.bid}}" value="0" title="未审核" {{#  if(d.b_is_examine == 0){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.bid}}" value="1" title="审核通过" {{#  if(d.b_is_examine == 1){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.bid}}" value="2" title="审核失败" {{#  if(d.b_is_examine == 2){ }} checked{{# } }} lay-filter="shenhe">
+    {{#  } }}
 </script>
-
+<script type="text/html" id="is_bidTpl">
+    {{#  if(d.is_master == 1){ }}
+    <div class="ew-tree-table-cell-content">{{d.bid.split("_")[0]}}</div>
+    {{#  } else { }}
+    <div class="ew-tree-table-cell-content">{{d.bid}}</div>
+    {{#  } }}
+</script>
 <!-- <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
@@ -225,6 +176,8 @@
                 type : 'get',
                 dataType : 'json',
                 success : function(result_data){
+
+                    $('.examine').css('display','none');
 
                     test(result_data['data']);
 
@@ -287,7 +240,7 @@
                     // page: true,
                     // limit: 20,
                     tree: {
-                        iconIndex: 2,
+                        iconIndex: 4,
                         isPidData: true,
                         idName: 'bid',
                         pidName: 'pid'
@@ -299,26 +252,31 @@
                     }],
                     cols: [
                         [ {
+                            fixed: 'right',
+                            title: '操作',
+                            width: 80,
+                            toolbar: '#barDemo'
+                        }, {
                             field: 'video_id',
                             title: '视频ID',
                             width: 72,
                             sort: true,
-                            fixed: true
                         }, {
                             field: 'bid',
                             title: '集数表ID',
                             width: 72,
                             sort: true,
-                            fixed: true
+                            fixed: true,
+                            templet: '#is_bidTpl'
+                        }, {
+                            field: 'collection',
+                            title: '集',
+                            width: 90,
                         }, {
                             field: 'vod_name',
                             title: '视频名称',
                             width: 300,
                             templet: '#is_nameTpl'
-                        }, {
-                            field: 'collection',
-                            title: '集',
-                            width: 90,
                         }, {
                             field: 'vod_pic',
                             title: '图片',
@@ -327,27 +285,22 @@
                         }, {
                             field: 'm_status',
                             title: '视频状态',
-                            width: 90,
+                            width: 200,
                             templet: '#vod_statusTpl'
+                        },  {
+                            field: 'm_eid',
+                            title: '审核状态',
+                            templet: '#is_examineTpl',
+                            width: 380
                         }, {
                             field: 'm_time_auto_up',
                             title: '时间',
                             width: 180,
                             sort: true,
                         }, {
-                            field: 'm_eid',
-                            title: '审核状态',
-                            templet: '#is_examineTpl',
-                            width: 255
-                        }, {
                             field: 'm_reasons',
                             title: '审核理由',
                             width: 90
-                        }, {
-                            fixed: 'right',
-                            title: '操作',
-                            width: 80,
-                            toolbar: '#barDemo'
                         }
                         ]
                     ], style: 'margin-top:0;',
@@ -382,7 +335,6 @@
                                     data: '',
                                     dataType: "json",
                                     success: function (data) {
-                                        console.log(data)
                                         var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
                                             ' "><option value="">请选择一个理由</option>'
                                         for (var i = 0; i < data.data.length; i++) {
@@ -408,7 +360,7 @@
                     var data = {
                         'id': sid,
                         'examine_id': examineId,
-                        'is_examine': is_examineId
+                        'is_examine': is_examineId,
                     };
                     $.ajax({
                         type: "GET",
@@ -419,7 +371,6 @@
                             if (data.code == 0) {
                                 layer.closeAll()
                                 layer.msg('修改成功！！！');
-                                init_table( $('#cur_page').val(), $('#cur_limit').val(), $('#search_data').val() );
                             } else {
                                 layer.msg('修改失败！！！');
                             }
@@ -446,7 +397,6 @@
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
-                    console.log(obj)
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -483,11 +433,11 @@
                     active = {
                         reload: function () {
                             var demoReload = $('#demoReload');
-                            var b_is_down = $("select[name='b_is_down']").val();
+                            // var b_is_down = $("select[name='b_is_down']").val();
                             // alert(b_is_down)
-                            var b_is_section = $("select[name='b_is_section']").val();
-                            var b_is_sync = $("select[name='b_is_sync']").val();
-                            var b_code = $("select[name='b_code']").val();
+                            // var b_is_section = $("select[name='b_is_section']").val();
+                            // var b_is_sync = $("select[name='b_is_sync']").val();
+                            // var b_code = $("select[name='b_code']").val();
                             var b_is_examine = $("select[name='b_is_examine']").val();
                             var vod_status = $("select[name='vod_status']").val();
                             //执行重载
@@ -498,10 +448,10 @@
                                 where: {
                                     // key: {
                                     idName: demoReload.val(),
-                                    b_is_down: b_is_down,
-                                    b_code: b_code,
-                                    b_is_section: b_is_section,
-                                    b_is_sync: b_is_sync,
+                                    // b_is_down: b_is_down,
+                                    // b_code: b_code,
+                                    // b_is_section: b_is_section,
+                                    // b_is_sync: b_is_sync,
                                     b_is_examine: b_is_examine,
                                     vod_status: vod_status
                                     // }
@@ -511,13 +461,7 @@
                     };
 
                 $('.demoTable .layui-btn').unbind('click').bind('click', function () {
-                    // var type = $(this).data('type');
-                    // active[type] ? active[type].call(this) : '';
                     var data = {
-                        b_is_down: $("select[name='b_is_down']").val(),
-                        b_is_section: $("select[name='b_is_section']").val(),
-                        b_is_sync: $("select[name='b_is_sync']").val(),
-                        b_code: $("select[name='b_code']").val(),
                         b_is_examine: $("select[name='b_is_examine']").val(),
                         vod_status: $("select[name='vod_status']").val(),
                         idName: $('#demoReload').val(),
@@ -529,9 +473,23 @@
                 // 监听radio
                 form.on('radio(status)', function (datas) {
                     var name = datas.elem.name.split("_");
+
+                    var className = datas.elem.className.split("_");
+
+                    if (className[2] == 1) {
+                        // 电影 同步主集状态
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
+                    if (className[2] != 1 && name[2] == 1) {
+                        // 非电影 且是主集按钮  所有集修改
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
                     var data = {
                         'id': name[1],
-                        'status': datas.elem.value
+                        'status': datas.elem.value,
+                        'is_master': name[2]
                     };
                     $.ajax({
                         type: "GET",
@@ -540,16 +498,16 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == 0) {
-                                layer.closeAll()
+                                layer.closeAll();
                                 layer.msg('修改成功！！！');
-                                init_table( $('#cur_page').val(), $('#cur_limit').val(), $('#search_data').val() );
                             } else {
                                 layer.msg('修改失败！！！');
                             }
                         },
                     });
+                    form.render();
+                    return false;
                 });
-
             });
         }
 </script>

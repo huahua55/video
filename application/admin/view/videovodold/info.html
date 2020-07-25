@@ -11,16 +11,7 @@
 <div class="page-container p10">
     <form class="layui-form layui-form-pane" method="post" action="">
         <input id="id" name="id" type="hidden" value="{$info.id}">
-        <input id="id" name="is_master" type="hidden" value="{$is_master}">
-        {if condition="$is_master eq 1"}
-        <input id="id" name="vod_id" type="hidden" value="{$info.vod_id}">
-        <div class="layui-form-item">
-            <label class="layui-form-label">权重顺序：</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight" lay-verify="weight">
-            </div>
-        </div>
-        {else /}
+
         <div class="layui-form-item">
             <label class="layui-form-label">相关视频ID：</label>
             <div class="layui-input-inline w500">
@@ -77,7 +68,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">权重顺序：</label>
             <div class="layui-input-inline w100">
-                <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight" lay-verify="weight">
+                <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight">
             </div>
         </div>
         <div class="layui-form-item">
@@ -124,14 +115,13 @@
                 <textarea class="layui-textarea"  name="reason" rows="3" cols="20">{$info.reason}</textarea>
             </div>
         </div>
-        {/if}
+
         <div class="layui-form-item center">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
                 <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
             </div>
         </div>
-        
     </form>
 
 </div>
@@ -155,12 +145,6 @@
             rel_ids: function (value) {
                 if (value == "") {
                     return "请输入相关ID列表";
-                }
-            },
-            weight: function (value) {
-                var reg = /^([1-9][\d]{0,1}|0)(\.[\d]{1})?$/;
-                if (!reg.test(value)) {
-                    return "排序不能超过3位的整数或者小数且小数点保留一位";
                 }
             }
         });
