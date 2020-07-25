@@ -36,16 +36,12 @@ class videoVod extends Base {
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
         // log::write('两表联查sql开始--'.msectime());
 
-
-        $field_vod = 'a.vod_name,a.vod_id,a.type_id_1,a.type_id';
-
         $field_video_vod = 'b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.vod_name,b.is_sync as b_is_sync,b.collection,b.type_id,b.type_id_1';
 
         $total = Db::table('video_vod')
                     ->alias('b')
                     ->where( $where )
                     ->whereOr( $whereOr )
-                    ->join('vod a', 'a.vod_id=b.vod_id', 'left')
                     ->group('b.vod_id')->count();
 
         $video_vods = Db::table('video_vod')
@@ -53,7 +49,6 @@ class videoVod extends Base {
                     ->field( $field_vod )
                     ->whereOr( $whereOr )
                     ->where( $where )
-                    ->join('vod a', 'a.vod_id=b.vod_id', 'left')
                     ->group('b.vod_id')
                     ->order( $order )->limit( $limit_str )->select();
 

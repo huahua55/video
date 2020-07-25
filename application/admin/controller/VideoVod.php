@@ -52,7 +52,7 @@ class VideoVod extends Base
 
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = ['like', '%'.$param['idName'].'%'];
+            $whereOr['b.vod_name'] = ['like', '%'.$param['idName'].'%'];
             $whereOr['b.id'] = $param['idName'];
         }
         if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
