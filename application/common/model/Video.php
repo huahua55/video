@@ -71,6 +71,7 @@ class Video extends Base
                 ->alias( 'b' )
                 ->field( $field_b )
                 ->where( 'b.video_id', $v['aid'] )
+                ->order( 'b.collection asc' )
                 ->select();
             foreach ($video_collection as $v1) {
                 $v1['pid'] = $v['aid'] . '_' . $v['aid'];
