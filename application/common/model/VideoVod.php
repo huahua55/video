@@ -213,6 +213,7 @@ class videoVod extends Base {
 
     public function saveData($data)
     {
+        $data['up_time'] = time();
         $data['down_time'] = time();
         if(!empty($data['id'])){
             $where=[];

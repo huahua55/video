@@ -242,15 +242,26 @@ class Video extends Base
 
         Db::startTrans();
         $save_vod = true;
+        $save_vedio_vod = true;
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
             $res = $this->allowField(true)->where($where)->update($data);
 
-            // 根据video_id获取任务标中的vod_id
-            $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $data['id']] )->find();
+            $id = $data['id'];
 
             unset( $data['id'] );
+
+            $data['up_time'] = time();
+            // 修改vedio_vod表信息
+            $save_vedio_vod = model('video_vod')->where( ['video_id' => $id] )->update( $data );
+
+            unset( $data['up_time'] );
+            
+            // 根据video_id获取任务标中的vod_id
+            $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $id] )->find();
+
+            
 
             // 更新主表数据 即vod表
             $data['vod_id'] = $video_vod_data['vod_id'];

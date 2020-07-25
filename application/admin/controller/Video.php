@@ -138,10 +138,10 @@ class Video extends Base
         $where['id'] = $id;
 
         // 获取集
-        $video_collection_data = Db::table('video_collection')->field('id,video_id')->where( $where )->find();
+        // $video_collection_data = Db::table('video_collection')->field('id,video_id')->where( $where )->find();
 
-        $video_where['id'] = $video_collection_data['video_id'];
-        $res = model('video')->infoData( $video_where );
+        // $video_where['id'] = $video_collection_data['video_id'];
+        $res = model('video')->infoData( $where );
 
 
         $info = $res['info'];

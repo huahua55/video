@@ -434,6 +434,7 @@
                             layer.close(index);
                         });
                     } else if (obj.event === 'edit') {
+
                         // console.log(data)
                         layer.open({
                             type: 2,
@@ -444,7 +445,7 @@
                             area: ['100%', '100%'],
                             offset: ['0px', '0px'],
                             shadeClose: true, //开启遮罩关闭
-                            content: '/admin/video/info?id=' + data.bid
+                            content: '/admin/video/info?id=' + data.bid.split('_')[0]
                         });
                     } else if (obj.event === 'edits') {
                         layer.prompt({
