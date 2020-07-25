@@ -62,7 +62,6 @@
         </form>
     </div>
 </div>
-
 <input type="hidden" name="cur_page" id="cur_page" value="">
 <input type="hidden" name="cur_limit" id="cur_limit" value="">
 <input type="hidden" name="search_data" id="search_data" value="">
@@ -70,11 +69,11 @@
 {include file="../../../application/admin/view/public/foot" /}
 <script type="text/html" id="vod_statusTpl">
     {{#  if(d.is_master == 1){ }}
-        <input type="radio" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
     {{#  } else{ }}
-        <input type="radio" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
     {{#  } }}
 </script>
 <script type="text/html" id="is_downTpl">
@@ -179,7 +178,7 @@
                 success : function(result_data){
 
                     $('.examine').css('display','none');
-                    
+
                     test(result_data['data']);
 
                     laypageRender( result_data );
@@ -336,7 +335,6 @@
                                     data: '',
                                     dataType: "json",
                                     success: function (data) {
-                                        console.log(data)
                                         var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
                                             ' "><option value="">请选择一个理由</option>'
                                         for (var i = 0; i < data.data.length; i++) {
@@ -373,7 +371,6 @@
                             if (data.code == 0) {
                                 layer.closeAll()
                                 layer.msg('修改成功！！！');
-                                init_table( $('#cur_page').val(), $('#cur_limit').val(), $('#search_data').val() );
                             } else {
                                 layer.msg('修改失败！！！');
                             }
@@ -400,7 +397,6 @@
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
-                    console.log(obj)
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -477,7 +473,19 @@
                 // 监听radio
                 form.on('radio(status)', function (datas) {
                     var name = datas.elem.name.split("_");
-                    console.log('name',name)
+
+                    var className = datas.elem.className.split("_");
+
+                    if (className[2] == 1) {
+                        // 电影 同步主集状态
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
+                    if (className[2] != 1 && name[2] == 1) {
+                        // 非电影 且是主集按钮  所有集修改
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
                     var data = {
                         'id': name[1],
                         'status': datas.elem.value,
@@ -490,16 +498,16 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == 0) {
-                                layer.closeAll()
+                                layer.closeAll();
                                 layer.msg('修改成功！！！');
-                                init_table( $('#cur_page').val(), $('#cur_limit').val(), $('#search_data').val() );
                             } else {
                                 layer.msg('修改失败！！！');
                             }
                         },
                     });
+                    form.render();
+                    return false;
                 });
-
             });
         }
 </script>

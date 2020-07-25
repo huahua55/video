@@ -82,6 +82,7 @@ class Video extends Base
                 $v1['vod_pic'] = $v['vod_pic'];
                 $v1['vod_name'] = $v['vod_name'];
                 $v1['aid'] = $v['aid'];
+                $v1['type_pid'] = $v['type_pid'];
                 $list[] = $v1;
             }
             

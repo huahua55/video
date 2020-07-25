@@ -210,12 +210,36 @@
             data : data,
             type : 'get',
             dataType : 'json',
-            success : function(result_data){
+            beforeSend: function () {
+                //loading层
+                showloading(true);
+            },
+            success: function(result_data){
+
+                showloading(false);//关闭loading
 
                 test(result_data['data']);
 
                 laypageRender( result_data );
             }
+        });
+    }
+
+    // 加载中方法
+    function showloading(flag = true){
+        layui.use(['table','layer'], function(){
+            var layer = layui.layer;
+            var index = '';
+            if ( flag ) {
+                index = layer.load(1, {
+                    shade: [0.1,'#fff'], //0.1透明度的白色背景
+                    offset: ['50%'] // 向上偏移量
+                });
+            } else {
+                // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
+                layer.closeAll();
+            }
+            
         });
     }
     
@@ -241,7 +265,14 @@
                             data : result_data.param,
                             type : 'get',
                             dataType : 'json',
+                            beforeSend: function () {
+                                //loading层
+                                showloading(true);
+                            },
                             success : function(result_data){
+                                
+                                showloading(false);//关闭loading
+
                                 test(result_data['data']);
                             }
                         });
