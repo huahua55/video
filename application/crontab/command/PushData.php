@@ -133,9 +133,6 @@ class PushData extends Common
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
-        $vod_where['b.is_sync'] = ['neq', 1];
-        $vod_where['b.is_section'] = ['neq', 1];
-        $vod_where['b.is_down'] = ['neq', 1];
 //        $vod_where['b.vod_id'] = ['eq', 392512];//
 //        $vod_where['b.vod_id'] = ['eq', 452786];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
@@ -145,7 +142,7 @@ class PushData extends Common
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-'.$page.'-共-'.$pagecount);
-            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
+//            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
 //                p($data);
             if (!empty($data)) {
                 if ($page > $pagecount) {
