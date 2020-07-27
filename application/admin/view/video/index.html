@@ -1,0 +1,547 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    td[data-field="vod_name"] .ew-tree-table-cell.single-line > .ew-tree-table-cell-content {
+        text-overflow: unset;
+    }
+</style>
+<script>
+    function show_img(t) {
+        var t = $(t).find("img");
+        //页面层
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['80%', '80%'], //宽高 t.width() t.height()
+            shadeClose: true, //开启遮罩关闭
+            end: function (index, layero) {
+                return false;
+            },
+            content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '" /></div>'
+        });
+    }
+</script>
+<div class="page-container p10">
+
+    <div class="demoTable">
+        搜索：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="视频名称或ID" name="id" id="demoReload" autocomplete="off">
+        </div>
+        &nbsp; 审核状态：
+        <div class="layui-inline">
+            <select class="layui-select" name="b_is_examine">
+                <option value="">选择状态</option>
+                <option value="0" {if condition="$param['b_is_examine'] eq '0'" }selected {
+                /if}>未审核 </option>
+                <option value="1" {if condition="$param['b_is_examine'] eq '1'" }selected {
+                /if}>审核通过 </option>
+                <option value="2" {if condition="$param['b_is_examine'] eq '2'" }selected {
+                /if}>审核失败 </option>
+            </select>
+        </div>
+        &nbsp; 视频状态：
+        <div class="layui-inline">
+            <select class="layui-select" name="vod_status">
+                <option value="">选择状态</option>
+                <option value="1" {if condition="$param['vod_status'] eq '1'" }selected {
+                /if}>正常 </option>
+                <option value="2" {if condition="$param['vod_status'] eq '2'" }selected {
+                /if}>下线 </option>
+            </select>
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    <div id="pages" class="center"></div>
+
+    <div class="examine">
+        <form class="layui-form" action="" lay-filter="example">
+            <div id="examineForm" style="padding: 20px;">
+            </div>
+        </form>
+    </div>
+</div>
+<input type="hidden" name="cur_page" id="cur_page" value="">
+<input type="hidden" name="cur_limit" id="cur_limit" value="">
+<input type="hidden" name="search_data" id="search_data" value="">
+
+{include file="../../../application/admin/view/public/foot" /}
+<script type="text/html" id="vod_statusTpl">
+    {{#  if(d.is_master == 1){ }}
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+    {{#  } else{ }}
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+    {{#  } }}
+</script>
+<script type="text/html" id="is_downTpl">
+    {{#  if(d.b_is_down == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未下载</button>
+    {{#  } else if(d.b_is_down == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">下载成功</button>
+    {{#  } else if(d.b_is_down == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">下载中</button>
+    {{#  } else if(d.b_is_down == '3'){ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">下载失败</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-disabled layui-btn-xs">异常</button>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="is_sectionTpl">
+    {{#  if(d.b_is_section == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未切片</button>
+    {{#  } else if(d.b_is_section == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">切片成功</button>
+    {{#  } else if(d.b_is_section == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">切片中</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">切片失败</button>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="barDemo">
+    {{#  if(d.is_master == 1){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {{#  } }}
+    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+<script type="text/html" id="is_syncTpl">
+    {{#  if(d.b_is_sync == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未上传</button>
+    {{#  } else if(d.b_is_sync == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">上传成功</button>
+    {{#  } else if(d.b_is_sync == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">上传中</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">上传失败</button>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="is_nameTpl">
+    {{#  if(d.vod_url == '' || d.vod_url == null){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.vod_url}}','_blank')">
+        {{d.vod_name}}
+    </button>
+    {{#  } }}
+</script>
+<script type="text/html" id="img">
+    {{#  if(d.is_master == 0){ }}
+    <div onclick="show_img(this)"><img src="{{ d.vod_pic }}" style="width: 40px; height: 40px;"></div>
+    {{#  } }}
+</script>
+<script type="text/html" id="is_examineTpl">
+    {{#  if(d.is_master == 0){ }}
+        <input type="radio" name="{{d.bid}}" value="0" title="未审核" {{#  if(d.b_is_examine == 0){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.bid}}" value="1" title="审核通过" {{#  if(d.b_is_examine == 1){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.bid}}" value="2" title="审核失败" {{#  if(d.b_is_examine == 2){ }} checked{{# } }} lay-filter="shenhe">
+    {{#  } }}
+</script>
+<script type="text/html" id="is_bidTpl">
+    {{#  if(d.is_master == 1){ }}
+    <div class="ew-tree-table-cell-content">{{d.bid.split("_")[0]}}</div>
+    {{#  } else { }}
+    <div class="ew-tree-table-cell-content">{{d.bid}}</div>
+    {{#  } }}
+</script>
+<!-- <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
+    </div>
+</script> -->
+
+<script>
+
+</script>
+<!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+        init_table();
+        function init_table( page = 1, limit = 20, param = '' ) { 
+            var data = {
+                    'page' : page,
+                    'limit' : limit
+                };
+            if ( param != '' ) {
+                Object.assign( data, JSON.parse( param ) );
+            }
+            
+            $.ajax({
+                url :'/admin/video/index1',
+                data : data,
+                type : 'get',
+                dataType : 'json',
+                beforeSend: function () {
+                    //loading层
+                    showloading(true);
+                },
+                success : function(result_data){
+
+                    $('.examine').css('display','none');
+
+                    showloading(false);//关闭loading
+
+                    test(result_data['data']);
+
+                    laypageRender( result_data );
+                }
+            });
+        }
+        
+        function laypageRender( result_data ){
+            layui.use(['laypage', 'layer'],function(){
+                var laypage = layui.laypage
+                    ,layer = layui.layer;
+                //分页
+                laypage.render({
+                    elem: 'pages'
+                    ,count: result_data.count
+                    ,limit: result_data.limit
+                    ,curr: result_data.page
+                    ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    ,jump: function(obj, first){
+                        $('#cur_page').val(obj.curr);
+                        $('#cur_limit').val(obj.limit);
+                        result_data.param.page = obj.curr;
+                        result_data.param.limit = obj.limit;
+                        if(!first){
+                            $.ajax({
+                                url :'/admin/video/index1',
+                                data : result_data.param,
+                                type : 'get',
+                                dataType : 'json',
+                                beforeSend: function () {
+                                    //loading层
+                                    showloading(true);
+                                },
+                                success : function(result_data){
+
+                                    showloading(false);//关闭loading
+
+                                    test(result_data['data']);
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        // 加载中方法
+        function showloading(flag = true){
+            layui.use(['table','layer'], function(){
+                var layer = layui.layer;
+                var index = '';
+                if ( flag ) {
+                    index = layer.load(1, {
+                        shade: [0.1,'#fff'], //0.1透明度的白色背景
+                        offset: ['50%'] // 向上偏移量
+                    });
+                } else {
+                    // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
+                    layer.closeAll();
+                }
+                
+            });
+        }
+
+        function test(result_data){
+            layui.use(['form', 'upload', 'util', 'treeTable', 'jquery', 'layer', 'table', 'laypage'], function () {
+                var table = layui.table;
+                var form = layui.form;
+                var laypage = layui.laypage //分页
+                var layer = layui.layer //弹层
+                var $ = layui.jquery
+                var util = layui.util; //注意这行，很重要
+                var treeTable = layui.treeTable; //注意这行，很重要
+                // $('body').removeClass('layui-hide');
+                //方法级渲染
+                // 渲染表格
+                var insTb = treeTable.render({
+                    elem: '#test',
+                    // toolbar: '#toolbarDemo',
+                    data: result_data,
+                    // height: 'full-200',
+                    // url: '/admin/video/index1',
+                    id: 'testReload',
+                    // page: true,
+                    // limit: 20,
+                    tree: {
+                        iconIndex: 4,
+                        isPidData: true,
+                        idName: 'bid',
+                        pidName: 'pid'
+                    },
+                    defaultToolbar: ['filter', 'print', 'exports', {
+                        title: '提示',
+                        layEvent: 'LAYTABLE_TIPS',
+                        icon: 'layui-icon-tips'
+                    }],
+                    cols: [
+                        [ {
+                            fixed: 'right',
+                            title: '操作',
+                            width: 80,
+                            toolbar: '#barDemo'
+                        }, {
+                            field: 'video_id',
+                            title: '视频ID',
+                            width: 72,
+                            sort: true,
+                        }, {
+                            field: 'bid',
+                            title: '集数表ID',
+                            width: 72,
+                            sort: true,
+                            fixed: true,
+                            templet: '#is_bidTpl'
+                        }, {
+                            field: 'collection',
+                            title: '集',
+                            width: 90,
+                        }, {
+                            field: 'vod_name',
+                            title: '视频名称',
+                            width: 300,
+                            templet: '#is_nameTpl'
+                        }, {
+                            field: 'vod_pic',
+                            title: '图片',
+                            width: 90,
+                            templet: '#img'
+                        }, {
+                            field: 'm_status',
+                            title: '视频状态',
+                            width: 200,
+                            templet: '#vod_statusTpl'
+                        },  {
+                            field: 'm_eid',
+                            title: '审核状态',
+                            templet: '#is_examineTpl',
+                            width: 380
+                        }, {
+                            field: 'm_reasons',
+                            title: '审核理由',
+                            width: 90
+                        }, {
+                            field: 'm_time_auto_up',
+                            title: '时间',
+                            width: 180,
+                            sort: true,
+                        }
+                        ]
+                    ], style: 'margin-top:0;',
+                });
+
+                //监听排序事件
+                table.on('sort(test)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                     insTb.sort({field:obj.field,desc:obj.type === 'desc'})
+                });
+
+                // 监听radio
+                form.on('radio(shenhe)', function (datas) {
+                    if (datas.value == 2) {
+                        var dame333 = $(".examine")
+                        layer.open({
+                            type: 1,
+                            title: '理由',
+                            closeBtn: 1, //不显示关闭按钮
+                            shadeClose: true, //开启遮罩关闭
+                            content: dame333,
+                            cancel: function (index, layero) {
+                                $(datas.elem).siblings('input[value = 0]').prop("checked", true);
+                                layui.form.render();
+                                layer.close(index)
+                                return false;
+                            },
+                            success: function (layero, index) {
+                                $("#examineForm").html('')
+                                $.ajax({
+                                    type: "POST",
+                                    url: "getExamine",
+                                    data: '',
+                                    dataType: "json",
+                                    success: function (data) {
+                                        var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
+                                            ' "><option value="">请选择一个理由</option>'
+                                        for (var i = 0; i < data.data.length; i++) {
+                                            str += "<option value='" + data.data[i].id + "'>" + data.data[i].reasons + "</option>"
+                                        }
+                                        str += "</select>"
+                                        $("#examineForm").append(str)
+                                        form.render('select');
+                                    },
+                                })
+                            }
+                        });
+                    } else {
+                        getUpdateExamine(datas.elem.name, datas.elem.value, 0)
+                    }
+                });
+                form.on('select(examine)', function (data) {
+                    var id = $(data.elem).data("id");
+                    getUpdateExamine(id, 2, data.elem.value)
+                });
+
+                function getUpdateExamine(sid, is_examineId, examineId) {
+                    var data = {
+                        'id': sid,
+                        'examine_id': examineId,
+                        'is_examine': is_examineId,
+                    };
+                    $.ajax({
+                        type: "GET",
+                        url: "updateExamine",
+                        data: data,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.closeAll()
+                                layer.msg('修改成功！！！');
+                            } else {
+                                layer.msg('修改失败！！！');
+                            }
+                        },
+                    });
+                }
+
+                //
+                //头工具栏事件
+                treeTable.on('toolbar(test)', function (obj) {
+                    layer.open({
+                        type: 2,
+                        skin: 'layui-layer-demo', //样式类名
+                        title: '添加',
+                        closeBtn: 1, //不显示关闭按钮
+                        anim: 2,
+                        area: ['100%', '100%'],
+                        offset: ['0px', '0px'],
+                        shadeClose: true, //开启遮罩关闭
+                        content: '/admin/video/info'
+                    });
+                });
+                //监听行工具事件
+                //监听行工具事件
+                treeTable.on('tool(test)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            obj.del();
+                            layer.close(index);
+                        });
+                    } else if (obj.event === 'edit') {
+
+                        // console.log(data)
+                        layer.open({
+                            type: 2,
+                            skin: 'layui-layer-demo', //样式类名
+                            title: '编辑',
+                            closeBtn: 1, //不显示关闭按钮
+                            anim: 2,
+                            area: ['100%', '100%'],
+                            offset: ['0px', '0px'],
+                            shadeClose: true, //开启遮罩关闭
+                            content: '/admin/video/info?id=' + data.bid.split('_')[0]
+                        });
+                    } else if (obj.event === 'edits') {
+                        layer.prompt({
+                            formType: 2,
+                            value: data.email
+                        }, function (value, index) {
+                            obj.update({
+                                email: value
+                            });
+                            layer.close(index);
+                        });
+                    }
+
+                });
+
+                var $ = layui.$,
+                    active = {
+                        reload: function () {
+                            var demoReload = $('#demoReload');
+                            // var b_is_down = $("select[name='b_is_down']").val();
+                            // alert(b_is_down)
+                            // var b_is_section = $("select[name='b_is_section']").val();
+                            // var b_is_sync = $("select[name='b_is_sync']").val();
+                            // var b_code = $("select[name='b_code']").val();
+                            var b_is_examine = $("select[name='b_is_examine']").val();
+                            var vod_status = $("select[name='vod_status']").val();
+                            //执行重载
+                            insTb.reload({
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                },
+                                where: {
+                                    // key: {
+                                    idName: demoReload.val(),
+                                    // b_is_down: b_is_down,
+                                    // b_code: b_code,
+                                    // b_is_section: b_is_section,
+                                    // b_is_sync: b_is_sync,
+                                    b_is_examine: b_is_examine,
+                                    vod_status: vod_status
+                                    // }
+                                }
+                            }, 'data');
+                        }
+                    };
+
+                $('.demoTable .layui-btn').unbind('click').bind('click', function () {
+                    var data = {
+                        b_is_examine: $("select[name='b_is_examine']").val(),
+                        vod_status: $("select[name='vod_status']").val(),
+                        idName: $('#demoReload').val(),
+                    };
+                    $('#search_data').val( JSON.stringify( data ) );
+                    init_table( $('#cur_page').val(), $('#cur_limit').val(), JSON.stringify( data ) );
+                    
+                });
+                // 监听radio
+                form.on('radio(status)', function (datas) {
+                    var name = datas.elem.name.split("_");
+
+                    var className = datas.elem.className.split("_");
+
+                    if (className[2] == 1) {
+                        // 电影 同步主集状态
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
+                    if (className[2] != 1 && name[2] == 1) {
+                        // 非电影 且是主集按钮  所有集修改
+                        layui.$('.' + datas.elem.className).prop("checked","true");
+                    }
+
+                    var data = {
+                        'id': name[1],
+                        'status': datas.elem.value,
+                        'is_master': name[2]
+                    };
+                    $.ajax({
+                        type: "GET",
+                        url: "updateStatus",
+                        data: data,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.closeAll();
+                                layer.msg('修改成功！！！');
+                            } else {
+                                layer.msg('修改失败！！！');
+                            }
+                        },
+                    });
+                    form.render();
+                    return false;
+                });
+            });
+        }
+</script>
+</body>
+</html>

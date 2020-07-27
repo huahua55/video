@@ -1,11 +1,7 @@
 <?php
 
 
-
-
 echo 'ok';die;
-
-
 
 
 
