@@ -144,8 +144,8 @@ class PushData extends Common
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
-//            p( $this->vodModel->getlastsql());
             log::write('页码-'.$page.'-共-'.$pagecount);
+            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
 //                p($data);
             if (!empty($data)) {
                 if ($page > $pagecount) {
