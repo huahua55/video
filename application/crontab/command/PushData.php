@@ -39,6 +39,7 @@ class PushData extends Common
     protected function execute(Input $input, Output $output)
     {
 
+
         set_time_limit(0);
         $output->writeln('获取数据-插入任务表-获取数据开始:init');
         $myparme = $input->getArguments();
@@ -54,6 +55,9 @@ class PushData extends Common
         } else if ($name == 'up') {
             //这里写业务逻辑
             $this->getWhile2();
+        } else if ($name == 'upAll') {
+            //这里写业务逻辑
+            $this->getWhile2($name);
         } else {
             //这里写业务逻辑
             $this->getWhile();
@@ -100,7 +104,7 @@ class PushData extends Common
         }
     }
 
-    protected function getWhile2()
+    protected function getWhile2($name = '')
     {
 
 
@@ -108,12 +112,20 @@ class PushData extends Common
         $page = 1;
         $limit = 20;
         $is_true = true;
-        $order = 'a.vod_id desc';
+        if(rand(1,2) == 1){
+            $order = 'a.vod_id desc';
+            $limit = 50;
+        }else{
+            $order = 'a.vod_id asc';
+        }
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
-        $s = strtotime(date("Y-m-d H:00:00",time()));
-        $e = strtotime(date("Y-m-d H:59:59",time()));
-        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        if(!empty($name) && $name == 'upAll'){
+        }else{
+            $s = strtotime(date("Y-m-d H:00:00",time()));
+            $e = strtotime(date("Y-m-d H:59:59",time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
         $vod_where['b.is_sync'] = ['neq', 1];
         $vod_where['b.is_section'] = ['neq', 1];
@@ -123,7 +135,6 @@ class PushData extends Common
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         while ($is_true) {
-
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-'.$page.'-共-'.$data['pagecount'] ?? 0);
 //                p($data);
