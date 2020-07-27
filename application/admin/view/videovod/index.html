@@ -200,6 +200,7 @@
         <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
     </div>
 </script>
+
 <script type="text/html" id="is_vodIdTpl">
     {{#  if(d.is_master == 1){ }}
         <div class="ew-tree-table-cell-content">{{d.b_id}}</div>
@@ -317,6 +318,7 @@
                 elem: '#test',
                 data: result_data,
                 id: 'testReload',
+                toolbar: '#toolbarDemo',
                 tree: {
                     iconIndex: 4,
                     isPidData: true,
@@ -439,10 +441,8 @@
 
             //头工具栏事件
             treeTable.on('toolbar(test)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
                 switch (obj.event) {
                     case 'getCheckData':
-                        var data = checkStatus.data; //获取选中行数据
                         layer.open({
                             type: 2,
                             skin: 'layui-layer-demo', //样式类名
