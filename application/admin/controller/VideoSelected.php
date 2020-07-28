@@ -277,7 +277,7 @@ class VideoSelected extends Base
             $video_edit = Db::table('video_selected')->where( $video_where )->update($video_edit_data);
 
             // 根据视频id获取所有的集id
-            $video_collention_datas = Db::table('video_collection_selected')->field('id')->where( ['video_id' => $collention_info['video_id']] )->select();
+            $video_collention_datas = Db::table('video_collection_selected')->field('id')->where( ['video_id' => $collection_id] )->select();
 
             $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
         } else {
