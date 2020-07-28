@@ -27,7 +27,7 @@ class Video extends Base
         // 过滤搜索条件
         $search_data = self::_filterSearchData( $param );
 
-        $order = 'vod_time_auto_up desc';
+        $order = 'a.vod_time desc';
 
         $res = model('video')->listData(
                     $search_data['whereOr'],
@@ -89,19 +89,21 @@ class Video extends Base
             $collection_where['id'] = $collection_id;
             // 根据集表主键id获取相关数据
             $collention_info = self::_getCollectionData( $collection_where );
-            
             // 获取视频信息
-            $vedio_info = self::_getVedioData( $collention_info['video_id'] ); 
+            $vedio_info = self::_getVedioData( ['id' => $collention_info['video_id'] ] ); 
             
             Db::startTrans();
-
             $video_edit = true;
             if ( $vedio_info['type_pid'] == 1 ) {
                 // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
-                $collection_edit_data['e_id'] = $examine_id;
+                $video_edit_data['e_id'] = $examine_id;
+                $video_edit_data['vod_time'] = time();
                 $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+            } else {
+                // 修改视频时间
+                self::_editVideoVodTime( $collention_info['video_id'] );
             }
 
             // 修改集表
@@ -288,6 +290,9 @@ class Video extends Base
                 $video_edit_data['vod_status'] = $status;
                 $video_edit_data['vod_time'] = time();
                 $video_is_film_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+            } else {
+                // 修改视频时间
+                self::_editVideoVodTime( $collention_info['video_id'] );
             }
         }
 
@@ -326,5 +331,17 @@ class Video extends Base
         }
 
         return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a]];
+    }
+
+    /**
+     * 只修改更新时间用于排序其他的数据不能在这里修改
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    private function _editVideoVodTime( $id )
+    {
+        $data['vod_time'] = time();
+        $where['id'] = $id;
+        return Db::table('video')->where( $where )->update($data);
     }
 }
