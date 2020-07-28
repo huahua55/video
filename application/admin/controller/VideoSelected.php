@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\console\command\make\Model;
 use think\Db;
 
-class Video extends Base
+class VideoSelected extends Base
 {
     public function __construct()
     {
@@ -14,8 +14,8 @@ class Video extends Base
 
     public function index()
     {
-        $this->assign('title', '视频数据管理');
-        return $this->fetch('admin@video/index');
+        $this->assign('title', '精选视频数据管理');
+        return $this->fetch('admin@videoselected/index');
     }
 
     public function index1()
@@ -29,7 +29,7 @@ class Video extends Base
 
         $order = 'vod_time_auto_up desc';
 
-        $res = model('video')->listData(
+        $res = model('video_selected')->listData(
                     $search_data['whereOr'],
                     $search_data['where'],
                     $order, 
@@ -61,7 +61,7 @@ class Video extends Base
             $where['reasons'] = ['like', '%' . $param['name'] . '%'];
         }
         $order = 'id desc';
-        $res = model('video')->listData1($where, $order, $param['page'], $param['limit']);
+        $res = model('video_selected')->listData1($where, $order, $param['page'], $param['limit']);
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
@@ -101,14 +101,14 @@ class Video extends Base
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
                 $collection_edit_data['e_id'] = $examine_id;
-                $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+                $video_edit = Db::table('video_selected')->where( $video_where )->update($video_edit_data);
             }
 
             // 修改集表
             $collection_edit_data['is_examine'] = $is_examine;
             $collection_edit_data['e_id'] = $examine_id;
             $collection_edit_data['time_up'] = time();
-            $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
+            $video_collection_edit = Db::table('video_collection_selected')->where( $collection_where )->update( $collection_edit_data );
             
             if ( $video_edit !== false && $video_collection_edit !== false ) {
                 Db::commit();
@@ -126,7 +126,7 @@ class Video extends Base
     {
         if (Request()->isPost()) {
             $param = input('post.');
-            $save_video = model('video')->saveData( $param );
+            $save_video = model('video_selected')->saveData( $param );
             if($save_video['code']>1){
                 return $this->error($save_video['msg']);
             }
@@ -141,7 +141,7 @@ class Video extends Base
         // $video_collection_data = Db::table('video_collection')->field('id,video_id')->where( $where )->find();
 
         // $video_where['id'] = $video_collection_data['video_id'];
-        $res = model('video')->infoData( $where );
+        $res = model('video_selected')->infoData( $where );
 
 
         $info = $res['info'];
@@ -160,7 +160,7 @@ class Video extends Base
 
 
         $this->assign('title','视频信息');
-        return $this->fetch('admin@video/info');
+        return $this->fetch('admin@videoselected/info');
     }
 
     public function del()
@@ -187,7 +187,7 @@ class Video extends Base
      */
     private function _getCollectionData( $where )
     {
-        return Db::table('video_collection')->field('video_id,task_id,collection')->where( $where )->find();
+        return Db::table('video_collection_selected')->field('video_id,task_id,collection')->where( $where )->find();
     }
 
     /**
@@ -197,7 +197,7 @@ class Video extends Base
      */
     private function _getVedioData( $where )
     {
-        return Db::table('video')->field('type_pid')->where( $where )->find();
+        return Db::table('video_selected')->field('type_pid')->where( $where )->find();
     }
 
     public function batch()
@@ -270,10 +270,10 @@ class Video extends Base
             $video_where['id'] = $collection_id;
             $video_edit_data['vod_status'] = $status;
             $video_edit_data['vod_time'] = time();
-            $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+            $video_edit = Db::table('video_selected')->where( $video_where )->update($video_edit_data);
 
             // 根据视频id获取所有的集id
-            $video_collention_datas = Db::table('video_collection')->field('id')->where( ['video_id' => $collention_info['video_id']] )->select();
+            $video_collention_datas = Db::table('video_collection_selected')->field('id')->where( ['video_id' => $collention_info['video_id']] )->select();
 
             $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
         } else {
@@ -287,14 +287,14 @@ class Video extends Base
                 // 是电影
                 $video_edit_data['vod_status'] = $status;
                 $video_edit_data['vod_time'] = time();
-                $video_is_film_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+                $video_is_film_edit = Db::table('video_selected')->where( $video_where )->update($video_edit_data);
             }
         }
 
         // 修改集表
         $collection_edit_data['status'] = $status;
         $collection_edit_data['time_up'] = time();
-        $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
+        $video_collection_edit = Db::table('video_collection_selected')->where( $collection_where )->update( $collection_edit_data );
 
         if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
             Db::commit();

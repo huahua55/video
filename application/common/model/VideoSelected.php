@@ -6,10 +6,10 @@ use think\Db;
 use think\Cache;
 use think\helper\Arr;
 
-class Video extends Base
+class VideoSelected extends Base
 {
     // 设置数据表（不含前缀）
-    protected $name = 'video';
+    protected $name = 'video_selected';
 
     // 定义时间戳字段名
     protected $createTime = '';
@@ -35,10 +35,10 @@ class Video extends Base
 
         $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up';
 
-        $total = Db::name('Video')
+        $total = Db::name('VideoSelected')
                     ->alias( 'a' )
                     ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
-        $videos = Db::name('Video')
+        $videos = Db::name('VideoSelected')
                 ->alias( 'a' )
                 ->field( $field_a )
                 ->where( $where['where_a'] )
@@ -54,11 +54,11 @@ class Video extends Base
         if (isset($where['where_a']['a.is_examine']) && $where['where_a']['a.is_examine'] != "") {
             $where_b['b.is_examine'] = $where['where_a']['a.is_examine'];
         }
-
+        
         foreach ($videos as $v) {
 
             // 主集
-            $video_collection_count = Db::name('video_collection')
+            $video_collection_count = Db::name('video_collection_selected')
                 ->alias( 'b' )
                 ->where( 'b.video_id', $v['aid'] )
                 ->count();
@@ -77,7 +77,8 @@ class Video extends Base
                     'type_pid' => $v['type_pid'],
                     'vod_pic' => ''
                 ];
-            $video_collection = Db::name('video_collection')
+
+            $video_collection = Db::name('video_collection_selected')
                 ->alias( 'b' )
                 ->field( $field_b )
                 ->where( 'b.video_id', $v['aid'] )
@@ -212,15 +213,15 @@ class Video extends Base
 
     public function saveData($data)
     {
-        $validate = \think\Loader::validate('video');
+        $validate = \think\Loader::validate('video_selected');
         if(!$validate->check($data)){
             return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
         }
-        $key = 'video_detail_'.$data['video_id'];
+        $key = 'video_selected_'.$data['video_id'];
         Cache::rm($key);
-        $key = 'video_detail_'.$data['vod_en'];
+        $key = 'video_selected_'.$data['vod_en'];
         Cache::rm($key);
-        $key = 'video_detail_'.$data['video_id'].'_'.$data['vod_en'];
+        $key = 'video_selected_'.$data['video_id'].'_'.$data['vod_en'];
         Cache::rm($key);
 
         //分类
@@ -253,32 +254,21 @@ class Video extends Base
 
         Db::startTrans();
         $save_vod = true;
-        $save_vedio_vod = true;
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
             $res = $this->allowField(true)->where($where)->update($data);
 
-            $id = $data['id'];
-
-            unset( $data['id'] );
-
-            $data['up_time'] = time();
-            // 修改vedio_vod表信息
-            $save_vedio_vod = model('video_vod')->where( ['video_id' => $id] )->update( $data );
-
-            unset( $data['up_time'] );
-            
             // 根据video_id获取任务标中的vod_id
-            $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $id] )->find();
+            $video_selected_data = $this->field('vod_id')->where( $where )->find();
 
-            if (empty( $video_vod_data['vod_id'] )) {
+            if (empty( $video_selected_data['vod_id'] )) {
                 Db::rollback();
                 return ['code'=>1002,'msg'=>'保存失败：缺失vod_id'];
             }
 
             // 更新主表数据 即vod表
-            $data['vod_id'] = $video_vod_data['vod_id'];
+            $data['vod_id'] = $video_selected_data['vod_id'];
             $save_vod = model('vod')->saveData( $data );
         }
         else{
@@ -286,7 +276,7 @@ class Video extends Base
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res && $save_vod === false && $save_vedio_vod === false){
+        if(false === $res && $save_vod === false){
             Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
