@@ -37,7 +37,7 @@ class videoVod extends Base {
         // log::write('两表联查sql开始--'.msectime());
 
 
-        $field_video_vod_1 = 'b.vod_name,b.vod_id,b.type_id_1,b.type_id';
+        $field_video_vod_1 = 'b.vod_name,b.vod_id,b.type_id_1,b.type_id,max(b.up_time) as max_up_time';
 
         $field_video_vod = 'b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.vod_name,b.is_sync as b_is_sync,b.collection,b.type_id,b.type_id_1';
 
@@ -55,6 +55,7 @@ class videoVod extends Base {
                     ->group('b.vod_id')
                     ->order( $order )->limit( $limit_str )->select();
         $list = [];
+        $video_vod_where = $where;
         foreach ($video_vods as $v) {
             $video_vod_where['b.vod_id'] = $v['vod_id'];
             // 主集
@@ -269,6 +270,7 @@ class videoVod extends Base {
             $where['vod_id'] = ['eq',$data['id']];
             unset( $data['id'] );
             unset( $data['vod_id'] );
+            $data['up_time'] = time();
             $res = $this->allowField(true)->where($where)->update($data);
         }
         else{

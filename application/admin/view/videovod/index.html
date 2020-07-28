@@ -58,15 +58,6 @@
                 <option value="2" {if condition="$param['b_is_sync'] eq '2'" }selected {/if}>上传中 </option>
                 <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {/if}>上传失败</option>
             </select></div>
-			&nbsp; 审核状态：
-		<div class="layui-inline">
-		    <select class="layui-select" name="b_is_examine">
-		        <option value="">选择状态</option>
-		        <option value="0" {if condition="$param['b_is_examine'] eq '0'" }selected { /if}>未审核 </option>
-		        <option value="1" {if condition="$param['b_is_examine'] eq '1'" }selected { /if}>审核通过 </option>
-		        <option value="2" {if condition="$param['b_is_examine'] eq '2'" }selected { /if}>审核失败 </option>
-			</select>
-		</div>
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
 

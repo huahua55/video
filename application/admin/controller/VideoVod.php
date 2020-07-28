@@ -52,7 +52,7 @@ class VideoVod extends Base
 
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['b.vod_name'] = ['like', '%'.$param['idName'].'%'];
+            $whereOr['b.vod_name'] = $param['idName'];
             $whereOr['b.id'] = $param['idName'];
         }
         if (isset($param['b_is_down']) && $param['b_is_down'] != "") {
@@ -68,7 +68,8 @@ class VideoVod extends Base
         if (isset($param['b_code']) && $param['b_code'] != "") {
             $where['b.code'] = $param['b_code'];
         }
-        $order = 'b.up_time desc';
+        // 实际还是以up_time排序
+        $order = 'max_up_time desc';
         if (isset($param['field']) && $param['field'] != "") {
             if ($param['field'] == 'b_weight') {
                 $order = 'b.weight ' . $param['order'] . '';
@@ -207,7 +208,7 @@ class VideoVod extends Base
                 if ($findVod['type_id_1'] == 0) {
                     $findVod['type_id_1'] = getTypePid($findVod['type_id']);
                 }
-                if ($findVod['type_id_1'] == 1 || empty($v['type_id_1'])) {
+                if ($findVod['type_id_1'] == 1 || empty($findVod['type_id_1'])) {
                     $collection = 1;
                 }
                 unset($param['rel_ids']);
