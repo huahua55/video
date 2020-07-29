@@ -269,7 +269,8 @@ class VideoSelected extends Base
 
             // 更新主表数据 即vod表
             $data['vod_id'] = $video_selected_data['vod_id'];
-            $save_vod = model('vod')->saveData( $data );
+            $data['vod_time'] = time();
+            $save_vod = model('vod')->allowField(true)->update( $data );
         }
         else{
             $data['vod_time_add'] = time();
