@@ -74,9 +74,9 @@ class PushData extends Common
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
 //        ['13','14','15','16','24'];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
-//        $s = strtotime(date("Y-m-d H:00:00",time()));
-//        $e = strtotime(date("Y-m-d H:59:59",time()));
-//        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        $s = strtotime(date("Y-m-d H:00:00",time()));
+        $e = strtotime(date("Y-m-d H:59:59",time()));
+        $vod_where['a.vod_time'] = ['between', [$s, $e]];
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
