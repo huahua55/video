@@ -22,7 +22,7 @@ class VideoSelected extends Base
 
     public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0)
     {
-        $video_domain = Db::table('video_domain')->where('type','video_selected')->find();
+        $video_domain = Db::table('video_domain')->where('type', 2)->find();
         $video_examine = Db::table('video_examine')->column(null,'id');
         if (!is_array($where)) {
             $where = json_decode($where, true);
