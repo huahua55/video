@@ -74,6 +74,9 @@ class PushData extends Common
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
 //        ['13','14','15','16','24'];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
+        $s = strtotime(date("Y-m-d H:00:00",time()));
+        $e = strtotime(date("Y-m-d H:59:59",time()));
+        $vod_where['a.vod_time'] = ['between', [$s, $e]];
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
@@ -81,16 +84,18 @@ class PushData extends Common
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['b.is_down'] = ['EXP', Db::raw('IS NULL')];
+
+        $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
-            $data = $this->getDataJoin($vod_where, $order, $page, $limit, $start);
+            $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
+            log::write('页码-'.$page.'-共-'.$pagecount);
             if (!empty($data)) {
-                $pagecount = $data['pagecount'] ?? 0;
                 if ($page > $pagecount) {
                     $is_true = false;
                     break;
                 }
-                if (!empty($data['list'])) {
-                    foreach ($data['list'] as $key => $val) {
+                if (!empty($data)) {
+                    foreach ($data as $key => $val) {
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
@@ -435,13 +440,17 @@ class PushData extends Common
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
-    protected function getDataJoin($where, $order, $page, $limit, $start)
+    protected function getDataJoinit($where, $order, $page, $limit, $start)
+    {
+
+        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->count();
+        return  ceil($total / $limit);
+    }
+    protected function getDataJoini($where, $order, $page, $limit, $start)
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->count();
-        $list = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,b.collection,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        return $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,b.collection,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
     }
 
     protected function getDataJoinT($where, $order, $page, $limit, $start)
