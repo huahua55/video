@@ -188,6 +188,10 @@
                     test(result_data['data']);
 
                     laypageRender( result_data );
+                },
+                complete: function(){
+                    
+                    showloading(false);//关闭loading
                 }
             });
         }
@@ -223,6 +227,10 @@
                                     showloading(false);//关闭loading
 
                                     test(result_data['data']);
+                                },
+                                complete: function(){
+                                    
+                                    showloading(false);//关闭loading
                                 }
                             });
                         }

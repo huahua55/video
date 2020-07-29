@@ -265,7 +265,7 @@ class Video extends Base
 
             $data['up_time'] = time();
             // 修改vedio_vod表信息
-            $save_vedio_vod = model('video_vod')->where( ['video_id' => $id] )->update( $data );
+            $save_vedio_vod = model('video_vod')->allowField(true)->where( ['video_id' => $id] )->update( $data );
 
             unset( $data['up_time'] );
             
@@ -279,7 +279,9 @@ class Video extends Base
 
             // 更新主表数据 即vod表
             $data['vod_id'] = $video_vod_data['vod_id'];
-            $save_vod = model('vod')->saveData( $data );
+            $data['vod_time'] = time();
+            $save_vod = model('vod')->allowField(true)->update( $data );
+            unset( $data['vod_time'] );
         }
         else{
             $data['vod_time_add'] = time();

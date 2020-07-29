@@ -684,19 +684,41 @@ class Vod extends Base {
         unset($data['uptime']);
         unset($data['uptag']);
 
+        Db::startTrans();
+        $save_video = true;
+        $save_vedio_vod = true;
         if(!empty($data['vod_id'])){
             $where=[];
             $where['vod_id'] = ['eq',$data['vod_id']];
             $res = $this->allowField(true)->where($where)->update($data);
+
+            /***** 这里修改数据同步到video、video_vod表 *****/
+
+            // 根据vod_id去任务表video_vod查找关联的video表的video_id
+            $video_id = model('video_vod')->where( $where )->column('video_id');
+            if (!empty( $video_id )) {
+
+                $data['up_time'] = time();
+                $save_vedio_vod = model('video_vod')->allowField(true)->where( ['video_id' => $video_id[0]] )->update( $data );
+                unset( $data['up_time'] );
+
+                $data['type_pid'] = $data['type_id_1'];
+                $save_video = model('video')->allowField(true)->where( ['id' => $video_id[0]] )->update( $data );
+                unset( $data['type_pid'] );
+            }
+
+            /***** 这里修改数据同步到video、video_vod表 *****/
         }
         else{
             $data['vod_time_add'] = time();
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res){
+        if(false === $res && false === $save_video && false === $save_vedio_vod){
+            Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
+        Db::commit();
         return ['code'=>1,'msg'=>'保存成功'];
     }
 
