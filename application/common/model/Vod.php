@@ -698,7 +698,9 @@ class Vod extends Base {
             $video_id = model('video_vod')->where( $where )->column('video_id');
             if (!empty( $video_id )) {
 
+                $data['up_time'] = time();
                 $save_vedio_vod = model('video_vod')->allowField(true)->where( ['video_id' => $video_id[0]] )->update( $data );
+                unset( $data['up_time'] );
 
                 $data['type_pid'] = $data['type_id_1'];
                 $save_video = model('video')->allowField(true)->where( ['id' => $video_id[0]] )->update( $data );
