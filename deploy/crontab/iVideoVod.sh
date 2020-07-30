@@ -11,5 +11,5 @@ if [ ! -n "$a" ]; then
 else
 #  echo 1
   # 不是空的 先不杀死
-  ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
+#  ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
 fi
