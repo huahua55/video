@@ -24,8 +24,8 @@ else
   if (($rnd==2));then
      echo 1
   else
-    echo 1
-#     ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
+#    echo 1
+     ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
   fi
   # 不是空的 先不杀死
 fi
