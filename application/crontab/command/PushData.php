@@ -66,6 +66,7 @@ class PushData extends Common
     {
         $start = 0;
         $page = 1;
+        $page1 = 1;
         $limit = 20;
         $is_true = true;
         $order = 'a.vod_id desc';
@@ -88,9 +89,9 @@ class PushData extends Common
         $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
-            log::write('页码-'.$page.'-共-'.$pagecount);
+            log::write('页码-'.$page1.'-共-'.$pagecount);
             if (!empty($data)) {
-                if ($page > $pagecount) {
+                if ($page1 > $pagecount) {
                     $is_true = false;
                     break;
                 }
@@ -102,7 +103,7 @@ class PushData extends Common
             } else {
                 break;
             }
-            $page = $page + 1;
+            $page1 = $page + 1;
         }
     }
 
