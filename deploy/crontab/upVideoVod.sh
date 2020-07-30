@@ -18,12 +18,13 @@ cd /data/www/video/
 a=`ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
   #空的
-#  php think pushData name=up
+  php think pushData name=up
    echo 1
 else
   if (($rnd==2));then
      echo 1
   else
+#    echo 1
      ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
   fi
   # 不是空的 先不杀死
