@@ -697,15 +697,18 @@ class Vod extends Base {
             // 根据vod_id去任务表video_vod查找关联的video表的video_id
             $video_vod_where['vod_id'] = ['eq',$data['vod_id']];
             $video_vod_where['video_id'] = ['NEQ',0];
-            $video_id = Db::name('video_vod')->field('id,video_id')->where( $video_vod_where )->find();
-
+            $video_id = Db::name('video_vod')->field('video_id')->where( $video_vod_where )->find();
             if (!empty( $video_id )) {
+
+
+                $save_vedio_vod_where['vod_id'] = ['eq',$data['vod_id']];
+                $save_vedio_vod_where['video_id'] = ['eq',$video_id['video_id']];
 
                 $save_vedio_vod_edit['up_time'] = time();
                 $save_vedio_vod_edit['type_id_1'] = $data['type_id_1'];
                 $save_vedio_vod_edit['type_id'] = $data['type_id'];
                 $save_vedio_vod_edit['vod_name'] = $data['vod_name'];
-                $save_vedio_vod = model('video_vod')->allowField(true)->where( ['id'=>$video_id['id']] )->update( $save_vedio_vod_edit );
+                $save_vedio_vod = model('video_vod')->allowField(true)->where( $save_vedio_vod_where )->update( $save_vedio_vod_edit );
                 unset( $data['up_time'] );
 
                 $data['type_pid'] = $data['type_id_1'];
