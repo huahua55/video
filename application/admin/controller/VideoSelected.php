@@ -319,6 +319,7 @@ class VideoSelected extends Base
     private function _filterSearchData( $param='' )
     {
         $where_a = [];
+        $where_b = [];
         $whereOr = [];
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
@@ -331,8 +332,11 @@ class VideoSelected extends Base
         if (isset($param['vod_status']) && $param['vod_status'] != "") {
             $where_a['a.vod_status'] = $param['vod_status'];
         }
+        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
+            $where_b['b.is_sync'] = $param['b_is_sync'];
+        }
 
-        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a]];
+        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a, 'where_b' => $where_b]];
     }
 
     /**
