@@ -49,23 +49,24 @@ class PushData extends Common
         $name = $param['name'] ?? 'all';
         if ($name == 'all') {
             //这里写业务逻辑
-            $this->getWhile2();
+            $this->getWhile2($name);
             //不存在添加
-            $this->getWhile();
+            $this->getWhile($name);
         } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay') {
             //这里写业务逻辑
             $this->getWhile2($name);
         }  else {
             //这里写业务逻辑
-            $this->getWhile();
+            $this->getWhile($name);
         }
         $output->writeln("结束...");
     }
 
-    protected function getWhile()
+    protected function getWhile($name = '')
     {
         $start = 0;
         $page = 1;
+        $page1 = 1;
         $limit = 20;
         $is_true = true;
         $order = 'a.vod_id desc';
@@ -74,9 +75,12 @@ class PushData extends Common
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
 //        ['13','14','15','16','24'];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
-        $s = strtotime(date("Y-m-d H:00:00",time()));
-        $e = strtotime(date("Y-m-d H:59:59",time()));
-        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        if ($name == 'iAll'){
+        }else{
+            $s = strtotime(date("Y-m-d H:00:00",time()));
+            $e = strtotime(date("Y-m-d H:59:59",time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
@@ -88,9 +92,9 @@ class PushData extends Common
         $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
-            log::write('页码-'.$page.'-共-'.$pagecount);
+            log::write('页码-'.$page1.'-共-'.$pagecount);
             if (!empty($data)) {
-                if ($page > $pagecount) {
+                if ($page1 > $pagecount) {
                     $is_true = false;
                     break;
                 }
@@ -102,7 +106,7 @@ class PushData extends Common
             } else {
                 break;
             }
-            $page = $page + 1;
+            $page1 = $page + 1;
         }
     }
 
