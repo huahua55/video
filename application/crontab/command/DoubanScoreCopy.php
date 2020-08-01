@@ -160,7 +160,7 @@ class DoubanScoreCopy extends Common
                     Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                     log::info('采集豆瓣评分-url-:' . $url);
 
-                    if (!empty($mac_curl_get_data) && !$v['vod_douban_id']) {
+                    if (!empty($mac_curl_get_data) && (!$v['vod_douban_id'] || $v['vod_douban_id'] == 0)) {
                         log::info('采集豆瓣评分-no-douban-id-开始::' . $v['vod_id']);
                         foreach ($mac_curl_get_data as $da_k => $as_k) {
                             if ($da_k == 0 || $da_k == 1 || $da_k == 2) {
