@@ -35,6 +35,13 @@ class VideoSelected extends Base
 
         $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up';
 
+        // 获取未上传的video_id
+        if ( !empty( $where['where_b'] ) ) {
+            $video_ids = Db::name('video_collection_selected')->alias('b')->field('b.video_id')->where($where['where_b'])->group('b.video_id')->select();
+            $video_ids = array_column($video_ids, 'video_id');
+            $where['where_a']['a.id'] = ['in', $video_ids];
+        }
+
         $total = Db::name('VideoSelected')
                     ->alias( 'a' )
                     ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
@@ -46,7 +53,7 @@ class VideoSelected extends Base
                 ->order( $order )->limit( $limit_str )->select();
         $list = [];
 
-        $where_b = [];
+        $where_b = $where['where_b'];
 
         if (isset($where['where_a']['a.vod_status']) && $where['where_a']['a.vod_status'] != "") {
             $where_b['b.status'] = $where['where_a']['a.vod_status'];
