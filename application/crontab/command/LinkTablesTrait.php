@@ -137,9 +137,9 @@ trait LinkTablesTrait{
             $video_data['vod_name'] = $data['vod_name'];
             $video_data['vod_sub'] = isset($data['vod_sub'])?$data['vod_sub']:'';
             $video_data['vod_tag'] = isset($data['vod_tag'])?$data['vod_tag']:'';
-            $video_data['vod_actor'] = isset($data['vod_actor'])?$data['vod_area']:'';
-            $video_data['vod_director'] = isset($data['vod_director'])?$data['vod_area']:'';
-            $video_data['vod_writer'] = isset($data['vod_writer'])?$data['vod_area']:'';
+            $video_data['vod_actor'] = isset($data['vod_actor'])?$data['vod_actor']:'';
+            $video_data['vod_director'] = isset($data['vod_director'])?$data['vod_director']:'';
+            $video_data['vod_writer'] = isset($data['vod_writer'])?$data['vod_writer']:'';
             $video_data['vod_pubdate'] = isset($data['vod_pubdate'])?$data['vod_pubdate']:'';
             $video_data['vod_total'] = isset($data['vod_total'])?$data['vod_total']:0;
             $video_data['vod_area'] = isset($data['vod_area'])?$data['vod_area']:'';
