@@ -84,6 +84,7 @@ class DoubanScoreCopy extends Common
                 // 'vod_douban_id' => 0,
             ];
             // $is_vod_id = Cache::get('vod_id_list_douban_score');
+            Cache::set('vod_time_list_douban_score', '');
             $vod_time = Cache::get('vod_time_list_douban_score');
             if (!empty($id)) {
                 $where['vod_id'] = ['gt', $id];
