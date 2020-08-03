@@ -48,7 +48,7 @@ class DoubanScoreCopy extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_time')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_time')->where($where)->orderRaw('CONVERT(vod_year,SIGNED) desc')->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
@@ -84,14 +84,18 @@ class DoubanScoreCopy extends Common
                 // 'vod_douban_id' => 0,
             ];
             // $is_vod_id = Cache::get('vod_id_list_douban_score');
-            Cache::set('vod_time_list_douban_score', '');
+            // Cache::set('vod_time_list_douban_score', '');
             $vod_time = Cache::get('vod_time_list_douban_score');
+            $vod_year = Cache::get('vod_year_list_douban_score');
             if (!empty($id)) {
                 $where['vod_id'] = ['gt', $id];
             } else {
                 if (!empty($vod_time)) {
                     // $where['vod_id'] = ['gt', $is_vod_id];
-                    $where['vod_time'] = ['lt', $vod_time];
+                    $where['vod_time'] = ['ELT', $vod_time];
+                }
+                if (!empty($vod_year)) {
+                    $where['vod_year'] = ['EXP', Db::raw(' <= ' . (int)$vod_year)];
                 }
             }
             // $startTime =  date("Y-m-d 00:00:00",time());
@@ -228,6 +232,7 @@ class DoubanScoreCopy extends Common
                     }
 
                     // Cache::set('vod_id_list_douban_score', $v['vod_id']);
+                    Cache::set('vod_year_list_douban_score', $v['vod_year']);
                     Cache::set('vod_time_list_douban_score', $v['vod_time']);
                     if ($is_log == false) {
                         log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
