@@ -31,7 +31,7 @@ class VideoSelected extends Base
         //b.id,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id,b.is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         
-        $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up';
+        $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up,a.vod_id';
 
         $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up';
 
@@ -70,12 +70,22 @@ class VideoSelected extends Base
                 ->where( 'b.video_id', $v['aid'] )
                 ->count();
 
+            // 获取视频总集数
+            if ($v['type_pid'] == 1) {
+                // 电影 总集数默认为1
+                $video_total = 1;
+            } else {
+                $video_total = Db::name('vod')
+                ->where( 'vod_id', $v['vod_id'] )
+                ->column('vod_total')[0];
+            }
+
             $list[] = [
                     'vod_name' => $v['vod_name'],
                     'video_id' => $v['aid'],
                     'bid' => $v['aid'] . '_' . $v['aid'],
                     'is_master' => 1,
-                    'collection' => $video_collection_count,
+                    'collection' => $video_total . '-' . $video_collection_count,
                     'm_reasons' => isset($video_examine[$v['e_id']])?$video_examine[$v['e_id']]:'',
                     'm_time_auto_up' => $v['vod_time_auto_up'],
                     'm_eid' => $v['e_id'],
@@ -224,11 +234,11 @@ class VideoSelected extends Base
         if(!$validate->check($data)){
             return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
         }
-        $key = 'video_selected_'.$data['video_id'];
+        $key = 'video_selected_'.$data['id'];
         Cache::rm($key);
         $key = 'video_selected_'.$data['vod_en'];
         Cache::rm($key);
-        $key = 'video_selected_'.$data['video_id'].'_'.$data['vod_en'];
+        $key = 'video_selected_'.$data['id'].'_'.$data['vod_en'];
         Cache::rm($key);
 
         //分类

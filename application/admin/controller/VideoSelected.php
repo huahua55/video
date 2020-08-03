@@ -323,7 +323,7 @@ class VideoSelected extends Base
         $whereOr = [];
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = $param['idName'];
+            $whereOr['a.vod_name'] = ['instr', $param['idName']];
             $whereOr['a.id'] = $param['idName'];
         }
         if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
@@ -331,6 +331,9 @@ class VideoSelected extends Base
         }
         if (isset($param['vod_status']) && $param['vod_status'] != "") {
             $where_a['a.vod_status'] = $param['vod_status'];
+        }
+        if (isset($param['type_pid']) && $param['type_pid'] != "") {
+            $where_a['a.type_pid'] = $param['type_pid'];
         }
         if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
             $where_b['b.is_sync'] = $param['b_is_sync'];

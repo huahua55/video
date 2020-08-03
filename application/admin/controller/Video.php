@@ -320,7 +320,7 @@ class Video extends Base
         $whereOr = [];
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = $param['idName'];
+            $whereOr['a.vod_name'] = ['instr', $param['idName']];
             $whereOr['a.id'] = $param['idName'];
         }
         if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
