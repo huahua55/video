@@ -48,7 +48,7 @@ class DoubanScoreCopy extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score')->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_time')->where($where)->order($order)->limit($limit_str)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
@@ -83,18 +83,20 @@ class DoubanScoreCopy extends Common
             $where = [
                 // 'vod_douban_id' => 0,
             ];
-            $is_vod_id = Cache::get('vod_id_list_douban_score');
+            // $is_vod_id = Cache::get('vod_id_list_douban_score');
+            $vod_time = Cache::get('vod_time_list_douban_score');
             if (!empty($id)) {
                 $where['vod_id'] = ['gt', $id];
             } else {
-                if (!empty($is_vod_id)) {
-                    $where['vod_id'] = ['gt', $is_vod_id];
+                if (!empty($vod_time)) {
+                    // $where['vod_id'] = ['gt', $is_vod_id];
+                    $where['vod_time'] = ['lt', $vod_time];
                 }
             }
             // $startTime =  date("Y-m-d 00:00:00",time());
             // $endTime =  date("Y-m-d 23:59:59",time());
             // $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-            $order = 'vod_id asc';
+            $order = 'vod_time desc';
             $cookie = $this->newCookie($cookies);
             //进入循环 取出数据
             while ($is_true) {
@@ -159,7 +161,6 @@ class DoubanScoreCopy extends Common
                     }
                     Log::info('采集豆瓣评分-err--proxyerr_i-' . $this->proxy_server . ":" . $this->get_port);
                     log::info('采集豆瓣评分-url-:' . $url);
-log::info($mac_curl_get_data);
                     if (!empty($mac_curl_get_data) && (!$v['vod_douban_id'] || $v['vod_douban_id'] == 0)) {
                         log::info('采集豆瓣评分-no-douban-id-开始::' . $v['vod_id']);
                         foreach ($mac_curl_get_data as $da_k => $as_k) {
@@ -225,7 +226,8 @@ log::info($mac_curl_get_data);
                         log::info('采集豆瓣评分-has-douban-id-结束::' . $v['vod_douban_id'] . '---' . $v['vod_id']);
                     }
 
-                    Cache::set('vod_id_list_douban_score', $v['vod_id']);
+                    // Cache::set('vod_id_list_douban_score', $v['vod_id']);
+                    Cache::set('vod_time_list_douban_score', $v['vod_time']);
                     if ($is_log == false) {
                         log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
                     }
