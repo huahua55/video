@@ -29,11 +29,11 @@ trait LinkTablesTrait{
 
         $edit_video_vod_table = self::_editVideoVodTable($vod_id, $data);
         $edit_video_table = self::_editVideoTable($vod_id, $data);
-        // $edit_video_selected_table = self::_editVideoSelectedVod($vod_id, $data);
+        $edit_video_selected_table = self::_editVideoSelectedVod($vod_id, $data);
 
         log::info($vod_id . '：修改视频关联表结束------');
 
-        if ($edit_video_vod_table && $edit_video_table) {
+        if ($edit_video_vod_table && $edit_video_table && $edit_video_selected_table) {
         	return true;
         }
         return false;
@@ -149,6 +149,9 @@ trait LinkTablesTrait{
             $video_data['vod_duration'] = isset($data['vod_duration'])?$data['vod_duration']:'0';
             $video_data['vod_douban_id'] = $data['vod_douban_id'];
             $video_data['vod_douban_score'] = isset($data['vod_douban_score'])?$data['vod_douban_score']:'0.0';
+            if (isset($data['vod_blurb']) && !empty($data['vod_blurb'])) {
+                $video_data['vod_blurb'] = $data['vod_blurb'];
+            }
             $video_data['vod_time'] = time();
         }
         switch ($from) {
