@@ -63,12 +63,25 @@ class Video extends Base
                 ->where( 'b.video_id', $v['aid'] )
                 ->count();
 
+            // 获取视频总集数
+            if ($v['type_pid'] == 1) {
+                // 电影 总集数默认为1
+                $video_total = 1;
+            } else {
+                $vod_id = Db::name('video_vod')->where( 'video_id', $v['aid'] )->column('vod_id')[0];
+                if ( $vod_id ) {
+                    $video_total = Db::name('vod')->where( 'vod_id', $vod_id )->column('vod_total')[0];
+                } else {
+                    $video_total = 0;
+                }
+            }
+
             $list[] = [
                     'vod_name' => $v['vod_name'],
                     'video_id' => $v['aid'],
                     'bid' => $v['aid'] . '_' . $v['aid'],
                     'is_master' => 1,
-                    'collection' => $video_collection_count,
+                    'collection' => $video_total . '-' . $video_collection_count,
                     'm_reasons' => isset($video_examine[$v['e_id']])?$video_examine[$v['e_id']]:'',
                     'm_time_auto_up' => $v['vod_time_auto_up'],
                     'm_eid' => $v['e_id'],
