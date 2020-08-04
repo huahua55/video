@@ -570,6 +570,10 @@ class Common extends Command
         if (isset($get_url_search_id_data['share_url'])) {
             $vod_data['vod_reurl'] = $get_url_search_id_data['share_url'];
         }
+        // 豆瓣简介
+        if (isset($get_url_search_id_data['summary']) && !empty($get_url_search_id_data['summary'])) {
+            $vod_data['vod_blurb'] = mac_str_is_html( $get_url_search_id_data['summary'] );
+        }
         $vod_data['vod_author'] = '豆瓣';
         return $vod_data;
     }
