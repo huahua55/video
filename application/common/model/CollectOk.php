@@ -539,7 +539,10 @@ class CollectOk extends Base
                         $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
                     }
                     if (strpos($config['inrule'], 'g') !== false) {
-                        $where['vod_director'] = $v['vod_director'];
+                        $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
+
+                        $str_vod_director = implode(',', $arr_vod_director);
+                        $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
                     }
                     if ($config['tag'] == 1) {
                         $v['vod_tag'] = mac_get_tag($v['vod_name'], $v['vod_content']);
@@ -662,18 +665,36 @@ class CollectOk extends Base
                         })->find();
                     }
 
-                    if ( !empty($info) ) {
-                        // 校验视频内容百分比
-                        if (!empty($info['vod_content'])) {
-                            $check_vod_content_rade = self::_checkVodContentRade($info['vod_content'], $v['vod_content']);
-                            if ( $check_vod_content_rade < 30) {
-                                // 视频详情百分比小于30, 走添加操作
-                                $info = '';
-                            } else {
-                                $des = '数据详情百分比大于30，更新。';
+                    if ( empty($info) ) {
+                        // 根据vod_name获取数据
+                        $vod_sec_where['vod_name'] = $v['vod_name'];
+                        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
+                        if (!empty($vod_sec_info)) {
+                            foreach ($vod_sec_info as $key => $value) {
+                                // 校验视频内容百分比
+                                if (!empty($value['vod_content']) && !empty($v['vod_content'])) {
+                                    $check_vod_content_rade = self::_checkVodContentRade($value['vod_content'], $v['vod_content']);
+                                    if ( $check_vod_content_rade > 30) {
+                                        // 视频详情百分比大于30, 走更新操作
+                                        $des = '数据详情百分比大于30，更新。';
+                                        $info = $vod_sec_info[$key];
+                                        break;
+                                    }
+                                } else if (empty($value['vod_content']) && !empty($v['vod_content'])) {
+                                    // 简介比
+                                    if (!empty($value['vod_blurb']) && !empty($v['vod_blurb'])) {
+                                        $check_vod_blurb_rade = self::_checkVodContentRade($value['vod_blurb'], $v['vod_blurb']);
+                                        if ( $check_vod_blurb_rade > 30) {
+                                            // 视频详情百分比大于30, 走更新操作
+                                            $des = '数据简介百分比大于30，更新。';
+                                            $info = $vod_sec_info[$key];
+                                            break;
+                                        }
+                                    }
+                                } else {
+
+                                }
                             }
-                        } else {
-                             $info = '';
                         }
                     }
 
@@ -714,6 +735,12 @@ class CollectOk extends Base
                                 $v['vod_down_url'] = (string)join('$$$', $collect_filter['down'][$param['filter']]['cj_down_url_arr']);
                                 $v['vod_down_server'] = (string)join('$$$', $collect_filter['down'][$param['filter']]['cj_down_server_arr']);
                                 $v['vod_down_note'] = (string)join('$$$', $collect_filter['down'][$param['filter']]['cj_down_note_arr']);
+                            }
+
+                            if (isset($v['vod_director']) && !empty($v['vod_director'])) {
+                                $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
+
+                                $v['vod_director'] = implode(',', $arr_vod_director);
                             }
 
                             $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
@@ -945,6 +972,12 @@ class CollectOk extends Base
                                 $update['vod_plot_detail'] = $v['vod_plot_detail'];
                             }
 
+                            // 处理导演
+                            if (isset($update['vod_director']) && !empty($update['vod_director'])) {
+                                $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
+
+                                $update['vod_director'] = implode(',', $arr_vod_director);
+                            }
 
                             if (count($update) > 0) {
                                 $update['vod_time'] = time();
