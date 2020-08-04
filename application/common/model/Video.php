@@ -239,7 +239,7 @@ class Video extends Base
         }
 
         if(empty($data['vod_blurb'])){
-            $data['vod_blurb'] = mac_substring( strip_tags($data['vod_content']) ,100);
+            $data['vod_blurb'] = strip_tags($data['vod_content']);
         }
 
         if($data['uptime']==1){
