@@ -39,6 +39,7 @@ class PushData extends Common
     protected function execute(Input $input, Output $output)
     {
 
+
         set_time_limit(0);
         $output->writeln('获取数据-插入任务表-获取数据开始:init');
         $myparme = $input->getArguments();
@@ -48,23 +49,24 @@ class PushData extends Common
         $name = $param['name'] ?? 'all';
         if ($name == 'all') {
             //这里写业务逻辑
-            $this->getWhile2();
+            $this->getWhile2($name);
             //不存在添加
-            $this->getWhile();
-        } else if ($name == 'up') {
+            $this->getWhile($name);
+        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay') {
             //这里写业务逻辑
-            $this->getWhile2();
+            $this->getWhile2($name);
         } else {
             //这里写业务逻辑
-            $this->getWhile();
+            $this->getWhile($name);
         }
         $output->writeln("结束...");
     }
 
-    protected function getWhile()
+    protected function getWhile($name = '')
     {
         $start = 0;
         $page = 1;
+        $page1 = 1;
         $limit = 20;
         $is_true = true;
         $order = 'a.vod_id desc';
@@ -73,6 +75,12 @@ class PushData extends Common
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
 //        ['13','14','15','16','24'];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
+        if ($name == 'iAll') {
+        } else {
+            $s = strtotime(date("Y-m-d H:00:00", time()));
+            $e = strtotime(date("Y-m-d H:59:59", time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
@@ -80,27 +88,29 @@ class PushData extends Common
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['b.is_down'] = ['EXP', Db::raw('IS NULL')];
+
+        $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
-            $data = $this->getDataJoin($vod_where, $order, $page, $limit, $start);
+            $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
+            log::write('页码-' . $page1 . '-共-' . $pagecount);
             if (!empty($data)) {
-                $pagecount = $data['pagecount'] ?? 0;
-                if ($page > $pagecount) {
+                if ($page1 > $pagecount) {
                     $is_true = false;
                     break;
                 }
-                if (!empty($data['list'])) {
-                    foreach ($data['list'] as $key => $val) {
+                if (!empty($data)) {
+                    foreach ($data as $key => $val) {
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
             } else {
                 break;
             }
-            $page = $page + 1;
+            $page1 = $page + 1;
         }
     }
 
-    protected function getWhile2()
+    protected function getWhile2($name = '')
     {
 
 
@@ -108,33 +118,49 @@ class PushData extends Common
         $page = 1;
         $limit = 20;
         $is_true = true;
-        $order = 'a.vod_id desc';
+        if (rand(1, 2) == 1) {
+            $order = 'a.vod_id desc';
+            $limit = 50;
+        } else {
+            $order = 'a.vod_id asc';
+        }
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
-        $s = strtotime(date("Y-m-d H:00:00",time()));
-        $e = strtotime(date("Y-m-d H:59:59",time()));
-        $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        if (!empty($name) && $name == 'upAll') {
+        } elseif ($name == 'upSan') {
+            $t_time = 3 * (60 * 60 * 24);
+            $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
+            $e = strtotime(date("Y-m-d 23:59:59", time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        } elseif ($name == 'upDay') {
+            $s = strtotime(date("Y-m-d 00:00:00", time()));
+            $e = strtotime(date("Y-m-d 23:59:59", time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        } else {
+            $s = strtotime(date("Y-m-d H:00:00", time()));
+            $e = strtotime(date("Y-m-d H:59:59", time()));
+            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
-        $vod_where['b.is_sync'] = ['neq', 1];
-        $vod_where['b.is_section'] = ['neq', 1];
-        $vod_where['b.is_down'] = ['neq', 1];
 //        $vod_where['b.vod_id'] = ['eq', 392512];//
 //        $vod_where['b.vod_id'] = ['eq', 452786];//
         $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
-        while ($is_true) {
 
+        $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
+        while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
-            log::write('页码-'.$page.'-共-'.$data['pagecount'] ?? 0);
+            log::write('页码-' . $page . '-共-' . $pagecount);
+//            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
 //                p($data);
             if (!empty($data)) {
-                $pagecount = $data['pagecount'] ?? 0;
                 if ($page > $pagecount) {
                     $is_true = false;
                     break;
                 }
-                if (!empty($data['list'])) {
-                    foreach ($data['list'] as $key => $val) {
+//                p($data);
+                if (!empty($data)) {
+                    foreach ($data as $key => $val) {
 //                        p($val);
                         $val['chren'] = $this->videoVodModel->where(['vod_id' => $val['b_vod_id']])->select();
                         $chren_data = $this->childrenUnArr($val['chren']);
@@ -145,7 +171,6 @@ class PushData extends Common
                 break;
             }
             $page = $page + 1;
-
         }
 
     }
@@ -177,7 +202,7 @@ class PushData extends Common
     }
 
     //获取列表
-    protected function getIndexData($v,$cj_from_arr, $cj_url_arr, $cj_server_arr, $cj_note_arr, $type)
+    protected function getIndexData($v, $cj_from_arr, $cj_url_arr, $cj_server_arr, $cj_note_arr, $type)
     {
         $collect_filter = [];
         foreach ($cj_from_arr as $kk => $vv) {
@@ -207,19 +232,19 @@ class PushData extends Common
                     if ($count != 0) {
                         $count2 = substr_count($v_v, '$');
                         if ($count2 > 0) {
-                              $def_k = $v_k+1;
-                                $title =  explode("$", $v_v)[0] ?? $def_k;
-                                if ($v['type_id_1'] == 0) {
-                                    $v['type_id_1'] = getTypePid($v['type_id']);
-                                }
-                                if ($v['type_id_1'] == 1 || empty($v['type_id_1'])) {
-                                    $title = 1;
-                                }
-                                $new_v_k_ = intval(findNumAll($title));
-                        }else{
-                            $new_v_k_ = $v_k+1;
-                            if(substr_count($v_v, 'http') > 0){
-                                $v_v = '第'.($new_v_k_).'集$'.$v_v;
+                            $def_k = $v_k + 1;
+                            $title = explode("$", $v_v)[0] ?? $def_k;
+                            if ($v['type_id_1'] == 0) {
+                                $v['type_id_1'] = getTypePid($v['type_id']);
+                            }
+                            if ($v['type_id_1'] == 1 || empty($v['type_id_1'])) {
+                                $title = 1;
+                            }
+                            $new_v_k_ = intval(findNumAll($title));
+                        } else {
+                            $new_v_k_ = $v_k + 1;
+                            if (substr_count($v_v, 'http') > 0) {
+                                $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                             }
                         }
                         $collect_filter[$vv][$new_v_k_] = $v_v;
@@ -243,11 +268,11 @@ class PushData extends Common
         $cj_down_note_arr = explode('$$$', $v['vod_down_note']);
         $collect_filter = [];
         //播放连接
-        $collect_filter['play'] = $this->getIndexData($v,$cj_play_from_arr, $cj_play_url_arr, $cj_play_server_arr, $cj_play_note_arr, $type);
+        $collect_filter['play'] = $this->getIndexData($v, $cj_play_from_arr, $cj_play_url_arr, $cj_play_server_arr, $cj_play_note_arr, $type);
         if (empty($collect_filter['play'])) {
-            $collect_filter['play'] = $this->getIndexData($v,$cj_down_from_arr, $cj_down_url_arr, $cj_down_server_arr, $cj_down_note_arr, $type);
+            $collect_filter['play'] = $this->getIndexData($v, $cj_down_from_arr, $cj_down_url_arr, $cj_down_server_arr, $cj_down_note_arr, $type);
         }
-        $collect_filter['down'] = $this->getIndexData($v,$cj_down_from_arr, $cj_down_url_arr, $cj_down_server_arr, $cj_down_note_arr, '.mp4');
+        $collect_filter['down'] = $this->getIndexData($v, $cj_down_from_arr, $cj_down_url_arr, $cj_down_server_arr, $cj_down_note_arr, '.mp4');
         return $collect_filter;
     }
 
@@ -265,7 +290,7 @@ class PushData extends Common
             $collect_push = [];
             foreach ($key_data_new as $itemKey => $itemVal) {
                 $key_url = $collect_filter[$type][$itemKey][$key_data_k] ?? '';
-                if(!empty($key_url)){
+                if (!empty($key_url)) {
                     $collect_push[] = $key_url;
                 }
             }
@@ -273,7 +298,7 @@ class PushData extends Common
             //down_url
             //m3u8_url
             $collect_push = array_filter($collect_push);
-            if(!empty($collect_push)){
+            if (!empty($collect_push)) {
                 if ($type == 'play') {
                     $new_play_url[$key_data_k]['m3u8_url'] = implode('#', $collect_push);
                 } else {
@@ -285,8 +310,7 @@ class PushData extends Common
     }
 
 
-
-    protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,$i='i')
+    protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, $i = 'i')
     {
         $new_url['vod_name'] = $v['vod_name'] ?? '';
         $new_url['type_id'] = $v['type_id'] ?? '';
@@ -308,27 +332,31 @@ class PushData extends Common
         $new_url['duration'] = '';
         $new_url['video_id'] = 0;
         $new_url['sum'] = 0;
-        if($i == 'i'){
+        if ($i == 'i') {
             $new_url['down_add_time'] = time();
         }
         $new_url['up_time'] = time();
         $new_url['down_time'] = time();
         $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
-        $new_url['weight'] = '80';
+        $new_url['weight'] = '0';
+        if ($i != 'i') {
+            $new_url['weight'] = $v['b_weight'] ?? '0';
+        }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
         $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
         return $new_url;
     }
 
-    protected function getFindVideo($id,$collection){
+    protected function getFindVideo($id, $collection)
+    {
         $where = [];
-        $where['vod_id']= $id;
-        $where['collection']= $collection;
-       return $this->videoVodModel->where($where)->find();
+        $where['vod_id'] = $id;
+        $where['collection'] = $collection;
+        return $this->videoVodModel->where($where)->find();
 
-   }
+    }
 
     public function getUrlLike($v, $type = '.m3u8', $i = 'install', $n = [])
     {
@@ -352,8 +380,8 @@ class PushData extends Common
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        $getFindVideo = $this->getFindVideo($v['vod_id'],intval($title));
-                        if(empty($getFindVideo)){
+                        $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                        if (empty($getFindVideo)) {
                             $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                             if (!empty($n_url)) {
                                 $res = $this->videoVodModel->insert($n_url);
@@ -377,7 +405,7 @@ class PushData extends Common
                         }
                         if (isset($n[$title])) {
                             if ($n[$title]['is_sync'] != 1) {
-                                $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,'u');
+                                $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = $this->videoVodModel->where(['id' => $n[$title]['id']])->update($up_data);
                                     if ($res) {
@@ -388,8 +416,8 @@ class PushData extends Common
                                 }
                             }
                         } else {
-                            $getFindVideo = $this->getFindVideo($v['vod_id'],intval($title));
-                            if(empty($getFindVideo)){
+                            $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                            if (empty($getFindVideo)) {
                                 $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                                 if (!empty($n_url)) {
                                     $res = $this->videoVodModel->insert($n_url);
@@ -419,21 +447,30 @@ class PushData extends Common
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
-    protected function getDataJoin($where, $order, $page, $limit, $start)
+    protected function getDataJoinit($where, $order, $page, $limit, $start)
+    {
+
+        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->count();
+        return ceil($total / $limit);
+    }
+
+    protected function getDataJoini($where, $order, $page, $limit, $start)
     {
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->count();
-        $list = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,b.collection,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        return $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,b.collection,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync,b.weight as b_weight')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->limit($limit_str)->select();
+    }
+
+    protected function getDataJoinT($where, $order, $page, $limit, $start)
+    {
+        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->count();
+        $pagecount = ceil($total / $limit);
+        return $pagecount;
     }
 
     protected function getDataJoin1($where, $order, $page, $limit, $start)
     {
-
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->count();
-        $list = $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,b.is_down,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.vod_name as b_vod_name,b.m3u8_url as b_m3u8_url,b.id as bid,b.vod_id as b_vod_id')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->limit($limit_str)->select();
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        return $this->vodModel->alias('a')->field('a.vod_id,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,b.is_down,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.vod_name as b_vod_name,b.m3u8_url as b_m3u8_url,b.id as bid,b.vod_id as b_vod_id,b.weight as b_weight')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->limit($limit_str)->select();
     }
 }

@@ -63,6 +63,17 @@ class videoVod extends Base {
                 ->alias( 'b' )
                 ->where( $video_vod_where )
                 ->count();
+
+            // 获取视频总集数
+            if ($v['type_id_1'] == 1) {
+                // 电影 总集数默认为1
+                $video_total = 1;
+            } else {
+                $video_total = Db::name('vod')
+                ->where( 'vod_id', $v['vod_id'] )
+                ->column('vod_total')[0];
+            }
+
             $list[] = [
                     'vod_name' => $v['vod_name'],
                     'b_vod_id' => '',
@@ -71,7 +82,7 @@ class videoVod extends Base {
                     'is_master' => 1,
                     'type_id_1' => $v['type_id_1'],
                     'type_id' => $v['type_id'],
-                    'collection' => $video_vod_count
+                    'collection' => $video_total . '-' . $video_vod_count
                 ];
 
             // 集
