@@ -6,6 +6,7 @@ use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
 use think\Request;
+use similar_text\similarText;
 
 class Collect extends Base
 {
@@ -514,7 +515,7 @@ class Collect extends Base
                     }
 
                     if (empty($v['vod_blurb'])) {
-                        $v['vod_blurb'] = mac_substring(strip_tags($v['vod_content']), 100);
+                        $v['vod_blurb'] = strip_tags($v['vod_content']);
                     }
 
                     $where = [];
@@ -659,6 +660,20 @@ class Collect extends Base
                         })->find();
                     }
 
+                    if ( !empty($info) ) {
+                        // 校验视频内容百分比
+                        if (!empty($info['vod_content'])) {
+                            $check_vod_content_rade = self::_checkVodContentRade($info['vod_content'], $v['vod_content']);
+                            if ( $check_vod_content_rade < 30) {
+                                // 视频详情百分比小于30, 走添加操作
+                                $info = '';
+                            } else {
+                                $des = '数据详情百分比大于30，更新。';
+                            }
+                        } else {
+                             $info = '';
+                        }
+                    }
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
@@ -2141,6 +2156,22 @@ class Collect extends Base
                 }
             }
         }
+    }
+
+    /**
+     * 比较详情百分比
+     * @param  [type] $old_content [description]
+     * @param  [type] $new_content [description]
+     * @return [type]              [description]
+     */
+    private function _checkVodContentRade($old_content = NULL, $new_content = NULL)
+    {
+        // 字符串对比算法
+        $lcs = new similarText();
+
+        $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($old_content)), mac_trim_all(mac_characters_format($new_content))) * 100;
+
+        return $rade;
     }
 
 }
