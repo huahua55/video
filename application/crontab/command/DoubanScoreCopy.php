@@ -83,28 +83,23 @@ class DoubanScoreCopy extends Common
             $where = [
                 // 'vod_douban_id' => 0,
             ];
-            // $is_vod_id = Cache::get('vod_id_list_douban_score');
+            Cache::set('vod_id_list_douban_score', '');
+            $is_vod_id = Cache::get('vod_id_list_douban_score');
             // Cache::set('vod_time_list_douban_score', '');
-            // $vod_time = Cache::get('vod_time_list_douban_score');
-            // $vod_year = Cache::get('vod_year_list_douban_score');
-            // if (!empty($id)) {
-            //     $where['vod_id'] = ['gt', $id];
-            // } else {
-            //     if (!empty($vod_time)) {
-            //         // $where['vod_id'] = ['gt', $is_vod_id];
-            //         $where['vod_time'] = ['ELT', $vod_time];
-            //     }
-            //     if (!empty($vod_year)) {
-            //         $where['vod_year'] = ['EXP', Db::raw(' <= ' . (int)$vod_year)];
-            //     }
-            // }
-            $video_selected = Db::name('video_selected')->field('vod_id')->group('vod_id')->select();
-            $vod_ids = array_unique(array_column($video_selected, 'vod_id'));
-            $where['vod_id'] = ['in', $vod_ids];
+            if (!empty($id)) {
+                $where['vod_id'] = ['gt', $id];
+            } else {
+                if (!empty($is_vod_id)) {
+                    $where['a.vod_id'] = ['gt', $is_vod_id];
+                }
+            }
+            // 只修改精选表数据
+            // $where = self::_editVideoSelectWhere();
             // $startTime =  date("Y-m-d 00:00:00",time());
             // $endTime =  date("Y-m-d 23:59:59",time());
             // $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
-            $order = 'vod_time desc';
+
+            $order = 'a.vod_id asc';
             $cookie = $this->newCookie($cookies);
             //进入循环 取出数据
             while ($is_true) {
@@ -114,7 +109,7 @@ class DoubanScoreCopy extends Common
                 }
 
                 // 取出数据
-                $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
+                $douBanScoreData = self::_getVideoData($where, $order, $page, $limit, $start);
                 // print_r( $this->vodDb->getlastsql());die;
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
                 if ($page > $pagecount) {
@@ -234,9 +229,7 @@ class DoubanScoreCopy extends Common
                         log::info('采集豆瓣评分-has-douban-id-结束::' . $v['vod_douban_id'] . '---' . $v['vod_id']);
                     }
 
-                    // Cache::set('vod_id_list_douban_score', $v['vod_id']);
-                    Cache::set('vod_year_list_douban_score', $v['vod_year']);
-                    Cache::set('vod_time_list_douban_score', $v['vod_time']);
+                    Cache::set('vod_id_list_douban_score', $v['vod_id']);
                     if ($is_log == false) {
                         log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
                     }
@@ -287,19 +280,26 @@ class DoubanScoreCopy extends Common
 
             // 相似度
             $vod_actor_rade = mac_intersect(mac_trim_all($v['vod_actor']), mac_trim_all($vod_actor));
-            log::info('相似度:::vod_actor_rade:' . $vod_actor_rade . '---rade:' . $rade . '---vod_name:' . mac_characters_format($v['vod_name']) . '---title|title_lang:' . mac_trim_all(mac_characters_format($v['vod_sub'])) . '---vod_director:' . $v['vod_director'] . '-' . $vod_director);
 
             $v['vod_sub'] = isset($v['vod_sub'])?$v['vod_sub']:'';
             $up_res = true;
             $edit_link_table = true;
             $continue = false;
 
+            // 求导演交集
+            $old_vod_director = array_filter(explode(',', mac_format_text($v['vod_director'])));
+            $new_vod_director = array_filter(explode(',', mac_format_text($vod_director)));
+
+            $vod_director_intersect = array_intersect($old_vod_director, $new_vod_director);
+
+            log::info('相似度:::vod_actor_rade:' . $vod_actor_rade . '---rade:' . $rade . '---vod_name:' . mac_characters_format($v['vod_name']) . '---title:' . $title . '---title|title_lang:' . mac_trim_all(mac_characters_format($v['vod_sub'])) . '---vod_director:' . $v['vod_director'] . '-' . $vod_director . 'vod_director_intersect:' . count($vod_director_intersect));
+
             if (($vod_actor_rade > 85 || 
                 $rade > 95 || 
                 $title == mac_characters_format($v['vod_name']) || 
                 $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || 
                 $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && 
-                ($v['vod_director'] == $vod_director)) {
+                (count($vod_director_intersect) >= 1)) {
                 if (!empty($v['vod_year']) && isset($vod_data['vod_year'])) {
                     if ($v['vod_year'] == $vod_data['vod_year']) {
                         if (isset($vod_data['title'])) {
@@ -377,7 +377,12 @@ class DoubanScoreCopy extends Common
             $upDetails['douban_json'] =json_encode($get_url_search_id_data,true);
         }else{
             $upDetails['trailer_urls'] = json_encode([],true);
-            $upDetails['douban_json'] = json_encode([],true);
+            if ( empty($get_url_search_id_data)) {
+                $upDetails['douban_json'] = json_encode([],true);
+            } else {
+                $upDetails['douban_json'] = json_encode($get_url_search_id_data,true);
+            }
+            
         }
         return $upDetails;
     }
@@ -401,6 +406,58 @@ class DoubanScoreCopy extends Common
         ])->getHtml();
 
         return $data;
+    }
+
+    /**
+     * 更新video数据
+     * @param  [type] $where [description]
+     * @param  [type] $order [description]
+     * @param  [type] $page  [description]
+     * @param  [type] $limit [description]
+     * @param  [type] $start [description]
+     * @return [type]        [description]
+     */
+    private function _getVideoData($where, $order, $page, $limit, $start)
+    {
+
+        $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
+        $total = Db::name('video_vod')
+                        ->alias('a')
+                        ->join('video b','a.video_id = b.id', 'INNER')
+                        ->where($where)
+                        ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        ->count();
+
+        $video_vod = Db::name('video_vod')
+                        ->alias('a')
+                        ->field('a.vod_id')
+                        ->join('video b','a.video_id = b.id', 'INNER')
+                        ->where($where)
+                        ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        ->group('a.video_id')
+                        ->order($order)
+                        ->limit($limit_str)
+                        ->select();
+// print_r( Db::name('video_vod')->getlastsql());die;
+        $vod_ids = array_unique(array_column($video_vod, 'vod_id'));
+        $vod_where['vod_id'] = ['in', $vod_ids];
+
+        $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_time')->where($vod_where)->select();
+
+        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+    }
+
+    /**
+     * 修改精选表条件
+     * @return [type] [description]
+     */
+    private function _editVideoSelectWhere()
+    {
+        $video_selected = Db::name('video_selected')->field('vod_id')->group('vod_id')->select();
+        $vod_ids = array_unique(array_column($video_selected, 'vod_id'));
+        $where['vod_id'] = ['in', $vod_ids];
+        
+        return $where;
     }
 
     //暂时废弃
