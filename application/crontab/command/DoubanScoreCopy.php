@@ -85,19 +85,22 @@ class DoubanScoreCopy extends Common
             ];
             // $is_vod_id = Cache::get('vod_id_list_douban_score');
             // Cache::set('vod_time_list_douban_score', '');
-            $vod_time = Cache::get('vod_time_list_douban_score');
-            $vod_year = Cache::get('vod_year_list_douban_score');
-            if (!empty($id)) {
-                $where['vod_id'] = ['gt', $id];
-            } else {
-                if (!empty($vod_time)) {
-                    // $where['vod_id'] = ['gt', $is_vod_id];
-                    $where['vod_time'] = ['ELT', $vod_time];
-                }
-                if (!empty($vod_year)) {
-                    $where['vod_year'] = ['EXP', Db::raw(' <= ' . (int)$vod_year)];
-                }
-            }
+            // $vod_time = Cache::get('vod_time_list_douban_score');
+            // $vod_year = Cache::get('vod_year_list_douban_score');
+            // if (!empty($id)) {
+            //     $where['vod_id'] = ['gt', $id];
+            // } else {
+            //     if (!empty($vod_time)) {
+            //         // $where['vod_id'] = ['gt', $is_vod_id];
+            //         $where['vod_time'] = ['ELT', $vod_time];
+            //     }
+            //     if (!empty($vod_year)) {
+            //         $where['vod_year'] = ['EXP', Db::raw(' <= ' . (int)$vod_year)];
+            //     }
+            // }
+            $video_selected = Db::name('video_selected')->field('vod_id')->group('vod_id')->select();
+            $vod_ids = array_unique(array_column($video_selected, 'vod_id'));
+            $where['vod_id'] = ['in', $vod_ids];
             // $startTime =  date("Y-m-d 00:00:00",time());
             // $endTime =  date("Y-m-d 23:59:59",time());
             // $where['vod_time'] =['between',[strtotime($startTime),strtotime($endTime)]];
