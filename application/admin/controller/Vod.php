@@ -56,6 +56,15 @@ class Vod extends Base
             $where['vod_plot'] = ['eq',$param['plot']];
         }
 
+        // 是否存在豆瓣id
+        if(in_array($param['vod_douban_id'], ['0', '1'])){
+            if ($param['vod_douban_id'] == '1') {
+                $where['vod_douban_id'] = ['GT', 0];
+            } else {
+                $where['vod_douban_id'] = ['eq', 0];
+            }
+        }
+
         if(!empty($param['url'])){
             if($param['url']==1){
                 $where['vod_play_url'] = '';
