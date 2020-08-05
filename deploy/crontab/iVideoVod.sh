@@ -7,7 +7,7 @@ a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
 #   echo 1
   #空的
-#  php think pushData name=i
+  php think pushData name=i
 else
 #  echo 1
   # 不是空的 先不杀死
