@@ -27,13 +27,13 @@ trait LinkTablesTrait{
             return false;
         }
 
-        $edit_video_vod_table = self::_editVideoVodTable($vod_id, $data);
-        $edit_video_table = self::_editVideoTable($vod_id, $data);
+        // $edit_video_vod_table = self::_editVideoVodTable($vod_id, $data);
+        // $edit_video_table = self::_editVideoTable($vod_id, $data);
         $edit_video_selected_table = self::_editVideoSelectedVod($vod_id, $data);
 
         log::info($vod_id . '：修改视频关联表结束------');
 
-        if ($edit_video_vod_table && $edit_video_table && $edit_video_selected_table) {
+        if ($edit_video_selected_table) {
         	return true;
         }
         return false;
