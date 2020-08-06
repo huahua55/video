@@ -426,7 +426,9 @@ class DoubanScoreCopy extends Common
                         ->alias('a')
                         ->join('video b','a.video_id = b.id', 'INNER')
                         ->where($where)
-                        ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        // ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        ->where('b.vod_tag like "%国产%"')
+                        ->group('a.video_id')
                         ->count();
 
         $video_vod = Db::name('video_vod')
