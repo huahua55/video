@@ -155,10 +155,9 @@ class DoubanScoreCopy extends Common
                         continue;
                     }
                     if (empty($mac_curl_get_data)) {
-
+                        $this->get_zm_port();
                         // 针对名称查询为空的情况再次请求三次
                         for ($i=0; $i < 3; $i++) {
-                            $this->get_zm_port();
                             usleep(500000);
                             $mac_curl_get_data = self::_qlRequest( $url, $cookie );
                             $mac_curl_get_data = json_decode($mac_curl_get_data, true);
