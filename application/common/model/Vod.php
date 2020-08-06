@@ -692,7 +692,7 @@ class Vod extends Base {
             $where['vod_id'] = ['eq',$data['vod_id']];
             $res = $this->allowField(true)->where($where)->update($data);
 
-            /***** 这里修改数据同步到video、video_vod表 *****/
+            /***** 这里修改数据同步到video、video_vod、video_selected表 *****/
 
             // 根据vod_id去任务表video_vod查找关联的video表的video_id
             $video_vod_where['vod_id'] = ['eq',$data['vod_id']];
@@ -716,14 +716,22 @@ class Vod extends Base {
                 unset( $data['type_pid'] );
             }
 
-            /***** 这里修改数据同步到video、video_vod表 *****/
+            $video_selected_id = Db::name('video_selected')->field('id')->where( ['vod_id' => $data['vod_id']] )->find();
+            $save_video_selected = true;
+            if (!empty($video_selected_id)) {
+                $data['type_pid'] = $data['type_id_1'];
+                $save_video_selected = model('video_selected')->allowField(true)->where( ['id' => $video_selected_id['id']] )->update( $data );
+            }
+            
+
+            /***** 这里修改数据同步到video、video_vod、video_selected表 *****/
         }
         else{
             $data['vod_time_add'] = time();
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res && false === $save_video && false === $save_vedio_vod){
+        if(false === $res && false === $save_video && false === $save_vedio_vod && false === $save_video_selected){
             Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
