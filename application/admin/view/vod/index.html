@@ -167,6 +167,13 @@
                     </select>
                 </div>
 
+                <div class="layui-input-inline w150">
+                    <select name="vod_douban_id">
+                        <option value="">选择有无豆瓣id</option>
+                        <option value="0" {if condition="$param['vod_douban_id'] eq '0'"}selected {/if}>没有</option>
+                        <option value="1" {if condition="$param['vod_douban_id'] eq '1'"}selected {/if}>有</option>
+                    </select>
+                </div>
 
                 <div class="layui-input-inline">
                     <input type="text" autocomplete="off" placeholder="请输入ID或影片" class="layui-input" name="wd" value="{$param['wd']}">
