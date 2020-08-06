@@ -300,8 +300,9 @@ class DoubanScoreCopy extends Common
                 $title == mac_trim_all(mac_characters_format($v['vod_sub'])) || 
                 $title_lang == mac_trim_all(mac_characters_format($v['vod_sub']))) && 
                 (count($vod_director_intersect) >= 1)) {
-                if (!empty($v['vod_year']) && isset($vod_data['vod_year'])) {
-                    if ($v['vod_year'] == $vod_data['vod_year']) {
+                log::info('采集豆瓣评分-相似度比对成功::OK');
+                // if (!empty($v['vod_year']) && isset($vod_data['vod_year'])) {
+                //     if ($v['vod_year'] == $vod_data['vod_year']) {
                         if (isset($vod_data['title'])) {
                             unset($vod_data['title']);
                         }
@@ -319,8 +320,8 @@ class DoubanScoreCopy extends Common
                                 $continue = false;
                             }
                         }
-                    }
-                }
+                //     }
+                // }
             }
             log::info('更新各关联表状态：'.$continue.'---'.$up_details.'---'.$up_res.'---'.$edit_link_table);
             if ($continue && $up_details !== false && $up_res !== false && $edit_link_table) {
@@ -433,7 +434,8 @@ class DoubanScoreCopy extends Common
                         ->field('a.vod_id')
                         ->join('video b','a.video_id = b.id', 'INNER')
                         ->where($where)
-                        ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        // ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+                        ->where('b.vod_tag like "%国产%"')
                         ->group('a.video_id')
                         ->order($order)
                         ->limit($limit_str)
