@@ -80,18 +80,10 @@ class DoubanScoreCopy extends Common
             $page = 1;
             $limit = 20;
             $is_true = true;
-            $where = [
-                // 'vod_douban_id' => 0,
-            ];
+            $where = [];
             Cache::set('vod_id_list_douban_score', '');
-            $is_vod_id = Cache::get('vod_id_list_douban_score');
-            // Cache::set('vod_time_list_douban_score', '');
             if (!empty($id)) {
-                $where['vod_id'] = ['gt', $id];
-            } else {
-                if (!empty($is_vod_id)) {
-                    $where['a.vod_id'] = ['gt', $is_vod_id];
-                }
+                $where['a.vod_id'] = ['gt', $id];
             }
             // 只修改精选表数据
             // $where = self::_editVideoSelectWhere();
@@ -110,9 +102,10 @@ class DoubanScoreCopy extends Common
 
                 // 取出数据
                 $douBanScoreData = self::_getVideoData($where, $order, $page, $limit, $start);
-                // print_r( $this->vodDb->getlastsql());die;
-                $pagecount = $douBanScoreData['pagecount'] ?? 0;
-                if ($page > $pagecount) {
+                // $pagecount = $douBanScoreData['pagecount'] ?? 0;
+                // if ($page > $pagecount) {
+                // 当获取的数据为空的时候则终止while执行
+                if (empty($douBanScoreData['list'])) {
                     $is_true = false;
                     log::info('采集豆瓣评分结束...');
                     $output->writeln("采集豆瓣评分-结束....");
@@ -250,7 +243,7 @@ class DoubanScoreCopy extends Common
                         log::info('采集豆瓣评分-过滤::' . $v['vod_name']);
                     }
                 }
-                $page = $page + 1;
+                // $page = $page + 1;
             }
         } catch (Exception $e) {
             $output->writeln("end.3." . $e);
@@ -437,15 +430,22 @@ class DoubanScoreCopy extends Common
     private function _getVideoData($where, $order, $page, $limit, $start)
     {
 
+        // 使用分页会出现跳页导致处理数据不完全。不再使用分页处理数据这里获取最后一次执行的vod_id，每次查询数据都从第一页开始即page=1
+        
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        $total = Db::name('video_vod')
-                        ->alias('a')
-                        ->join('video b','a.video_id = b.id', 'INNER')
-                        ->where($where)
-                        // ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
-                        ->where('b.vod_tag like "%国产%"')
-                        ->group('a.video_id')
-                        ->count();
+        // $total = Db::name('video_vod')
+        //                 ->alias('a')
+        //                 ->join('video b','a.video_id = b.id', 'INNER')
+        //                 ->where($where)
+        //                 // ->where('a.type_id_1 = 2 and b.type_pid = 2 and (b.vod_douban_id = 0 or b.vod_total = 0)')
+        //                 ->where('b.vod_tag like "%国产%"')
+        //                 ->group('a.video_id')
+        //                 ->count();
+        
+        $is_vod_id = Cache::get('vod_id_list_douban_score');
+        if (!isset($where['a.vod_id']) && !empty($is_vod_id)) {
+            $where['a.vod_id'] = ['gt', $is_vod_id];
+        }
 
         $video_vod = Db::name('video_vod')
                         ->alias('a')
@@ -458,13 +458,14 @@ class DoubanScoreCopy extends Common
                         ->order($order)
                         ->limit($limit_str)
                         ->select();
-// print_r( Db::name('video_vod')->getlastsql());die;
+        // print_r( Db::name('video_vod')->getlastsql());die;
         $vod_ids = array_unique(array_column($video_vod, 'vod_id'));
         $vod_where['vod_id'] = ['in', $vod_ids];
 
         $list = $this->vodDb->field('vod_id,vod_year,vod_sub,vod_name,vod_class,vod_actor,vod_director,vod_douban_id,vod_douban_score,vod_time')->where($vod_where)->select();
 
-        return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        // return ['pagecount' => ceil($total / $limit), 'list' => $list];
+        return ['list' => $list];
     }
 
     /**
