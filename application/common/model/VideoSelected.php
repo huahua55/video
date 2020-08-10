@@ -75,9 +75,13 @@ class VideoSelected extends Base
                 // 电影 总集数默认为1
                 $video_total = 1;
             } else {
-                $video_total = Db::name('vod')
-                ->where( 'vod_id', $v['vod_id'] )
-                ->column('vod_total')[0];
+                if ($v['type_id'] >= 6 && $v['type_id'] <= 12) {
+                    $video_total = 1;
+                } else {
+                    $video_total = Db::name('vod')
+                            ->where( 'vod_id', $v['vod_id'] )
+                            ->column('vod_total')[0];
+                }
             }
 
             $list[] = [
