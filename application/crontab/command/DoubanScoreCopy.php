@@ -147,22 +147,12 @@ class DoubanScoreCopy extends Common
                         Log::info('采集豆瓣评分-err--过滤' . $e . '---' . $url);
                         continue;
                     }
+
+                    // 数据为空进行三次请求
                     if (empty($mac_curl_get_data)) {
-                        $this->get_zm_port();
-                        // 针对名称查询为空的情况再次请求三次
-                        for ($i=0; $i < 3; $i++) {
-                            usleep(500000);
-                            $mac_curl_get_data = self::_qlRequest( $url, $cookie );
-                            $mac_curl_get_data = json_decode($mac_curl_get_data, true);
-                        }
-                        if (empty($mac_curl_get_data)) {
-                            Log::info('采集豆瓣评分-3次循环请求--vod_douban_id::' . $v['vod_douban_id'] . '  数据为空');
-                            Log::info('采集豆瓣评分-3次循环请求--vod_name::' . $v['vod_name'] . '  数据为空');
-                        } else {
-                            Log::info('采集豆瓣评分-3次循环请求--vod_douban_id::' . $v['vod_douban_id'] . '  数据不为空');
-                            Log::info('采集豆瓣评分-3次循环请求--vod_name::' . $v['vod_name'] . '  数据不为空');
-                        }
+                        $mac_curl_get_data = self::_threeRquest($mac_curl_get_data, $url, $cookie, $v);
                     }
+
                     if (empty($mac_curl_get_data)) {
                         $error_count++;
                         if ($error_count > 18) {
@@ -416,6 +406,37 @@ class DoubanScoreCopy extends Common
         ])->getHtml();
 
         return $data;
+    }
+
+    /**
+     * 针对名称查询为空的情况再次请求三次
+     * @param  [type] $mac_curl_get_data [description]
+     * @param  [type] $url               [description]
+     * @param  [type] $cookie            [description]
+     * @param  [type] $v                 [description]
+     * @return [type]                    [description]
+     */
+    private function _threeRquest($mac_curl_get_data, $url, $cookie, $v){
+        for ($i=0; $i < 3; $i++) {
+            try {
+                $this->get_zm_port();
+                usleep(500000);
+                $mac_curl_get_data = self::_qlRequest( $url, $cookie );
+                $mac_curl_get_data = json_decode($mac_curl_get_data, true);
+                if (!empty($mac_curl_get_data)) {
+                    break;
+                }
+            } catch (\Exception $e) {
+                // 捕获异常  防止程序终止
+                log::info('采集豆瓣评分-3次循环请求::请求异常::' . $v['vod_name'] . '--' . $v['vod_douban_id']);
+                log::info('采集豆瓣评分-3次循环请求::请求异常::' . $e);
+                continue;
+            }
+        }
+        
+        Log::info('采集豆瓣评分-3次循环请求url::' . $url);
+
+        return $mac_curl_get_data;
     }
 
     /**
