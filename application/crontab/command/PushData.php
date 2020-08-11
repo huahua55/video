@@ -2,6 +2,7 @@
 
 namespace app\crontab\command;
 
+use JonnyW\PhantomJs\Http\PdfRequest;
 use think\Cache;
 use think\console\Command;
 use think\console\Input;
@@ -72,7 +73,7 @@ class PushData extends Common
         $order = 'a.vod_id desc';
         //where
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22']; //电影
 //        ['13','14','15','16','24'];
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
         if ($name == 'iAll') {
@@ -85,13 +86,14 @@ class PushData extends Common
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
 //        $vod_where['a.vod_douban_score']  = ['gt',7];
-        $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
+        $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['b.is_down'] = ['EXP', Db::raw('IS NULL')];
 
         $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
+//            p($this->vodModel->getlastsql());
             log::write('页码-' . $page1 . '-共-' . $pagecount);
             if (!empty($data)) {
                 if ($page1 > $pagecount) {
@@ -125,7 +127,7 @@ class PushData extends Common
             $order = 'a.vod_id asc';
         }
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '6,7,8,9,10,11,12,13,14,15,16,24']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22']; //电影
         if (!empty($name) && $name == 'upAll') {
         } elseif ($name == 'upSan') {
             $t_time = 3 * (60 * 60 * 24);
@@ -144,7 +146,7 @@ class PushData extends Common
         $vod_where['a.vod_year'] = ['gt', 2000];//年代限制
 //        $vod_where['b.vod_id'] = ['eq', 392512];//
 //        $vod_where['b.vod_id'] = ['eq', 452786];//
-        $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
+        $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
