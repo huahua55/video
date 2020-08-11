@@ -48,14 +48,15 @@ class PushData extends Common
         //参数转义解析
         $param = $this->ParSing($parameter);
         $name = $param['name'] ?? 'all';
+        $id = $param['id'] ?? '';
         if ($name == 'all') {
             //这里写业务逻辑
-            $this->getWhile2($name);
+            $this->getWhile2($name,$id);
             //不存在添加
             $this->getWhile($name);
         } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay') {
             //这里写业务逻辑
-            $this->getWhile2($name);
+            $this->getWhile2($name,$id);
         } else {
             //这里写业务逻辑
             $this->getWhile($name);
@@ -112,7 +113,7 @@ class PushData extends Common
         }
     }
 
-    protected function getWhile2($name = '')
+    protected function getWhile2($name = '',$id = "")
     {
 
 
@@ -138,6 +139,8 @@ class PushData extends Common
             $s = strtotime(date("Y-m-d 00:00:00", time()));
             $e = strtotime(date("Y-m-d 23:59:59", time()));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }elseif ($name == 'upId') {
+            $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
             $s = strtotime(date("Y-m-d H:00:00", time()));
             $e = strtotime(date("Y-m-d H:59:59", time()));
@@ -236,6 +239,10 @@ class PushData extends Common
                         if ($count2 > 0) {
                             $def_k = $v_k + 1;
                             $title = explode("$", $v_v)[0] ?? $def_k;
+                            $count3 = substr_count($title, '特辑');
+                            if ($count3 > 0) {
+                                continue;
+                            }
                             if ($v['type_id_1'] == 0) {
                                 $v['type_id_1'] = getTypePid($v['type_id']);
                             }
@@ -249,7 +256,9 @@ class PushData extends Common
                                 $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                             }
                         }
-                        $collect_filter[$vv][$new_v_k_] = $v_v;
+                        if (!isset($collect_filter[$vv][$new_v_k_])) {
+                            $collect_filter[$vv][$new_v_k_] = $v_v;
+                        }
                     }
                 }
             }
