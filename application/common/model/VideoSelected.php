@@ -22,6 +22,10 @@ class VideoSelected extends Base
 
     public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0)
     {
+
+        if (empty($whereOr) && empty($where['where_a']) && empty($where['where_b'])) {
+            return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>[]];
+        }
         $video_domain = Db::table('video_domain')->where('type', 2)->find();
         $video_examine = Db::table('video_examine')->column(null,'id');
         if (!is_array($where)) {
@@ -44,12 +48,17 @@ class VideoSelected extends Base
 
         $total = Db::name('VideoSelected')
                     ->alias( 'a' )
-                    ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
+                    ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
+                    ->where( $where['where_a'] )->limit($limit_str)->count();
         $videos = Db::name('VideoSelected')
                 ->alias( 'a' )
                 ->field( $field_a )
+                ->where(function ($query) use ($whereOr) {
+                    $query->whereOr( $whereOr );
+                })
                 ->where( $where['where_a'] )
-                ->whereOr( $whereOr )
                 ->order( $order )->limit( $limit_str )->select();
         $list = [];
 
@@ -75,9 +84,13 @@ class VideoSelected extends Base
                 // 电影 总集数默认为1
                 $video_total = 1;
             } else {
-                $video_total = Db::name('vod')
-                ->where( 'vod_id', $v['vod_id'] )
-                ->column('vod_total')[0];
+                if ($v['type_id'] >= 6 && $v['type_id'] <= 12) {
+                    $video_total = 1;
+                } else {
+                    $video_total = Db::name('vod')
+                            ->where( 'vod_id', $v['vod_id'] )
+                            ->column('vod_total')[0];
+                }
             }
 
             $list[] = [
