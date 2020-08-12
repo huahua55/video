@@ -46,6 +46,22 @@
 
         </tbody>
     </table>
+    <table class="layui-table" >
+        <thead>
+        <tr>
+            <th colspan="4" scope="col">视频下载数据【<?php echo date('Y-m-d'); ?>】昨天8:00到今天8:00&nbsp;&nbsp;(总计：<?php echo $video['video'] + $video['video_selected']; ?>)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td width="15%">普通视频</td>
+            <td width="30%"><?php echo $video['video']; ?></td>
+            <td width="15%">精选视频</td>
+            <td width="30%"><?php echo $video['video_selected']; ?></td>
+        </tr>
+
+        </tbody>
+    </table>
 </div>
 {include file="../../../application/admin/view/public/foot" /}
 </body>
