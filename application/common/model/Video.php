@@ -22,6 +22,11 @@ class Video extends Base
 
     public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0)
     {
+
+        if (empty($whereOr) && empty($where['where_a'])) {
+            return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>[]];
+        }
+
         $video_domain = Db::table('video_domain')->find();
         $video_examine = Db::table('video_examine')->column(null,'id');
         if (!is_array($where)) {
@@ -37,12 +42,17 @@ class Video extends Base
 
         $total = Db::name('Video')
                     ->alias( 'a' )
-                    ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
+                    ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
+                    ->where( $where['where_a'] )->limit($limit_str)->count();
         $videos = Db::name('Video')
                 ->alias( 'a' )
                 ->field( $field_a )
+                ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
                 ->where( $where['where_a'] )
-                ->whereOr( $whereOr )
                 ->order( $order )->limit( $limit_str )->select();
         $list = [];
 

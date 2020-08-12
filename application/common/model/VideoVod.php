@@ -20,6 +20,9 @@ class videoVod extends Base {
 
     public function listData($whereOr =[],$where,$order,$page=1,$limit=20,$start=0)
     {
+        if (empty($where) && empty($whereOr)) {
+            return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>[]];
+        }
         // log::write('点击事件'.msectime());
 
         // log::write('域名表开始--'.msectime());
@@ -43,14 +46,18 @@ class videoVod extends Base {
 
         $total = Db::table('video_vod')
                     ->alias('b')
+                    ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
                     ->where( $where )
-                    ->whereOr( $whereOr )
                     ->group('b.vod_id')->count();
 
         $video_vods = Db::table('video_vod')
                     ->alias('b')
                     ->field( $field_video_vod_1 )
-                    ->whereOr( $whereOr )
+                    ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
                     ->where( $where )
                     ->group('b.vod_id')
                     ->order( $order )->limit( $limit_str )->select();
