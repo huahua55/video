@@ -662,40 +662,55 @@ class Collect extends Base
                             $query->where($qWhere1)->whereOr($qWhere12);
                         })->find();
                     }
-
+echo '$info的vod_id数据'.'<br>';
+var_dump($info['vod_id']);// 确定是否存在比较的字段
+echo '<br>';
+echo '$v的数据'.'<br>';
+var_dump($v);// 确定是否存在比较的字段
+echo '<br>';
+                    $new_check_data['vod_content'] = $v['vod_content'];
+                    $new_check_data['vod_blurb'] = $v['vod_blurb'];
+                    $new_check_data['vod_actor'] = $v['vod_actor'];
+                    $new_check_data['vod_director'] = $v['vod_director'];
+                    $new_check_data['type_id'] = $v['type_id'];
+                    $new_check_data['vod_play_url'] = $v['vod_play_url'];
                     if ( empty($info) ) {
                         // 根据vod_name获取数据
                         $vod_sec_where['vod_name'] = $v['vod_name'];
                         $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
+                        echo '$vod_sec_info的数据::' . '<br>';
+                        var_dump($vod_sec_info);// 确定是否存在比较的字段
+                        echo '<br>';
                         if (!empty($vod_sec_info)) {
                             foreach ($vod_sec_info as $key => $value) {
-                                // 校验视频内容百分比
-                                if (!empty($value['vod_content']) && !empty($v['vod_content'])) {
-                                    $check_vod_content_rade = self::_checkVodContentRade($value['vod_content'], $v['vod_content']);
-                                    if ( $check_vod_content_rade > 30) {
-                                        // 视频详情百分比大于30, 走更新操作
-                                        $des = '数据详情百分比大于30，更新。';
-                                        $info = $vod_sec_info[$key];
-                                        break;
-                                    }
-                                } else if (empty($value['vod_content']) && !empty($v['vod_content'])) {
-                                    // 简介比
-                                    if (!empty($value['vod_blurb']) && !empty($v['vod_blurb'])) {
-                                        $check_vod_blurb_rade = self::_checkVodContentRade($value['vod_blurb'], $v['vod_blurb']);
-                                        if ( $check_vod_blurb_rade > 30) {
-                                            // 视频详情百分比大于30, 走更新操作
-                                            $des = '数据简介百分比大于30，更新。';
-                                            $info = $vod_sec_info[$key];
-                                            break;
-                                        }
-                                    }
-                                } else {
-
+                                $old_check_data['vod_content'] = $value['vod_content'];
+                                $old_check_data['vod_blurb'] = $value['vod_blurb'];
+                                $old_check_data['vod_actor'] = $value['vod_actor'];
+                                $old_check_data['vod_director'] = $value['vod_director'];
+                                $old_check_data['type_id'] = $value['type_id'];
+                                $old_check_data['vod_play_url'] = $value['vod_play_url'];
+                                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                                if ($check_vod_rade) {
+                                    // 更新
+                                    $info = $vod_sec_info[$key];
+                                    break;
                                 }
                             }
                         }
+                    } else {
+                        $old_check_data['vod_content'] = $info['vod_content'];
+                        $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                        $old_check_data['vod_actor'] = $info['vod_actor'];
+                        $old_check_data['vod_director'] = $info['vod_director'];
+                        $old_check_data['type_id'] = $info['type_id'];
+                        $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                        $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                        if (!$check_vod_rade) {
+                            // 添加
+                            $info = '';
+                        }
                     }
-
+die;
                     if (!$info) {
                         if ($param['opt'] == 2) {
                             $des = '数据操作没有勾选新增，跳过。';
@@ -2206,6 +2221,88 @@ class Collect extends Base
         $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($old_content)), mac_trim_all(mac_characters_format($new_content))) * 100;
 
         return $rade;
+    }
+
+    /**
+     * 视频相似度比较
+     * @param  [type] $old_check_data [description]
+     * @param  [type] $new_check_data [description]
+     * @return [type]                 [description]
+     */
+    private function _checkVodRade( $old_check_data, $new_check_data ){
+        $check_vod_content_rade = 0;
+        $check_vod_blurb_rade = 0;
+        $vod_actor_rade = 0;
+        $vod_director_rade = 0;
+        $type_id_is_eq = false;
+        // 校验视频内容百分比
+        if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
+            $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
+        } 
+        // 简介比
+        if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
+            $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
+        }
+        // 主演比
+        if (!empty($old_check_data['vod_actor']) && !empty($new_check_data['vod_actor'])) {
+            $vod_actor_rade = mac_intersect(mac_trim_all($old_check_data['vod_actor']), mac_trim_all($new_check_data['vod_actor']));
+        }
+        // 导演比
+        if (!empty($old_check_data['vod_director']) && !empty($new_check_data['vod_director'])) {
+             $vod_director_rade = mac_intersect(mac_trim_all($old_check_data['vod_director']), mac_trim_all($new_check_data['vod_director']));
+        }
+        // 类型比
+        if ($old_check_data['type_id'] == $new_check_data['type_id']) {
+            $type_id_is_eq = true;
+        };
+
+        $condition_str = '';
+
+        if ($check_vod_content_rade > 0){
+            $condition_str .= $check_vod_content_rade . ' > 50' . ' && ';
+        }
+        if ($check_vod_blurb_rade > 0){
+            $condition_str .= $check_vod_blurb_rade . ' > 50' . ' && ';
+        }
+        if ($vod_actor_rade > 0){
+            $condition_str .= $vod_actor_rade . ' > 85' . ' && ';
+        }
+        if ($vod_director_rade > 0){
+            $condition_str .= $vod_director_rade . ' > 85' . ' && ';
+        }
+        if (empty($condition_str)) {
+            return false;
+        }
+        $condition_str .= $type_id_is_eq . ';';
+        echo $condition_str . '<br/>';
+        $condition = eval('return ' . $condition_str);
+        
+        if ( $condition ){
+            echo '正确'. '<br/>';
+        } else {
+            echo '错误'. '<br/>';
+        }
+        if ( $condition ){
+            return true;
+        } else {
+            if (!empty($old_check_data['vod_play_url']) && !empty($new_check_data['vod_play_url'])) {
+                // 链接比
+                $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
+                $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
+                foreach ($new_play_url as $v) {
+                    $new_play_url_arr = implode(',', explode('#', $v));
+                    foreach ($old_play_url as $v1) {
+                        $old_play_url_arr = implode(',', explode('#', $v1));
+                        $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
+                        if ($play_url_rade >= 80) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
     }
 
 }
