@@ -2942,13 +2942,13 @@ function build_url_query($param, $static = false)
  * @return [type]          [description]
  */
 function get_type_pid_type_id( $type_id ){
-    if ($type_id >= 6 and $type_id <= 12){
+    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1){
         $type_pid = 1;
-    } else if (($type_id >= 13 and $type_id <= 16) or $type_id == 24){
+    } else if (($type_id >= 13 &&  $type_id <= 16) || $type_id == 24 || $type_id == 2){
         $type_pid = 2;
-    } else if ($type_id >= 19 and $type_id <= 22){
+    } else if ($type_id >= 19 && $type_id <= 22){
         $type_pid = 4;
-    } else if ($type_id >= 25 and $type_id <= 28){
+    } else if (($type_id >= 25 && $type_id <= 28) || $type_id == 3){
         $type_pid = 3;
     } else if ($type_id == 4){
         $type_pid = 4;
