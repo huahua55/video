@@ -410,6 +410,10 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+                if (empty($v['vod_actor']) && empty($v['vod_director'])) {
+                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                    continue;
+                }
                 $color = 'red';
                 $des = '';
                 $msg = '';
@@ -674,37 +678,28 @@ class Collect extends Base
                     $new_check_data['type_id_1'] = $v['type_id_1'];
                     if ( empty($info) ) {
                         // 根据vod_name获取数据
-                        $vod_sec_where['vod_name'] = $v['vod_name'];
-                        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
-                        if (!empty($vod_sec_info)) {
-                            foreach ($vod_sec_info as $key => $value) {
-                                $old_check_data['vod_content'] = $value['vod_content'];
-                                $old_check_data['vod_blurb'] = $value['vod_blurb'];
-                                $old_check_data['vod_actor'] = $value['vod_actor'];
-                                $old_check_data['vod_director'] = $value['vod_director'];
-                                $old_check_data['type_id'] = $value['type_id'];
-                                $old_check_data['vod_play_url'] = $value['vod_play_url'];
-                                $old_check_data['type_id_1'] = $value['type_id_1'];
-                                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                                if ($check_vod_rade) {
-                                    // 更新
-                                    $info = $vod_sec_info[$key];
-                                    break;
-                                }
-                            }
-                        }
+                        $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                     } else {
-                        $old_check_data['vod_content'] = $info['vod_content'];
-                        $old_check_data['vod_blurb'] = $info['vod_blurb'];
-                        $old_check_data['vod_actor'] = $info['vod_actor'];
-                        $old_check_data['vod_director'] = $info['vod_director'];
-                        $old_check_data['type_id'] = $info['type_id'];
-                        $old_check_data['vod_play_url'] = $info['vod_play_url'];
-                        $old_check_data['type_id_1'] = $info['type_id_1'];
-                        $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                        if (!$check_vod_rade) {
-                            // 添加
-                            $info = '';
+                        if ( empty($info['vod_content']) &&
+                            empty($info['vod_blurb']) &&
+                            empty($info['vod_actor']) &&
+                            empty($info['vod_director'])
+                         ) {
+                            // 考虑内容、简介、导演、演员为空的情况
+                            $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                        } else {
+                            $old_check_data['vod_content'] = $info['vod_content'];
+                            $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                            $old_check_data['vod_actor'] = $info['vod_actor'];
+                            $old_check_data['vod_director'] = $info['vod_director'];
+                            $old_check_data['type_id'] = $info['type_id'];
+                            $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                            $old_check_data['type_id_1'] = $info['type_id_1'];
+                            $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                            if (!$check_vod_rade) {
+                                // 添加
+                                $info = '';
+                            }
                         }
                     }
 
@@ -2264,8 +2259,8 @@ class Collect extends Base
         if ( (
             $check_vod_content_rade > 50 ||
             $check_vod_blurb_rade > 50 ||
-            $vod_actor_count > 1 ||
-            $vod_director_count > 1 
+            $vod_actor_count >= 1 ||
+            $vod_director_count >= 1 
         ) && ($old_type_pid == $new_type_pid)){
             return true;
         } else {
@@ -2299,5 +2294,35 @@ class Collect extends Base
         $array2 = array_filter(explode(',', $str2));
         $count = array_intersect($array1, $array2);
         return count( $count );
+    }
+
+    /**
+     * 根据vod_name获取vod数据
+     * @param  [type] $vod_name [description]
+     * @return [type]           [description]
+     */
+    private function _getVodByVodName($vod_name, $new_check_data)
+    {
+        $info = '';
+        $vod_sec_where['vod_name'] = $vod_name;
+        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
+        if (!empty($vod_sec_info)) {
+            foreach ($vod_sec_info as $key => $value) {
+                $old_check_data['vod_content'] = $value['vod_content'];
+                $old_check_data['vod_blurb'] = $value['vod_blurb'];
+                $old_check_data['vod_actor'] = $value['vod_actor'];
+                $old_check_data['vod_director'] = $value['vod_director'];
+                $old_check_data['type_id'] = $value['type_id'];
+                $old_check_data['vod_play_url'] = $value['vod_play_url'];
+                $old_check_data['type_id_1'] = $value['type_id_1'];
+                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                if ($check_vod_rade) {
+                    // 更新
+                    $info = $vod_sec_info[$key];
+                    break;
+                }
+            }
+        }
+        return $info;
     }
 }
