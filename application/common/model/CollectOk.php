@@ -2338,7 +2338,7 @@ class CollectOk extends Base
     private function _logWrite($log_content){
         $dir = LOG_PATH .'collect'. DS;
         if (!file_exists($dir)){
-            mkdir ($dir,0777,true);
+            mkdir($dir,0777,true);
         }
         \think\Log::init([
             'type' => \think\Env::get('log.type', 'test'), 
