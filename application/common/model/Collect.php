@@ -410,7 +410,9 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
-                if (empty($v['vod_actor']) && empty($v['vod_director'])) {
+                $filter_vod_actor = self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_actor']));
+                $filter_vod_director =  self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_director']));
+                if (empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
                     // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
                     continue;
                 }
@@ -676,6 +678,7 @@ class Collect extends Base
                     $new_check_data['type_id'] = $v['type_id'];
                     $new_check_data['vod_play_url'] = $v['vod_play_url'];
                     $new_check_data['type_id_1'] = $v['type_id_1'];
+                    self::_logWrite('视频名称::' . $v['vod_name']);
                     if ( empty($info) ) {
                         self::_logWrite("未查询到视频信息::" . $v['vod_name']);
                         // 根据vod_name获取数据
@@ -2229,7 +2232,7 @@ class Collect extends Base
         $check_vod_blurb_rade = 0;
         $vod_actor_count = 0;
         $vod_director_count = 0;
-        $type_id_is_eq = 0;
+        $vod_play_url_rade = 0;
         // 校验视频内容百分比
         if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
             $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
@@ -2259,37 +2262,52 @@ class Collect extends Base
         } else {
             $new_type_pid = $new_check_data['type_id_1'];
         }
-        self::_logWrite("视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . '类型pid:' . $old_type_pid . '-' . $new_type_pid . '类型:' . $old_check_data['type_id'] . '-' . $new_check_data['type_id']);
-        if ( (
-            $check_vod_content_rade > 50 ||
-            $check_vod_blurb_rade > 50 ||
-            $vod_actor_count >= 1 ||
-            $vod_director_count >= 1 
-        ) && ($old_type_pid == $new_type_pid)){
-            return true;
-        } else {
-            if (!empty($old_check_data['vod_play_url']) && 
-                !empty($new_check_data['vod_play_url']) &&
-                ($old_type_pid == $new_type_pid)
-            ) {
-                // 链接比
-                $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
-                $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
-                foreach ($new_play_url as $v) {
-                    $new_play_url_arr = implode(',', explode('#', $v));
-                    foreach ($old_play_url as $v1) {
-                        $old_play_url_arr = implode(',', explode('#', $v1));
-                        $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
-                        self::_logWrite("视频链接相似度：：" . $play_url_rade);
-                        if ($play_url_rade >= 80) {
-                            return true;
-                        }
+
+        if (!empty($old_check_data['vod_play_url']) && !empty($new_check_data['vod_play_url'])) {
+            // 链接比
+            $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
+            $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
+            foreach ($new_play_url as $v) {
+                $new_play_url_arr = implode(',', explode('#', $v));
+                foreach ($old_play_url as $v1) {
+                    $old_play_url_arr = implode(',', explode('#', $v1));
+                    $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
+                    if ($play_url_rade >= 80) {
+                        $vod_play_url_rade = $play_url_rade;
+                        break;
                     }
                 }
             }
-            
+        }
+
+        $condition = [];
+        if ($check_vod_content_rade >= 50) {
+            $condition['check_vod_content_rade'] = $check_vod_content_rade;
+        }
+        if ($check_vod_blurb_rade >= 50) {
+            $condition['check_vod_blurb_rade'] = $check_vod_blurb_rade;
+        }
+        if ($vod_actor_count >= 1) {
+            $condition['vod_actor_count'] = $vod_actor_count;
+        }
+        if ($vod_director_count >= 1) {
+            $condition['vod_director_count'] = $vod_director_count;
+        }
+        if ($vod_play_url_rade >= 80) {
+            $condition['vod_play_url_rade'] = $vod_play_url_rade;
+        }
+        if ($old_type_pid == $new_type_pid) {
+            $condition['type_pid_eq'] = 1;
+        }
+
+        self::_logWrite("视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
+
+        if ( count($condition) >= 2 ){
+            return true;
+        } else {
             return false;
         }
+        
     }
 
     //交集相似度
