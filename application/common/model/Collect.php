@@ -677,11 +677,11 @@ class Collect extends Base
                     $new_check_data['vod_play_url'] = $v['vod_play_url'];
                     $new_check_data['type_id_1'] = $v['type_id_1'];
                     if ( empty($info) ) {
-                        mac_echo("未查询到视频信息::" . $v['vod_name']);
+                        self::_logWrite("未查询到视频信息::" . $v['vod_name']);
                         // 根据vod_name获取数据
                         $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                     } else {
-                        mac_echo("数据库查询到的视频id：：" . $info['vod_id']);
+                        self::_logWrite("数据库查询到的视频id：：" . $info['vod_id']);
                         if ( empty($info['vod_content']) &&
                             empty($info['vod_blurb']) &&
                             empty($info['vod_actor']) &&
@@ -762,7 +762,7 @@ class Collect extends Base
                             $des = '新加入库，成功ok。';
                         }
                     } else {
-                        mac_echo("需要处理的视频id：：" . $info['vod_id']);
+                        self::_logWrite("需要处理的视频id：：" . $info['vod_id']);
                         if (empty($config['uprule'])) {
                             $des = '没有设置任何二次更新项目，跳过。';
                         } elseif ($info['vod_lock'] == 1) {
@@ -2259,7 +2259,7 @@ class Collect extends Base
         } else {
             $new_type_pid = $new_check_data['type_id_1'];
         }
-        mac_echo("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . '类型pid:' . $old_type_pid . '-' . $new_type_pid . '类型:' . $old_check_data['type_id'] . '-' . $new_check_data['type_id']);
+        self::_logWrite("视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . '类型pid:' . $old_type_pid . '-' . $new_type_pid . '类型:' . $old_check_data['type_id'] . '-' . $new_check_data['type_id']);
         if ( (
             $check_vod_content_rade > 50 ||
             $check_vod_blurb_rade > 50 ||
@@ -2280,7 +2280,7 @@ class Collect extends Base
                     foreach ($old_play_url as $v1) {
                         $old_play_url_arr = implode(',', explode('#', $v1));
                         $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
-                        mac_echo("视频链接相似度：：" . $play_url_rade);
+                        self::_logWrite("视频链接相似度：：" . $play_url_rade);
                         if ($play_url_rade >= 80) {
                             return true;
                         }
@@ -2329,5 +2329,19 @@ class Collect extends Base
             }
         }
         return $info;
+    }
+
+    /**
+     * 重新定义日志文件路径存储采集比较信息
+     * @param  [type] $log_content [description]
+     * @return [type]              [description]
+     */
+    private function _logWrite($log_content){
+        \think\Log::init([
+            'type' => \think\Env::get('log.type', 'test'), 
+            'path' => LOG_PATH .'collect'. DS, 
+            'level' => ['info'],
+            'max_files' => 30]);
+        \think\Log::info($log_content);
     }
 }
