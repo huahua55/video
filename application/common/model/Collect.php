@@ -410,6 +410,10 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+                if (empty($v['vod_actor']) && empty($v['vod_director'])) {
+                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                    continue;
+                }
                 $color = 'red';
                 $des = '';
                 $msg = '';
@@ -517,6 +521,8 @@ class Collect extends Base
                     if (empty($v['vod_blurb'])) {
                         $v['vod_blurb'] = strip_tags($v['vod_content']);
                     }
+
+                    $v['vod_content'] = strip_tags($v['vod_content']);
 
                     $where = [];
                     $where['vod_name'] = $v['vod_name'];
@@ -663,35 +669,38 @@ class Collect extends Base
                         })->find();
                     }
 
+                    $new_check_data['vod_content'] = $v['vod_content'];
+                    $new_check_data['vod_blurb'] = $v['vod_blurb'];
+                    $new_check_data['vod_actor'] = $v['vod_actor'];
+                    $new_check_data['vod_director'] = $v['vod_director'];
+                    $new_check_data['type_id'] = $v['type_id'];
+                    $new_check_data['vod_play_url'] = $v['vod_play_url'];
+                    $new_check_data['type_id_1'] = $v['type_id_1'];
                     if ( empty($info) ) {
+                        mac_echo("未查询到视频信息::" . $v['vod_name']);
                         // 根据vod_name获取数据
-                        $vod_sec_where['vod_name'] = $v['vod_name'];
-                        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
-                        if (!empty($vod_sec_info)) {
-                            foreach ($vod_sec_info as $key => $value) {
-                                // 校验视频内容百分比
-                                if (!empty($value['vod_content']) && !empty($v['vod_content'])) {
-                                    $check_vod_content_rade = self::_checkVodContentRade($value['vod_content'], $v['vod_content']);
-                                    if ( $check_vod_content_rade > 30) {
-                                        // 视频详情百分比大于30, 走更新操作
-                                        $des = '数据详情百分比大于30，更新。';
-                                        $info = $vod_sec_info[$key];
-                                        break;
-                                    }
-                                } else if (empty($value['vod_content']) && !empty($v['vod_content'])) {
-                                    // 简介比
-                                    if (!empty($value['vod_blurb']) && !empty($v['vod_blurb'])) {
-                                        $check_vod_blurb_rade = self::_checkVodContentRade($value['vod_blurb'], $v['vod_blurb']);
-                                        if ( $check_vod_blurb_rade > 30) {
-                                            // 视频详情百分比大于30, 走更新操作
-                                            $des = '数据简介百分比大于30，更新。';
-                                            $info = $vod_sec_info[$key];
-                                            break;
-                                        }
-                                    }
-                                } else {
-
-                                }
+                        $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                    } else {
+                        mac_echo("数据库查询到的视频id：：" . $info['vod_id']);
+                        if ( empty($info['vod_content']) &&
+                            empty($info['vod_blurb']) &&
+                            empty($info['vod_actor']) &&
+                            empty($info['vod_director'])
+                         ) {
+                            // 考虑内容、简介、导演、演员为空的情况
+                            $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                        } else {
+                            $old_check_data['vod_content'] = $info['vod_content'];
+                            $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                            $old_check_data['vod_actor'] = $info['vod_actor'];
+                            $old_check_data['vod_director'] = $info['vod_director'];
+                            $old_check_data['type_id'] = $info['type_id'];
+                            $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                            $old_check_data['type_id_1'] = $info['type_id_1'];
+                            $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                            if (!$check_vod_rade) {
+                                // 添加
+                                $info = '';
                             }
                         }
                     }
@@ -753,6 +762,7 @@ class Collect extends Base
                             $des = '新加入库，成功ok。';
                         }
                     } else {
+                        mac_echo("需要处理的视频id：：" . $info['vod_id']);
                         if (empty($config['uprule'])) {
                             $des = '没有设置任何二次更新项目，跳过。';
                         } elseif ($info['vod_lock'] == 1) {
@@ -2208,4 +2218,116 @@ class Collect extends Base
         return $rade;
     }
 
+    /**
+     * 视频相似度比较
+     * @param  [type] $old_check_data [description]
+     * @param  [type] $new_check_data [description]
+     * @return [type]                 [description]
+     */
+    private function _checkVodRade( $old_check_data, $new_check_data ){
+        $check_vod_content_rade = 0;
+        $check_vod_blurb_rade = 0;
+        $vod_actor_count = 0;
+        $vod_director_count = 0;
+        $type_id_is_eq = 0;
+        // 校验视频内容百分比
+        if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
+            $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
+        } 
+        // 简介比
+        if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
+            $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
+        }
+        // 主演比
+        if (!empty($old_check_data['vod_actor']) && !empty($new_check_data['vod_actor'])) {
+            $vod_actor_count = self::_arrayIntersectCount(mac_trim_all($old_check_data['vod_actor']), mac_trim_all($new_check_data['vod_actor']));
+        }
+        // 导演比
+        if (!empty($old_check_data['vod_director']) && !empty($new_check_data['vod_director'])) {
+            $vod_director_count = self::_arrayIntersectCount(mac_trim_all($old_check_data['vod_director']), mac_trim_all($new_check_data['vod_director']));
+        }
+
+        // 类型比
+        if ($old_check_data['type_id_1'] == 0) {
+            $old_type_pid = get_type_pid_type_id($old_check_data['type_id']);
+        } else {
+            $old_type_pid = $old_check_data['type_id_1'];
+        }
+
+        if ($new_check_data['type_id_1'] == 0) {
+            $new_type_pid = get_type_pid_type_id($new_check_data['type_id']);
+        } else {
+            $new_type_pid = $new_check_data['type_id_1'];
+        }
+        mac_echo("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . '类型pid:' . $old_type_pid . '-' . $new_type_pid . '类型:' . $old_check_data['type_id'] . '-' . $new_check_data['type_id']);
+        if ( (
+            $check_vod_content_rade > 50 ||
+            $check_vod_blurb_rade > 50 ||
+            $vod_actor_count >= 1 ||
+            $vod_director_count >= 1 
+        ) && ($old_type_pid == $new_type_pid)){
+            return true;
+        } else {
+            if (!empty($old_check_data['vod_play_url']) && 
+                !empty($new_check_data['vod_play_url']) &&
+                ($old_type_pid == $new_type_pid)
+            ) {
+                // 链接比
+                $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
+                $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
+                foreach ($new_play_url as $v) {
+                    $new_play_url_arr = implode(',', explode('#', $v));
+                    foreach ($old_play_url as $v1) {
+                        $old_play_url_arr = implode(',', explode('#', $v1));
+                        $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
+                        mac_echo("视频链接相似度：：" . $play_url_rade);
+                        if ($play_url_rade >= 80) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
+    }
+
+    //交集相似度
+    private function _arrayIntersectCount($str1, $str2)
+    {
+        $array1 = array_filter(explode(',', $str1));
+        $array2 = array_filter(explode(',', $str2));
+        $count = array_intersect($array1, $array2);
+        return count( $count );
+    }
+
+    /**
+     * 根据vod_name获取vod数据
+     * @param  [type] $vod_name [description]
+     * @return [type]           [description]
+     */
+    private function _getVodByVodName($vod_name, $new_check_data)
+    {
+        $info = '';
+        $vod_sec_where['vod_name'] = $vod_name;
+        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
+        if (!empty($vod_sec_info)) {
+            foreach ($vod_sec_info as $key => $value) {
+                $old_check_data['vod_content'] = $value['vod_content'];
+                $old_check_data['vod_blurb'] = $value['vod_blurb'];
+                $old_check_data['vod_actor'] = $value['vod_actor'];
+                $old_check_data['vod_director'] = $value['vod_director'];
+                $old_check_data['type_id'] = $value['type_id'];
+                $old_check_data['vod_play_url'] = $value['vod_play_url'];
+                $old_check_data['type_id_1'] = $value['type_id_1'];
+                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                if ($check_vod_rade) {
+                    // 更新
+                    $info = $vod_sec_info[$key];
+                    break;
+                }
+            }
+        }
+        return $info;
+    }
 }

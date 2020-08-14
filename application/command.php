@@ -23,4 +23,5 @@ return [
     'app\crontab\command\CjUpdateTime',//修改视频表更新时间
     'app\crontab\command\UpVideoVod',//修改视频表更新时间
     'app\crontab\command\RecomVodList',//定时修改 推荐短视频
+    'app\crontab\command\CheckVideoCollection',//定时修改 检查视频集是否完整
 ];
