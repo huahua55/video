@@ -196,9 +196,9 @@ class VideoVodOld extends Base
             }
             $param['vod_id'] = $param['rel_ids'];
             $findVod = Db::table('vod')->field('vod_name,type_id,type_id_1')->where(['vod_id' => $param['vod_id']])->find();
-            if (empty($findVod)) {
-                return $this->error('参数错误');
-            }
+//            if (empty($findVod)) {
+//                return $this->error('参数错误');
+//            }
             $title = findTitle($param);
             if (empty($title)) {
                 return $this->error('参数错误1');
