@@ -176,7 +176,7 @@ class VideoVodOld extends Base
 
         if (Request()->isPost()) {
             if (empty($param)) {
-                return $this->error('参数错误');
+                return $this->error('参数错误3');
             }
 
             $count = count(explode(',', $param['rel_ids']));
