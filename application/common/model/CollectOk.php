@@ -678,9 +678,11 @@ class CollectOk extends Base
                     $new_check_data['vod_play_url'] = $v['vod_play_url'];
                     $new_check_data['type_id_1'] = $v['type_id_1'];
                     if ( empty($info) ) {
+                        mac_echo("ok未查询到视频信息::" . $v['vod_name']);
                         // 根据vod_name获取数据
                         $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                     } else {
+                        mac_echo("ok数据库查询到的视频id：：" . $info['vod_id']);
                         if ( empty($info['vod_content']) &&
                             empty($info['vod_blurb']) &&
                             empty($info['vod_actor']) &&
@@ -759,6 +761,7 @@ class CollectOk extends Base
                             $des = '新加入库，成功ok。';
                         }
                     } else {
+                        mac_echo("ok需要处理的视频id：：" . $info['vod_id']);
                         if (empty($config['uprule'])) {
                             $des = '没有设置任何二次更新项目，跳过。';
                         } elseif ($info['vod_lock'] == 1) {
@@ -2223,8 +2226,8 @@ class CollectOk extends Base
     private function _checkVodRade( $old_check_data, $new_check_data ){
         $check_vod_content_rade = 0;
         $check_vod_blurb_rade = 0;
-        $vod_actor_rade = 0;
-        $vod_director_rade = 0;
+        $vod_actor_count = 0;
+        $vod_director_count = 0;
         $type_id_is_eq = 0;
         // 校验视频内容百分比
         if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
@@ -2255,6 +2258,7 @@ class CollectOk extends Base
         } else {
             $new_type_pid = $new_check_data['type_id_1'];
         }
+        mac_echo("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . '类型pid:' . $old_type_pid . '-' . $new_type_pid . '类型:' . $old_check_data['type_id'] . '-' . $new_check_data['type_id']);
         if ( (
             $check_vod_content_rade > 50 ||
             $check_vod_blurb_rade > 50 ||
@@ -2275,6 +2279,7 @@ class CollectOk extends Base
                     foreach ($old_play_url as $v1) {
                         $old_play_url_arr = implode(',', explode('#', $v1));
                         $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
+                        mac_echo("ok视频链接相似度：：" . $play_url_rade);
                         if ($play_url_rade >= 80) {
                             return true;
                         }
