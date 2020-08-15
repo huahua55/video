@@ -6,6 +6,10 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 
 cd /data/www/video/
 
+ps -ef | grep pushData | grep -v grep | awk '{print $2}' | xargs kill -9
+
+sleep 1
+
 a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
 #   echo 1
@@ -40,7 +44,6 @@ else
   else
 #    echo 1
      ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
-     ps -ef | grep pushData | grep -v grep | awk '{print $2}' | xargs kill -9
   fi
   # 不是空的 先不杀死
 fi

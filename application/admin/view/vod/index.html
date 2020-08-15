@@ -244,8 +244,9 @@
                 <td>
                     <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('info?id='.$vo['vod_id'])}" href="javascript:;" title="编辑">编辑</a>
                     <a class="layui-badge-rim j-tr-del" data-href="{:url('del?ids='.$vo['vod_id'])}" href="javascript:;" title="删除">删除</a>
-                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('role/data?select=1&tab=vod&rid='.$vo['vod_id'])}" href="javascript:;" title="角色">角色</a>
-                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('upload?select=1&tab=vod&rid='.$vo['vod_id'])}" href="javascript:;" title="视频上传">上传</a>
+<!--                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('role/data?select=1&tab=vod&rid='.$vo['vod_id'])}" href="javascript:;" title="角色">角色</a>-->
+<!--                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('upload?select=1&tab=vod&rid='.$vo['vod_id'])}" href="javascript:;" title="视频上传">上传</a>-->
+                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('task?select=1&tab=vod&rid='.$vo['vod_id'])}" href="javascript:;" title="视频上传">生成任务</a>
                 </td>
             </tr>
             {/volist}
