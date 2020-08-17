@@ -254,6 +254,8 @@
     var player_select='{volist name="player_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var downer_select='{volist name="downer_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
     var server_select='{volist name="server_list" id="vo"}{if condition="$vo.status eq '1'"}<option value="{$vo.from}">{$vo.show}</option>{/if}{/volist}';
+    // 图片域名
+    var video_img_domain = '{$info.video_img_domain}';
 
     layui.use(['form','upload', 'layer'], function () {
         // 操作对象
@@ -311,11 +313,17 @@
             var e = window.event || e;
             var imgsrc = $(this).val();
             if(imgsrc.trim()==""){ return; }
-            var left = e.clientX+document.body.scrollLeft+20;
-            var top = e.clientY+document.body.scrollTop+20;
+            var left = e.clientX+document.documentElement.scrollLeft+20;
+            var top = e.clientY+document.documentElement.scrollTop+20;
             $(".showpic").css({left:left,top:top,display:""});
             if(imgsrc.indexOf('://')<0){ imgsrc = ROOT_PATH  + '/' + imgsrc;    } else{ imgsrc = imgsrc.replace('mac:','http:'); }
             $(".showpic_img").attr("src", imgsrc);
+            $(".showpic_img").error(function(){
+              //当图片加载失败时，你要进行的操作
+                if(imgsrc.indexOf('://')<0){ 
+                    $(".showpic_img").attr("src", video_img_domain + imgsrc.substr(1));
+                }
+            });
         },function (e){
             $(".showpic").css("display","none");
         });

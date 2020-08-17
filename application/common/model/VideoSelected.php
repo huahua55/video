@@ -237,6 +237,9 @@ class VideoSelected extends Base
             return ['code' => 1002, 'msg' => '获取数据失败'];
         }
         $info = $info->toArray();
+        // 获取图片域名
+        $video_img_domain = Db::table('video_domain')->field('img_domain')->find();
+        $info['video_img_domain'] = $video_img_domain['img_domain'];
 
         return ['code' => 1, 'msg' => '获取成功', 'info' => $info];
     }
