@@ -255,7 +255,14 @@ class Push extends Base {
         } else {
             if ($v['type_id_1'] == 3) {
                 if ($v['vod_year'] > 2000) {
-                    $new_url['weight'] = '80';
+                    $b_weight = 80 + ( $v['vod_year'] - 2000);
+                    if ($b_weight < 0) {
+                        $b_weight = 0;
+                    }
+                    if ($b_weight > 99) {
+                        $b_weight = 90;
+                    }
+                    $new_url['weight'] = $b_weight;
                 } else {
                     $b_weight = 80 - (2000 - $v['vod_year']);
                     if ($b_weight < 0) {
