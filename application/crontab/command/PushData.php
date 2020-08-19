@@ -133,17 +133,17 @@ class PushData extends Common
         } elseif ($name == 'upSan') {
             $t_time = 3 * (60 * 60 * 24);
             $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
-            $e = strtotime(date("Y-m-d 23:59:59", time()));
+            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         } elseif ($name == 'upDay') {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
-            $e = strtotime(date("Y-m-d 23:59:59", time()));
+            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         } elseif ($name == 'upId') {
             $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
             $s = strtotime(date("Y-m-d H:00:00", time()));
-            $e = strtotime(date("Y-m-d H:59:59", time()));
+            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
         $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
