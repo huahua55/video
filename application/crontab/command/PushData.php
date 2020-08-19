@@ -81,7 +81,7 @@ class PushData extends Common
         } else {
             $s = strtotime(date("Y-m-d H:00:00", time()));
             $e = strtotime(date("Y-m-d H:59:59", time()));
-            $vod_where['a.vod_time'] = ['between', [$s, $e]];
+            $vod_where['a.vod_time_add'] = ['between', [$s, $e]];
         }
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
