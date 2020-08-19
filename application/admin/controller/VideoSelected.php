@@ -353,4 +353,29 @@ class VideoSelected extends Base
         $where['id'] = $id;
         return Db::table('video_selected')->where( $where )->update($data);
     }
+
+    /**
+     * 替换普通视频vod_url
+     * @return [type] [description]
+     *               
+     */
+    public function replaceVideo(){
+        $param = input();
+        $data['code'] = 0;
+        $data['msg'] = 'error';
+        $data['data'] = [];
+
+        $collection_selected_id = $param['id'] ?? '';
+
+        $replace_video = model('video_selected')->replaceVideo( $collection_selected_id );
+
+        if ( $replace_video['code'] > 1 ) {
+            $data['code'] = $replace_video['code'];
+            $data['msg'] = $replace_video['msg'];
+        } else {
+            $data['msg'] = 'succ';
+        }
+
+        return $data;
+    }
 }

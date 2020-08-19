@@ -123,6 +123,12 @@
 <script type="text/html" id="barDemo">
     {{#  if(d.is_master == 1){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {{#  } else { }}
+        {{#  if(d.is_replace == 0){ }}
+        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
+        {{#  } else { }}
+        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
+        {{#  } }}
     {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
@@ -454,6 +460,7 @@
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
+                    
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -482,6 +489,25 @@
                                 email: value
                             });
                             layer.close(index);
+                        });
+                    } else if (obj.event === 'replace') {
+                        var data = {
+                            'id': data.bid
+                        };
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/video_selected/replaceVideo",
+                            data: data,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    obj.tr.find('.replace_vod').addClass('layui-btn-disabled');
+                                    obj.tr.find('.replace_vod').text('已替换');
+                                    layer.msg('替换成功！！！');
+                                } else {
+                                    layer.msg(data.msg);
+                                }
+                            },
                         });
                     }
 
