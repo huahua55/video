@@ -251,7 +251,7 @@
                     });
                 } else {
                     // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
-                    layer.closeAll();
+                    layer.closeAll('loading');
                 }
                 
             });
@@ -343,6 +343,9 @@
                         }
                         ]
                     ], style: 'margin-top:0;',
+                    done: function() {
+                        layer.closeAll('loading');
+                    }
                 });
 
                 //监听排序事件

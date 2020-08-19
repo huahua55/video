@@ -364,6 +364,7 @@
         } else {
             components.$loading.hide();
             components.$empty.show();
+            options.done && options.done();
         }
     };
 
