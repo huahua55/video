@@ -566,10 +566,11 @@ class Vod extends Base
                 $res = Db::name('video_vod')->where($where)->find();
                 if(empty($res)){
                     $push->getWhile($vod_id);
+                    mac_echo($vod_res['vod_name'] .' 添加任务成功 ');
                 }else{
                     $push->getWhile2($vod_id);
+                    mac_echo($vod_res['vod_name'] .' 添加任务生成成功！');
                 }
-                mac_echo($vod_res['vod_name'] .' 任务生成成功');
             }
         }
 

@@ -26,6 +26,7 @@ class Push extends Base {
         while ($is_true) {
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page1 . '-共-' . $pagecount);
+            mac_echo('页码-' . $page1 . '-共-' . $pagecount);
             if (!empty($data)) {
                 if ($page1 > $pagecount) {
                     $is_true = false;
@@ -33,6 +34,7 @@ class Push extends Base {
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
+                        mac_echo('开始处理' . $val['vod_name']);
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
@@ -59,6 +61,7 @@ class Push extends Base {
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page . '-共-' . $pagecount);
+            mac_echo('页码-' . $page . '-共-' . $pagecount);
             if (!empty($data)) {
                 if ($page > $pagecount) {
                     $is_true = false;
@@ -66,6 +69,7 @@ class Push extends Base {
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
+                        mac_echo('开始处理' . $val['b_vod_name']);
                         $val['chren'] = Db::name('video_vod')->where(['vod_id' => $val['b_vod_id']])->select();
                         $chren_data = $this->childrenUnArr($val['chren']);
                         $this->getUrlLike($val, '.m3u8', 'update', $chren_data);
