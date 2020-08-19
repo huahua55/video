@@ -96,7 +96,7 @@ class VideoSelected extends Base
             Db::startTrans();
 
             $video_edit = true;
-            if ( $vedio_info['type_pid'] == 1 ) {
+            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12)) {
                 // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
@@ -201,7 +201,7 @@ class VideoSelected extends Base
      */
     private function _getVedioData( $where )
     {
-        return Db::table('video_selected')->field('type_pid')->where( $where )->find();
+        return Db::table('video_selected')->field('type_pid,type_id')->where( $where )->find();
     }
 
     public function batch()
@@ -287,7 +287,7 @@ class VideoSelected extends Base
             $vedio_info = self::_getVedioData( $video_where );
             $video_is_film_edit = true;
 
-            if ( $vedio_info['type_pid'] == 1 ) {
+            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12) ) {
                 // 是电影
                 $video_edit_data['vod_status'] = $status;
                 $video_edit_data['vod_time'] = time();
