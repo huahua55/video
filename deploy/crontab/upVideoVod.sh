@@ -8,7 +8,7 @@ cd /data/www/video/
 
 ps -ef | grep pushData | grep -v grep | awk '{print $2}' | xargs kill -9
 
-sleep 1
+sleep 3
 
 a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
