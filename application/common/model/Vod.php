@@ -580,6 +580,9 @@ class Vod extends Base {
                 Cache::set($key, $info);
             }
         }
+        // 获取图片域名
+        $video_img_domain = Db::table('video_domain')->field('img_domain')->find();
+        $info['video_img_domain'] = $video_img_domain['img_domain'];
         return ['code'=>1,'msg'=>'获取成功','info'=>$info];
     }
 

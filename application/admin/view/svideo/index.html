@@ -29,44 +29,28 @@
         </div>
         &nbsp; 审核状态：
         <div class="layui-inline">
-            <select class="layui-select" name="b_is_examine">
+            <select class="layui-select" name="is_examine">
                 <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_examine'] eq '0'" }selected {
+                <option value="0" {if condition="$param['is_examine'] eq '0'" }selected {
                 /if}>未审核 </option>
-                <option value="1" {if condition="$param['b_is_examine'] eq '1'" }selected {
+                <option value="1" {if condition="$param['is_examine'] eq '1'" }selected {
                 /if}>审核通过 </option>
-                <option value="2" {if condition="$param['b_is_examine'] eq '2'" }selected {
+                <option value="2" {if condition="$param['is_examine'] eq '2'" }selected {
                 /if}>审核失败 </option>
             </select>
         </div>
         &nbsp; 视频状态：
         <div class="layui-inline">
-            <select class="layui-select" name="vod_status">
+            <select class="layui-select" name="status">
                 <option value="">选择状态</option>
-                <option value="1" {if condition="$param['vod_status'] eq '1'" }selected {
+                <option value="0" {if condition="$param['status'] eq '0'" }selected {
+                /if}>等待自动检测 </option>
+                <option value="1" {if condition="$param['status'] eq '1'" }selected {
                 /if}>正常 </option>
-                <option value="2" {if condition="$param['vod_status'] eq '2'" }selected {
+                <option value="2" {if condition="$param['status'] eq '2'" }selected {
                 /if}>下线 </option>
             </select>
         </div>
-        &nbsp; 上传状态：
-        <div class="layui-inline">
-            <select class="layui-select" name="b_is_sync">
-                <option value="">选择状态</option>
-                <option value="0" {if condition="$param['b_is_sync'] eq '0'" }selected {/if}>未上传 </option>
-                <option value="1" {if condition="$param['b_is_sync'] eq '1'" }selected {/if}>上传成功 </option>
-                <option value="2" {if condition="$param['b_is_sync'] eq '2'" }selected {/if}>上传中 </option>
-                <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {/if}>上传失败</option>
-            </select></div>
-        &nbsp; 视频分类：
-        <div class="layui-inline">
-            <select class="layui-select" name="type_pid">
-                <option value="">选择分类</option>
-                <option value="1" {if condition="$param['type_pid'] eq '1'" }selected {/if}>电影</option>
-                <option value="2" {if condition="$param['type_pid'] eq '2'" }selected {/if}>连续剧</option>
-                <option value="3" {if condition="$param['type_pid'] eq '3'" }selected {/if}>综艺</option>
-                <option value="4" {if condition="$param['type_pid'] eq '4'" }selected {/if}>动漫</option>
-            </select></div>
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
 
@@ -85,91 +69,51 @@
 <input type="hidden" name="search_data" id="search_data" value="">
 
 {include file="../../../application/admin/view/public/foot" /}
-<script type="text/html" id="vod_statusTpl">
+<script type="text/html" id="is_statusTpl">
     {{#  if(d.is_master == 1){ }}
-        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.vod_id}}_true" name="{{d.vod_id}}_{{d.is_master}}" value="1" title="正常" alt="{{d.collection}}" id="{{d.vod_id}}_true" {{# if(d.collection == d.on_line_video){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.vod_id}}_false" name="{{d.vod_id}}_{{d.is_master}}" value="2" title="下线" alt="{{d.collection}}" id="{{d.vod_id}}_false" {{# if(d.collection == d.off_line_video){ }} checked {{# } }} lay-filter="status">
     {{#  } else{ }}
-        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
-    {{#  } }}
-</script>
-<script type="text/html" id="is_downTpl">
-    {{#  if(d.b_is_down == 0){ }}
-    <button class="layui-btn layui-btn-normal layui-btn-xs">未下载</button>
-    {{#  } else if(d.b_is_down == '1'){ }}
-    <button class="layui-btn ayui-btn-sm layui-btn-xs">下载成功</button>
-    {{#  } else if(d.b_is_down == '2'){ }}
-    <button class="layui-btn layui-btn-warm layui-btn-xs">下载中</button>
-    {{#  } else if(d.b_is_down == '3'){ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs">下载失败</button>
-    {{#  } else{ }}
-    <button class="layui-btn layui-btn-disabled layui-btn-xs">异常</button>
-    {{#  } }}
-</script>
-
-<script type="text/html" id="is_sectionTpl">
-    {{#  if(d.b_is_section == 0){ }}
-    <button class="layui-btn layui-btn-normal layui-btn-xs">未切片</button>
-    {{#  } else if(d.b_is_section == '1'){ }}
-    <button class="layui-btn ayui-btn-sm layui-btn-xs">切片成功</button>
-    {{#  } else if(d.b_is_section == '2'){ }}
-    <button class="layui-btn layui-btn-warm layui-btn-xs">切片中</button>
-    {{#  } else{ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs">切片失败</button>
+        <div class="{{d.vod_id}}_{{d.is_master}}">
+            <input type="radio" class="{{d.vod_id}}_true" name="{{d.id}}_{{d.is_master}}" value="1" title="正常" {{# if(d.status == 1){ }} checked {{# } }} lay-filter="status">
+            <input type="radio" class="{{d.vod_id}}_false" name="{{d.id}}_{{d.is_master}}" value="2" title="下线" {{# if(d.status == 2){ }} checked {{# } }} lay-filter="status">
+        </div>
     {{#  } }}
 </script>
 
 <script type="text/html" id="barDemo">
-    {{#  if(d.is_master == 1){ }}
+    {{#  if(d.is_master == 0){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {{#  } else { }}
-        {{#  if(d.is_replace == 0){ }}
-        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
-        {{#  } else { }}
-        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
-        {{#  } }}
     {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
-</script>
-<script type="text/html" id="is_syncTpl">
-    {{#  if(d.b_is_sync == 0){ }}
-    <button class="layui-btn layui-btn-normal layui-btn-xs">未上传</button>
-    {{#  } else if(d.b_is_sync == '1'){ }}
-    <button class="layui-btn ayui-btn-sm layui-btn-xs">上传成功</button>
-    {{#  } else if(d.b_is_sync == '2'){ }}
-    <button class="layui-btn layui-btn-warm layui-btn-xs">上传中</button>
-    {{#  } else{ }}
-    <button class="layui-btn layui-btn-danger layui-btn-xs">上传失败</button>
-    {{#  } }}
 </script>
 
 <script type="text/html" id="is_nameTpl">
     {{#  if(d.vod_url == '' || d.vod_url == null){ }}
-    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
+    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.name}}</button>
     {{#  } else{ }}
     <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.vod_url}}','_blank')">
-        {{d.vod_name}}
+        {{d.name}}
     </button>
     {{#  } }}
 </script>
 <script type="text/html" id="img">
     {{#  if(d.is_master == 0){ }}
-    <div onclick="show_img(this)"><img src="{{ d.vod_pic }}" style="width: 40px; height: 40px;"></div>
+    <div onclick="show_img(this)"><img src="{{ d.pic_url }}" style="width: 40px; height: 40px;"></div>
     {{#  } }}
 </script>
 <script type="text/html" id="is_examineTpl">
     {{#  if(d.is_master == 0){ }}
-        <input type="radio" name="{{d.bid}}" value="0" title="未审核" {{#  if(d.b_is_examine == 0){ }} checked {{# } }} lay-filter="shenhe">
-        <input type="radio" name="{{d.bid}}" value="1" title="审核通过" {{#  if(d.b_is_examine == 1){ }} checked {{# } }} lay-filter="shenhe">
-        <input type="radio" name="{{d.bid}}" value="2" title="审核失败" {{#  if(d.b_is_examine == 2){ }} checked{{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.id}}" value="0" title="未审核" {{#  if(d.is_examine == 0){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.id}}" value="1" title="审核通过" {{#  if(d.is_examine == 1){ }} checked {{# } }} lay-filter="shenhe">
+        <input type="radio" name="{{d.id}}" value="2" title="审核失败" {{#  if(d.is_examine == 2){ }} checked{{# } }} lay-filter="shenhe">
     {{#  } }}
 </script>
-<script type="text/html" id="is_bidTpl">
+<script type="text/html" id="is_vod_idTpl">
     {{#  if(d.is_master == 1){ }}
-    <div class="ew-tree-table-cell-content">{{d.bid.split("_")[0]}}</div>
+    <div class="ew-tree-table-cell-content">{{d.vod_id}}</div>
     {{#  } else { }}
-    <div class="ew-tree-table-cell-content">{{d.bid}}</div>
+    <div class="ew-tree-table-cell-content">{{d.id}}</div>
     {{#  } }}
 </script>
 <!-- <script type="text/html" id="toolbarDemo">
@@ -195,7 +139,7 @@
             }
             
             $.ajax({
-                url :'/admin/video_selected/index1',
+                url :'/admin/svideo/index1',
                 data : data,
                 type : 'get',
                 dataType : 'json',
@@ -208,7 +152,6 @@
                     $('.examine').css('display','none');
 
                     showloading(false);//关闭loading
-
                     test(result_data['data']);
 
                     laypageRender( result_data );
@@ -238,7 +181,7 @@
                         result_data.param.limit = obj.limit;
                         if(!first){
                             $.ajax({
-                                url :'/admin/video_selected/index1',
+                                url :'/admin/svideo/index1',
                                 data : result_data.param,
                                 type : 'get',
                                 dataType : 'json',
@@ -295,13 +238,8 @@
                 // 渲染表格
                 var insTb = treeTable.render({
                     elem: '#test',
-                    // toolbar: '#toolbarDemo',
                     data: result_data,
-                    // height: 'full-200',
-                    // url: '/admin/video/index1',
                     id: 'testReload',
-                    // page: true,
-                    // limit: 20,
                     tree: {
                         iconIndex: 4,
                         isPidData: true,
@@ -320,50 +258,49 @@
                             width: 80,
                             toolbar: '#barDemo'
                         }, {
-                            field: 'video_id',
+                            field: 'vod_id',
                             title: '视频ID',
                             width: 72,
                             sort: true,
+                            templet: '#is_vod_idTpl'
                         }, {
-                            field: 'bid',
-                            title: '集数表ID',
+                            field: 'id',
+                            title: '集ID',
                             width: 72,
                             sort: true,
-                            fixed: true,
-                            templet: '#is_bidTpl'
+                            fixed: true
                         }, {
                             field: 'collection',
                             title: '集',
                             width: 90,
                         }, {
-                            field: 'vod_name',
+                            field: 'name',
                             title: '视频名称',
                             width: 300,
                             templet: '#is_nameTpl'
                         }, {
-                            field: 'vod_pic',
+                            field: 'pic_url',
                             title: '图片',
                             width: 90,
                             templet: '#img'
                         }, {
-                            field: 'm_status',
+                            field: 'status',
                             title: '视频状态',
                             width: 200,
-                            templet: '#vod_statusTpl'
-                        },  {
-                            field: 'm_eid',
+                            templet: '#is_statusTpl'
+                        }, {
+                            field: 'is_examine',
                             title: '审核状态',
                             templet: '#is_examineTpl',
                             width: 380
                         }, {
-                            field: 'm_reasons',
+                            field: 'reasons',
                             title: '审核理由',
                             width: 90
                         }, {
-                            field: 'm_time_auto_up',
-                            title: '时间',
-                            width: 180,
-                            sort: true,
+                            field: 'local_file_describe',
+                            title: '本地文件描述',
+                            width: 380
                         }
                         ]
                     ], style: 'margin-top:0;',
@@ -427,7 +364,7 @@
                     };
                     $.ajax({
                         type: "GET",
-                        url: "/admin/video_selected/updateExamine",
+                        url: "updateExamine",
                         data: data,
                         dataType: "json",
                         success: function (data) {
@@ -453,14 +390,13 @@
                         area: ['100%', '100%'],
                         offset: ['0px', '0px'],
                         shadeClose: true, //开启遮罩关闭
-                        content: '/admin/video_selected/info'
+                        content: '/admin/svideo/info'
                     });
                 });
                 //监听行工具事件
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
-                    
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -468,7 +404,6 @@
                         });
                     } else if (obj.event === 'edit') {
 
-                        // console.log(data)
                         layer.open({
                             type: 2,
                             skin: 'layui-layer-demo', //样式类名
@@ -478,7 +413,7 @@
                             area: ['100%', '100%'],
                             offset: ['0px', '0px'],
                             shadeClose: true, //开启遮罩关闭
-                            content: '/admin/video_selected/info?id=' + data.bid.split('_')[0]
+                            content: '/admin/svideo/info?id=' + data.id
                         });
                     } else if (obj.event === 'edits') {
                         layer.prompt({
@@ -490,67 +425,16 @@
                             });
                             layer.close(index);
                         });
-                    } else if (obj.event === 'replace') {
-                        var data = {
-                            'id': data.bid
-                        };
-                        $.ajax({
-                            type: "GET",
-                            url: "/admin/video_selected/replaceVideo",
-                            data: data,
-                            dataType: "json",
-                            success: function (data) {
-                                if (data.code == 0) {
-                                    obj.tr.find('.replace_vod').addClass('layui-btn-disabled');
-                                    obj.tr.find('.replace_vod').text('已替换');
-                                    layer.msg('替换成功！！！');
-                                } else {
-                                    layer.msg(data.msg);
-                                }
-                            },
-                        });
                     }
 
                 });
 
-                var $ = layui.$,
-                    active = {
-                        reload: function () {
-                            var demoReload = $('#demoReload');
-                            // var b_is_down = $("select[name='b_is_down']").val();
-                            // alert(b_is_down)
-                            // var b_is_section = $("select[name='b_is_section']").val();
-                            // var b_is_sync = $("select[name='b_is_sync']").val();
-                            // var b_code = $("select[name='b_code']").val();
-                            var b_is_examine = $("select[name='b_is_examine']").val();
-                            var vod_status = $("select[name='vod_status']").val();
-                            //执行重载
-                            insTb.reload({
-                                page: {
-                                    curr: 1 //重新从第 1 页开始
-                                },
-                                where: {
-                                    // key: {
-                                    idName: demoReload.val(),
-                                    // b_is_down: b_is_down,
-                                    // b_code: b_code,
-                                    // b_is_section: b_is_section,
-                                    // b_is_sync: b_is_sync,
-                                    b_is_examine: b_is_examine,
-                                    vod_status: vod_status
-                                    // }
-                                }
-                            }, 'data');
-                        }
-                    };
 
                 $('.demoTable .layui-btn').unbind('click').bind('click', function () {
                     var data = {
-                        b_is_examine: $("select[name='b_is_examine']").val(),
-                        vod_status: $("select[name='vod_status']").val(),
-                        b_is_sync: $("select[name='b_is_sync']").val(),
-                        type_pid: $("select[name='type_pid']").val(),
-                        idName: $('#demoReload').val(),
+                        is_examine: $("select[name='is_examine']").val(),
+                        status: $("select[name='status']").val(),
+                        name: $('#demoReload').val(),
                     };
                     $('#search_data').val( JSON.stringify( data ) );
                     init_table( $('#cur_page').val(), $('#cur_limit').val(), JSON.stringify( data ) );
@@ -559,27 +443,52 @@
                 // 监听radio
                 form.on('radio(status)', function (datas) {
                     var name = datas.elem.name.split("_");
-
                     var className = datas.elem.className.split("_");
-
-                    if (className[2] == 1) {
-                        // 电影 同步主集状态
+                    var collection_ids = [];
+                    if (name[1] == 1) {
+                        // 主集按钮  所有集修改
                         layui.$('.' + datas.elem.className).prop("checked","true");
+
+                        layui.$("." + className[0] + '_0').each(function (i) {
+                            var collection_name = layui.$(this).children("." + className[0] + '_true').prop('name').split("_");
+                            collection_ids.push(collection_name[0]);
+                        });
+                    } else {
+                        // 点击集后检查集是否全部选中，如果全部选中则修改主集对应的状态
+                        var is_on_line_count = 0;
+                        var is_off_line_count = 0;
+                        var collection_total = layui.$("input[name='" + className[0] + "_1']").prop('alt');
+                        layui.$("." + datas.elem.parentElement.className).each(function (i) {
+                            if (layui.$(this).find("input[type='radio']:checked").val() == 1) {
+                                is_on_line_count = (is_on_line_count + 1);
+                            } 
+                            if (layui.$(this).find("input[type='radio']:checked").val() == 2) {
+                                is_off_line_count = (is_off_line_count + 1);
+                            }
+                        });
+                        if (collection_total == is_on_line_count) {
+                            layui.$("#" + className[0] + "_true").prop("checked", true);
+                            layui.$("#" + className[0] + "_false").prop("checked", false);
+                        } else if (collection_total == is_off_line_count) {
+                            layui.$("#" + className[0] + "_true").prop("checked", false);
+                            layui.$("#" + className[0] + "_false").prop("checked", true);
+                        } else {
+                            layui.$("#" + className[0] + "_true").prop("checked", false);
+                            layui.$("#" + className[0] + "_false").prop("checked", false);
+                        }
+                        collection_ids.push(name[0]);
                     }
 
-                    if (className[2] != 1 && name[2] == 1) {
-                        // 非电影 且是主集按钮  所有集修改
-                        layui.$('.' + datas.elem.className).prop("checked","true");
-                    }
+                    
 
                     var data = {
-                        'id': name[1],
+                        'id': collection_ids,
                         'status': datas.elem.value,
-                        'is_master': name[2]
+                        'is_master': name[1]
                     };
                     $.ajax({
                         type: "GET",
-                        url: "/admin/video_selected/updateStatus",
+                        url: "updateStatus",
                         data: data,
                         dataType: "json",
                         success: function (data) {
