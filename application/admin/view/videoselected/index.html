@@ -124,9 +124,10 @@
     {{#  if(d.is_master == 1){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     {{#  } else { }}
-        {{#  if(d.is_replace == 0){ }}
+        {{#  if(d.is_replace == 0 && d.b_eid == 0 && d.b_is_examine == 1 && d.status == 1 && d.is_sync == 1){ }}
         &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
-        {{#  } else { }}
+        {{#  } }}
+        {{# if(d.is_replace == 1){ }}
         &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
         {{#  } }}
     {{#  } }}
@@ -275,7 +276,7 @@
                     });
                 } else {
                     // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
-                    layer.closeAll();
+                    layer.closeAll('loading');
                 }
                 
             });
@@ -367,6 +368,9 @@
                         }
                         ]
                     ], style: 'margin-top:0;',
+                    done: function() {
+                        layer.closeAll('loading');
+                    }
                 });
 
                 //监听排序事件
