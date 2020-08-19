@@ -27,7 +27,7 @@ class Svideo extends Base {
         //     return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>[]];
         // }
 
-        $video_domain = Db::table('video_domain')->find();
+        $video_domain = Db::table('video_domain')->where('type', 3)->find();
         $video_examine = Db::table('video_examine')->column(null,'id');
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
@@ -101,13 +101,16 @@ class Svideo extends Base {
                 } else {
                     $pic_url = $v1['pic_url'];
                 }
+                if(!empty($v1['play_url'])){
+                    $play_url = $video_domain['vod_domain'] . $v1['play_url'];
+                }
                 $vod_id = $v1['vod_id'];
                 $v1['pid'] = $v1['vod_id'] . '_' . $v1['vod_id'];
                 $v1['vod_id'] = $vod_id;
                 $v1['is_master'] = 0;
                 $v1['pic_url'] = $pic_url;
                 $v1['name'] = $v1['name'];
-                $v1['vod_url'] = '';
+                $v1['vod_url'] = $play_url;
                 $v1['bid'] = $v1['id'];
                 $v1['reasons'] = isset($video_examine[$v1['e_id']])?$video_examine[$v1['e_id']]:'';
                 $list[] = $v1;

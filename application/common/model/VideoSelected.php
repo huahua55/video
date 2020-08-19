@@ -37,7 +37,7 @@ class VideoSelected extends Base
         
         $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up,a.vod_id';
 
-        $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,b.is_replace';
+        $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,b.is_replace,b.is_sync';
 
         // 获取未上传的video_id
         if ( !empty( $where['where_b'] ) ) {
@@ -410,7 +410,7 @@ class VideoSelected extends Base
                         ->field('id,type_pid,type_id')
                         ->where('vod_id', $selected_video_info['vod_id'])->find();
         if (empty($video_info)) {
-            return ['code' => 1001, 'msg' => '没有关联到视频'];
+            return ['code' => 1001, 'msg' => '没有关联到普通视频'];
         }
 
         $replace_video = self::_replaceVideo($id, $selected_collection_info, $video_info, $selected_video_info);
@@ -447,6 +447,10 @@ class VideoSelected extends Base
             if (empty($video_collection_info)) {
                 // 插入该条数据
                 $get_selected_collection = self::_getSelectedCollection($id, $video_info['id']);
+                if (empty($get_selected_collection)) {
+                    Db::rollback();
+                    return ['code' => 1001, 'msg' => '要插入的视频集不存在'];
+                }
                 $add_video_collection = self::_addVideoCollection($get_selected_collection);
                 $need_edit_video_collection = false;
             }
@@ -455,6 +459,10 @@ class VideoSelected extends Base
             $need_edit_video_collection = false;
             // 8、从精选集表中查询出所有的集插入普通视频集表中
             $get_all_selected_collection = self::_getAllSelectedCollection($selected_collection_info['video_id'], $video_info['id']);
+            if (empty($get_all_selected_collection)) {
+                Db::rollback();
+                return ['code' => 1001, 'msg' => '要插入的所有视频集不存在'];
+            }
             $add_video_collection = self::_addVideoCollection($get_all_selected_collection);
         }
 
