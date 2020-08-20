@@ -412,23 +412,6 @@ class CollectOk extends Base
 
 
             foreach ($data['data'] as $k => $v) {
-                $filter_vod_actor = self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_actor']));
-                $filter_vod_director =  self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_director']));
-                if (empty($v['vod_actor'])) {
-                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
-                    mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
-                    continue;
-                }
-                if (empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
-                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
-                    mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
-                    continue;
-                }
-                if ($filter_vod_actor >= 1 || $filter_vod_director >= 1) {
-                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
-                    mac_echo("主演或者导演数据不详 过滤 请手动采集入库 ");
-                    continue;
-                }
 
                 $color = 'red';
                 $des = '';
@@ -672,18 +655,7 @@ class CollectOk extends Base
                     $v['vod_down_server'] = (string)join('$$$', $cj_down_server_arr);
                     $v['vod_down_note'] = (string)join('$$$', $cj_down_note_arr);
 
-//                p($where);
-                    if ($blend === false) {
-                        $info = model('Vod')->where($where)->find();
-                    } else {
-                        $info = model('Vod')->where($where)->where(function ($query) {
-                            $qWhere1 = [];
-                            $qWhere12 = [];
-                            $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
-                            $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
-                            $query->where($qWhere1)->whereOr($qWhere12);
-                        })->find();
-                    }
+
                     $new_check_data['vod_content'] = $v['vod_content'];
                     $new_check_data['vod_blurb'] = $v['vod_blurb'];
                     $new_check_data['vod_actor'] = $v['vod_actor'];
@@ -691,34 +663,80 @@ class CollectOk extends Base
                     $new_check_data['type_id'] = $v['type_id'];
                     $new_check_data['vod_play_url'] = $v['vod_play_url'];
                     $new_check_data['type_id_1'] = $v['type_id_1'];
-                    self::_logWrite('ok视频名称::' . $v['vod_name']);
-                    if ( empty($info) ) {
-                        self::_logWrite("ok未查询到视频信息::" . $v['vod_name']);
-                        // 根据vod_name获取数据
-                        $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
-                    } else {
-                        self::_logWrite("ok数据库查询到的视频id：：" . $info['vod_id']);
-                        if ( empty($info['vod_content']) &&
-                            empty($info['vod_blurb']) &&
-                            empty($info['vod_actor']) &&
-                            empty($info['vod_director'])
-                         ) {
-                            // 考虑内容、简介、导演、演员为空的情况
+
+
+                    $filter_vod_actor = self::_arrayIntersectCount('未知,内详', $v['vod_actor']);
+                    $filter_vod_director =  self::_arrayIntersectCount('未知,内详', $v['vod_director']);
+                    $check_actor_and_director = [];
+                    if (empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
+                        // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                        $check_actor_and_director = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                        if (empty( $check_actor_and_director )) {
+                            // 库中不存在  则不再入库
+                            if (empty($v['vod_actor'])) {
+                                mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
+                            }
+                            if (empty($v['vod_director'])) {
+                                mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
+                            }
+                            if ($filter_vod_actor >= 1) {
+                                mac_echo("主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                            }
+                            if ($filter_vod_director >= 1) {
+                                mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                            }
+                            continue;
+                        }
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
+                    }
+
+//                p($where);
+                    if (empty($check_actor_and_director)) { 
+                        if ($blend === false) {
+                            $info = model('Vod')->where($where)->find();
+                        } else {
+                            $info = model('Vod')->where($where)->where(function ($query) {
+                                $qWhere1 = [];
+                                $qWhere12 = [];
+                                $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
+                                $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
+                                $query->where($qWhere1)->whereOr($qWhere12);
+                            })->find();
+                        }
+
+                        self::_logWrite('ok视频名称::' . $v['vod_name']);
+                        if ( empty($info) ) {
+                            self::_logWrite("ok未查询到视频信息::" . $v['vod_name']);
+                            // 根据vod_name获取数据
                             $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                         } else {
-                            $old_check_data['vod_content'] = $info['vod_content'];
-                            $old_check_data['vod_blurb'] = $info['vod_blurb'];
-                            $old_check_data['vod_actor'] = $info['vod_actor'];
-                            $old_check_data['vod_director'] = $info['vod_director'];
-                            $old_check_data['type_id'] = $info['type_id'];
-                            $old_check_data['vod_play_url'] = $info['vod_play_url'];
-                            $old_check_data['type_id_1'] = $info['type_id_1'];
-                            $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                            if (!$check_vod_rade) {
-                                // 添加
-                                $info = '';
+                            self::_logWrite("ok数据库查询到的视频id：：" . $info['vod_id']);
+                            if ( empty($info['vod_content']) &&
+                                empty($info['vod_blurb']) &&
+                                empty($info['vod_actor']) &&
+                                empty($info['vod_director'])
+                             ) {
+                                // 考虑内容、简介、导演、演员为空的情况
+                                $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                            } else {
+                                $old_check_data['vod_content'] = $info['vod_content'];
+                                $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                                $old_check_data['vod_actor'] = $info['vod_actor'];
+                                $old_check_data['vod_director'] = $info['vod_director'];
+                                $old_check_data['type_id'] = $info['type_id'];
+                                $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                                $old_check_data['type_id_1'] = $info['type_id_1'];
+                                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                                if (!$check_vod_rade) {
+                                    // 添加
+                                    $info = '';
+                                }
                             }
                         }
+                    } else {
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . '更新数据');
+                        $info = $check_actor_and_director;
                     }
                     if (!$info) {
                         if ($param['opt'] == 2) {
@@ -2304,7 +2322,7 @@ class CollectOk extends Base
         if ($vod_director_count >= 1) {
             $condition['vod_director_count'] = $vod_director_count;
         }
-        if ($vod_play_url_rade >= 80) {
+        if ($vod_play_url_rade >= 95) {
             $condition['vod_play_url_rade'] = $vod_play_url_rade;
         }
         if ($old_type_pid == $new_type_pid) {
