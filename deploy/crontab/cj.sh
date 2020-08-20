@@ -10,7 +10,7 @@ chown -R www:www ../video
 ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 php think Cj name=cjokzyxs
-sleep 30
+sleep 3
 
 ###卧龙采集
 #php think Cj name=wlzyxs
@@ -35,7 +35,7 @@ sleep 30
 #sleep 30
 ##最大下载
 php think Cj name=zuidacj
-sleep 30
+sleep 1
 ##OK迅雷下载链接
 #php think Cj name=cjokzyxlxs
 #sleep 30
