@@ -52,7 +52,7 @@ class Push extends Base {
         $page = 1;
         $limit = 1;
         $is_true = true;
-        $order = 'a.vod_id asc';
+        $order = 'b.weight desc';
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
@@ -257,27 +257,14 @@ class Push extends Base {
         if ($i != 'i') {
             $new_url['weight'] = $v['b_weight'] ?? '0';
         } else {
-            if ($v['type_id_1'] == 3) {
-                if ($v['vod_year'] > 2000) {
-                    $b_weight = 80 + ( $v['vod_year'] - 2000);
-                    if ($b_weight < 0) {
-                        $b_weight = 0;
-                    }
-                    if ($b_weight > 99) {
-                        $b_weight = 90;
-                    }
-                    $new_url['weight'] = $b_weight;
-                } else {
-                    $b_weight = 80 - (2000 - $v['vod_year']);
-                    if ($b_weight < 0) {
-                        $b_weight = 0;
-                    }
-                    if ($b_weight > 99) {
-                        $b_weight = 80;
-                    }
-                    $new_url['weight'] = $b_weight;
-                }
+            $b_weight = 98 - (2020 - $v['vod_year']);
+            if ($b_weight < 0) {
+                $b_weight = 0;
             }
+            if ($b_weight > 99) {
+                $b_weight = 98;
+            }
+            $new_url['weight'] = $b_weight;
         }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';

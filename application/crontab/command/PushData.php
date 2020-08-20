@@ -97,7 +97,7 @@ class PushData extends Common
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
 //            p($this->vodModel->getlastsql());
             log::write('页码-' . $page1 . '-共-' . $pagecount);
-            log::info('页码-'.$page.'-共-插入sql语句：'.$this->vodModel->getlastsql());
+            log::info('页码-' . $page . '-共-插入sql语句：' . $this->vodModel->getlastsql());
             if (!empty($data)) {
                 if ($page1 > $pagecount) {
                     $is_true = false;
@@ -134,17 +134,17 @@ class PushData extends Common
         } elseif ($name == 'upSan') {
             $t_time = 3 * (60 * 60 * 24);
             $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
-            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
+            $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         } elseif ($name == 'upDay') {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
-            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
+            $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         } elseif ($name == 'upId') {
             $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
             $s = strtotime(date("Y-m-d H:00:00", time()));
-            $e = strtotime(date("Y-m-d 00:00:00",strtotime("+1 day")));
+            $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
         $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
@@ -160,7 +160,7 @@ class PushData extends Common
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page . '-共-' . $pagecount);
 //            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
-            log::info('页码-'.$page.'-共-更新sql语句：'.$this->vodModel->getlastsql());
+            log::info('页码-' . $page . '-共-更新sql语句：' . $this->vodModel->getlastsql());
 //            p($pagecount);
             if (!empty($data)) {
                 if ($page > $pagecount) {
@@ -170,7 +170,7 @@ class PushData extends Common
 
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-                        $qii = $qii+ 1;
+                        $qii = $qii + 1;
                         log::info($val['vod_name']);
                         $val['chren'] = $this->videoVodModel->where(['vod_id' => $val['b_vod_id']])->select();
 //                        p($val);
@@ -361,27 +361,14 @@ class PushData extends Common
         if ($i != 'i') {
             $new_url['weight'] = $v['b_weight'] ?? '0';
         } else {
-//            if ($v['type_id_1'] == 3) {
-                if ($v['vod_year'] > 2000) {
-                    $b_weight = 80 + ( $v['vod_year'] - 2000);
-                    if ($b_weight < 0) {
-                        $b_weight = 0;
-                    }
-                    if ($b_weight > 99) {
-                        $b_weight = 90;
-                    }
-                    $new_url['weight'] = $b_weight;
-                } else {
-                    $b_weight = 80 - (2000 - $v['vod_year']);
-                    if ($b_weight < 0) {
-                        $b_weight = 0;
-                    }
-                    if ($b_weight > 99) {
-                        $b_weight = 80;
-                    }
-                    $new_url['weight'] = $b_weight;
+                $b_weight = 98 - (2020 - $v['vod_year']);
+                if ($b_weight < 0) {
+                    $b_weight = 0;
                 }
-//            }
+                if ($b_weight > 99) {
+                    $b_weight = 98;
+                }
+                $new_url['weight'] = $b_weight;
         }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
