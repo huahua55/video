@@ -22,7 +22,13 @@ class Video extends Base
 
     public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0)
     {
+
+        if (empty($whereOr) && empty($where['where_a'])) {
+            return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>[]];
+        }
+
         $video_domain = Db::table('video_domain')->find();
+        $video_selected_domain = Db::table('video_domain')->where('type', 2)->find();
         $video_examine = Db::table('video_examine')->column(null,'id');
         if (!is_array($where)) {
             $where = json_decode($where, true);
@@ -33,16 +39,21 @@ class Video extends Base
         
         $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up';
 
-        $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up';
+        $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,b.is_selected';
 
         $total = Db::name('Video')
                     ->alias( 'a' )
-                    ->whereOr( $whereOr )->where( $where['where_a'] )->limit($limit_str)->count();
+                    ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
+                    ->where( $where['where_a'] )->limit($limit_str)->count();
         $videos = Db::name('Video')
                 ->alias( 'a' )
                 ->field( $field_a )
+                ->where(function ($query) use ($whereOr) {
+                        $query->whereOr( $whereOr );
+                    })
                 ->where( $where['where_a'] )
-                ->whereOr( $whereOr )
                 ->order( $order )->limit( $limit_str )->select();
         $list = [];
 
@@ -63,12 +74,24 @@ class Video extends Base
                 ->where( 'b.video_id', $v['aid'] )
                 ->count();
 
+            // 获取视频总集数
+            if ($v['type_pid'] == 1) {
+                // 电影 总集数默认为1
+                $video_total = 1;
+            } else {
+                if ($v['type_id'] >= 6 && $v['type_id'] <= 12) {
+                    $video_total = 1;
+                } else {
+                    $video_total = $v['vod_total'];
+                }
+            }
+
             $list[] = [
                     'vod_name' => $v['vod_name'],
                     'video_id' => $v['aid'],
                     'bid' => $v['aid'] . '_' . $v['aid'],
                     'is_master' => 1,
-                    'collection' => $video_collection_count,
+                    'collection' => $video_total . '-' . $video_collection_count,
                     'm_reasons' => isset($video_examine[$v['e_id']])?$video_examine[$v['e_id']]:'',
                     'm_time_auto_up' => $v['vod_time_auto_up'],
                     'm_eid' => $v['e_id'],
@@ -102,11 +125,18 @@ class Video extends Base
         
         foreach ($list as $k_list => &$v_list) {
 
-            if (substr_count($v_list['vod_pic'], 'http') == 0) {
+            if (substr_count($v_list['vod_pic'], 'http') == 0 && $v_list['is_selected'] == 0) {
                 $v_list['vod_pic'] = $video_domain['img_domain'] . $v_list['vod_pic'];
             }
-            if(!empty($v_list['vod_url'])){
+            if(!empty($v_list['vod_url']) && $v_list['is_selected'] == 0){
                 $v_list['vod_url'] = $video_domain['vod_domain'] . $v_list['vod_url'];
+            }
+
+            if (substr_count($v_list['vod_pic'], 'http') == 0 && $v_list['is_selected'] == 1) {
+                $v_list['vod_pic'] = $video_selected_domain['img_domain'] . $v_list['vod_pic'];
+            }
+            if(!empty($v_list['vod_url']) && $v_list['is_selected'] == 1){
+                $v_list['vod_url'] = $video_selected_domain['vod_domain'] . $v_list['vod_url'];
             }
         }
 
@@ -206,6 +236,9 @@ class Video extends Base
             return ['code' => 1002, 'msg' => '获取数据失败'];
         }
         $info = $info->toArray();
+        // 获取图片域名
+        $video_img_domain = Db::table('video_domain')->field('img_domain')->find();
+        $info['video_img_domain'] = $video_img_domain['img_domain'];
 
         return ['code' => 1, 'msg' => '获取成功', 'info' => $info];
     }

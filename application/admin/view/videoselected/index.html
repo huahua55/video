@@ -49,6 +49,24 @@
                 /if}>下线 </option>
             </select>
         </div>
+        &nbsp; 上传状态：
+        <div class="layui-inline">
+            <select class="layui-select" name="b_is_sync">
+                <option value="">选择状态</option>
+                <option value="0" {if condition="$param['b_is_sync'] eq '0'" }selected {/if}>未上传 </option>
+                <option value="1" {if condition="$param['b_is_sync'] eq '1'" }selected {/if}>上传成功 </option>
+                <option value="2" {if condition="$param['b_is_sync'] eq '2'" }selected {/if}>上传中 </option>
+                <option value="3" {if condition="$param['b_is_sync'] eq '3'" }selected {/if}>上传失败</option>
+            </select></div>
+        &nbsp; 视频分类：
+        <div class="layui-inline">
+            <select class="layui-select" name="type_pid">
+                <option value="">选择分类</option>
+                <option value="1" {if condition="$param['type_pid'] eq '1'" }selected {/if}>电影</option>
+                <option value="2" {if condition="$param['type_pid'] eq '2'" }selected {/if}>连续剧</option>
+                <option value="3" {if condition="$param['type_pid'] eq '3'" }selected {/if}>综艺</option>
+                <option value="4" {if condition="$param['type_pid'] eq '4'" }selected {/if}>动漫</option>
+            </select></div>
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
 
@@ -105,6 +123,13 @@
 <script type="text/html" id="barDemo">
     {{#  if(d.is_master == 1){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {{#  } else { }}
+        {{#  if(d.is_replace == 0 && d.b_eid == 0 && d.b_is_examine == 1 && d.status == 1 && d.is_sync == 1){ }}
+        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
+        {{#  } }}
+        {{# if(d.is_replace == 1){ }}
+        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
+        {{#  } }}
     {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
@@ -251,7 +276,7 @@
                     });
                 } else {
                     // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
-                    layer.closeAll();
+                    layer.closeAll('loading');
                 }
                 
             });
@@ -343,6 +368,9 @@
                         }
                         ]
                     ], style: 'margin-top:0;',
+                    done: function() {
+                        layer.closeAll('loading');
+                    }
                 });
 
                 //监听排序事件
@@ -436,6 +464,7 @@
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
+                    
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -464,6 +493,25 @@
                                 email: value
                             });
                             layer.close(index);
+                        });
+                    } else if (obj.event === 'replace') {
+                        var data = {
+                            'id': data.bid
+                        };
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/video_selected/replaceVideo",
+                            data: data,
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    obj.tr.find('.replace_vod').addClass('layui-btn-disabled');
+                                    obj.tr.find('.replace_vod').text('已替换');
+                                    layer.msg('替换成功！！！');
+                                } else {
+                                    layer.msg(data.msg);
+                                }
+                            },
                         });
                     }
 
@@ -504,6 +552,8 @@
                     var data = {
                         b_is_examine: $("select[name='b_is_examine']").val(),
                         vod_status: $("select[name='vod_status']").val(),
+                        b_is_sync: $("select[name='b_is_sync']").val(),
+                        type_pid: $("select[name='type_pid']").val(),
                         idName: $('#demoReload').val(),
                     };
                     $('#search_data').val( JSON.stringify( data ) );

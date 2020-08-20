@@ -412,8 +412,19 @@ class Collect extends Base
             foreach ($data['data'] as $k => $v) {
                 $filter_vod_actor = self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_actor']));
                 $filter_vod_director =  self::_arrayIntersectCount('未知,内详', mac_format_text($v['vod_director']));
-                if (empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
+                if (empty($v['vod_actor'])) {
                     // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                    mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
+                    continue;
+                }
+                if (empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
+                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                    mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
+                    continue;
+                }
+                if ($filter_vod_actor >= 1 || $filter_vod_director >= 1) {
+                    // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                    mac_echo("主演或者导演数据不详 过滤 请手动采集入库 ");
                     continue;
                 }
                 $color = 'red';

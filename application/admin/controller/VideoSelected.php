@@ -96,7 +96,7 @@ class VideoSelected extends Base
             Db::startTrans();
 
             $video_edit = true;
-            if ( $vedio_info['type_pid'] == 1 ) {
+            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12)) {
                 // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
@@ -201,7 +201,7 @@ class VideoSelected extends Base
      */
     private function _getVedioData( $where )
     {
-        return Db::table('video_selected')->field('type_pid')->where( $where )->find();
+        return Db::table('video_selected')->field('type_pid,type_id')->where( $where )->find();
     }
 
     public function batch()
@@ -287,7 +287,7 @@ class VideoSelected extends Base
             $vedio_info = self::_getVedioData( $video_where );
             $video_is_film_edit = true;
 
-            if ( $vedio_info['type_pid'] == 1 ) {
+            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12) ) {
                 // 是电影
                 $video_edit_data['vod_status'] = $status;
                 $video_edit_data['vod_time'] = time();
@@ -319,10 +319,11 @@ class VideoSelected extends Base
     private function _filterSearchData( $param='' )
     {
         $where_a = [];
+        $where_b = [];
         $whereOr = [];
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
-            $whereOr['a.vod_name'] = $param['idName'];
+            $whereOr['a.vod_name'] = ['instr', $param['idName']];
             $whereOr['a.id'] = $param['idName'];
         }
         if (isset($param['b_is_examine']) && $param['b_is_examine'] != "") {
@@ -331,8 +332,14 @@ class VideoSelected extends Base
         if (isset($param['vod_status']) && $param['vod_status'] != "") {
             $where_a['a.vod_status'] = $param['vod_status'];
         }
+        if (isset($param['type_pid']) && $param['type_pid'] != "") {
+            $where_a['a.type_pid'] = $param['type_pid'];
+        }
+        if (isset($param['b_is_sync']) && $param['b_is_sync'] != "") {
+            $where_b['b.is_sync'] = $param['b_is_sync'];
+        }
 
-        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a]];
+        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a, 'where_b' => $where_b]];
     }
 
     /**
@@ -345,5 +352,30 @@ class VideoSelected extends Base
         $data['vod_time'] = time();
         $where['id'] = $id;
         return Db::table('video_selected')->where( $where )->update($data);
+    }
+
+    /**
+     * 替换普通视频vod_url
+     * @return [type] [description]
+     *               
+     */
+    public function replaceVideo(){
+        $param = input();
+        $data['code'] = 0;
+        $data['msg'] = 'error';
+        $data['data'] = [];
+
+        $collection_selected_id = $param['id'] ?? '';
+
+        $replace_video = model('video_selected')->replaceVideo( $collection_selected_id );
+
+        if ( $replace_video['code'] > 1 ) {
+            $data['code'] = $replace_video['code'];
+            $data['msg'] = $replace_video['msg'];
+        } else {
+            $data['msg'] = 'succ';
+        }
+
+        return $data;
     }
 }

@@ -1,0 +1,195 @@
+{include file="../../../application/admin/view/public/head" /}
+<script type="text/javascript" src="__STATIC__/js/jquery.jscolor.js"></script>
+{include file="../../../application/admin/view/public/editor" flag="vod_editor"/}
+<div class="page-container p10">
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">基本信息</a></li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">参数：</label>
+                        <div class="layui-input-inline w150">
+                            <select name="type_pid" lay-filter="type_pid">
+                                <option value="">请选择分类</option>
+                                {volist name="type_tree" id="vo"}
+                                {if condition="$vo.type_mid eq 1"}
+                                <option value="{$vo.type_id}" {if condition="$info.type_pid eq $vo.type_id"}selected{/if}>{$vo.type_name}</option>
+                                {/if}
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="status">
+                                <option value="1" {if condition="$info.status eq '1'"}selected{/if}>已审核</option>
+                                <option value="0" {if condition="$info.status eq '0'"}selected{/if}>未审核</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">名称：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.name}" placeholder="请输入" name="name" id="name">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">集：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.collection}" placeholder="" name="collection" id="collection">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主演：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.actor}" placeholder="" name="actor" id="actor">
+                        </div>
+                        <label class="layui-form-label">导演：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.director}" placeholder="" name="director" id="director">
+                        </div>
+                    </div>
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">播放url：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.play_url}" placeholder="请输入播放url" name="play_url" id="play_url">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图片url：</label>
+                        <div class="layui-input-inline w500 upload">
+                            <input type="text" class="layui-input upload-input" style="max-width:100%;" value="{$info.pic_url}" placeholder="" id="pic_url" name="pic_url">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:1,thumb_class:'upload-thumb'}}" id="upload1">上传图片</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">文件名称：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.local_file_name}" placeholder="请输入本地文件名称" name="local_file_name" id="local_file_name">
+                        </div>
+                    </div>
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">文件路径：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.local_file_path}" placeholder="请输入本地文件路径" name="local_file_path" id="local_file_path">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">文件描述：</label>
+                        <div class="layui-input-block">
+                            <textarea name="local_file_describe" cols="" rows="3" class="layui-textarea"  placeholder="请填写本地文件描述" style="height:40px;">{$info.local_file_describe}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    // 图片域名
+    var video_img_domain = '{$info.video_img_domain}';
+    
+    layui.use(['form','upload', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery
+            , upload = layui.upload;;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输视频名称";
+                }
+            },
+            type_pid: function (value) {
+                if (value == "") {
+                    return "请输视频分类";
+                }
+            }
+        });
+
+        $(document).on("click", ".extend", function(){
+            $id = $(this).attr('data-id');
+            $("input[id='"+$id+"']").val($(this).text());
+        });
+
+
+        form.on('select(type_id)', function(data){
+            getExtend(data.value);
+        });
+
+
+        upload.render({
+            elem: '.layui-upload'
+            ,url: "{:url('upload/upload')}?flag=video"
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parent().parent().find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+
+                if(res.data.thumb_class !=''){
+                    $('.'+ res.data.thumb_class).val(res.data.thumb[0].file);
+                }
+            }
+        });
+
+        $('.upload-input').hover(function (e){
+            var e = window.event || e;
+            var imgsrc = $(this).val();
+            if(imgsrc.trim()==""){ return; }
+            var left = e.clientX+document.documentElement.scrollLeft+20;
+            var top = e.clientY+document.documentElement.scrollTop+20;
+            $(".showpic").css({left:left,top:top,display:""});
+            if(imgsrc.indexOf('://')<0){ imgsrc = ROOT_PATH  + '/' + imgsrc;    } else{ imgsrc = imgsrc.replace('mac:','http:'); }
+            $(".showpic_img").attr("src", imgsrc);
+            $(".showpic_img").error(function(){
+              //当图片加载失败时，你要进行的操作
+                if(imgsrc.indexOf('://')<0){ 
+                    $(".showpic_img").attr("src", video_img_domain + imgsrc.substr(1));
+                }
+            });
+        },function (e){
+            $(".showpic").css("display","none");
+        });
+    });
+
+</script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ return array(
         '14' => array("show"=>1,"name" => '轮播配置', 'controller' => 'banner', 'action' => 'index'),
         '15' => array("show"=>1,"name" => '视频解析', 'controller' => 'jx', 'action' => 'index'),
         '16' => array("show"=>1,"name" => '渠道配置', 'controller' => 'channel', 'action' => 'index'),
-        '17' => array("show"=>1,"name" => '推荐短视频', 'controller' => 'Recom', 'action' => 'index'),
+        '17' => array("show"=>1,"name" => '推荐短视频', 'controller' => 'Svideo', 'action' => 'index'),
         '18' => array("show"=>1,"name" => '下载任务管理', 'controller' => 'videoVod', 'action' => 'index'),
         '19' => array("show"=>1,"name" => '视频数据管理', 'controller' => 'video', 'action' => 'index'),
         '20' => array("show"=>1,"name" => '迅雷下载任务-旧版', 'controller' => 'videoVodOld', 'action' => 'index'),
