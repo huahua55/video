@@ -5,20 +5,16 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 
 
 cd /data/www/video/
-
-ps -ef | grep pushData | grep -v grep | awk '{print $2}' | xargs kill -9
-
-sleep 3
-
 a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
 #   echo 1
   #空的
   php think pushData name=i
 else
-#  echo 1
   # 不是空的 先不杀死
   ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
+  sleep 1
+  php think pushData name=i
 fi
 
 sleep 1
@@ -32,7 +28,6 @@ function rand(){
 
 rnd=$(rand 1 2)
 
-
 a=`ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
   #空的
@@ -44,6 +39,8 @@ else
   else
 #    echo 1
      ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
+     sleep 1
+     php think pushData name=up
   fi
   # 不是空的 先不杀死
 fi
