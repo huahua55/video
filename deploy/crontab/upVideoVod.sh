@@ -21,7 +21,7 @@ else
   ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
 fi
 
-sleep 5
+sleep 1
 
 function rand(){
     min=$1

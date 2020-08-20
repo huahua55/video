@@ -40,7 +40,7 @@ class PushData extends Common
     protected function execute(Input $input, Output $output)
     {
 
-
+        log::info('任务表脚本开始');
         set_time_limit(0);
         $output->writeln('获取数据-插入任务表-获取数据开始:init');
         $myparme = $input->getArguments();
@@ -66,6 +66,7 @@ class PushData extends Common
 
     protected function getWhile($name = '')
     {
+        log::info('插入逻辑开始');
         $start = 0;
         $page = 1;
         $page1 = 1;
@@ -96,6 +97,7 @@ class PushData extends Common
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
 //            p($this->vodModel->getlastsql());
             log::write('页码-' . $page1 . '-共-' . $pagecount);
+            log::info('页码-'.$page.'-共-插入sql语句：'.$this->vodModel->getlastsql());
             if (!empty($data)) {
                 if ($page1 > $pagecount) {
                     $is_true = false;
@@ -115,17 +117,16 @@ class PushData extends Common
 
     protected function getWhile2($name = '', $id = "")
     {
-
-
+        log::info('更新逻辑开始');
         $start = 0;
         $page = 1;
         $limit = 20;
         $is_true = true;
         if (rand(1, 2) == 1) {
-            $order = 'a.vod_id desc';
-            $limit = 50;
+            $order = 'b.weight desc';
+            $limit = 30;
         } else {
-            $order = 'a.vod_id asc';
+            $order = 'b.weight desc';
         }
         $vod_where = [];
         $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28']; //电影
@@ -153,21 +154,26 @@ class PushData extends Common
 //        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
 
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
+        log::info($pagecount);
+        $qii = 0;
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page . '-共-' . $pagecount);
 //            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
-//                p($data);
+            log::info('页码-'.$page.'-共-更新sql语句：'.$this->vodModel->getlastsql());
+//            p($pagecount);
             if (!empty($data)) {
                 if ($page > $pagecount) {
                     $is_true = false;
                     break;
                 }
-//                p($data);
+
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-//                        p($val);
+                        $qii = $qii+ 1;
+                        log::info($val['vod_name']);
                         $val['chren'] = $this->videoVodModel->where(['vod_id' => $val['b_vod_id']])->select();
+//                        p($val);
                         $chren_data = $this->childrenUnArr($val['chren']);
                         $this->getUrlLike($val, '.m3u8', 'update', $chren_data);
                     }
@@ -177,6 +183,7 @@ class PushData extends Common
             }
             $page = $page + 1;
         }
+        log::info($qii);
 
     }
 
@@ -497,6 +504,8 @@ class PushData extends Common
     protected function getDataJoinT($where, $order, $page, $limit, $start)
     {
         $total = $this->vodModel->alias('a')->field('a.vod_id,a.vod_year,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->count();
+        log::info($total);
+        log::info($limit);
         $pagecount = ceil($total / $limit);
         return $pagecount;
     }
