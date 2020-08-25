@@ -138,6 +138,12 @@ class Collect extends Base
 
     public function vod_xml($param, $html = '')
     {
+        // 获取缓存中的当前页
+        $cache_current_page = Cache::get('collect_current_page');
+        if (!empty($cache_current_page) && empty($param['page'])) {
+            $param['page'] = $cache_current_page;
+        }
+
         $url_param = [];
         $url_param['ac'] = $param['ac'] ?? '';
         $url_param['t'] = $param['t'] ?? '';
@@ -193,6 +199,13 @@ class Collect extends Base
         $array_page['pagesize'] = (string)$xml->list->attributes()->pagesize;
         $array_page['recordcount'] = (string)$xml->list->attributes()->recordcount;
         $array_page['url'] = $url;
+
+        // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
+        if ($array_page['page'] >= $array_page['pagecount']) {
+            Cache::set('collect_current_page', '');
+        } else {
+            Cache::set('collect_current_page', $array_page['page']);
+        }
 
         $type_list = model('Type')->getCache('type_list');
         $bind_list = config('bind');
@@ -1058,7 +1071,7 @@ class Collect extends Base
             }
 
             if (empty($GLOBALS['config']['app']['collect_timespan'])) {
-                $GLOBALS['config']['app']['collect_timespan'] = 3;
+                $GLOBALS['config']['app']['collect_timespan'] = 5;
             }
             if ($show == 1) {
                 if ($param['ac'] == 'cjsel') {
