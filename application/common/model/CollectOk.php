@@ -1069,9 +1069,9 @@ class CollectOk extends Base
                 die;
             }
 
-            if (empty($GLOBALS['config']['app']['collect_timespan'])) {
+            // if (empty($GLOBALS['config']['app']['collect_timespan'])) {
                 $GLOBALS['config']['app']['collect_timespan'] = 5;
-            }
+            // }
             if ($show == 1) {
                 if ($param['ac'] == 'cjsel') {
                     Cache::rm('collect_break_vod');
