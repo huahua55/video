@@ -12,6 +12,7 @@ chown -R www:www ../video
 #php think Cj name=cjokzyxs
 sleep 3
 
+
 ###卧龙采集
 #php think Cj name=wlzyxs
 #sleep 30
