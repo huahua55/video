@@ -140,7 +140,7 @@ class CollectOk extends Base
     {
         if (!empty($param['h'])) {
             // 区分全量还是其他
-            Cache::set('collect_current_page', '');
+            Cache::set('collect_ok_current_page', '');
         }
         
         // 获取缓存中的当前页
