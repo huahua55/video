@@ -5,8 +5,20 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 cd /data/www/video/
 
 #最大采集所有天
-php think Cj name=zuidacjday#force=1
-sleep 360
-php think Cj name=zuidaicjxlday#force=1
+# php think Cj name=zuidacjday#force=1
+# sleep 360
+# php think Cj name=zuidaicjxlday#force=1
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
+
+page=('831' '1131')
+
+for i in ${page[@]}
+do
+	{
+		php think Cj name=zuidacjday#force=1#custom_page=$i
+		sleep 360
+	}&
+done
+# wait关键字确保每一个子进程都执行完成
+wait
