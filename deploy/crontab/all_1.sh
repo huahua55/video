@@ -7,10 +7,21 @@ cd /data/www/video/
 
 #ok所有天
 
-php think Cj name=okzycjday#force=1
-sleep 360
+# php think Cj name=okzycjday#force=1
+# sleep 360
 #ok迅雷下载所有天
-php think Cj name=okcyxlday#force=1
+# php think Cj name=okcyxlday#force=1
 
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
+
+
+
+php think Cj name=okzycjday#force=1#custom_page=260
+php think Cj name=okzycjday#force=1#custom_page=501
+sleep 360
+php think Cj name=okzycjday#force=1#custom_page=801
+php think Cj name=okzycjday#force=1#custom_page=1101
+sleep 360
+php think Cj name=okzycjday#force=1#custom_page=1401
+php think Cj name=okzycjday#force=1#custom_page=1701

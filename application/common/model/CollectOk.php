@@ -138,17 +138,16 @@ class CollectOk extends Base
 
     public function vod_xml($param, $html = '')
     {
-        if (!empty($param['h'])) {
-            // 区分全量还是其他
-            Cache::set('collect_ok_current_page', '');
-        }
-        
+
         // 获取缓存中的当前页
         $cache_current_page = Cache::get('collect_ok_current_page');
-        self::_logWrite('OK获取缓存中的当前页::' . $cache_current_page . 'url页::' . $param['page']);
-        if (!empty($cache_current_page) && empty($param['page'])) {
-            $param['page'] = $cache_current_page;
+        self::_logWrite('OK获取缓存中的当前页::' . $cache_current_page . 'url页::' . $param['page'] . 'h::' . $param['h']);
+        if (empty($param['h'])) {
+            if (!empty($cache_current_page) && empty($param['page'])) {
+                $param['page'] = $cache_current_page;
+            }
         }
+
         $url_param = [];
         $url_param['ac'] = $param['ac'] ?? '';
         $url_param['t'] = $param['t'] ?? '';
@@ -205,16 +204,13 @@ class CollectOk extends Base
         $array_page['recordcount'] = (string)$xml->list->attributes()->recordcount;
         $array_page['url'] = $url;
         self::_logWrite('OK资源站页数信息::' . json_encode($array_page));
-        // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
-        if ($array_page['page'] >= $array_page['pagecount']) {
-            Cache::set('collect_ok_current_page', '');
-        } else {
-            Cache::set('collect_ok_current_page', $array_page['page']);
-        }
-
-        if (!empty($param['h'])) {
-            // 区分全量还是其他
-            Cache::set('collect_ok_current_page', '');
+        if (empty($param['h'])) {
+            // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
+            if ($array_page['page'] >= $array_page['pagecount']) {
+                Cache::set('collect_ok_current_page', '');
+            } else {
+                Cache::set('collect_ok_current_page', $array_page['page']);
+            }
         }
 
         $type_list = model('Type')->getCache('type_list');
@@ -1042,7 +1038,6 @@ class CollectOk extends Base
 
                                 $update['vod_director'] = implode(',', $arr_vod_director);
                             }
-                            self::_logWrite('OK需要更新的数据::' . json_encode($update));
                             if (count($update) > 0) {
                                 $update['vod_time'] = time();
                                 $where = [];
@@ -1064,6 +1059,12 @@ class CollectOk extends Base
                 } else {
                     return ['code' => ($color == 'red' ? 1001 : 1), 'msg' => $des];
                 }
+            }
+
+            // 校验page
+            $limit_page = self::_limitPage($data['page']['page']);
+            if ($limit_page) {
+                die;
             }
 
             if (ENTRANCE == 'api') {
@@ -2417,5 +2418,38 @@ class CollectOk extends Base
             'level' => ['info'],
             'max_files' => 30]);
         \think\Log::info($log_content);
+    }
+
+    private function _limitPage($page)
+    {
+        switch ($page) {
+            case 200:
+                self::_logWrite('collect页数小于等于200的完成');
+                return true;
+                break;
+            case 500:
+                self::_logWrite('collect页数小于等于500的完成');
+                return true;
+                break;
+            case 800:
+                self::_logWrite('collect页数小于等于800的完成');
+                return true;
+                break;
+            case 1100:
+                self::_logWrite('collect页数小于等于1100的完成');
+                return true;
+                break;
+            case 1400:
+                self::_logWrite('collect页数小于等于1400的完成');
+                return true;
+                break;
+            case 1700:
+                self::_logWrite('collect页数小于等于1700的完成');
+                return true;
+                break;
+            default:
+                return false;
+                break;
+        }
     }
 }

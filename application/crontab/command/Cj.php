@@ -17,6 +17,7 @@ use think\Log;
 class Cj extends Command
 {
     protected $Collect = '';
+    protected $custom_page = '';
 
     protected function configure()
     {
@@ -33,6 +34,12 @@ class Cj extends Command
         //参数转义解析
         $param = $this->ParSing($parameter);
         $name = $param['name'] ?? '';
+
+        if(isset($param['custom_page'])) {
+            $this->custom_page = $param['custom_page'] ?? '';
+            unset($param['custom_page']);
+        }
+
         //执行对应的方法
         // 定时器需要执行的内容
         $list = config('timming');
@@ -112,6 +119,8 @@ class Cj extends Command
 
     public function api($param = [])
     {
+        $param['pg'] = $this->custom_page;
+        
         if (!empty($param['pg'])) {
             $param['page'] = $param['pg'];
             unset($param['pg']);
