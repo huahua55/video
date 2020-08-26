@@ -1061,6 +1061,12 @@ class Collect extends Base
                 }
             }
 
+            // 校验page
+            $limit_page = self::_limitPage($data['page']['page']);
+            if ($limit_page) {
+                die;
+            }
+            
             if (ENTRANCE == 'api') {
                 Cache::rm('collect_break_vod');
                 if ($data['page']['page'] < $data['page']['pagecount']) {
@@ -2412,5 +2418,22 @@ class Collect extends Base
             'level' => ['info'],
             'max_files' => 30]);
         \think\Log::info($log_content);
+    }
+
+    private function _limitPage($page)
+    {
+        switch ($page) {
+            case 830:
+                self::_logWrite('collect页数小于等于750的完成');
+                return true;
+                break;
+            case 1130:
+                self::_logWrite('collect页数小于等于1130的完成');
+                return true;
+                break;
+            default:
+                return false;
+                break;
+        }
     }
 }
