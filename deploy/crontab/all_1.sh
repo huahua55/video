@@ -17,11 +17,14 @@ cd /data/www/video/
 
 
 
-php think Cj name=okzycjday#force=1#custom_page=260
-php think Cj name=okzycjday#force=1#custom_page=501
-sleep 360
-php think Cj name=okzycjday#force=1#custom_page=801
-php think Cj name=okzycjday#force=1#custom_page=1101
-sleep 360
-php think Cj name=okzycjday#force=1#custom_page=1401
-php think Cj name=okzycjday#force=1#custom_page=1701
+page=('360' '501' '801' '1101' '1401' '1701')
+
+for i in ${page[@]}
+do
+	{
+		php think Cj name=okzycjday#force=1#custom_page=$i
+		sleep 360
+	}&
+done
+# wait关键字确保每一个子进程都执行完成
+wait
