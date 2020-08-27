@@ -11,7 +11,9 @@ cd /data/www/video/
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 
-php think Cj name=zuidacjday#force=1#custom_page=841
-php think Cj name=zuidacjday#force=1#custom_page=1048
-php think Cj name=zuidacjday#force=1#custom_page=1302
+php think Cj name=zuidacjday#force=1#custom_page=862
+sleep 60
+php think Cj name=zuidacjday#force=1#custom_page=1049
+sleep 60
+php think Cj name=zuidacjday#force=1#custom_page=1303
 
