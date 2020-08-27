@@ -2424,11 +2424,23 @@ class Collect extends Base
     {
         switch ($page) {
             case 830:
-                self::_logWrite('collect页数小于等于750的完成');
+                self::_logWrite('collect页数小于等于830的完成');
+                return true;
+                break;
+            case 930:
+                self::_logWrite('collect页数小于等于930的完成');
+                return true;
+                break;
+            case 1030:
+                self::_logWrite('collect页数小于等于1030的完成');
                 return true;
                 break;
             case 1130:
                 self::_logWrite('collect页数小于等于1130的完成');
+                return true;
+                break;
+            case 1230:
+                self::_logWrite('collect页数小于等于1230的完成');
                 return true;
                 break;
             default:
