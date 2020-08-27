@@ -15,19 +15,10 @@ cd /data/www/video/
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 
-php think Cj name=okzycjday#force=1#custom_page=602
-
-page=('812' '1148' '1401' '1701')
-
-for i in ${page[@]}
-do
-	{
-		if [ $i -ne 1701 ]
-		then
-			php think Cj name=okzycjday#force=1#custom_page=$i
-			sleep 360
-		fi
-	}&
-done
-# wait关键字确保每一个子进程都执行完成
-wait
+php think Cj name=okzycjday#force=1#custom_page=603
+sleep 120
+php think Cj name=okzycjday#force=1#custom_page=812
+sleep 120
+php think Cj name=okzycjday#force=1#custom_page=1148
+sleep 120
+php think Cj name=okzycjday#force=1#custom_page=1402
