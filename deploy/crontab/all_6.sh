@@ -19,7 +19,7 @@ do
 		if [ $i -ne 931 -a $i -ne 1131 -a $i -ne 1231 ]
 		then
 			php think Cj name=zuidacjday#force=1#custom_page=$i
-			sleep 360
+			sleep 60
 		fi
 	}&
 done
