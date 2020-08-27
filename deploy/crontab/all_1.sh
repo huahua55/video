@@ -2,7 +2,7 @@
 PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # 1.执行 php 命令不需要到thinkphp项目的目录下 2.index.php为入口文件 3.第三个参数为需要执行方法的路由
 # 采集所有
-cd E:/soft/PhpStudy2018/PHPTutorial/WWW/video/
+cd /data/www/video/
 
 
 #ok所有天
@@ -24,7 +24,7 @@ do
 	{
 		if [ $i -ne 1701 ]
 		then
-			E:/soft/PhpStudy2018/PHPTutorial/php/php-7.1.13-nts/php.exe think Cj name=okzycjday#force=1#custom_page=$i
+			php think Cj name=okzycjday#force=1#custom_page=$i
 			sleep 360
 		fi
 	}&
