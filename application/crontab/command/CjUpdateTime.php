@@ -78,7 +78,7 @@ class CjUpdateTime extends Common
         $whereArr['vod_pic'] = array(array('not like', "%0827%"), array('not like', "%0826%"), array('not like', "0825%"), 'and');
         $whereArr['vod_douban_id'] = ['neq', 0];
 
-        $res = Db::name('vod')->where($whereArr)->limit(1000)->select();
+        $res = Db::name('vod')->where($whereArr)->select();
 //        p(Db::name('vod')->getLastSql());
         foreach ($res as $k => $v) {
             $vod_pic = '';
