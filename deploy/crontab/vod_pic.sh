@@ -4,4 +4,8 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 # 采集所有
 cd /data/www/video/
 
-php think VodPicEdit
+php think VodPicEdit name=ok
+
+sleep 120
+
+php think VodPicEdit name=zd
