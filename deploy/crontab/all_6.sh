@@ -16,9 +16,14 @@ page=('831' '931' '1031' '1131' '1231')
 for i in ${page[@]}
 do
 	{
-		php think Cj name=zuidacjday#force=1#custom_page=$i
-		sleep 360
+		if [ $i -ne 931 -a $i -ne 1131 -a $i -ne 1231 ]
+		then
+			php think Cj name=zuidacjday#force=1#custom_page=$i
+			sleep 60
+		fi
 	}&
 done
 # wait关键字确保每一个子进程都执行完成
 wait
+
+php think Cj name=zuidacjday#force=1#custom_page=1231
