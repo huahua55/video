@@ -11,19 +11,18 @@ cd /data/www/video/
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 
-page=('831' '931' '1031' '1131' '1231')
+page=('838' '931' '1031' '1131' '1258')
 
 for i in ${page[@]}
 do
 	{
-		if [ $i -ne 931 -a $i -ne 1131 -a $i -ne 1231 ]
+		if [ $i -ne 931 -a $i -ne 1131 ]
 		then
 			php think Cj name=zuidacjday#force=1#custom_page=$i
-			sleep 60
+			sleep 360
 		fi
 	}&
 done
 # wait关键字确保每一个子进程都执行完成
 wait
 
-php think Cj name=zuidacjday#force=1#custom_page=1231

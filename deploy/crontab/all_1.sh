@@ -2,7 +2,7 @@
 PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # 1.执行 php 命令不需要到thinkphp项目的目录下 2.index.php为入口文件 3.第三个参数为需要执行方法的路由
 # 采集所有
-cd /data/www/video/
+cd E:/soft/PhpStudy2018/PHPTutorial/WWW/video/
 
 
 #ok所有天
@@ -17,14 +17,14 @@ cd /data/www/video/
 
 
 
-page=('501' '801' '1101' '1401' '1701')
+page=('602' '812' '1136' '1401' '1701')
 
 for i in ${page[@]}
 do
 	{
-		if [ $i -ne 1101 -a $i -ne 1401 -a $i -ne 1701 ]
+		if [ $i -ne 1701 ]
 		then
-			php think Cj name=okzycjday#force=1#custom_page=$i
+			E:/soft/PhpStudy2018/PHPTutorial/php/php-7.1.13-nts/php.exe think Cj name=okzycjday#force=1#custom_page=$i
 			sleep 360
 		fi
 	}&
