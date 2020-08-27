@@ -1066,7 +1066,7 @@ class CollectOk extends Base
             if ($limit_page) {
                 die;
             }
-
+            self::_logWrite($data['page']['page'] . '页数据更新成功');
             if (ENTRANCE == 'api') {
                 Cache::rm('collect_break_vod');
                 if ($data['page']['page'] < $data['page']['pagecount']) {
@@ -1113,6 +1113,7 @@ class CollectOk extends Base
                 }
             }
         } catch (\Exception $e) {
+            self::_logWrite('OK_collect异常信息：：' . $e->getMessage());
             print_r($e->getMessage());
         }
     }
