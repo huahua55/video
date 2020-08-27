@@ -78,30 +78,37 @@ class CjUpdateTime extends Common
         $whereArr['vod_pic'] = array(array('not like', "%0827%"), array('not like', "%0826%"), array('not like', "0825%"), 'and');
         $whereArr['vod_douban_id'] = ['neq', 0];
 
-        $res = Db::name('vod')->where($whereArr)->select();
+        $total = Db::name('vod')->where($whereArr)->count();
+        $page = ceil($total / 20);
+        while ($page>0){
+            $res = Db::name('vod')->where($whereArr)->limit(20)->select();
 //        p(Db::name('vod')->getLastSql());
-        foreach ($res as $k => $v) {
-            $vod_pic = '';
-            $vod_douban_id = $v['vod_douban_id'];
-            $url = $this->get_mac_id . $vod_douban_id;
-            $vod_pic = $this->maccmsImg($url);
-            if (empty($vod_pic)) {
+            foreach ($res as $k => $v) {
+                $vod_pic = '';
+                $vod_douban_id = $v['vod_douban_id'];
+                $url = $this->get_mac_id . $vod_douban_id;
+                $vod_pic = $this->maccmsImg($url);
+                if (empty($vod_pic)) {
 //                p(1);
-                $url = $this->get_feifei_id . $vod_douban_id;
-                $vod_pic = $this->ffImg($url);
+                    $url = $this->get_feifei_id . $vod_douban_id;
+                    $vod_pic = $this->ffImg($url);
+                }
+                if (empty($vod_pic)){
+                    log::info('新-过滤-图片-:' . $v['vod_id']);
+                    continue;
+                }
+                $tmp = $this->syncImages(1, $vod_pic, 'vod');
+                $update['vod_pic'] = (string)$tmp['pic'];
+                $where['vod_id'] = $v['vod_id'];
+                $res = model('Vod')->where($where)->update($update);
+                if($res){
+                    log::info('新-succ-图片-:' . $v['vod_id']);
+                }
             }
-            if (empty($vod_pic)){
-                log::info('新-过滤-图片-:' . $v['vod_id']);
-                continue;
-            }
-            $tmp = $this->syncImages(1, $vod_pic, 'vod');
-            $update['vod_pic'] = (string)$tmp['pic'];
-            $where['vod_id'] = $v['vod_id'];
-            $res = model('Vod')->where($where)->update($update);
-            if($res){
-                log::info('新-succ-图片-:' . $v['vod_id']);
-            }
+            $page = $page-1;
         }
+
+
 
     }
 
