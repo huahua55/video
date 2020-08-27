@@ -30,7 +30,13 @@ class VodPicEdit extends Common
         // 输出到日志文件
         $output->writeln("定时计划：更新vod表图片:start...");
         try {
-            
+            $myparme = $input->getArguments();
+            $parameter = $myparme['parameter'];
+            //参数转义解析
+            $param = $this->ParSing($parameter);
+            $name = $param['name'] ?? '';
+            Log::info('$name::'.$name);
+
             $is_true = true;
             
             while ($is_true) {
@@ -53,7 +59,7 @@ class VodPicEdit extends Common
                    foreach ($vod_info as $v) {
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         Cache::set('video_selected_current_select_video_id', $v['vod_id']);
-                        self::_getData($v);
+                        self::_getData($v, $name);
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
                     } 
                 }
@@ -67,18 +73,23 @@ class VodPicEdit extends Common
         $output->writeln("定时计划：更新vod表图片:end...");
     }
 
-    private function _getData($info)
+    private function _getData($info, $name)
     {
         if (!empty($info['vod_name'])) {
-
-            $param = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
+            if ($name == 'ok') {
+                $param = 'cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
+            }
+            
+            if ($name == 'zd') {
+                $param = 'cjflag=ebde4a475b33db4e5628cd905dafd343&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
+            }
 
             @parse_str($param, $output);
             // $output['wd'] = '双核时代';
             // $output['ids'] = 43465;
             $vod_xml_info = $this->vod_xml_id($output);
             Log::info('查询到的数据'.json_encode($vod_xml_info));
-
+            Log::info('$param::'.$param_1);
             $config = config('maccms.collect');
             $config = $config['vod'];
 
@@ -86,7 +97,14 @@ class VodPicEdit extends Common
 
                 $type_list = model('Type')->getCache('type_list');
                 foreach ($vod_xml_info as $v) {
-                    $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                    if ($name == 'ok') {
+                        $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                    }
+                    if ($name == 'zd') {
+                        $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                    }
+
+                    Log::info('$param_1::'.$param_1);
                     @parse_str($param_1, $output_1);
                     $res_vod_xml = $this->vod_xml($output_1);
                     if ($res_vod_xml['code'] == 1) {
@@ -537,5 +555,20 @@ class VodPicEdit extends Common
             }
         }
         return ['pic' => $pic_url, 'msg' => $des];
+    }
+
+    //代码解析(urlget传参模式)
+
+    public function ParSing($parameter)
+    {
+        $parameter_array = array();
+        $arry = explode('#', $parameter);
+        foreach ($arry as $key => $value) {
+            $zzz = explode('=', $value);
+            $parameter_array[$zzz[0]] = $zzz[1];
+
+        }
+        return $parameter_array;
+
     }
 }
