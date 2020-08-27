@@ -15,9 +15,9 @@ cd /data/www/video/
 ## 强制采集 #force=1
 ##001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 
+php think Cj name=okzycjday#force=1#custom_page=602
 
-
-page=('602' '812' '1136' '1401' '1701')
+page=('812' '1148' '1401' '1701')
 
 for i in ${page[@]}
 do
