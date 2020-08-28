@@ -8,6 +8,10 @@ use think\Log;
 use Exception;
 use similar_text\similarText;
 
+ini_set('max_execution_time', '0');
+//内存限制 取消内存限制
+ini_set("memory_limit",'-1');
+
 class VodPic extends Base
 {
     protected $vodDb; // 视频表
@@ -27,15 +31,16 @@ class VodPic extends Base
         try {
 
             $name = $param['name'] ?? '';
+            $limit = $param['limit'] ?? '';
             Log::info('$name::'.$name);
 
             $is_true = true;
-            while ($is_true) {
+            // while ($is_true) {
             	if ($name == 'ok') {
-	                $current_vod_id = Cache::get('video_selected_current_select_video_id');
+	                $current_vod_id = Cache::get('video_selected_current_select_video_id_ok');
 	            }
 	            if ($name == 'zd') {
-	                $current_vod_id = Cache::get('video_current_select_video_id_zd');
+	                $current_vod_id = Cache::get('video_selected_current_select_video_id_zd');
 	            }
                 Log::info('current_vod_id::'. $current_vod_id);
                 $vod_where = [];
@@ -46,26 +51,26 @@ class VodPic extends Base
                                     ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
                                     ->where($vod_where)
                                     ->order('vod_id asc')
-                                    ->limit('0, 20')
+                                    ->limit('0, ' . $limit)
                                     ->select();
                                     // echo $this->vodDb->getLastSql();die;
-                if (empty($vod_info)) {
-                    $is_true = false;
-                } else {
+                // if (empty($vod_info)) {
+                //     $is_true = false;
+                // } else {
                    foreach ($vod_info as $v) {
                         Log::info($name.'视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         if ($name == 'ok') {
-	                        Cache::set('video_selected_current_select_video_id', $v['vod_id']);
+	                        Cache::set('video_selected_current_select_video_id_ok', $v['vod_id']);
 	                    }
                         if ($name == 'zd') {
-	                        Cache::set('video_current_select_video_id_zd', $v['vod_id']);
+	                        Cache::set('video_selected_current_select_video_id_zd', $v['vod_id']);
 	                    }
                         self::_getData($v, $name);
                         Log::info($name.'视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
                     } 
-                }
+                // }
                 
-            }
+            // }
           
 
         } catch (Exception $e) {
@@ -154,6 +159,7 @@ class VodPic extends Base
                                 $edit_data['vod_time'] = time();
                                 $where['vod_id'] = $info['vod_id'];
                                 $result = $this->vodDb->where($where)->update($edit_data);
+// echo $result;die;
                                 Log::info('视频id为::'. $info['vod_id']  . '视频名称为::' . $info['vod_name'] . '更新结果为：：'.$result);
                             }
                         }
@@ -173,7 +179,7 @@ class VodPic extends Base
         $cache_current_page = Cache::get('collect_ok_current_page');
         if (empty($param['h'])) {
             if (!empty($cache_current_page) && empty($param['page'])) {
-                $param['page'] = $cache_current_page;
+                // $param['page'] = $cache_current_page;
             }
         }
 
@@ -235,9 +241,9 @@ class VodPic extends Base
         if (empty($param['h'])) {
             // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
             if ($array_page['page'] >= $array_page['pagecount']) {
-                Cache::set('collect_ok_current_page', '');
+                // Cache::set('collect_ok_current_page', '');
             } else {
-                Cache::set('collect_ok_current_page', $array_page['page']);
+                // Cache::set('collect_ok_current_page', $array_page['page']);
             }
         }
 
