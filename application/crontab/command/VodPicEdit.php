@@ -17,7 +17,6 @@ class VodPicEdit extends Common
 {
     protected $videoDb; // 视频表
 
-
     protected function configure()
     {
         $this->vodDb = Db::name('vod');
@@ -56,7 +55,9 @@ class VodPicEdit extends Common
                 if (empty($vod_info)) {
                     $is_true = false;
                 } else {
+                    $current_index = Cache::get('vod_pic_current_index');
                     foreach ($vod_info as $v) {
+                        Cache::set('vod_pic_current_index', $current_index + 1);
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         Cache::set('video_selected_current_select_video_id', $v['vod_id']);
                         self::_getData($v, $name);
@@ -98,6 +99,9 @@ class VodPicEdit extends Common
 
                 $type_list = model('Type')->getCache('type_list');
                 foreach ($vod_xml_info as $v) {
+                    if ($info['vod_name'] != $info['vod_name']) {
+                        continue;
+                    }
                     if ($name == 'ok') {
                         $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
                     }
@@ -150,7 +154,7 @@ class VodPicEdit extends Common
                             $old_check_data['type_id'] = $info['type_id'];
                             $old_check_data['vod_play_url'] = $info['vod_play_url'];
                             $old_check_data['type_id_1'] = $info['type_id_1'];
-                            Log::info('视频名称为::' . $v['vod_name'] . '开始比对');
+                            self::_logWrite('视频名称为::' . $v['vod_name'] . '数据库vod_id::' . $info['vod_id'] . '当前顺序：：' . Cache::get('vod_pic_current_index'));
                             $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
                             if($check_vod_rade){
                                 $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
