@@ -141,7 +141,6 @@ class CollectOk extends Base
 
         // 获取缓存中的当前页
         $cache_current_page = Cache::get('collect_ok_current_page');
-        self::_logWrite('OK获取缓存中的当前页::' . $cache_current_page . 'url页::' . $param['page'] . 'h::' . $param['h']);
         if (empty($param['h'])) {
             if (!empty($cache_current_page) && empty($param['page'])) {
                 $param['page'] = $cache_current_page;
@@ -203,7 +202,7 @@ class CollectOk extends Base
         $array_page['pagesize'] = (string)$xml->list->attributes()->pagesize;
         $array_page['recordcount'] = (string)$xml->list->attributes()->recordcount;
         $array_page['url'] = $url;
-        self::_logWrite('OK资源站页数信息::' . json_encode($array_page));
+
         if (empty($param['h'])) {
             // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
             if ($array_page['page'] >= $array_page['pagecount']) {
@@ -1061,12 +1060,6 @@ class CollectOk extends Base
                 }
             }
 
-            // 校验page
-            $limit_page = self::_limitPage($data['page']['page']);
-            if ($limit_page) {
-                die;
-            }
-            self::_logWrite($data['page']['page'] . '页数据更新成功');
             if (ENTRANCE == 'api') {
                 Cache::rm('collect_break_vod');
                 if ($data['page']['page'] < $data['page']['pagecount']) {
@@ -2421,36 +2414,4 @@ class CollectOk extends Base
         \think\Log::info($log_content);
     }
 
-    private function _limitPage($page)
-    {
-        switch ($page) {
-            case 200:
-                self::_logWrite('collect页数小于等于200的完成');
-                return true;
-                break;
-            case 500:
-                self::_logWrite('collect页数小于等于500的完成');
-                return true;
-                break;
-            case 800:
-                self::_logWrite('collect页数小于等于800的完成');
-                return true;
-                break;
-            case 1100:
-                self::_logWrite('collect页数小于等于1100的完成');
-                return true;
-                break;
-            case 1400:
-                self::_logWrite('collect页数小于等于1400的完成');
-                return true;
-                break;
-            case 1700:
-                self::_logWrite('collect页数小于等于1700的完成');
-                return true;
-                break;
-            default:
-                return false;
-                break;
-        }
-    }
 }
