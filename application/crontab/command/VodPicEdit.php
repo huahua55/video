@@ -45,27 +45,27 @@ class VodPicEdit extends Common
                 $vod_where = [];
                 if (!empty($current_vod_id)) {
                     $vod_where['vod_id'] = ['EGT', $current_vod_id];
-                }   
+                }
                 $vod_info = $this->vodDb->field('vod_id,vod_name,vod_content,vod_blurb,vod_actor,vod_director,type_id,vod_play_url,type_id_1')
-                                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
-                                    ->where($vod_where)
-                                    ->order('vod_id asc')
-                                    ->limit('0, 20')
-                                    ->select();
-                                    // echo $this->vodDb->getLastSql();die;
+                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
+                    ->where($vod_where)
+                    ->order('vod_id asc')
+                    ->limit('0, 20')
+                    ->select();
+                // echo $this->vodDb->getLastSql();die;
                 if (empty($vod_info)) {
                     $is_true = false;
                 } else {
-                   foreach ($vod_info as $v) {
+                    foreach ($vod_info as $v) {
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         Cache::set('video_selected_current_select_video_id', $v['vod_id']);
                         self::_getData($v, $name);
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
-                    } 
+                    }
                 }
-                
+
             }
-          
+
 
         } catch (Exception $e) {
             $output->writeln("定时计划：更新vod表图片异常信息：" . $e);
@@ -90,7 +90,7 @@ class VodPicEdit extends Common
                     break;
                 }
             }
-        
+
             $config = config('maccms.collect');
             $config = $config['vod'];
 
@@ -429,7 +429,7 @@ class VodPicEdit extends Common
         // 校验视频内容百分比
         if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
             $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
-        } 
+        }
         // 简介比
         if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
             $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
@@ -498,7 +498,7 @@ class VodPicEdit extends Common
         } else {
             return false;
         }
-        
+
     }
 
     //交集相似度
@@ -521,7 +521,7 @@ class VodPicEdit extends Common
             mkdir($dir,0777,true);
         }
         \think\Log::init([
-            'type' => \think\Env::get('log.type', 'test'), 
+            'type' => \think\Env::get('log.type', 'test'),
             'path' => $dir,
             'level' => ['info'],
             'max_files' => 30]);
