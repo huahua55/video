@@ -20,36 +20,39 @@ class VodPic extends Base
 
     public function __construct()
     {
-    	parent::__construct();
+        parent::__construct();
         $this->vodDb = Db::name('vod');
     }
 
     public function index1()
     {
-    	$param = input();
+        $param = input();
         
         // 输出到日志文件
         try {
 
             $name = $param['name'] ?? '';
             $limit = $param['limit'] ?? '';
+            $vod_id = $param['vod_id'] ?? '';
             Log::info('$name::'.$name);
 
             $is_true = true;
             // while ($is_true) {
-            	if ($name == 'ok') {
-	                $current_vod_id = Cache::get('video_selected_current_select_video_id_ok');
-	            }
-	            if ($name == 'zd') {
-	                $current_vod_id = Cache::get('video_selected_current_select_video_id_zd');
-	            }
+                if ($name == 'ok') {
+                    $current_vod_id = Cache::get('video_selected_current_select_video_id_ok');
+                }
+                if ($name == 'zd') {
+                    $current_vod_id = Cache::get('video_selected_current_select_video_id_zd');
+                }
                 Log::info('current_vod_id::'. $current_vod_id);
                 $vod_where = [];
                 if (!empty($current_vod_id)) {
                     $vod_where['vod_id'] = ['EGT', $current_vod_id];
-                }   
+                } else {
+                    $vod_where['vod_id'] = ['EGT', $vod_id];
+                }
                 $vod_info = $this->vodDb->field('vod_id,vod_name,vod_content,vod_blurb,vod_actor,vod_director,type_id,vod_play_url,type_id_1')
-                                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
+                                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%', '%20200829%'],'AND')
                                     ->where($vod_where)
                                     ->order('vod_id asc')
                                     ->limit('0, ' . $limit)
@@ -58,16 +61,19 @@ class VodPic extends Base
                 // if (empty($vod_info)) {
                 //     $is_true = false;
                 // } else {
-                   foreach ($vod_info as $v) {
+                   foreach ($vod_info as $key=>$v) {
                         Log::info($name.'视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         if ($name == 'ok') {
-	                        Cache::set('video_selected_current_select_video_id_ok', $v['vod_id']);
-	                    }
+                            Cache::set('video_selected_current_select_video_id_ok', $v['vod_id']);
+                        }
                         if ($name == 'zd') {
-	                        Cache::set('video_selected_current_select_video_id_zd', $v['vod_id']);
-	                    }
+                            Cache::set('video_selected_current_select_video_id_zd', $v['vod_id']);
+                        }
                         self::_getData($v, $name);
                         Log::info($name.'视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
+                        if ((count($vod_info)-1) == $key) {
+                            echo $v['vod_id'];
+                        }
                     } 
                 // }
                 
