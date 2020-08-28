@@ -81,6 +81,7 @@ class CjUpdateTime extends Common
         $total = Db::name('vod')->where($whereArr)->count();
         $page = ceil($total / 20);
         while ($page>0){
+
             $res = Db::name('vod')->where($whereArr)->limit(20)->select();
 //        p(Db::name('vod')->getLastSql());
             foreach ($res as $k => $v) {
