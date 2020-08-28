@@ -75,7 +75,7 @@ class CjUpdateTime extends Common
 
     protected function execute(Input $input, Output $output)
     {
-        $whereArr['vod_pic'] = array(array('not like', "%20200827%"),array('not like', "%20200828%"),  array('not like', "%20200826%"), array('not like', "20200825%"), 'and');
+        $whereArr['vod_pic'] = array(array('not like', "%20200827%"),array('not like', "%20200828%"),  array('not like', "%20200826%"), array('not like', "%20200825%"), 'and');
         $whereArr['vod_douban_id'] = ['neq', 0];
 
         $total = Db::name('vod')->where($whereArr)->count();
