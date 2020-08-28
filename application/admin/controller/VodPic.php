@@ -8,9 +8,10 @@ use think\Log;
 use Exception;
 use similar_text\similarText;
 
-ini_set('max_execution_time', '0');
+@ini_set('max_execution_time', '0');
 //内存限制 取消内存限制
-ini_set("memory_limit",'-1');
+
+@ini_set("memory_limit",'-1');
 
 class VodPic extends Base
 {
