@@ -38,7 +38,7 @@ class VodPicEdit extends Common
             Log::info('$name::'.$name);
 
             $is_true = true;
-            
+            Cache::set('video_selected_current_select_video_id', '');
             while ($is_true) {
                 $current_vod_id = Cache::get('video_selected_current_select_video_id');
                 Log::info('current_vod_id::'. $current_vod_id);
@@ -76,20 +76,21 @@ class VodPicEdit extends Common
     private function _getData($info, $name)
     {
         if (!empty($info['vod_name'])) {
-            if ($name == 'ok') {
-                $param = 'cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
+            $zy_list =  [
+                'ok'=>'cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zd'=> 'cjflag=ebde4a475b33db4e5628cd905dafd343&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zx'=> 'ac=list&cjflag=fae10fd072c8e9f85fd79a8de702683b&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=',
+            ];
+            foreach ($zy_list as $zy_val =>$zy_val){
+                @parse_str($zy_val, $output);
+                $vod_xml_info = $this->vod_xml_id($output);
+                if(!empty($vod_xml_info) && !isset($vod_xml_info['code'])){
+                    $name = $zy_val;
+                    Log::info('查询到的数据'.json_encode($vod_xml_info));
+                    break;
+                }
             }
-            
-            if ($name == 'zd') {
-                $param = 'cjflag=ebde4a475b33db4e5628cd905dafd343&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
-            }
-
-            @parse_str($param, $output);
-            // $output['wd'] = '双核时代';
-            // $output['ids'] = 43465;
-            $vod_xml_info = $this->vod_xml_id($output);
-            Log::info('查询到的数据'.json_encode($vod_xml_info));
-            Log::info('$param::'.$param_1);
+        
             $config = config('maccms.collect');
             $config = $config['vod'];
 
@@ -102,6 +103,9 @@ class VodPicEdit extends Common
                     }
                     if ($name == 'zd') {
                         $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                    }
+                    if ($name == 'zx') {
+                        $param_1 = 'ac=cj&cjflag=fae10fd072c8e9f85fd79a8de702683b&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids='.$v['vod_id'].'&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=';
                     }
 
                     Log::info('$param_1::'.$param_1);
