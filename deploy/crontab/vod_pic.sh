@@ -8,4 +8,4 @@ php think VodPicEdit name=ok
 
 sleep 120
 
-php think VodPicEdit name=zd
+php think VodPicEditZd name=zd
