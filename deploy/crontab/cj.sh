@@ -12,37 +12,10 @@ ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 php think Cj name=cjokzyxs
 sleep 3
 
-
-###卧龙采集
-#php think Cj name=wlzyxs
-#sleep 30
-###135迅雷下载
-#php think Cj name=135xlcj
-#sleep 30
-###135采集
-#php think Cj name=135cj
-#sleep 30
-###1886采集
-#php think Cj name=1886zycj
-#sleep 30
-###1886迅雷下载
-#php think Cj name=1886zyxlcj
-#sleep 30
-###秒播下载
-#php think Cj name=mbzycj
-#sleep 30
-###秒播迅雷下载
-#php think Cj name=mbzyxlcj
-#sleep 30
-##最大下载
 php think Cj name=zuidacj
 sleep 1
-##OK迅雷下载链接
-#php think Cj name=cjokzyxlxs
-#sleep 30
-###最大迅雷下载
-#php think Cj name=zuidaicjxl
-# 开始 采集
+
+# 任务
 
 a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 if [ ! -n "$a" ]; then
@@ -83,3 +56,36 @@ else
   fi
   # 不是空的 先不杀死
 fi
+
+
+
+
+
+###卧龙采集
+#php think Cj name=wlzyxs
+#sleep 30
+###135迅雷下载
+#php think Cj name=135xlcj
+#sleep 30
+###135采集
+#php think Cj name=135cj
+#sleep 30
+###1886采集
+#php think Cj name=1886zycj
+#sleep 30
+###1886迅雷下载
+#php think Cj name=1886zyxlcj
+#sleep 30
+###秒播下载
+#php think Cj name=mbzycj
+#sleep 30
+###秒播迅雷下载
+#php think Cj name=mbzyxlcj
+#sleep 30
+##最大下载
+##OK迅雷下载链接
+#php think Cj name=cjokzyxlxs
+#sleep 30
+###最大迅雷下载
+#php think Cj name=zuidaicjxl
+# 开始 采集
