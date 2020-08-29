@@ -38,7 +38,7 @@ class VodPicEditZd extends Common
 
             $is_true = true;
             $vod_where = [];
-            $sql = "SELECT vod_name,vod_id,vod_pic FROM `vod` WHERE  (  `vod_pic` NOT LIKE '%20200828%' and `vod_pic` NOT LIKE '%20200827%' and `vod_pic` NOT LIKE '%20200826%' and `vod_pic` NOT LIKE '%20200825%' and `vod_pic` NOT LIKE '%20200829%' and `vod_pic` NOT LIKE '%20200815-1%' and `vod_pic` NOT LIKE '%20200816-1%' and `vod_pic` NOT LIKE '%20200817-1%' and `vod_pic` NOT LIKE '%20200818-1%' and `vod_pic` NOT LIKE '%20200819-1%' and `vod_pic` NOT LIKE '%20200820-1%' and `vod_pic` NOT LIKE '%20200821-1%' and `vod_pic` NOT LIKE '%20200822-1%' and `vod_pic` NOT LIKE '%20200824-1%' ) limit 10";
+            $sql = "SELECT vod_name,vod_id,vod_pic FROM `vod` WHERE  (  `vod_pic` NOT LIKE '%20200828%' and `vod_pic` NOT LIKE '%20200827%' and `vod_pic` NOT LIKE '%20200826%' and `vod_pic` NOT LIKE '%20200825%' and `vod_pic` NOT LIKE '%20200829%' and `vod_pic` NOT LIKE '%20200815-1%' and `vod_pic` NOT LIKE '%20200816-1%' and `vod_pic` NOT LIKE '%20200817-1%' and `vod_pic` NOT LIKE '%20200818-1%' and `vod_pic` NOT LIKE '%20200819-1%' and `vod_pic` NOT LIKE '%20200820-1%' and `vod_pic` NOT LIKE '%20200821-1%' and `vod_pic` NOT LIKE '%20200822-1%' and `vod_pic` NOT LIKE '%20200824-1%' )";
             $vod_info = Db::query($sql);
             // echo $this->vodDb->getLastSql();die;
             foreach ($vod_info as $v) {
