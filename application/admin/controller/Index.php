@@ -69,6 +69,7 @@ class Index extends Base
     public function welcome()
     {
         $this->assign('video',self::_getVideoStatistics());
+        $this->assign('dmachine',self::_getMachineInfo());
         $this->assign('info',$this->_admin);
         $this->assign('title','欢迎页面');
         return $this->fetch('admin@index/welcome');
@@ -192,13 +193,23 @@ class Index extends Base
      * @return [type] [description]
      */
     private function _getVideoStatistics(){
-        $startTime = date("Y-m-d 20:00:00", strtotime("-1 day"));
-        $endTime = date("Y-m-d 20:00:00", time());
+        $startTime = date("Y-m-d 08:00:00", strtotime("-1 day"));
+        $endTime = date("Y-m-d 08:00:00", time());
         $where['time_auto_up'] = ['between', [$startTime, $endTime]];
         // 普通视频下载量
         $video['video'] = db('video_collection')->where( $where )->count();
         // 精选视频下载量
         $video['video_selected'] = db('video_collection_selected')->where( $where )->count();
         return $video;
+    }
+
+    /**
+     * 获取七台机器最后的信息
+     * @return [type] [description]
+     */
+    private function _getMachineInfo(){
+        $dmachine = db('dmachine')->order('id asc')->select();
+
+        return $dmachine;
     }
 }
