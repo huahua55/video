@@ -688,8 +688,8 @@ class Vod extends Base {
         unset($data['uptag']);
 
         Db::startTrans();
-        $save_video = true;
-        $save_vedio_vod = true;
+        // $save_video = true;
+        // $save_vedio_vod = true;
         if(!empty($data['vod_id'])){
             $where=[];
             $where['vod_id'] = ['eq',$data['vod_id']];
@@ -698,33 +698,33 @@ class Vod extends Base {
             /***** 这里修改数据同步到video、video_vod、video_selected表 *****/
 
             // 根据vod_id去任务表video_vod查找关联的video表的video_id
-            $video_vod_where['vod_id'] = ['eq',$data['vod_id']];
-            $video_vod_where['video_id'] = ['NEQ',0];
-            $video_id = Db::name('video_vod')->field('video_id')->where( $video_vod_where )->find();
-            if (!empty( $video_id )) {
+            // $video_vod_where['vod_id'] = ['eq',$data['vod_id']];
+            // $video_vod_where['video_id'] = ['NEQ',0];
+            // $video_id = Db::name('video_vod')->field('video_id')->where( $video_vod_where )->find();
+            // if (!empty( $video_id )) {
 
 
-                $save_vedio_vod_where['vod_id'] = ['eq',$data['vod_id']];
-                $save_vedio_vod_where['video_id'] = ['eq',$video_id['video_id']];
+            //     $save_vedio_vod_where['vod_id'] = ['eq',$data['vod_id']];
+            //     $save_vedio_vod_where['video_id'] = ['eq',$video_id['video_id']];
 
-                $save_vedio_vod_edit['up_time'] = time();
-                $save_vedio_vod_edit['type_id_1'] = $data['type_id_1'];
-                $save_vedio_vod_edit['type_id'] = $data['type_id'];
-                $save_vedio_vod_edit['vod_name'] = $data['vod_name'];
-                $save_vedio_vod = model('video_vod')->allowField(true)->where( $save_vedio_vod_where )->update( $save_vedio_vod_edit );
-                unset( $data['up_time'] );
+            //     $save_vedio_vod_edit['up_time'] = time();
+            //     $save_vedio_vod_edit['type_id_1'] = $data['type_id_1'];
+            //     $save_vedio_vod_edit['type_id'] = $data['type_id'];
+            //     $save_vedio_vod_edit['vod_name'] = $data['vod_name'];
+            //     $save_vedio_vod = model('video_vod')->allowField(true)->where( $save_vedio_vod_where )->update( $save_vedio_vod_edit );
+            //     unset( $data['up_time'] );
 
-                $data['type_pid'] = $data['type_id_1'];
-                $save_video = model('video')->allowField(true)->where( ['id' => $video_id['video_id']] )->update( $data );
-                unset( $data['type_pid'] );
-            }
+            //     $data['type_pid'] = $data['type_id_1'];
+            //     $save_video = model('video')->allowField(true)->where( ['id' => $video_id['video_id']] )->update( $data );
+            //     unset( $data['type_pid'] );
+            // }
 
-            $video_selected_id = Db::name('video_selected')->field('id')->where( ['vod_id' => $data['vod_id']] )->find();
-            $save_video_selected = true;
-            if (!empty($video_selected_id)) {
-                $data['type_pid'] = $data['type_id_1'];
-                $save_video_selected = model('video_selected')->allowField(true)->where( ['id' => $video_selected_id['id']] )->update( $data );
-            }
+            // $video_selected_id = Db::name('video_selected')->field('id')->where( ['vod_id' => $data['vod_id']] )->find();
+            // $save_video_selected = true;
+            // if (!empty($video_selected_id)) {
+            //     $data['type_pid'] = $data['type_id_1'];
+            //     $save_video_selected = model('video_selected')->allowField(true)->where( ['id' => $video_selected_id['id']] )->update( $data );
+            // }
             
 
             /***** 这里修改数据同步到video、video_vod、video_selected表 *****/
@@ -734,7 +734,7 @@ class Vod extends Base {
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res && false === $save_video && false === $save_vedio_vod && false === $save_video_selected){
+        if(false === $res){
             Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
