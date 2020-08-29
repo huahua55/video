@@ -102,6 +102,7 @@ class VodPicEditZd extends Common
                     }
 
                     Log::info('$param_1::' . $param_1);
+
                     @parse_str($param_1, $output_1);
                     $res_vod_xml = $this->vod_xml($output_1);
                     if ($res_vod_xml['code'] == 1) {
@@ -109,50 +110,12 @@ class VodPicEditZd extends Common
                             if ($v1['type_id'] == 0) {
                                 continue;
                             }
-                            $v1['type_id_1'] = intval($type_list[$v1['type_id']]['type_pid']);
-                            $cj_play_from_arr = explode('$$$', $v1['vod_play_from']);
-                            $cj_play_url_arr = explode('$$$', $v1['vod_play_url']);
-                            foreach ($cj_play_from_arr as $kk => $vv) {
-                                if (empty($vv)) {
-                                    unset($cj_play_from_arr[$kk]);
-                                    unset($cj_play_url_arr[$kk]);
-                                    continue;
-                                }
-                                if (empty($players[$vv])) {
-                                    unset($cj_play_from_arr[$kk]);
-                                    unset($cj_play_url_arr[$kk]);
-                                    continue;
-                                }
-
-                                $cj_play_url_arr[$kk] = rtrim($cj_play_url_arr[$kk] ?? '', '#');
-                            }
-
-
-                            $new_check_data['vod_content'] = $v1['vod_content'];
-                            $new_check_data['vod_blurb'] = $v1['vod_blurb'];
-                            $new_check_data['vod_actor'] = $v1['vod_actor'];
-                            $new_check_data['vod_director'] = $v1['vod_director'];
-                            $new_check_data['type_id'] = $v1['type_id'];
-                            $new_check_data['vod_play_url'] = (string)join('$$$', $cj_play_url_arr);
-                            $new_check_data['type_id_1'] = $v1['type_id_1'];
-
-                            $old_check_data['vod_content'] = $info['vod_content'];
-                            $old_check_data['vod_blurb'] = $info['vod_blurb'];
-                            $old_check_data['vod_actor'] = $info['vod_actor'];
-                            $old_check_data['vod_director'] = $info['vod_director'];
-                            $old_check_data['type_id'] = $info['type_id'];
-                            $old_check_data['vod_play_url'] = $info['vod_play_url'];
-                            $old_check_data['type_id_1'] = $info['type_id_1'];
-                            self::_logWrite('视频名称为::' . $info['vod_name'] . '数据库vod_id::' . $info['vod_id'] . '当前顺序：：' . Cache::get('vod_pic_current_index'));
-                            $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                            if ($check_vod_rade) {
-                                $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
-                                $edit_data['vod_pic'] = (string)$tmp['pic'];
-                                $edit_data['vod_time'] = time();
-                                $where['vod_id'] = $info['vod_id'];
-                                $result = $this->vodDb->where($where)->update($edit_data);
-                                Log::info('视频id为::' . $info['vod_id'] . '视频名称为::' . $info['vod_name'] . '更新结果为：：' . $result);
-                            }
+                            $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
+                            $edit_data['vod_pic'] = (string)$tmp['pic'];
+                            $edit_data['vod_time'] = time();
+                            $where['vod_id'] = $info['vod_id'];
+                            $result = $this->vodDb->where($where)->update($edit_data);
+                            Log::info('视频id为::' . $info['vod_id'] . '视频名称为::' . $info['vod_name'] . '更新结果为：：' . $result);
                         }
                     } else {
                         Log::info(json_encode($res_vod_xml));
