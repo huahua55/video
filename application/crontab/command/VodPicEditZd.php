@@ -17,79 +17,67 @@ class VodPicEditZd extends Common
 {
     protected $videoDb; // 视频表
 
-
     protected function configure()
     {
         $this->vodDb = Db::name('vod');
         $this->setName('VodPicEditZd')->addArgument('parameter')
-            ->setDescription('定时计划：zd更新vod表图片');
+            ->setDescription('定时计划：更新vod表图片');
     }
 
     protected function execute(Input $input, Output $output)
     {
         // 输出到日志文件
-        $output->writeln("定时计划：zd更新vod表图片:start...");
+        $output->writeln("定时计划：更新vod表图片:start...");
         try {
             $myparme = $input->getArguments();
             $parameter = $myparme['parameter'];
             //参数转义解析
             $param = $this->ParSing($parameter);
             $name = $param['name'] ?? '';
-            Log::info('$name::'.$name);
+            Log::info('$name::' . $name);
 
             $is_true = true;
-            
-            while ($is_true) {
-                $current_vod_id = Cache::get('video_current_select_video_id_zd');
-                Log::info('current_vod_id::'. $current_vod_id);
-                $vod_where = [];
-                if (!empty($current_vod_id)) {
-                    $vod_where['vod_id'] = ['EGT', $current_vod_id];
-                }   
-                $vod_info = $this->vodDb->field('vod_id,vod_name,vod_content,vod_blurb,vod_actor,vod_director,type_id,vod_play_url,type_id_1')
-                                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
-                                    ->where($vod_where)
-                                    ->order('vod_id asc')
-                                    ->limit('0, 20')
-                                    ->select();
-                                    // echo $this->vodDb->getLastSql();die;
-                if (empty($vod_info)) {
-                    $is_true = false;
-                } else {
-                   foreach ($vod_info as $v) {
-                        Log::info('zd视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
-                        Cache::set('video_current_select_video_id_zd', $v['vod_id']);
-                        self::_getData($v, $name);
-                        Log::info('zd视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
-                    } 
-                }
-                
+            $vod_where = [];
+            $sql = "SELECT vod_name,vod_id,vod_pic FROM `vod` WHERE  (  `vod_pic` NOT LIKE '%20200828%' and `vod_pic` NOT LIKE '%20200827%' and `vod_pic` NOT LIKE '%20200826%' and `vod_pic` NOT LIKE '%20200825%' and `vod_pic` NOT LIKE '%20200829%' and `vod_pic` NOT LIKE '%20200815-1%' and `vod_pic` NOT LIKE '%20200816-1%' and `vod_pic` NOT LIKE '%20200817-1%' and `vod_pic` NOT LIKE '%20200818-1%' and `vod_pic` NOT LIKE '%20200819-1%' and `vod_pic` NOT LIKE '%20200820-1%' and `vod_pic` NOT LIKE '%20200821-1%' and `vod_pic` NOT LIKE '%20200822-1%' and `vod_pic` NOT LIKE '%20200824-1%' ) limit 10";
+            $vod_info = Db::query($sql);
+            // echo $this->vodDb->getLastSql();die;
+            foreach ($vod_info as $v) {
+//                if (substr($v['vod_pic'], 0, 4) == 'http') {
+//                   continue;
+//                }
+                Log::info('视频id为::' . $v['vod_id'] . '视频名称为::' . $v['vod_name'] . '更新开始-----');
+                self::_getData($v);
+                Log::info('视频id为::' . $v['vod_id'] . '视频名称为::' . $v['vod_name'] . '更新结束-----');
             }
-          
-
         } catch (Exception $e) {
-            $output->writeln("定时计划：zd更新vod表图片异常信息：" . $e);
+            $output->writeln("定时计划：更新vod表图片异常信息：" . $e);
         }
-        $output->writeln("定时计划：zd更新vod表图片:end...");
+        $output->writeln("定时计划：更新vod表图片:end...");
     }
 
-    private function _getData($info, $name)
+    private function _getData($info)
     {
+        $name = "";
+
         if (!empty($info['vod_name'])) {
-            if ($name == 'ok') {
-                $param = 'cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
-            }
-            
-            if ($name == 'zd') {
-                $param = 'cjflag=ebde4a475b33db4e5628cd905dafd343&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd='.$info['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list';
+            $okcjflag = md5("https://cj.okzy.tv/inc/api1s_subname.php");
+            $zdcjflag = md5("http://www.zdziyuan.com/inc/api.php");
+            $zxcjflag = md5("http://api.zuixinapi.com/inc/api.php");
+            $zy_list = [
+                'ok' => 'cjflag='.$okcjflag.'&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zd' => 'cjflag='.$zdcjflag.'&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zx' => 'ac=list&cjflag='.$zxcjflag.'&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=',
+            ];
+            foreach ($zy_list as $zyk_val => $zy_val) {
+                @parse_str($zy_val, $output);
+                $vod_xml_info = $this->vod_xml_id($output);
+                if (!empty($vod_xml_info) && !isset($vod_xml_info['code'])) {
+                    $name = $zyk_val;
+                    Log::info('查询到的数据' . json_encode($vod_xml_info));
+                    break;
+                }
             }
 
-            @parse_str($param, $output);
-            // $output['wd'] = '双核时代';
-            // $output['ids'] = 43465;
-            $vod_xml_info = $this->vod_xml_id($output);
-            Log::info('查询到的数据'.json_encode($vod_xml_info));
-            Log::info('$param::'.$param_1);
             $config = config('maccms.collect');
             $config = $config['vod'];
 
@@ -97,14 +85,23 @@ class VodPicEditZd extends Common
 
                 $type_list = model('Type')->getCache('type_list');
                 foreach ($vod_xml_info as $v) {
+                    if ($v['vod_name'] != $info['vod_name']) {
+                        continue;
+                    }
                     if ($name == 'ok') {
-                        $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                       $cjflag = md5("https://cj.okzy.tv/inc/api1s_subname.php");
+                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
                     }
                     if ($name == 'zd') {
-                        $param_1 = 'ac=cj&cjflag=80ded8e39c08122688a152ca5f4544c0&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids='.$v['vod_id'].'&wd='.$v['vod_name'].'&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                        $cjflag = md5("http://www.zdziyuan.com/inc/api.php");
+                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                    }
+                    if ($name == 'zx') {
+                        $cjflag = md5("http://api.zuixinapi.com/inc/api.php");
+                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=';
                     }
 
-                    Log::info('$param_1::'.$param_1);
+                    Log::info('$param_1::' . $param_1);
                     @parse_str($param_1, $output_1);
                     $res_vod_xml = $this->vod_xml($output_1);
                     if ($res_vod_xml['code'] == 1) {
@@ -146,15 +143,15 @@ class VodPicEditZd extends Common
                             $old_check_data['type_id'] = $info['type_id'];
                             $old_check_data['vod_play_url'] = $info['vod_play_url'];
                             $old_check_data['type_id_1'] = $info['type_id_1'];
-                            Log::info('视频名称为::' . $v['vod_name'] . '开始比对');
+                            self::_logWrite('视频名称为::' . $info['vod_name'] . '数据库vod_id::' . $info['vod_id'] . '当前顺序：：' . Cache::get('vod_pic_current_index'));
                             $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                            if($check_vod_rade){
+                            if ($check_vod_rade) {
                                 $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
                                 $edit_data['vod_pic'] = (string)$tmp['pic'];
                                 $edit_data['vod_time'] = time();
                                 $where['vod_id'] = $info['vod_id'];
                                 $result = $this->vodDb->where($where)->update($edit_data);
-                                Log::info('视频id为::'. $info['vod_id']  . '视频名称为::' . $info['vod_name'] . '更新结果为：：'.$result);
+                                Log::info('视频id为::' . $info['vod_id'] . '视频名称为::' . $info['vod_name'] . '更新结果为：：' . $result);
                             }
                         }
                     } else {
@@ -416,7 +413,8 @@ class VodPicEditZd extends Common
      * @param  [type] $new_check_data [description]
      * @return [type]                 [description]
      */
-    private function _checkVodRade( $old_check_data, $new_check_data ){
+    private function _checkVodRade($old_check_data, $new_check_data)
+    {
         $check_vod_content_rade = 0;
         $check_vod_blurb_rade = 0;
         $vod_actor_count = 0;
@@ -425,7 +423,7 @@ class VodPicEditZd extends Common
         // 校验视频内容百分比
         if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
             $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
-        } 
+        }
         // 简介比
         if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
             $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
@@ -489,12 +487,12 @@ class VodPicEditZd extends Common
 
         self::_logWrite("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
 
-        if ( count($condition) >= 2 ){
+        if (count($condition) >= 2) {
             return true;
         } else {
             return false;
         }
-        
+
     }
 
     //交集相似度
@@ -503,7 +501,7 @@ class VodPicEditZd extends Common
         $array1 = array_filter(explode(',', $str1));
         $array2 = array_filter(explode(',', $str2));
         $count = array_intersect($array1, $array2);
-        return count( $count );
+        return count($count);
     }
 
     /**
@@ -511,13 +509,14 @@ class VodPicEditZd extends Common
      * @param  [type] $log_content [description]
      * @return [type]              [description]
      */
-    private function _logWrite($log_content){
-        $dir = LOG_PATH .'collect'. DS;
-        if (!file_exists($dir)){
-            mkdir($dir,0777,true);
+    private function _logWrite($log_content)
+    {
+        $dir = LOG_PATH . 'collect' . DS;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
         }
         \think\Log::init([
-            'type' => \think\Env::get('log.type', 'test'), 
+            'type' => \think\Env::get('log.type', 'test'),
             'path' => $dir,
             'level' => ['info'],
             'max_files' => 30]);
