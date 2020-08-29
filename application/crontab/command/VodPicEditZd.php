@@ -64,9 +64,9 @@ class VodPicEditZd extends Common
             $zdcjflag = md5("http://www.zdziyuan.com/inc/api.php");
             $zxcjflag = md5("http://api.zuixinapi.com/inc/api.php");
             $zy_list = [
-                'ok' => 'cjflag='.$okcjflag.'&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
-                'zd' => 'cjflag='.$zdcjflag.'&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
-                'zx' => 'ac=list&cjflag='.$zxcjflag.'&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=',
+                'ok' => 'cjflag=' . $okcjflag . '&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zd' => 'cjflag=' . $zdcjflag . '&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&ac=list',
+                'zx' => 'ac=list&cjflag=' . $zxcjflag . '&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=',
             ];
             foreach ($zy_list as $zyk_val => $zy_val) {
                 @parse_str($zy_val, $output);
@@ -87,21 +87,21 @@ class VodPicEditZd extends Common
                 foreach ($vod_xml_info as $v) {
                     $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
                     if ($v['vod_name'] != $info['vod_name']) {
-                        self::_logWrite('过滤 视频名称为::' . $v['vod_name'].'查找名称'.$info['vod_name']);
+                        self::_logWrite('过滤 视频名称为::' . $v['vod_name'] . '查找名称' . $info['vod_name']);
                         continue;
                     }
-                
+
                     if ($name == 'ok') {
-                       $cjflag = md5("https://cj.okzy.tv/inc/api1s_subname.php");
-                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                        $cjflag = md5("https://cj.okzy.tv/inc/api1s_subname.php");
+                        $param_1 = 'ac=cj&cjflag=' . $cjflag . '&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
                     }
                     if ($name == 'zd') {
                         $cjflag = md5("http://www.zdziyuan.com/inc/api.php");
-                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
+                        $param_1 = 'ac=cj&cjflag=' . $cjflag . '&cjurl=http%3A%2F%2Fwww.zdziyuan.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
                     }
                     if ($name == 'zx') {
                         $cjflag = md5("http://api.zuixinapi.com/inc/api.php");
-                        $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=';
+                        $param_1 = 'ac=cj&cjflag=' . $cjflag . '&cjurl=http%3A%2F%2Fapi.zuixinapi.com%2Finc%2Fapi.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $info['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=&page=1&limit=';
                     }
 
                     self::_logWrite('$param_1::' . $param_1);
@@ -486,7 +486,7 @@ class VodPicEditZd extends Common
             'path' => $dir,
             'level' => ['info'],
             'max_files' => 30]);
-        \think\self::_logWrite($log_content);
+        Log::info($log_content);
     }
 
     /**
