@@ -87,7 +87,7 @@ class VodPicEditZd extends Common
                 foreach ($vod_xml_info as $v) {
                     $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
                     if ($v['vod_name'] != $info['vod_name']) {
-                        self::_logWrite('过滤 视频名称为::' . $v['vod_name'] . '查找名称' . $info['vod_name']);
+                        self::_logWrite('过滤 视频名称为::' . $v['vod_name'] . '------查找名称：：' . $info['vod_name']);
                         continue;
                     }
 
@@ -113,8 +113,10 @@ class VodPicEditZd extends Common
                             if ($v1['type_id'] == 0) {
                                 continue;
                             }
+
                             $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
                             $edit_data['vod_pic'] = (string)$tmp['pic'];
+                            self::_logWrite('原始图片：：' . $v1['vod_pic'] .'---：新图片：：'.$edit_data['vod_pic'] );
                             $edit_data['vod_time'] = time();
                             $where['vod_id'] = $info['vod_id'];
                             $result = $this->vodDb->where($where)->update($edit_data);
