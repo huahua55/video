@@ -50,8 +50,10 @@ class VodPicEditZd extends Common
                 self::_logWrite('视频id为::' . $v['vod_id'] . '视频名称为::' . $v['vod_name'] . '更新结束-----');
             }
         } catch (Exception $e) {
+            self::_logWrite('更新vod表图片异常信息::::' . $e);
             $output->writeln("定时计划：更新vod表图片异常信息：" . $e);
         }
+        self::_logWrite('定时计划：更新vod表图片:end...' . $e);
         $output->writeln("定时计划：更新vod表图片:end...");
     }
 
