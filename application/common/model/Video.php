@@ -285,43 +285,43 @@ class Video extends Base
         unset($data['uptag']);
 
         Db::startTrans();
-        $save_vod = true;
-        $save_vedio_vod = true;
+        // $save_vod = true;
+        // $save_vedio_vod = true;
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
             $res = $this->allowField(true)->where($where)->update($data);
 
-            $id = $data['id'];
+            // $id = $data['id'];
 
-            unset( $data['id'] );
+            // unset( $data['id'] );
 
-            $data['up_time'] = time();
-            // 修改vedio_vod表信息
-            $save_vedio_vod = model('video_vod')->allowField(true)->where( ['video_id' => $id] )->update( $data );
+            // $data['up_time'] = time();
+            // // 修改vedio_vod表信息
+            // $save_vedio_vod = model('video_vod')->allowField(true)->where( ['video_id' => $id] )->update( $data );
 
-            unset( $data['up_time'] );
+            // unset( $data['up_time'] );
             
-            // 根据video_id获取任务标中的vod_id
-            $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $id] )->find();
+            // // 根据video_id获取任务标中的vod_id
+            // $video_vod_data = Db::table('video_vod')->field('id,vod_id')->where( ['video_id' => $id] )->find();
 
-            if (empty( $video_vod_data['vod_id'] )) {
-                Db::rollback();
-                return ['code'=>1002,'msg'=>'保存失败：缺失vod_id'];
-            }
+            // if (empty( $video_vod_data['vod_id'] )) {
+            //     Db::rollback();
+            //     return ['code'=>1002,'msg'=>'保存失败：缺失vod_id'];
+            // }
 
-            // 更新主表数据 即vod表
-            $data['vod_id'] = $video_vod_data['vod_id'];
-            $data['vod_time'] = time();
-            $save_vod = model('vod')->allowField(true)->update( $data );
-            unset( $data['vod_time'] );
+            // // 更新主表数据 即vod表
+            // $data['vod_id'] = $video_vod_data['vod_id'];
+            // $data['vod_time'] = time();
+            // $save_vod = model('vod')->allowField(true)->update( $data );
+            // unset( $data['vod_time'] );
         }
         else{
             $data['vod_time_add'] = time();
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res && $save_vod === false && $save_vedio_vod === false){
+        if(false === $res){
             Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }

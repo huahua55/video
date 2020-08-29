@@ -286,31 +286,31 @@ class VideoSelected extends Base
         unset($data['uptag']);
 
         Db::startTrans();
-        $save_vod = true;
+        // $save_vod = true;
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
             $res = $this->allowField(true)->where($where)->update($data);
 
             // 根据video_id获取任务标中的vod_id
-            $video_selected_data = $this->field('vod_id')->where( $where )->find();
+            // $video_selected_data = $this->field('vod_id')->where( $where )->find();
 
-            if (empty( $video_selected_data['vod_id'] )) {
-                Db::rollback();
-                return ['code'=>1002,'msg'=>'保存失败：缺失vod_id'];
-            }
+            // if (empty( $video_selected_data['vod_id'] )) {
+            //     Db::rollback();
+            //     return ['code'=>1002,'msg'=>'保存失败：缺失vod_id'];
+            // }
 
-            // 更新主表数据 即vod表
-            $data['vod_id'] = $video_selected_data['vod_id'];
-            $data['vod_time'] = time();
-            $save_vod = model('vod')->allowField(true)->update( $data );
+            // // 更新主表数据 即vod表
+            // $data['vod_id'] = $video_selected_data['vod_id'];
+            // $data['vod_time'] = time();
+            // $save_vod = model('vod')->allowField(true)->update( $data );
         }
         else{
             $data['vod_time_add'] = time();
             $data['vod_time'] = time();
             $res = $this->allowField(true)->insert($data);
         }
-        if(false === $res && $save_vod === false){
+        if(false === $res){
             Db::rollback();
             return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
         }
