@@ -85,9 +85,12 @@ class VodPicEditZd extends Common
 
                 $type_list = model('Type')->getCache('type_list');
                 foreach ($vod_xml_info as $v) {
+                    $v['vod_name'] = mac_characters_format(trim($v['vod_name']));
                     if ($v['vod_name'] != $info['vod_name']) {
+                        Log::info('过滤 视频名称为::' . $v['vod_name'].'查找名称'.$info['vod_name']);
                         continue;
                     }
+
                     if ($name == 'ok') {
                        $cjflag = md5("https://cj.okzy.tv/inc/api1s_subname.php");
                         $param_1 = 'ac=cj&cjflag='.$cjflag.'&cjurl=https%3A%2F%2Fcj.okzy.tv%2Finc%2Fapi1s_subname.php&h=&t=&ids=' . $v['vod_id'] . '&wd=' . $v['vod_name'] . '&type=1&mid=1&opt=0&filter=0&filter_from=&param=';
