@@ -45,9 +45,9 @@ class VodPicEditZd extends Common
 //                if (substr($v['vod_pic'], 0, 4) == 'http') {
 //                   continue;
 //                }
-                self::_logWrite('视频id为::' . $v['vod_id'] . '视频名称为::' . $v['vod_name'] . '更新开始-----');
+                self::_logWrite('视频id为::' . $v['vod_id'] . '----视频名称为::' . $v['vod_name'] . '----更新开始-----');
                 self::_getData($v);
-                self::_logWrite('视频id为::' . $v['vod_id'] . '视频名称为::' . $v['vod_name'] . '更新结束-----');
+                self::_logWrite('视频id为::' . $v['vod_id'] . '----视频名称为::' . $v['vod_name'] . '----更新结束-----');
             }
         } catch (Exception $e) {
             self::_logWrite('更新vod表图片异常信息::::' . $e);
@@ -75,7 +75,7 @@ class VodPicEditZd extends Common
                 $vod_xml_info = $this->vod_xml_id($output);
                 if (!empty($vod_xml_info) && !isset($vod_xml_info['code'])) {
                     $name = $zyk_val;
-                    self::_logWrite('查询到的数据' . json_encode($vod_xml_info));
+                    self::_logWrite('查询到的数据：：' . json_encode($vod_xml_info));
                     break;
                 }
             }
@@ -122,10 +122,10 @@ class VodPicEditZd extends Common
                             $edit_data['vod_time'] = time();
                             $where['vod_id'] = $info['vod_id'];
                             $result = $this->vodDb->where($where)->update($edit_data);
-                            self::_logWrite('视频id为::' . $info['vod_id'] . '视频名称为::' . $info['vod_name'] . '更新结果为：：' . $result);
+                            self::_logWrite('视频id为::' . $info['vod_id'] . '----视频名称为::' . $info['vod_name'] . '----更新结果为：：' . $result);
                         }
                     } else {
-                        self::_logWrite(json_encode($res_vod_xml));
+                        self::_logWrite('从资源站获取数据错误：：'.json_encode($res_vod_xml));
                     }
                 }
             }
@@ -358,7 +358,7 @@ class VodPicEditZd extends Common
 
             $key++;
         }
-        self::_logWrite(json_encode($array_data));
+        self::_logWrite('根据视频名称去资源站搜索结果：：'.json_encode($array_data));
         return $array_data;
     }
 
