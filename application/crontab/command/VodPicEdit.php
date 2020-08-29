@@ -37,7 +37,7 @@ class VodPicEdit extends Common
             Log::info('$name::'.$name);
 
             $is_true = true;
-            Cache::set('video_selected_current_select_video_id', '');
+            // Cache::set('video_selected_current_select_video_id', '');
             while ($is_true) {
                 $current_vod_id = Cache::get('video_selected_current_select_video_id');
                 Log::info('current_vod_id::'. $current_vod_id);
@@ -45,8 +45,8 @@ class VodPicEdit extends Common
                 if (!empty($current_vod_id)) {
                     $vod_where['vod_id'] = ['EGT', $current_vod_id];
                 }
-                $vod_info = $this->vodDb->field('vod_id,vod_name,vod_content,vod_blurb,vod_actor,vod_director,type_id,vod_play_url,type_id_1')
-                    ->where('vod_pic','not like',['%20200826%','%20200827%','%20200825%', '%20200828%'],'AND')
+                $vod_info = $this->vodDb->field('vod_id,vod_name,vod_content,vod_blurb,vod_actor,vod_director,type_id,vod_play_url,type_id_1,vod_pic')
+                    ->where("(vod_pic NOT LIKE '%20200826%' AND vod_pic NOT LIKE '%20200827%' AND vod_pic NOT LIKE '%20200825%' AND vod_pic NOT LIKE '%20200828%' AND vod_pic NOT LIKE '%20200829%' AND vod_pic NOT LIKE '%20200830%') OR vod_pic LIKE '%http%'")
                     ->where($vod_where)
                     ->order('vod_id asc')
                     ->limit('0, 20')
@@ -58,13 +58,21 @@ class VodPicEdit extends Common
                     $current_index = Cache::get('vod_pic_current_index');
                     foreach ($vod_info as $v) {
                         Cache::set('vod_pic_current_index', $current_index + 1);
+                        if(substr($v['vod_pic'],0,4)=='http'){
+                            $tmp = $this->syncImages(1, $v['vod_pic'], 'vod');
+                            $edit_data['vod_pic'] = (string)$tmp['pic'];
+                            $edit_data['vod_time'] = time();
+                            $edit_where['vod_id'] = $v['vod_id'];
+                            $edit_result = $this->vodDb->where($edit_where)->update($edit_data);
+                            Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '中地址包含http ' . '更新结果为：：'.$edit_result);
+                            continue;
+                        }
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新开始-----');
                         Cache::set('video_selected_current_select_video_id', $v['vod_id']);
                         self::_getData($v, $name);
                         Log::info('视频id为::'. $v['vod_id']  . '视频名称为::' . $v['vod_name'] . '更新结束-----');
                     }
                 }
-
             }
 
 
@@ -154,7 +162,7 @@ class VodPicEdit extends Common
                             $old_check_data['type_id'] = $info['type_id'];
                             $old_check_data['vod_play_url'] = $info['vod_play_url'];
                             $old_check_data['type_id_1'] = $info['type_id_1'];
-                            self::_logWrite('视频名称为::' . $v['vod_name'] . '数据库vod_id::' . $info['vod_id'] . '当前顺序：：' . Cache::get('vod_pic_current_index'));
+                            self::_logWrite('视频名称为::' . $info['vod_name'] . '数据库vod_id::' . $info['vod_id'] . '当前顺序：：' . Cache::get('vod_pic_current_index'));
                             $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
                             if($check_vod_rade){
                                 $tmp = $this->syncImages($config['pic'], $v1['vod_pic'], 'vod');
