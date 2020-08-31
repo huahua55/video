@@ -42,9 +42,9 @@ return array(
 		'292' => array("show" => 1, "name" => '短信发送配置', 'controller' => 'system', 'action' => 'configsms'),
 
 		'2910' => array("show" => 1, "name" => '定时任务配置', 'controller' => 'timming', 'action' => 'index'),
-		'2911' => array("show" => 0, 'name' => '--定时任务信息维护', 'controller' => 'type', 'action' => 'info'),
-		'2912' => array("show" => 0, 'name' => '--定时任务删除', 'controller' => 'type', 'action' => 'del'),
-		'2913' => array("show" => 0, 'name' => '--定时任务状态', 'controller' => 'type', 'action' => 'field'),
+		'2911' => array("show" => 0, 'name' => '--定时任务信息维护', 'controller' => 'timming', 'action' => 'info'),
+		'2912' => array("show" => 0, 'name' => '--定时任务删除', 'controller' => 'timming', 'action' => 'del'),
+		'2913' => array("show" => 0, 'name' => '--定时任务状态', 'controller' => 'timming', 'action' => 'field'),
 
 		'2920' => array("show" => 1, "name" => '站群配置', 'controller' => 'domain', 'action' => 'index'),
 		'2922' => array("show" => 0, 'name' => '--站群删除', 'controller' => 'domain', 'action' => 'del'),
@@ -210,6 +210,7 @@ return array(
 		'61101' => array("show" => 0, 'name' => '--权限信息维护', 'controller' => 'rule', 'action' => 'info'),
 		'61102' => array("show" => 0, 'name' => '--删除权限', 'controller' => 'rule', 'action' => 'del'),
 		'61103' => array("show" => 0, 'name' => '--权限状态', 'controller' => 'rule', 'action' => 'field'),
+        '61104' => array("show" => 0, 'name' => '--更新权限', 'controller' => 'rule', 'action' => 'updateRule'),
 
 	)),
 

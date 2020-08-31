@@ -65,9 +65,27 @@ class roles extends Base {
 			return $this->success($save_video['msg']);
 		}
 
-		$where['id'] = input('id');
+        $role_id = input('id');
+
+		$where['id'] = $role_id;
 
 		$res = model('roles')->infoData($where);
+
+        // 获取所有权限
+        $all_rules = self::_getAllRule();
+        if (!empty($role_id)) {
+            // 获取已关联权限
+            $has_link_rules = self::_getRoleHasLinkRule( $role_id );
+            if ($has_link_rules['code'] > 1) {
+                return $this->error($has_link_rules['msg']);
+            }
+        } else {
+            $has_link_rules['data'] = [];
+        }
+
+        $all_rules = self::_filterRule( $all_rules, $has_link_rules['data'] );
+
+        $this->assign('all_rules', $all_rules);
 
 		$info = $res['info'];
 		$this->assign('info', $info);
@@ -97,7 +115,11 @@ class roles extends Base {
 		$param = input();
 		$ids = isset($param['ids']) ? $param['ids'] : '';
 
-		return model('roles')->delData($ids);
+		$res = model('roles')->delData($ids);
+
+        if($res['code'] > 1){
+            return $this->error($res['msg']);
+        }
 	}
 
 	/**
@@ -116,4 +138,56 @@ class roles extends Base {
 
 		return ['whereOr' => $whereOr, 'where' => $where];
 	}
+
+    /**
+     * 获取所有权限
+     * @return [type] [description]
+     */
+    private function _getAllRule() {
+        $all_rules = model('rule')->getAllRule();
+        return $all_rules;
+    }
+
+    /**
+     * 获取角色已关联的权限
+     * @return [type] [description]
+     */
+    private function _getRoleHasLinkRule( $role_id ) {
+        $role_has_link_rule = model('role_rule_link')->getRoleHasLinkRule( $role_id );
+        return $role_has_link_rule;
+    }
+
+    /**
+     * 过滤权限
+     * @param  [type] $all_rules      [description]
+     * @param  [type] $has_link_rules [description]
+     * @return [type]                 [description]
+     */
+    private function _filterRule( $all_rules, $has_link_rules ) {
+        foreach ($all_rules as $k => $v) {
+            // 改子级下所选中的数量
+            $selected_count = 0;
+            // 权限总数
+            $children_info_count = count($v['children_info']);
+            foreach ($v['children_info'] as $k1 => $v1) {
+                if (in_array( $v1['id'], $has_link_rules )) {
+                    $selected_count = $selected_count + 1;
+                    $all_rules[$k]['children_info'][$k1]['checked'] = 'checked';
+                } else {
+                    $all_rules[$k]['children_info'][$k1]['checked'] = '';
+                }
+            }
+
+            if (($selected_count == $children_info_count && 
+                            $selected_count != 0 && $children_info_count != 0) || 
+                (in_array( $v['id'], $has_link_rules ) && $v['parent_id'] == 0)
+                ) {
+                $all_rules[$k]['checked'] = 'checked';
+            } else {
+                $all_rules[$k]['checked'] = '';
+            }
+        }
+
+        return $all_rules;
+    }
 }

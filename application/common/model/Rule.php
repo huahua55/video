@@ -2,9 +2,9 @@
 
 namespace app\common\model;
 
-class Roles extends Base {
+class Rule extends Base {
 	// 设置数据表（不含前缀）
-	protected $name = 'roles';
+	protected $name = 'rule';
 
 	// 定义时间戳字段名
 	protected $createTime = '';
@@ -26,20 +26,38 @@ class Roles extends Base {
 	 * @return [type]           [description]
 	 */
 	public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0) {
+
 		$limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
 
-		$field_a = 'id,role_name,status';
+		$field_a = 'id,rule_name,status,controller,action,parent_id';
 
-		$total = $this->where(function ($query) use ($whereOr) {
-			$query->whereOr($whereOr);
-		})->where($where)->limit($limit_str)->count();
+        if (empty($whereOr)) {
+            $where_str = '';
+        } else {
+            $where_str = "INSTR(`rule_name`,'" . $whereOr['rule_name'] . "') > 0 OR `id` = '" .  $whereOr['rule_name'] . "'";
+        }
+        $where['parent_id'] = 0;
 
-		$list = $this->field($field_a)
-			->where(function ($query) use ($whereOr) {
-				$query->whereOr($whereOr);
-			})
+		$total = $this->where($where_str)->where($where)->limit($limit_str)->count();
+
+		$parents = $this->field($field_a)
+			->where($where_str)
 			->where($where)
 			->order($order)->limit($limit_str)->select();
+
+		$parent_ids = array_unique(array_column($parents, 'id'));
+		unset($where['parent_id']);
+
+		$where['parent_id'] = ['in', $parent_ids];
+		$childrens = $this->field($field_a)
+			->where($where_str)
+			->where($where)
+			->order($order)->select();
+		$list = $childrens;
+
+		foreach ($parents as $v) {
+			$list[] = $v;
+		}
 
 		return ['code' => 1, 'msg' => '数据列表', 'page' => $page, 'pagecount' => ceil($total / $limit), 'limit' => $limit, 'total' => $total, 'list' => $list];
 	}
@@ -121,11 +139,117 @@ class Roles extends Base {
 	 * @param  [type] $where [description]
 	 * @return [type]        [description]
 	 */
-	public function delData($where) {
-		$res = $this->where($where)->delete();
+	public function delData($ids, $is_master) {
+		if (empty($ids)) {
+            return ['code' => 1001, 'msg' => '参数错误'];
+        }
+
+        // 如果是父级，则删除自己即下级
+        $whereOr = [];
+        if ($is_master == 0) {
+        	$whereOr['parent_id'] = ['in', $ids];
+        }
+		$where['id'] = ['in', $ids];
+		$res = $this->where($where)->whereOr($whereOr)->delete();
 		if ($res === false) {
 			return ['code' => 1001, 'msg' => '删除失败：' . $this->getError()];
 		}
 		return ['code' => 1, 'msg' => '删除成功'];
+	}
+
+	/**
+	 * 获取父级分类
+	 * @return [type] [description]
+	 */
+	public function getParentList() {
+		$where['parent_id'] = 0;
+		$where['status'] = 1;
+		$field = 'id,rule_name,parent_id';
+		$list = $this->field($field)->where($where)->select();
+		return objectToArray($list);
+	}
+
+	/**
+	 * 获取父级分类
+	 * @return [type] [description]
+	 */
+	public function getChildrenListByParentId( $parent_id ) {
+		$where['parent_id'] = $parent_id;
+		$where['status'] = 1;
+		$field = 'id,rule_name,parent_id';
+		$list = $this->field($field)->where($where)->select();
+		return objectToArray($list);
+	}
+
+	/**
+	 * 获取所有权限
+	 * @return [type] [description]
+	 */
+	public function getAllRule() {
+		$parent_info = $this->getParentList();
+		if (!empty($parent_info)) {
+			// 获取子级
+			foreach ($parent_info as $k => $v) {
+				$parent_info[$k]['children_info'] = $this->getChildrenListByParentId( $v['id'] );
+			}
+		}
+		
+		return $parent_info;
+	}
+
+	/**
+	 * 更新权限
+	 * @return [type] [description]
+	 */
+	public function updateRule() {
+		//权限列表
+        $menus = @include MAC_ADMIN_COMM . 'auth.php';
+
+        foreach($menus as $k1=>$v1){
+            foreach($v1['sub'] as $k2=>$v2){
+        		if ($v2['show'] == 1) {
+        			// 校验权限是否存在
+        			$parent_rule_where['controller'] = $v2['controller'];
+        			$parent_rule_where['action'] = $v2['action'];
+        			$parent_has_exist = $this->field('id')->where($parent_rule_where)->find();
+        			if (empty($parent_has_exist)) {
+        				// 菜单栏
+            			$parent_rule_data['rule_name'] = $v2['name'];
+            			$parent_rule_data['controller'] = $v2['controller'];
+            			$parent_rule_data['parent_id'] = 0;
+            			$parent_rule_data['action'] = $v2['action'];
+            			$parent_rule_data['status'] = 1;
+            			$parent_rule_data['add_time'] = time();
+            			$this->insert($parent_rule_data);
+        			}
+        		}
+
+        		if ($v2['show'] == 0) {
+            		// 子级
+            		// 校验权限是否存在
+        			$children_rule_where['controller'] = $v2['controller'];
+        			$children_rule_where['action'] = $v2['action'];
+        			$children_has_exist = $this->field('id')->where($children_rule_where)->find();
+
+        			if (empty($children_has_exist)) {
+        				// 根据控制器找到parent_id
+        				$parent_where['controller'] = $v2['controller'];
+        				$parent_info = $this->field('id')->where($parent_where)->find();
+        				if (empty($parent_info)) {
+        					continue;
+        				}
+        				// 菜单栏
+            			$children_rule_data['rule_name'] = $v2['name'];
+            			$children_rule_data['controller'] = $v2['controller'];
+            			$children_rule_data['action'] = $v2['action'];
+            			$children_rule_data['parent_id'] = $parent_info['id'];
+            			$children_rule_data['status'] = 1;
+            			$children_rule_data['add_time'] = time();
+            			$this->insert($children_rule_data);
+        			}
+        		}
+            }
+        }
+        return ['code' => 0, 'msg' => '更新成功'];
 	}
 }

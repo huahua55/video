@@ -79,19 +79,35 @@ class Roles extends Base {
 		}
 
         $data['role_name'] = htmlspecialchars(urldecode($data['role_name']));
-
+        Db::startTrans();
 		if (!empty($data['id'])) {
 			$where = [];
 			$where['id'] = ['eq', $data['id']];
 			$data['update_time'] = time();
 			$res = $this->allowField(true)->where($where)->update($data);
+
+            $role_id = $data['id'];
 		} else {
 			$data['add_time'] = time();
 			$res = $this->allowField(true)->insert($data);
+
+            $role_id = $this->getLastInsID();
 		}
+
+        if (!empty($data['rule_ids'])) {
+            // 处理角色关联的权限
+            $set_role_link_rule = model('role_rule_link')->addRoleLinkRule( $data['rule_ids'], $role_id );
+            if ($set_role_link_rule['code'] > 1) {
+                Db::rollback();
+                return $set_role_link_rule;
+            }
+        }
+        
 		if (false === $res) {
+            Db::rollback();
 			return ['code' => 1002, 'msg' => '保存失败：' . $this->getError()];
 		}
+        Db::commit();
 		return ['code' => 1, 'msg' => '保存成功'];
 	}
 
@@ -132,6 +148,13 @@ class Roles extends Base {
             return ['code' => 1001, 'msg' => '参数错误'];
         }
 
+        // 角色是否已关联用户
+        $role_has_link_user = model('admin_role')->roleHasLinkUser($ids);
+
+        if ($role_has_link_user['code'] > 1) {
+            return $role_has_link_user;
+        }
+
         Db::startTrans();
         // 删除关联关系表
         $del_where['role_id'] = ['in', $ids];
@@ -151,4 +174,15 @@ class Roles extends Base {
         Db::commit();
 		return ['code' => 1, 'msg' => '删除成功'];
 	}
+
+    /**
+     * 可用的角色列表
+     * @return [type] [description]
+     */
+    public function allRoleList() {
+        $where['status'] = 1;
+        $field = 'id,role_name';
+        return $this->field($field)->where($where)->select();
+    }
+
 }

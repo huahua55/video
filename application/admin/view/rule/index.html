@@ -10,7 +10,15 @@
     <div class="demoTable">
         搜索：
         <div class="layui-inline">
-            <input class="layui-input" placeholder="角色名称或ID" name="id" id="demoReload" autocomplete="off">
+            <input class="layui-input" placeholder="权限名称或ID" name="id" id="demoReload" autocomplete="off">
+        </div>
+        &nbsp; 控制器名：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="控制器名" name="controller" autocomplete="off">
+        </div>
+        &nbsp; 方法名：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="方法名" name="action" autocomplete="off">
         </div>
         &nbsp; 角色状态：
         <div class="layui-inline">
@@ -46,7 +54,8 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
+        <button class="layui-btn layui-btn-danger" lay-event="addRuleData">添加</button>
+        <button class="layui-btn layui-btn-danger" lay-event="updateRuleData">更新权限</button>
     </div>
 </script>
 
@@ -67,7 +76,7 @@
             }
             
             $.ajax({
-                url :'/admin/roles/list',
+                url :'/admin/rule/list',
                 data : data,
                 type : 'get',
                 dataType : 'json',
@@ -108,7 +117,7 @@
                         result_data.param.limit = obj.limit;
                         if(!first){
                             $.ajax({
-                                url :'/admin/roles/list',
+                                url :'/admin/rule/list',
                                 data : result_data.param,
                                 type : 'get',
                                 dataType : 'json',
@@ -152,14 +161,16 @@
         }
 
         function test(result_data){
-            layui.use(['form', 'jquery', 'layer', 'table', 'laypage'], function () {
+            layui.use(['form', 'upload', 'util', 'treeTable', 'jquery', 'layer', 'table', 'laypage'], function () {
                 var table = layui.table;
                 var form = layui.form;
                 var laypage = layui.laypage //分页
                 var layer = layui.layer //弹层
                 var $ = layui.jquery
+                var util = layui.util; //注意这行，很重要
+                var treeTable = layui.treeTable; //注意这行，很重要
                 // 渲染表格
-                table.render({
+                var insTb = treeTable.render({
                     elem: '#test',
                     data: result_data,
                     id: 'testReload',
@@ -170,6 +181,12 @@
                         icon: 'layui-icon-tips'
                     }],
                     cellMinWidth: 100,
+                    tree: {
+                        iconIndex: 2,
+                        isPidData: true,
+                        idName: 'id',
+                        pidName: 'parent_id'
+                    },
                     cols: [
                         [ {
                             fixed: 'right',
@@ -177,13 +194,21 @@
                             toolbar: '#barDemo'
                         }, {
                             field: 'id',
-                            title: '角色ID',
+                            title: '权限ID',
                         }, {
-                            field: 'role_name',
-                            title: '角色名称',
+                            field: 'rule_name',
+                            title: '权限名称',
+                            width: 300
+                        }, {
+                            field: 'controller',
+                            title: '控制器名',
+                        }, {
+                            field: 'action',
+                            title: '方法名',
                         }, {
                             field: 'status',
-                            title: '角色状态',
+                            title: '权限状态',
+                            width: 200,
                             templet: '#is_statusTpl'
                         }
                         ]
@@ -194,32 +219,60 @@
                 });
 
                 //头工具栏事件
-                table.on('toolbar(test)', function (obj) {
-                    layer.open({
-                        type: 2,
-                        skin: 'layui-layer-demo', //样式类名
-                        title: '添加',
-                        closeBtn: 1, //不显示关闭按钮
-                        anim: 2,
-                        area: ['100%', '100%'],
-                        offset: ['0px', '0px'],
-                        shadeClose: true, //开启遮罩关闭
-                        content: '/admin/roles/info'
-                    });
+                treeTable.on('toolbar(test)', function (obj) {
+                    switch(obj.event){
+                        case 'updateRuleData':
+                            // 更新权限
+                            $.ajax({
+                                type: "get",
+                                url: "/admin/rule/updateRule",
+                                data: {},
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.code == 0) {
+                                        layer.closeAll();
+                                        layer.msg(data.msg);
+                                    } else {
+                                        layer.msg(data.msg);
+                                    }
+                                },
+                            });
+                        break;
+                        case 'addRuleData':
+                            layer.open({
+                                type: 2,
+                                skin: 'layui-layer-demo', //样式类名
+                                title: '添加',
+                                closeBtn: 1, //不显示关闭按钮
+                                anim: 2,
+                                area: ['100%', '100%'],
+                                offset: ['0px', '0px'],
+                                shadeClose: true, //开启遮罩关闭
+                                content: '/admin/rule/info'
+                            });
+                        break;
+                    };
+                    
                 });
 
                 //监听行工具事件
-                table.on('tool(test)', function (obj) {
+                treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
                     if (obj.event === 'del') {
-                        layer.confirm('真的删除行么', function (index) {
+                        var msg = '真的删除行么';
+                        if (data.parent_id == 0) {
+                            msg = '真的删除行及其子级么';
+                        } 
+                        layer.confirm(msg, function (index) {
                             obj.del();
                             layer.close(index);
+
                             $.ajax({
                                 type: "post",
-                                url: "/admin/roles/del",
+                                url: "/admin/rule/del",
                                 data: {
-                                    'ids': data.id
+                                    'ids': data.id,
+                                    'is_master': data.parent_id
                                 },
                                 dataType: "json",
                                 success: function (data) {
@@ -242,7 +295,7 @@
                             area: ['100%', '100%'],
                             offset: ['0px', '0px'],
                             shadeClose: true, //开启遮罩关闭
-                            content: '/admin/roles/info?id=' + data.id
+                            content: '/admin/rule/info?id=' + data.id
                         });
                     }
                 });
@@ -251,7 +304,9 @@
                 $('.demoTable .layui-btn').unbind('click').bind('click', function () {
                     var data = {
                         status: $("select[name='status']").val(),
-                        role_name: $('#demoReload').val(),
+                        rule_name: $('#demoReload').val(),
+                        controller: $("input[name='controller']").val(),
+                        action: $("input[name='action']").val(),
                     };
                     $('#search_data').val( JSON.stringify( data ) );
                     init_table( $('#cur_page').val(), $('#cur_limit').val(), JSON.stringify( data ) );
@@ -267,7 +322,7 @@
                     };
                     $.ajax({
                         type: "GET",
-                        url: "/admin/roles/field",
+                        url: "/admin/rule/field",
                         data: data,
                         dataType: "json",
                         success: function (data) {

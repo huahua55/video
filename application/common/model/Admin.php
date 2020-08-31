@@ -52,6 +52,7 @@ class Admin extends Base {
         else{
             $data['admin_auth'] = '';
         }
+        Db::startTrans();
         $validate = \think\Loader::validate('Admin');
         if(!empty($data['admin_id'])){
             if(!$validate->scene('edit')->check($data)){
@@ -76,9 +77,15 @@ class Admin extends Base {
             $data['admin_pwd'] = md5($data['admin_pwd']);
             $res = $this->insert($data);
         }
-        if(false === $res){
+
+        // 用户角色
+        $user_role = model('admin_role')->saveData($data['admin_id'], $data['role_id']);
+
+        if(false === $res && $user_role['code'] != 1){
+            Db::rollback();
             return ['code'=>1003,'msg'=>''.$this->getError() ];
         }
+        Db::commit();
         return ['code'=>1,'msg'=>'保存成功'];
     }
 
@@ -140,6 +147,9 @@ class Admin extends Base {
         $update['admin_last_login_time'] = $row['admin_login_time'];
         $update['admin_last_login_ip'] = $row['admin_login_ip'];
 
+        // 更新权限
+        $update['admin_auth'] = self::_getUserRole($row['admin_id'], $row['admin_auth']);
+
         $res = $this->where($where)->update($update);
         if($res===false){
             return ['code'=>1004,'msg'=>'更新登录信息失败'];
@@ -189,5 +199,34 @@ class Admin extends Base {
         return ['code'=>1,'msg'=>'已登录','info'=>$info];
     }
 
+    /**
+     * 获取用户角色和权限
+     * @param  [type] $admin_id [description]
+     * @return [type]           [description]
+     */
+    private function _getUserRole($admin_id, $old_admin_auth) {
+        $role_info = model('admin_role')->getRoleByUserId($admin_id);
+        if ($role_info['code'] > 1) {
+            return $role_info;
+        }
+        // 获取角色下的权限
+        $get_role_rule_info = model('role_rule_link')->getRoleHasLinkRule($role_info['data']['role_id']);
 
+        $rule_ids = $get_role_rule_info['data'];
+        // 获取所有权限
+        $where['id'] = ['in', $rule_ids];
+        $where['status'] = 1;
+        $field = 'controller,action';
+        $rule_info = model('rule')->where($where)->select();
+        $old_admin_auth = array_filter(explode(',', $old_admin_auth));
+        foreach ($rule_info as $k => $v) {
+            $auth = $v['controller'] . '/' . $v['action'];
+            if (!in_array($auth, $old_admin_auth)) {
+                array_push($old_admin_auth, $auth);
+            }
+        }
+
+        $old_admin_auth = ','. implode(',', $old_admin_auth) .',';
+        return $old_admin_auth;
+    }
 }
