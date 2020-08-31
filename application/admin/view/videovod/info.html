@@ -75,6 +75,12 @@
 			</div> 
 		</div>
         <div class="layui-form-item">
+            <label class="layui-form-label">下载失败次数：</label>
+            <div class="layui-input-inline w200">
+                <input type="text" class="layui-input" value="{$info.fail_count}" placeholder="请输入下载失败次数" id="fail_count" name="fail_count">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">权重顺序：</label>
             <div class="layui-input-inline w100">
                 <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight" lay-verify="weight">
