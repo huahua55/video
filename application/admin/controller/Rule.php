@@ -20,7 +20,7 @@ class rule extends Base {
 	 * 列表页
 	 * @return [type] [description]
 	 */
-	public function list() {
+	public function index1() {
 		$param = input();
 		$param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
 		$param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
@@ -44,10 +44,9 @@ class rule extends Base {
 
 		$data['code'] = 0;
 		$data['count'] = $res['total'];
-		$data['msg'] = 'succ';
 		$data['data'] = $res['list'];
 
-		return $data;
+		return $this->success('succ', null, $data);
 	}
 
 	/**
@@ -91,7 +90,11 @@ class rule extends Base {
 		$col = isset($param['col']) ? $param['col'] : '';
 		$val = isset($param['val']) ? $param['val'] : '';
 
-		return model('rule')->fieldData($ids, $col, $val);
+		$res = model('rule')->fieldData($ids, $col, $val);
+		if($res['code'] > 1){
+            return $this->error($res['msg']);
+        }
+        return $this->success($res['msg']);
 	}
 
 	/**
@@ -103,7 +106,11 @@ class rule extends Base {
 		$ids = isset($param['ids']) ? $param['ids'] : '';
 		$is_master = $param['is_master'];
 
-		return model('rule')->delData($ids, $is_master);
+		$res = model('rule')->delData($ids, $is_master);
+		if($res['code'] > 1){
+            return $this->error($res['msg']);
+        }
+        return $this->success($res['msg']);
 	}
 
 	/**
@@ -111,7 +118,11 @@ class rule extends Base {
 	 * @return [type] [description]
 	 */
 	public function updateRule() {
-		return model('rule')->updateRule($ids, $is_master);
+		$res = model('rule')->updateRule($ids, $is_master);
+		if($res['code'] > 1){
+            return $this->error($res['msg']);
+        }
+        return $this->success($res['msg']);
 	}
 
 	/**

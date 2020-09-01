@@ -20,7 +20,7 @@ class roles extends Base {
 	 * 列表页
 	 * @return [type] [description]
 	 */
-	public function list() {
+	public function index1() {
 		$param = input();
 		$param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
 		$param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
@@ -43,10 +43,9 @@ class roles extends Base {
 
 		$data['code'] = 0;
 		$data['count'] = $res['total'];
-		$data['msg'] = 'succ';
 		$data['data'] = $res['list'];
 
-		return $data;
+		return $this->success('succ', null, $data);
 	}
 
 	/**
@@ -104,7 +103,11 @@ class roles extends Base {
 		$col = isset($param['col']) ? $param['col'] : '';
 		$val = isset($param['val']) ? $param['val'] : '';
 
-		return model('roles')->fieldData($ids, $col, $val);
+		$res = model('roles')->fieldData($ids, $col, $val);
+        if($res['code'] > 1){
+            return $this->error($res['msg']);
+        }
+        return $this->success($res['msg']);
 	}
 
 	/**
@@ -120,6 +123,7 @@ class roles extends Base {
         if($res['code'] > 1){
             return $this->error($res['msg']);
         }
+        return $this->success($res['msg']);
 	}
 
 	/**
@@ -180,7 +184,7 @@ class roles extends Base {
 
             if (($selected_count == $children_info_count && 
                             $selected_count != 0 && $children_info_count != 0) || 
-                (in_array( $v['id'], $has_link_rules ) && $v['parent_id'] == 0)
+                (in_array( $v['id'], $has_link_rules ) && $v['parent_id'] == 0 && empty($v['children_info']))
                 ) {
                 $all_rules[$k]['checked'] = 'checked';
             } else {

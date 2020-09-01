@@ -148,7 +148,10 @@ class Admin extends Base {
         $update['admin_last_login_ip'] = $row['admin_login_ip'];
 
         // 更新权限
-        $update['admin_auth'] = self::_getUserRole($row['admin_id'], $row['admin_auth']);
+        $get_user_role = self::_getUserRole($row['admin_id']);
+        if ($get_user_role['code'] == 1) {
+            $update['admin_auth'] = $get_user_role['data'];
+        }
 
         $res = $this->where($where)->update($update);
         if($res===false){
@@ -204,29 +207,56 @@ class Admin extends Base {
      * @param  [type] $admin_id [description]
      * @return [type]           [description]
      */
-    private function _getUserRole($admin_id, $old_admin_auth) {
+    private function _getUserRole($admin_id) {
         $role_info = model('admin_role')->getRoleByUserId($admin_id);
         if ($role_info['code'] > 1) {
             return $role_info;
         }
+        $where['l.role_id'] = ['in', $role_info['data']['role_id']];
+        $where['r.status'] = 1;
         // 获取角色下的权限
-        $get_role_rule_info = model('role_rule_link')->getRoleHasLinkRule($role_info['data']['role_id']);
+        $rule_info = model('role_rule_link')->alias('l')
+                            ->field('r.id,r.controller,r.action')
+                            ->join('rule r', 'r.id=l.rule_id', 'left')
+                            ->where($where)
+                            ->select();
+                            
+        $rule_ids = array_unique(array_column($rule_info, 'id'));
 
-        $rule_ids = $get_role_rule_info['data'];
-        // 获取所有权限
-        $where['id'] = ['in', $rule_ids];
-        $where['status'] = 1;
-        $field = 'controller,action';
-        $rule_info = model('rule')->where($where)->select();
-        $old_admin_auth = array_filter(explode(',', $old_admin_auth));
+        $new_admin_auth = [];
+        $add_link_data = [];
         foreach ($rule_info as $k => $v) {
             $auth = $v['controller'] . '/' . $v['action'];
-            if (!in_array($auth, $old_admin_auth)) {
-                array_push($old_admin_auth, $auth);
+            if ($v['action'] == 'index') {
+                // 获取列表id
+                $rule_where['controller'] = $v['controller'];
+                $rule_where['action'] = 'index1';
+                $rule_info = model('rule')->field('id')->where($rule_where)->find();
+
+                if (!empty($rule_info['id']) && !in_array($rule_info['id'], $rule_ids)) {
+                    // 列表未关联则添加关联关系
+                    $add_link_data[] = [
+                        'role_id' => $role_info['data']['role_id'],
+                        'rule_id' => $rule_info['id'],
+                        'add_time' => time()
+                    ];
+                }
+
+                $index1 = $v['controller'] . '/index1';
+                // 是列表
+                if (!in_array($index1, $new_admin_auth)) {
+                    $new_admin_auth[] = $index1;
+                }
             }
+            $new_admin_auth[] = $auth;
         }
 
-        $old_admin_auth = ','. implode(',', $old_admin_auth) .',';
-        return $old_admin_auth;
+        if (!empty($add_link_data)) {
+            model('role_rule_link')->insertAll($add_link_data);
+        }
+
+        $new_admin_auth = array_unique($new_admin_auth);
+        $new_admin_auth = ',index/index,index/welcome,'. implode(',', $new_admin_auth) .',';
+        return ['code' => 1, 'msg' => '获取角色成功', 'data' => $new_admin_auth];
     }
 }

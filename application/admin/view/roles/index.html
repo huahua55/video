@@ -67,7 +67,7 @@
             }
             
             $.ajax({
-                url :'/admin/roles/list',
+                url :'/admin/roles/index1',
                 data : data,
                 type : 'get',
                 dataType : 'json',
@@ -78,10 +78,13 @@
                 success : function(result_data){
 
                     showloading(false);//关闭loading
+                    if (result_data.code == 0) {
+                        layer.msg(result_data.msg);
+                    } else {
+                        test(result_data['data']['data']);
 
-                    test(result_data['data']);
-
-                    laypageRender( result_data );
+                        laypageRender( result_data['data'] );
+                    }
                 },
                 complete: function(){
                     
@@ -108,7 +111,7 @@
                         result_data.param.limit = obj.limit;
                         if(!first){
                             $.ajax({
-                                url :'/admin/roles/list',
+                                url :'/admin/roles/index1',
                                 data : result_data.param,
                                 type : 'get',
                                 dataType : 'json',
@@ -117,10 +120,13 @@
                                     showloading(true);
                                 },
                                 success : function(result_data){
+                                    if (result_data.code == 0) {
+                                        layer.msg(result_data.msg);
+                                    } else {
+                                        showloading(false);//关闭loading
 
-                                    showloading(false);//关闭loading
-
-                                    test(result_data['data']);
+                                        test(result_data['data']['data']);
+                                    }
                                 },
                                 complete: function(){
                                     
@@ -213,7 +219,6 @@
                     var data = obj.data;
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
-                            obj.del();
                             layer.close(index);
                             $.ajax({
                                 type: "post",
@@ -227,9 +232,10 @@
                                         layer.closeAll();
                                         layer.msg(data.msg);
                                     } else {
+                                        obj.del();
                                         layer.msg(data.msg);
                                     }
-                                },
+                                }
                             });
                         });
                     } else if (obj.event === 'edit') {

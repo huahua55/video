@@ -23,12 +23,12 @@ class AdminRole extends Base {
 	 * @return [type]       [description]
 	 */
 	public function saveData($admin_id, $role_id) {
-		if (empty($role_id) || empty($admin_id)) {
+		if (empty($admin_id)) {
 			return ['code' => 1002, 'msg' => '参数错误'];
 		}
 
 		$where['admin_id'] = $admin_id;
-		if ($role_id > 0) {
+		if (!empty($role_id)) {
 			// 用户是否已绑定角色
 			$get_user_role = $this->getRoleByUserId($admin_id);
 			if ($get_user_role['code'] > 1) {
@@ -40,6 +40,7 @@ class AdminRole extends Base {
 			} else {
 				// 更新
 				$data['update_time'] = time();
+				$data['role_id'] = $role_id;
 				$res = $this->allowField(true)->where($where)->update($data);
 			}
 		} else {
