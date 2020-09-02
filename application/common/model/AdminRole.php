@@ -51,8 +51,19 @@ class AdminRole extends Base {
 			}
 		}
 
+		// 更新用户权限
+		$get_rule_by_role_id = model('role_rule_link')->getRuleByRoleId($role_id);
+		if ($get_rule_by_role_id['code'] == 1) {
+            $admin_where['admin_id'] = ['eq', $admin_id];
+            $admin_edit_data['admin_auth'] = $get_rule_by_role_id['data'];
+
+            $edit_admin = model('admin')->where($admin_where)->update($admin_edit_data);
+
+        } else {
+            return $get_rule_by_role_id;
+        }
 		
-		if (false !== $res) {
+		if (false !== $res && $edit_admin !== false) {
 			return ['code' => 1, 'msg' => '保存成功'];
 		}
 		return ['code' => 1002, 'msg' => '保存失败：' . $this->getError()];
