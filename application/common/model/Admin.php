@@ -46,12 +46,12 @@ class Admin extends Base {
 
     public function saveData($data)
     {
-        if(!empty($data['admin_auth'])){
-            $data['admin_auth'] = ','.join(',',$data['admin_auth']).',';
-        }
-        else{
-            $data['admin_auth'] = '';
-        }
+        // if(!empty($data['admin_auth'])){
+        //     $data['admin_auth'] = ','.join(',',$data['admin_auth']).',';
+        // }
+        // else{
+        //     $data['admin_auth'] = '';
+        // }
         Db::startTrans();
         $validate = \think\Loader::validate('Admin');
         if(!empty($data['admin_id'])){
@@ -212,51 +212,7 @@ class Admin extends Base {
         if ($role_info['code'] > 1) {
             return $role_info;
         }
-        $where['l.role_id'] = ['in', $role_info['data']['role_id']];
-        $where['r.status'] = 1;
-        // 获取角色下的权限
-        $rule_info = model('role_rule_link')->alias('l')
-                            ->field('r.id,r.controller,r.action')
-                            ->join('rule r', 'r.id=l.rule_id', 'left')
-                            ->where($where)
-                            ->select();
-                            
-        $rule_ids = array_unique(array_column($rule_info, 'id'));
-
-        $new_admin_auth = [];
-        $add_link_data = [];
-        foreach ($rule_info as $k => $v) {
-            $auth = $v['controller'] . '/' . $v['action'];
-            if ($v['action'] == 'index') {
-                // 获取列表id
-                $rule_where['controller'] = $v['controller'];
-                $rule_where['action'] = 'index1';
-                $rule_info = model('rule')->field('id')->where($rule_where)->find();
-
-                if (!empty($rule_info['id']) && !in_array($rule_info['id'], $rule_ids)) {
-                    // 列表未关联则添加关联关系
-                    $add_link_data[] = [
-                        'role_id' => $role_info['data']['role_id'],
-                        'rule_id' => $rule_info['id'],
-                        'add_time' => time()
-                    ];
-                }
-
-                $index1 = $v['controller'] . '/index1';
-                // 是列表
-                if (!in_array($index1, $new_admin_auth)) {
-                    $new_admin_auth[] = $index1;
-                }
-            }
-            $new_admin_auth[] = $auth;
-        }
-
-        if (!empty($add_link_data)) {
-            model('role_rule_link')->insertAll($add_link_data);
-        }
-
-        $new_admin_auth = array_unique($new_admin_auth);
-        $new_admin_auth = ',index/index,index/welcome,'. implode(',', $new_admin_auth) .',';
-        return ['code' => 1, 'msg' => '获取角色成功', 'data' => $new_admin_auth];
+        return model('role_rule_link')->getRuleByRoleId($role_info['data']['role_id']);
     }
+    
 }

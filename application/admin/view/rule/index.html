@@ -228,6 +228,7 @@
                 treeTable.on('toolbar(test)', function (obj) {
                     switch(obj.event){
                         case 'updateRuleData':
+                            showloading(true);
                             // 更新权限
                             $.ajax({
                                 type: "get",
@@ -239,7 +240,9 @@
                                         layer.closeAll();
                                         layer.msg(data.msg);
                                     } else {
+                                        layer.closeAll();
                                         layer.msg(data.msg);
+                                        init_table();
                                     }
                                 },
                             });

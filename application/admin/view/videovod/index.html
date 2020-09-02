@@ -226,10 +226,13 @@
             success: function(result_data){
 
                 showloading(false);//关闭loading
+                if (result_data.code == 0) {
+                    layer.msg(result_data.msg);
+                } else {
+                    test(result_data['data']['data']);
 
-                test(result_data['data']);
-
-                laypageRender( result_data );
+                    laypageRender( result_data['data'] );
+                }
             },
             complete: function(){
                 
@@ -283,10 +286,13 @@
                                 showloading(true);
                             },
                             success : function(result_data){
-                                
-                                showloading(false);//关闭loading
+                                if (result_data.code == 0) {
+                                    layer.msg(result_data.msg);
+                                } else {
+                                    showloading(false);//关闭loading
 
-                                test(result_data['data']);
+                                    test(result_data['data']);
+                                }
                             },
                             complete: function(){
                                 

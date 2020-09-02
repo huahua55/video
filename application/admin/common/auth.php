@@ -16,9 +16,7 @@ return array(
         '1705' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'Svideo', 'action' => 'getExamine'),
 		'18' => array("show" => 1, "name" => '下载任务管理', 'controller' => 'videoVod', 'action' => 'index'),
         '1801' => array("show" => 0, "name" => '--下载任务管理列表', 'controller' => 'videoVod', 'action' => 'index1'),
-        '1802' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoVod', 'action' => 'getExamine'),
-        '1803' => array("show" => 0, "name" => '--修改下载任务审核状态', 'controller' => 'videoVod', 'action' => 'updateExamine'),
-        '1804' => array("show" => 0, "name" => '--下载任务管理信息维护', 'controller' => 'videoVod', 'action' => 'info'),
+        '1802' => array("show" => 0, "name" => '--下载任务管理信息维护', 'controller' => 'videoVod', 'action' => 'info'),
 		'19' => array("show" => 1, "name" => '视频数据管理', 'controller' => 'video', 'action' => 'index'),
         '1901' => array("show" => 0, "name" => '--视频数据管理列表', 'controller' => 'video', 'action' => 'index1'),
         '1902' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'video', 'action' => 'getExamine'),
@@ -30,7 +28,7 @@ return array(
         '2002' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoVodOld', 'action' => 'getExamine'),
         '2003' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'videoVodOld', 'action' => 'updateExamine'),
         '2004' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'videoVodOld', 'action' => 'info'),
-        '2004' => array("show" => 0, "name" => '--删除视频', 'controller' => 'videoVodOld', 'action' => 'del'),
+        '2005' => array("show" => 0, "name" => '--删除视频', 'controller' => 'videoVodOld', 'action' => 'del'),
 		'21' => array("show" => 1, "name" => '精选视频管理', 'controller' => 'videoSelected', 'action' => 'index'),
         '2101' => array("show" => 0, "name" => '--精选视频管理列表', 'controller' => 'videoSelected', 'action' => 'index1'),
         '2102' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoSelected', 'action' => 'getExamine'),
@@ -44,7 +42,7 @@ return array(
 		'1003' => array("show" => 0, "name" => '--锁屏解锁', 'controller' => 'index', 'action' => 'unlocked'),
 
 		'1004' => array("show" => 0, "name" => '--公共下拉选择框', 'controller' => 'index', 'action' => 'select'),
-		'1005' => array("show" => 0, "name" => '--文件上传', 'controller' => 'upload', 'action' => 'upload'),
+		'1005' => array("show" => 0, "name" => '文件上传', 'controller' => 'upload', 'action' => 'upload'),
 
 	)),
 

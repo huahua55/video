@@ -102,6 +102,13 @@ class Roles extends Base {
                 return $set_role_link_rule;
             }
         }
+
+        // 同步更新用户权限
+        $edit_admin_auth = self::_editAdminAuth($role_id);
+        if ($edit_admin_auth['code'] > 1) {
+            Db::rollback();
+            return $edit_admin_auth;
+        }
         
 		if (false === $res) {
             Db::rollback();
@@ -183,6 +190,35 @@ class Roles extends Base {
         $where['status'] = 1;
         $field = 'id,role_name';
         return $this->field($field)->where($where)->select();
+    }
+
+    /**
+     * 同步更新用户权限   避免用户登录更新
+     * @param  [type] $role_id [description]
+     * @return [type]          [description]
+     */
+    private function _editAdminAuth($role_id) {
+        $admin_info = model('admin_role')->alias('r')
+                        ->field('a.admin_id')
+                        ->join('admin a', 'a.admin_id=r.admin_id', 'left')
+                        ->where('r.role_id', $role_id)
+                        ->select();
+        $get_rule_by_role_id = model('role_rule_link')->getRuleByRoleId($role_id);
+        $admin_ids = array_column($admin_info, 'admin_id');
+
+        if ($get_rule_by_role_id['code'] == 1) {
+            $admin_where['admin_id'] = ['in', $admin_ids];
+            $admin_edit_data['admin_auth'] = $get_rule_by_role_id['data'];
+
+            $edit_admin = model('admin')->where($admin_where)->update($admin_edit_data);
+            if ($edit_admin !== false) {
+                return ['code' => 1, 'msg' => '更新用户权限成功'];
+            } else {
+                return ['code' => 1001, 'msg' => '更新用户权限失败'];
+            }
+        } else {
+            return $get_rule_by_role_id;
+        }
     }
 
 }
