@@ -1,0 +1,95 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container p10">
+
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">添加任务</a></li>
+            </ul>
+        <div class="layui-tab-content">
+
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户：</label>
+                    <div class="layui-input-block">
+                        {foreach name="info.ad_user_id_array" item="vo"}
+                        <input name="ad_user_id" type="radio" id="ad_user_id-{$key}" value="{$key}" title="{$vo}" {in name="key" value="$info.ad_user_id"}checked{/in} />
+                        {/foreach}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">任务类型：</label>
+                    <div class="layui-input-block">
+                        {foreach name="info.add_type_array" item="vo"}
+                        <input name="add_type" type="radio" id="add_type-{$key}" value="{$key}" title="{$vo}" {in name="key" value="$info.add_type"}checked{/in} />
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">任务数量：</label>
+                    <div class="layui-input-inline w500">
+                        <input type="text" class="layui-input"  value="{$info.total_sum}" placeholder="默认自动生成300个任务" name="total_sum">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline w500">
+                        <input type="text" class="layui-input " id="task_date"  value="{$info.task_date}"  name="task_date" placeholder="yyyy-MM-dd">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+
+<script type="text/javascript">
+
+    layui.use(['form','upload', 'layer','laydate'], function () {
+        // 操作对象
+        var form = layui.form
+                , layer = layui.layer
+                , $ = layui.jquery
+               ,laydate = layui.laydate
+                , upload = layui.upload;
+
+        // 验证
+        // 验证
+        form.verify({
+            vod_name: function (value) {
+                if (value == "") {
+                    return "请输入专题名称";
+                }
+            }
+        });
+        //日期范围
+        laydate.render({
+            elem: '#task_date',
+            // type: 'datetime'
+        });
+
+
+
+
+    });
+
+</script>
+
+</body>
+</html>

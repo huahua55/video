@@ -1,0 +1,112 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container p10">
+
+    <div class="my-toolbar-box" >
+
+        <div class="left mb10">
+            <form class="layui-form " method="post">
+                <div class="layui-input-inline w150">
+                    <select name="status">
+                        <option value="">选择任务状态</option>
+                        <option value="0" {if condition="$param['status'] == '0'"}selected {/if}>未完成</option>
+                        <option value="1" {if condition="$param['status'] == '1'"}selected {/if}>已完成</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;
+                <div class="layui-input-inline w150">
+                    <select name="ad_user_id">
+                        <option value="">选择用户昵称</option>
+
+
+                        {volist name="list_admin_role" id="vo2" key="key2"}
+                        <option value="{$key}" {if condition="$param['ad_user_id'] eq $key"}selected{/if}>{$vo2}</option>
+                        {/volist}
+                    </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;
+                <div class="layui-input-inline w150">
+                    <input class="layui-input laydate-icon" name="task_date" value="{$param['task_date']}" placeholder="日期" id="task_date">
+                </div>
+                <button class="layui-btn mgl-20 j-search" >查询</button>
+            </form>
+        </div>
+        <div class="layui-btn-group">
+            <a data-full="1" data-href="{:url('info')}" class="layui-btn layui-btn-primary j-iframe"><i class="layui-icon">&#xe654;</i>添加</a>
+        </div>
+    </div>
+
+    <form class="layui-form" method="post" id="pageListForm" >
+        <table class="layui-table" lay-size="sm">
+            <thead>
+            <tr>
+                <th width="25"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+                <th>编号</th>
+                <th >用户昵称</th>
+                <th>任务日期</th>
+                <th>今日任务状态</th>
+                <th >分配数量</th>
+                <th>完成数量</th>
+                <th >任务类型</th>
+                <th >管理员</th>
+                <th >更新时间</th>
+                <th width="100">操作</th>
+            </tr>
+            </thead>
+
+            {volist name="list" id="vo"}
+            <tr>
+                <td><input type="checkbox" name="ids[]" value="{$vo.id}" class="layui-checkbox checkbox-ids" lay-skin="primary"></td>
+                <td>{$vo.id}</td>
+                <td>{$vo.ad_user_id_name}</td>
+                <td>{$vo.task_date}</td>
+                <td>{if condition="$vo.status eq 1"}<span class="layui-badge layui-bg-green " >完成</span>{else/}<span class="layui-badge layui-bg-red " >未完成</span>{/if}</td>
+                <td>{$vo.total_sum}</td>
+                <td>{$vo.success_sum}</td>
+                <td>{$vo.task_type_name}</td>
+                <td>{$vo.admin_id_name}</td>
+               <td>{$vo.time_auto_up|mac_day=color}</td>
+                <td>
+                    <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('info?id='.$vo['id'])}" href="javascript:;" title="编辑">编辑</a>
+                    <a class="layui-badge-rim j-tr-del" data-href="{:url('del?ids='.$vo['id'])}" href="javascript:;" title="删除">删除</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        <div id="pages" class="center"></div>
+    </form>
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    var curUrl="{:url('task/data',$param)}";
+    layui.use(['laypage', 'layer','form','laydate'], function() {
+        var laypage = layui.laypage
+                , layer = layui.layer
+            ,laydate = layui.laydate
+                form = layui.form;
+
+        //日期范围
+        laydate.render({
+            elem: '#task_date',
+        });
+
+        laypage.render({
+            elem: 'pages'
+            ,count: {$total}
+            ,limit: {$limit}
+            ,curr: {$page}
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            ,jump: function(obj,first){
+                if(!first){
+                    location.href = curUrl.replace('%7Bpage%7D',obj.curr).replace('%7Blimit%7D',obj.limit);
+                }
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>
