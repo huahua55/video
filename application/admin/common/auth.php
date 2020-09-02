@@ -48,9 +48,16 @@ return array(
     '13' => array('name' => '任务', 'icon' => 'xe625', 'sub' => array(
         '131' => array("show"=>1,"name" => '任务管理', 'controller' => 'task', 'action' => 'index'),
         '13101' => array("show"=>0,'name' => '--任务编辑', 'controller' => 'task',		'action' => 'info'),
-        '13103' => array("show"=>0,'name' => '--任务删除', 'controller' => 'task',		'action' => 'del'),
+        '13102' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'task', 'action' => 'getExamine'),
+        '13103' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'task', 'action' => 'updateExamine'),
+        '13104' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'task', 'action' => 'updateStatus'),
+        '13105' => array("show"=>0,'name' => '--任务删除', 'controller' => 'task',		'action' => 'del'),
         '132' => array("show"=>1,'name' => '任务列表', 'controller' => 'taskLog',		'action' => 'index'),
-        '13201' => array("show"=>0,'name' => '00任务列表添加', 'controller' => 'taskLog',		'action' => 'info'),
+        '13201' => array("show"=>0,'name' => '任务列表添加', 'controller' => 'taskLog',		'action' => 'info'),
+        '13202' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'taskLog', 'action' => 'getExamine'),
+        '13203' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'taskLog', 'action' => 'updateExamine'),
+        '13204' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'taskLog', 'action' => 'updateStatus'),
+        '13205' => array("show"=>0,'name' => '--任务删除', 'controller' => 'taskLog',		'action' => 'del'),
     )),
 	'2' => array('name' => '系统', 'icon' => 'xe62e', 'sub' => array(
 		'21' => array("show" => 1, 'name' => '网站参数配置', 'controller' => 'system', 'action' => 'config'),
