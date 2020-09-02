@@ -184,10 +184,13 @@
                     $('.examine').css('display','none');
 
                     showloading(false);//关闭loading
+                    if (result_data.code == 0) {
+                        layer.msg(result_data.msg);
+                    } else {
+                        test(result_data['data']['data']);
 
-                    test(result_data['data']);
-
-                    laypageRender( result_data );
+                        laypageRender( result_data['data'] );
+                    }
                 },
                 complete: function(){
                     
@@ -223,10 +226,13 @@
                                     showloading(true);
                                 },
                                 success : function(result_data){
+                                    if (result_data.code == 0) {
+                                        layer.msg(result_data.msg);
+                                    } else {
+                                        showloading(false);//关闭loading
 
-                                    showloading(false);//关闭loading
-
-                                    test(result_data['data']);
+                                        test(result_data['data']['data']);
+                                    }
                                 },
                                 complete: function(){
                                     
@@ -377,14 +383,19 @@
                                     data: '',
                                     dataType: "json",
                                     success: function (data) {
-                                        var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
+                                        if (data.code == 0) {
+                                            layer.closeAll()
+                                            layer.msg(data.msg);
+                                        } else {
+                                            var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
                                             ' "><option value="">请选择一个理由</option>'
-                                        for (var i = 0; i < data.data.length; i++) {
-                                            str += "<option value='" + data.data[i].id + "'>" + data.data[i].reasons + "</option>"
+                                            for (var i = 0; i < data.data.data.length; i++) {
+                                                str += "<option value='" + data.data.data[i].id + "'>" + data.data.data[i].reasons + "</option>"
+                                            }
+                                            str += "</select>"
+                                            $("#examineForm").append(str)
+                                            form.render('select');
                                         }
-                                        str += "</select>"
-                                        $("#examineForm").append(str)
-                                        form.render('select');
                                     },
                                 })
                             }
@@ -412,9 +423,9 @@
                         success: function (data) {
                             if (data.code == 0) {
                                 layer.closeAll()
-                                layer.msg('修改成功！！！');
+                                layer.msg(data.msg);
                             } else {
-                                layer.msg('修改失败！！！');
+                                layer.msg(data.msg);
                             }
                         },
                     });
@@ -542,9 +553,9 @@
                         success: function (data) {
                             if (data.code == 0) {
                                 layer.closeAll();
-                                layer.msg('修改成功！！！');
+                                layer.msg(data.msg);
                             } else {
-                                layer.msg('修改失败！！！');
+                                layer.msg(data.msg);
                             }
                         },
                     });

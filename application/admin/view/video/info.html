@@ -342,6 +342,7 @@
             }
             is_load=1;
             that.text('读取中...');
+             var pp = 1
             $.ajax({
                 type: 'post',
                 dataType: "jsonp",
@@ -349,7 +350,7 @@
                 timeout: 5000,
                 url: '//' + 'api' + '.' + 'mac'+ 'cms' + '.'+ 'com' + '/douban/index/id/' + id,
                 error: function(){
-                    alert('请求解析服务器失败');
+                    pp = 0
                 },
                 complete:function(){
                     is_load=0;
@@ -357,7 +358,8 @@
                 },
                 success:function(r){
                     if(r.code>1){
-                        alert(r.msg);
+                        // alert(r.msg);
+                       pp = 0
                     }
                     else{
                         if(r.data.vod_total){
@@ -414,6 +416,11 @@
                     }
                 }
             });
+
+             if (pp == 0){
+
+
+             }
         });
     });
 

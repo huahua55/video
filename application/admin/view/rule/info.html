@@ -1,0 +1,118 @@
+{include file="../../../application/admin/view/public/head" /}
+
+<div class="page-container p10">
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">基本信息</a></li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">权限名称：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.rule_name}" placeholder="请输入" name="rule_name" id="rule_name" lay-verify="required|rule_name">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">所属父级：</label>
+                        <div class="layui-input-inline w500">
+                            <select name="parent_id" lay-search="">
+                                <option value="0">直接选择或搜索选择</option>
+                                {volist name="parent_list" id="vo"}
+                                    <option value="{$vo.id}" {if condition="$info.parent_id eq $vo.id"}selected{/if}>{$vo.rule_name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">控制器名：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.controller}" placeholder="请输入" name="controller" id="controller" lay-verify="required|controller">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">方法名：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.action}" placeholder="请输入" name="action" id="action" lay-verify="required|action">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态：</label>
+                        <div class="layui-input-block">
+                          <input type="radio" name="status" value="1" title="正常" 
+                          {if condition="($info['status'] == 1)"} checked {/if} lay-verify="required|status">
+                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if} lay-verify="required|status">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+
+        // 正则验证
+        var reg_str =  /^[A-Za-z0-9\-\_]+$/;
+
+        // 验证
+        form.verify({
+            rule_name: function (value) {
+                if (value.length > 60) {
+                    return "权限名称最多不能超过60个字符";
+                }
+            },
+            controller: function (value) {
+                if (value.length > 60) {
+                    return "控制器名最多不能超过60个字符";
+                }
+                if (!reg_str.test(value)) {
+                    return "控制器名只能是字母和数字，下划线_及破折号-";
+                }
+            },
+            action: function (value) {
+                if (value.length > 60) {
+                    return "方法名最多不能超过60个字符";
+                }
+                if (!reg_str.test(value)) {
+                    return "方法名只能是字母和数字，下划线_及破折号-";
+                }
+            },
+            status: function (value) {
+                var default_status = ',0,1,';
+                if (default_status.indexOf(',' + value + ',') == -1) {
+                    return "权限状态必须为0或1";
+                }
+        });
+    });
+
+</script>
+
+</body>
+</html>

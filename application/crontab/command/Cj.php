@@ -33,6 +33,7 @@ class Cj extends Command
         //参数转义解析
         $param = $this->ParSing($parameter);
         $name = $param['name'] ?? '';
+
         //执行对应的方法
         // 定时器需要执行的内容
         $list = config('timming');
@@ -112,6 +113,7 @@ class Cj extends Command
 
     public function api($param = [])
     {
+        
         if (!empty($param['pg'])) {
             $param['page'] = $param['pg'];
             unset($param['pg']);

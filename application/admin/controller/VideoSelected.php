@@ -43,10 +43,9 @@ class VideoSelected extends Base
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
-        $data['msg'] = 'succ';
         $data['data'] = $res['list'];
 
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function getExamine()
@@ -66,7 +65,7 @@ class VideoSelected extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     /**
@@ -117,12 +116,13 @@ class VideoSelected extends Base
             if ( $video_edit !== false && $video_collection_edit !== false ) {
                 Db::commit();
 
-                $data['msg'] = 'succ';
+                return $this->success('修改成功！');
             } else {
                 Db::rollback();
+                return $this->error('修改失败！');
             }
         }
-        return $data;
+        return $this->error('参数错误！');
     }
 
 
@@ -260,7 +260,7 @@ class VideoSelected extends Base
 
         $is_master = $param['is_master'];
         if ($is_master != 1 && $is_master != 0) {
-            return $data;
+            return $this->error('参数错误！');
         }
         // 根据集表主键id获取相关数据
         $collention_info = self::_getCollectionData( $collection_where );
@@ -306,11 +306,11 @@ class VideoSelected extends Base
         if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
             Db::commit();
 
-            $data['msg'] = 'succ';
+            return $this->success('修改成功！');
         } else {
             Db::rollback();
         }
-        return $data;
+        return $this->error('修改失败！');
     }
     /**
      * 过滤搜索条件
@@ -370,12 +370,9 @@ class VideoSelected extends Base
         $replace_video = model('video_selected')->replaceVideo( $collection_selected_id );
 
         if ( $replace_video['code'] > 1 ) {
-            $data['code'] = $replace_video['code'];
-            $data['msg'] = $replace_video['msg'];
+            return $this->error($replace_video['msg']);
         } else {
-            $data['msg'] = 'succ';
+            return $this->success('修改成功！');
         }
-
-        return $data;
     }
 }
