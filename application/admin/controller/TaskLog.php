@@ -35,16 +35,16 @@ class TaskLog extends Base
         if ($role_id == 3) {
             $where['ad_user_id'] = cookie('admin_id');
         }
-        print_r( cookie('admin_id'));
-        print_r($role_id);
-        print_r($where);
+//        print_r( cookie('admin_id'));
+//        print_r($role_id);
+//        print_r($where);
 
         if (!empty($param['idName'])) {
             $param['idName'] = htmlspecialchars(urldecode($param['idName']));
             $whereOr['vod_name'] = ['like', "%".$param['idName']."%"];
             $whereOr['vod_id'] = $param['idName'];
         }
-        p(1);
+//        p(1);
         // 实际还是以up_time排序
         $order = 'add_time desc,collection asc';
         $res = model('TaskLog')->listData($whereOr, $where, $order, $param['page'], $param['limit']);
