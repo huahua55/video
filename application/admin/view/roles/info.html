@@ -16,16 +16,25 @@
                     <div class="layui-form-item ">
                         <label class="layui-form-label">角色名称：</label>
                         <div class="layui-input-inline w500">
-                            <input type="text" class="layui-input" value="{$info.role_name}" placeholder="请输入" name="role_name" id="role_name">
+                            <input type="text" class="layui-input" lay-verify="required|role_name" value="{$info.role_name}" placeholder="请输入" name="role_name" id="role_name">
                         </div>
                     </div>
-
+                    {notin name="admin_id" value="1,2"}
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">所属角色组：</label>
+                        <div class="layui-input-inline w500">
+                            <select name="parent_id" lay-verify="required" lay-search="">
+                                <option value="{$user_role_group.role_id}" selected>{$user_role_group.role_name}</option>
+                            </select>
+                        </div>
+                    </div>
+                    {/notin}
                     <div class="layui-form-item">
                         <label class="layui-form-label">状态：</label>
                         <div class="layui-input-block">
                           <input type="radio" name="status" value="1" title="正常" 
-                          {if condition="($info['status'] == 1)"} checked {/if} >
-                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if}>
+                          {if condition="($info['status'] == 1)"} checked {/if} lay-verify="required|status">
+                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if} lay-verify="required|status">
                         </div>
                     </div>
 
@@ -84,16 +93,13 @@
         // 验证
         form.verify({
             role_name: function (value) {
-                if (value == "") {
-                    return "请输入角色名称";
-                }
                 if (value.length > 60) {
                     return "角色名称最多不能超过60个字符";
                 }
             },
             status: function (value) {
-                var default_status = [0,1];
-                if (default_status.indexOf(value) == -1) {
+                var default_status = ',0,1,';
+                if (default_status.indexOf(',' + value + ',') == -1) {
                     return "角色状态必须为0或1";
                 }
             }

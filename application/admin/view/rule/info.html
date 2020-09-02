@@ -16,15 +16,15 @@
                     <div class="layui-form-item ">
                         <label class="layui-form-label">权限名称：</label>
                         <div class="layui-input-inline w500">
-                            <input type="text" class="layui-input" value="{$info.rule_name}" placeholder="请输入" name="rule_name" id="rule_name">
+                            <input type="text" class="layui-input" value="{$info.rule_name}" placeholder="请输入" name="rule_name" id="rule_name" lay-verify="required|rule_name">
                         </div>
                     </div>
 
                     <div class="layui-form-item ">
                         <label class="layui-form-label">所属父级：</label>
                         <div class="layui-input-inline w500">
-                            <select name="parent_id" lay-verify="required" lay-search="">
-                                <option value="0">直接选择或搜索选择</option>4
+                            <select name="parent_id" lay-search="">
+                                <option value="0">直接选择或搜索选择</option>
                                 {volist name="parent_list" id="vo"}
                                     <option value="{$vo.id}" {if condition="$info.parent_id eq $vo.id"}selected{/if}>{$vo.rule_name}</option>
                                 {/volist}
@@ -35,14 +35,14 @@
                     <div class="layui-form-item ">
                         <label class="layui-form-label">控制器名：</label>
                         <div class="layui-input-inline w500">
-                            <input type="text" class="layui-input" value="{$info.controller}" placeholder="请输入" name="controller" id="controller">
+                            <input type="text" class="layui-input" value="{$info.controller}" placeholder="请输入" name="controller" id="controller" lay-verify="required|controller">
                         </div>
                     </div>
 
                     <div class="layui-form-item ">
                         <label class="layui-form-label">方法名：</label>
                         <div class="layui-input-inline w500">
-                            <input type="text" class="layui-input" value="{$info.action}" placeholder="请输入" name="action" id="action">
+                            <input type="text" class="layui-input" value="{$info.action}" placeholder="请输入" name="action" id="action" lay-verify="required|action">
                         </div>
                     </div>
 
@@ -50,8 +50,8 @@
                         <label class="layui-form-label">状态：</label>
                         <div class="layui-input-block">
                           <input type="radio" name="status" value="1" title="正常" 
-                          {if condition="($info['status'] == 1)"} checked {/if} >
-                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if}>
+                          {if condition="($info['status'] == 1)"} checked {/if} lay-verify="required|status">
+                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if} lay-verify="required|status">
                         </div>
                     </div>
                 </div>
@@ -84,17 +84,11 @@
         // 验证
         form.verify({
             rule_name: function (value) {
-                if (value == "") {
-                    return "请输入权限名称";
-                }
                 if (value.length > 60) {
                     return "权限名称最多不能超过60个字符";
                 }
             },
             controller: function (value) {
-                if (value == "") {
-                    return "请输入控制器名";
-                }
                 if (value.length > 60) {
                     return "控制器名最多不能超过60个字符";
                 }
@@ -103,9 +97,6 @@
                 }
             },
             action: function (value) {
-                if (value == "") {
-                    return "请输入方法名";
-                }
                 if (value.length > 60) {
                     return "方法名最多不能超过60个字符";
                 }
@@ -114,9 +105,9 @@
                 }
             },
             status: function (value) {
-                var default_status = [0,1];
-                if (default_status.indexOf(value) == -1) {
-                    return "角色状态必须为0或1";
+                var default_status = ',0,1,';
+                if (default_status.indexOf(',' + value + ',') == -1) {
+                    return "权限状态必须为0或1";
                 }
         });
     });

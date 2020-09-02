@@ -23,6 +23,20 @@ class Admin extends Base {
 
     public function listData($where,$order,$page,$limit=20)
     {
+        // 管理员id为1和2超级管理员看全部
+        $admin_id = cookie('admin_id');
+        if (!in_array($admin_id, [1, 2])) {
+            // 根据角色组获取该角色组下的用户
+            $get_role_user = model('admin_role')->getRoleByUserId($admin_id);
+            $get_role_group_admin_ids = model('roles')->getRoleGroupAdminIdsByRoleId($get_role_user['data']['role_id'], $admin_id);
+            if (empty($get_role_group_admin_ids['data'])) {
+                return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>0,'limit'=>$limit,'total'=>0,'list'=>$list];
+            } else {
+                $get_role_group_admin_ids['data'][] = $admin_id;
+                $where['admin_id'] = ['in', $get_role_group_admin_ids['data']];
+            }
+        }
+
         $total = $this->where($where)->count();
         $list = Db::name('Admin')->where($where)->order($order)->page($page)->limit($limit)->select();
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
@@ -73,14 +87,14 @@ class Admin extends Base {
             if(!$validate->scene('edit')->check($data)){
                 return ['code'=>1002,'msg'=>'参数错误：'.$validate->getError() ];
             }
-
+            $data['admin_auth'] = '';
             $data['admin_pwd'] = md5($data['admin_pwd']);
             $res = $this->insert($data);
+            $data['admin_id'] = $this->getLastInsID();
         }
 
         // 用户角色
         $user_role = model('admin_role')->saveData($data['admin_id'], $data['role_id']);
-
         if(false === $res && $user_role['code'] != 1){
             Db::rollback();
             return ['code'=>1003,'msg'=>''.$this->getError() ];
@@ -131,7 +145,7 @@ class Admin extends Base {
         $row = $this->where($where)->find();
 
         if(empty($row)){
-            return ['code'=>1003,'msg'=>'账号或密码错误'];
+            return ['code'=>1003,'msg'=>'账号或密码错误或禁用状态'];
         }
         // 暂时去掉单点登录限制
         // $random = md5(rand(10000000,99999999));

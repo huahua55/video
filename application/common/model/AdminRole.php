@@ -104,8 +104,10 @@ class AdminRole extends Base {
             return ['code' => 1001, 'msg' => '缺失管理员id'];
         }
         $where['admin_id'] = $admin_id;
-        $field = 'role_id';
-       	$info = $this->field($field)->where($where)->find();
+        $field = 'a.role_id,r.role_name';
+       	$info = $this->alias('a')->field($field)
+       					->join('roles r', 'a.role_id=r.id', 'left')
+       					->where($where)->find();
 
        	if (!empty($info)) {
             return ['code' => 1, 'msg' => '获取管理员角色成功', 'data' => $info];

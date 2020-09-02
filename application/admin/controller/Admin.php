@@ -88,7 +88,9 @@ class Admin extends Base
         // $this->assign('menus',$menus);
 
         $role_data = self::_getUserRole( $id );
+
         $this->assign('role_data',$role_data);
+        $this->assign('admin_id',$id);
 
 
         $this->assign('title','管理员信息');

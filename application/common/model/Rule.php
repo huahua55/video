@@ -161,19 +161,32 @@ class Rule extends Base {
 	 * 获取父级分类
 	 * @return [type] [description]
 	 */
-	public function getParentList() {
+	public function getParentList($role_id = '') {
+		$rule_info['data'] = [];
+        if (!empty($role_id)) {
+        	$rule_info = model('role_rule_link')->getRoleHasLinkRule( $role_id );
+        	if (!empty($rule_info['data'])) {
+        		$where['id'] = ['in', $rule_info['data']];
+        	} else {
+        		return [];
+        	}
+        }
 		$where['parent_id'] = 0;
 		$where['status'] = 1;
 		$field = 'id,rule_name,parent_id';
 		$list = $this->field($field)->where($where)->select();
-		return objectToArray($list);
+		return ['list' => objectToArray($list), 'rule_ids' => $rule_info['data']];
 	}
 
 	/**
 	 * 获取父级分类
 	 * @return [type] [description]
 	 */
-	public function getChildrenListByParentId( $parent_id ) {
+	public function getChildrenListByParentId( $parent_id, $rule_ids  = null ) {
+		if (!empty($rule_ids)) {
+			$where['id'] = ['in', $rule_ids];
+		}
+		
 		$where['parent_id'] = $parent_id;
 		$where['status'] = 1;
 		$field = 'id,rule_name,parent_id';
@@ -185,16 +198,17 @@ class Rule extends Base {
 	 * 获取所有权限
 	 * @return [type] [description]
 	 */
-	public function getAllRule() {
-		$parent_info = $this->getParentList();
-		if (!empty($parent_info)) {
+	public function getAllRule($role_id) {
+		$parent_info = $this->getParentList($role_id);
+		$rule_ids = $parent_info['rule_ids'];
+		if (!empty($parent_info['list'])) {
 			// 获取子级
-			foreach ($parent_info as $k => $v) {
-				$parent_info[$k]['children_info'] = $this->getChildrenListByParentId( $v['id'] );
+			foreach ($parent_info['list'] as $k => $v) {
+				$parent_info['list'][$k]['children_info'] = $this->getChildrenListByParentId( $v['id'], $rule_ids );
 			}
 		}
 		
-		return $parent_info;
+		return $parent_info['list'];
 	}
 
 	/**

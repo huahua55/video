@@ -24,12 +24,17 @@
         </div>
         
         <div class="layui-form-item">
-            <label class="layui-form-label">所属角色：</label>
+            <label class="layui-form-label">所属角色<?php echo '    ';?>：</label>
             <div class="layui-input-inline">
                 <select name="role_id" lay-verify="required" lay-search="">
                     <option value="0">直接选择或搜索选择</option>4
                     {volist name="role_data['all_roles']" id="vo"}
                         <option value="{$vo.id}" {if condition="$role_data['user_role']['role_id'] eq $vo.id"}selected{/if}>{$vo.role_name}</option>
+                        {if condition="isset($vo['children']) AND !empty($vo['children']) "}
+                            {volist name="$vo.children" id="vo1"}
+                                <option value="{$vo1.id}" {if condition="$role_data['user_role']['role_id'] eq $vo1.id"}selected{/if}>----{$vo1.role_name}</option>
+                            {/volist}
+                        {/if}
                     {/volist}
                 </select>
             </div>

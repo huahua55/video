@@ -70,8 +70,16 @@ class roles extends Base {
 
 		$res = model('roles')->infoData($where);
 
+        // 管理员id为1和2超级管理员看全部
+        $admin_id = cookie('admin_id');
+        if (!in_array($admin_id, [1, 2])) {
+            // 获取用户所拥有的角色 
+            $user_role_group = model('adminRole')->getRoleByUserId(cookie('admin_id'));
+        } else {
+            $user_role_group['data']['role_id'] = '';
+        }
         // 获取所有权限
-        $all_rules = self::_getAllRule();
+        $all_rules = self::_getAllRule($user_role_group['data']['role_id']);
         if (!empty($role_id)) {
             // 获取已关联权限
             $has_link_rules = self::_getRoleHasLinkRule( $role_id );
@@ -85,6 +93,8 @@ class roles extends Base {
         $all_rules = self::_filterRule( $all_rules, $has_link_rules['data'] );
 
         $this->assign('all_rules', $all_rules);
+        $this->assign('user_role_group', $user_role_group['data']);
+        $this->assign('admin_id', $admin_id);
 
 		$info = $res['info'];
 		$this->assign('info', $info);
@@ -147,8 +157,8 @@ class roles extends Base {
      * 获取所有权限
      * @return [type] [description]
      */
-    private function _getAllRule() {
-        $all_rules = model('rule')->getAllRule();
+    private function _getAllRule($role_id) {
+        $all_rules = model('rule')->getAllRule($role_id);
         return $all_rules;
     }
 
