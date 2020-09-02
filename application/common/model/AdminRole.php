@@ -51,8 +51,9 @@ class AdminRole extends Base {
 			}
 		}
 
+		$edit_user_auth = model("roles")->editAdminAuth($role_id);
 		
-		if (false !== $res) {
+		if (false !== $res && $edit_user_auth['code'] == 1) {
 			return ['code' => 1, 'msg' => '保存成功'];
 		}
 		return ['code' => 1002, 'msg' => '保存失败：' . $this->getError()];

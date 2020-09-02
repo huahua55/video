@@ -113,7 +113,7 @@ class Roles extends Base {
         }
 
         // 同步更新角色
-        $edit_admin_auth = self::_editAdminAuth($role_id);
+        $edit_admin_auth = $this->editAdminAuth($role_id);
         if ($edit_admin_auth['code'] > 1) {
             Db::rollback();
             return $edit_admin_auth;
@@ -242,7 +242,7 @@ class Roles extends Base {
      * @param  [type] $role_id [description]
      * @return [type]          [description]
      */
-    private function _editAdminAuth($role_id) {
+    public function editAdminAuth($role_id) {
         $admin_info = model('admin_role')->alias('r')
                         ->field('a.admin_id')
                         ->join('admin a', 'a.admin_id=r.admin_id', 'left')
