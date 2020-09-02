@@ -47,7 +47,7 @@ class Svideo extends Base{
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
 
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     /**
@@ -103,7 +103,7 @@ class Svideo extends Base{
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     /**
@@ -118,8 +118,6 @@ class Svideo extends Base{
         $is_examine = $param['is_examine'] ?? '';
         // 审核理由表主键id
         $examine_id = $param['examine_id'] ?? '';
-        $data['code'] = 0;
-        $data['msg'] = 'error';
         $data['data'] = [];
         if ( !empty( $id ) ) {
             $video_where['id'] = $id;
@@ -128,10 +126,12 @@ class Svideo extends Base{
             $video_edit = Db::table('svideo')->where( $video_where )->update( $video_edit_data );
             
             if ( $video_edit !== false ) {
-                $data['msg'] = 'succ';
+                return $this->success('修改成功！');
+            } else {
+                return $this->error('修改失败！');
             }
         }
-        return $data;
+        return $this->error('参数错误！');
     }
 
     /**
@@ -145,9 +145,6 @@ class Svideo extends Base{
         $collection_id = $param['id'] ?? '';
         // 审核理由表主键id
         $status = $param['status'] ?? '';
-        $data['code'] = 0;
-        $data['msg'] = 'error';
-        $data['data'] = [];
 
         $video_where['id'] = ['in', implode(',', array_unique($collection_id))];
 
@@ -159,11 +156,11 @@ class Svideo extends Base{
 
         if ( $video_edit !== false ) {
             Db::commit();
-            $data['msg'] = 'succ';
+            return $this->success('修改成功！');
         } else {
             Db::rollback();
+            return $this->error('修改失败！');
         }
-        return $data;
     }
 
     /**
