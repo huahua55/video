@@ -74,7 +74,7 @@ class rule extends Base {
 
 		$info = $res['info'];
 		$this->assign('info', $info);
-		$this->assign('parent_list', $parent_list);
+		$this->assign('parent_list', $parent_list['list']);
 
 		$this->assign('title', '权限信息');
 		return $this->fetch('admin@rule/info');
