@@ -22,7 +22,7 @@ return array(
         '1902' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'video', 'action' => 'getExamine'),
         '1903' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'video', 'action' => 'updateExamine'),
         '1904' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'video', 'action' => 'info'),
-        '1904' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'video', 'action' => 'updateStatus'),
+        '1905' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'video', 'action' => 'updateStatus'),
 		'20' => array("show" => 1, "name" => '迅雷下载任务-旧版', 'controller' => 'videoVodOld', 'action' => 'index'),
         '2001' => array("show" => 0, "name" => '--迅雷下载任务-旧版列表', 'controller' => 'videoVodOld', 'action' => 'index1'),
         '2002' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoVodOld', 'action' => 'getExamine'),
@@ -34,7 +34,7 @@ return array(
         '2102' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoSelected', 'action' => 'getExamine'),
         '2103' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'videoSelected', 'action' => 'updateExamine'),
         '2104' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'videoSelected', 'action' => 'info'),
-        '2104' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'videoSelected', 'action' => 'updateStatus'),
+        '2105' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'videoSelected', 'action' => 'updateStatus'),
 		//'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
 		'1001' => array("show" => 0, "name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
