@@ -35,6 +35,7 @@ return array(
         '2103' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'videoSelected', 'action' => 'updateExamine'),
         '2104' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'videoSelected', 'action' => 'info'),
         '2105' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'videoSelected', 'action' => 'updateStatus'),
+        '2106' => array("show" => 0, "name" => '--替换普通视频vod_url', 'controller' => 'videoSelected', 'action' => 'replaceVideo'),
 		//'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
 		'1001' => array("show" => 0, "name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),
