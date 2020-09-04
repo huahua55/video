@@ -2936,3 +2936,22 @@ function build_url_query($param, $static = false)
     }
     return $query;
 }
+/**
+ * 当type_id_1=0 根据type_id获取对应的type_id_1
+ * @param  [type] $type_id [description]
+ * @return [type]          [description]
+ */
+function get_type_pid_type_id( $type_id ){
+    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1){
+        $type_pid = 1;
+    } else if (($type_id >= 13 &&  $type_id <= 16) || $type_id == 24 || $type_id == 2){
+        $type_pid = 2;
+    } else if ($type_id >= 19 && $type_id <= 22){
+        $type_pid = 4;
+    } else if (($type_id >= 25 && $type_id <= 28) || $type_id == 3){
+        $type_pid = 3;
+    } else if ($type_id == 4){
+        $type_pid = 4;
+    }
+    return $type_pid;
+}

@@ -296,7 +296,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">简介：</label>
                         <div class="layui-input-block">
-                            <textarea name="vod_blurb" cols="" rows="3" class="layui-textarea"  placeholder="不填写将自动从第一页详情里获取前100个字" style="height:40px;">{$info.vod_blurb}</textarea>
+                            <textarea name="vod_blurb" cols="" rows="3" class="layui-textarea"  placeholder="不填写将自动从第一页详情里获取" style="height:40px;">{$info.vod_blurb}</textarea>
                         </div>
                     </div>
 
@@ -664,7 +664,7 @@
             $(".showpic_img").attr("src", imgsrc);
             $(".showpic_img").error(function(){
               //当图片加载失败时，你要进行的操作
-                if(imgsrc.indexOf('://')<0){ 
+                if(imgsrc.indexOf('://')<0){
                     $(".showpic_img").attr("src", video_img_domain + imgsrc.substr(1));
                 }
             });
@@ -698,7 +698,7 @@
                 return;
             }
             is_load=1;
-            that.text('读取中...');
+            that.text('读取中3...');
             $.ajax({
                 type: 'post',
                 dataType: "jsonp",
@@ -706,7 +706,105 @@
                 timeout: 5000,
                 url: '//' + 'api' + '.' + 'mac'+ 'cms' + '.'+ 'com' + '/douban/index/id/' + id,
                 error: function(){
-                    alert('请求解析服务器失败');
+                    // alert('请求解析服务器失败');
+                    $.ajax({
+                        type: 'post',
+                        dataType: "jsonp",
+                        jsonp: "callback",
+                        jsonpCallback:"douban",
+                        timeout: 5000,
+                        url: 'https://cdn.feifeicms.co/server/v3/douban.php?key=&callback=douban&id=' + id,
+                        // url: '//api.douban.com/v2/movie/subject/' + id,
+                        error: function(){
+                            alert('请求解析服务器失败');
+                        },
+                        complete:function(){
+                            is_load=0;
+                            that.text('查询数据');
+                        },
+                        success:function(r){
+                            if(r.code>1){
+                                alert(r.msg);
+                            }
+                            else{
+                                if(r.data.vod_total){
+                                    $('#vod_total').val(r.data.vod_total);
+                                }
+                                if(r.data.vod_serial){
+                                    $('#vod_continu').val(r.data.vod_serial);
+                                }
+                                if(r.data.vod_isend){
+                                    $('#vod_isend').val(r.data.vod_isend);
+                                }
+                                if(r.data.vod_name){
+                                    $('#vod_name').val(r.data.vod_name);
+                                }
+                                if(r.data.vod_title){
+                                    $('#vod_sub').val(r.data.vod_title);
+                                }
+                                // if(r.data.vod_pic){
+                                //     $('#vod_pic').val(r.data.vod_pic);
+                                // }
+                                if(r.data.vod_year){
+                                    $('#vod_year').val(r.data.vod_year);
+                                }
+                                if(r.data.vod_language){
+                                    $('#vod_lang').val(r.data.vod_language);
+                                }
+                                if(r.data.vod_area){
+                                    $('#vod_area').val(r.data.vod_area);
+                                }
+                                if(r.data.vod_states){
+                                    $('#vod_state').val(r.data.vod_states);
+                                }
+                                if(r.data.vod_type){
+                                    $('#vod_type').val(r.data.vod_type);
+                                }
+                                if(r.data.vod_tag){
+                                    $('#vod_tag').val(r.data.vod_tag);
+                                }
+                                if(r.data.vod_actor){
+                                    $('#vod_actor').val(r.data.vod_actor);
+                                }
+                                if(r.data.vod_director){
+                                    $('#vod_director').val(r.data.vod_director);
+                                }
+                                if(r.data.vod_pubdate){
+                                    $('#vod_pubdate').val(r.data.vod_pubdate);
+                                }
+                                if(r.data.vod_writer){
+                                    $('#vod_writer').val(r.data.vod_writer);
+                                }
+                                if(r.data.vod_score){
+                                    $('#vod_score').val(r.data.vod_score);
+                                }
+                                if(r.data.vod_score_num){
+                                    $('#vod_score_num').val(r.data.vod_score_num);
+                                }
+                                if(r.data.vod_score_all){
+                                    $('#vod_score_all').val(r.data.vod_score_all);
+                                }
+                                if(r.data.vod_douban_score){
+                                    $('#vod_douban_score').val(r.data.vod_douban_score);
+                                }
+                                if(r.data.vod_duration){
+                                    $('#vod_duration').val(r.data.vod_duration);
+                                }
+                                if(r.data.vod_content){
+                                    ue.setContent(r.data.vod_content);
+                                }
+                                if(r.data.vod_class){
+                                    $('#vod_class').val(r.data.vod_class);
+                                }
+                                if(r.data.vod_reurl) {
+                                    $('#vod_reurl').val(r.data.vod_reurl);
+                                }
+                                if(r.data.vod_author) {
+                                    $('#vod_author').val(r.data.vod_author);
+                                }
+                            }
+                        }
+                    });
                 },
                 complete:function(){
                     is_load=0;
@@ -714,7 +812,105 @@
                 },
                 success:function(r){
                     if(r.code>1){
-                        alert(r.msg);
+                        that.text('读取中f...');
+                        $.ajax({
+                            type: 'post',
+                            dataType: "jsonp",
+                            jsonp: "callback",
+                            jsonpCallback:"douban",
+                            timeout: 5000,
+                            url: 'https://cdn.feifeicms.co/server/v3/douban.php?key=&callback=douban&id=' + id,
+                            // url: '//api.douban.com/v2/movie/subject/' + id,
+                            error: function(){
+                                alert('请求解析服务器失败');
+                            },
+                            complete:function(){
+                                is_load=0;
+                                that.text('查询数据');
+                            },
+                            success:function(r){
+                                if(r.code>1){
+                                    alert(r.msg);
+                                }
+                                else{
+                                    if(r.data.vod_total){
+                                        $('#vod_total').val(r.data.vod_total);
+                                    }
+                                    if(r.data.vod_serial){
+                                        $('#vod_continu').val(r.data.vod_serial);
+                                    }
+                                    if(r.data.vod_isend){
+                                        $('#vod_isend').val(r.data.vod_isend);
+                                    }
+                                    if(r.data.vod_name){
+                                        $('#vod_name').val(r.data.vod_name);
+                                    }
+                                    if(r.data.vod_title){
+                                        $('#vod_sub').val(r.data.vod_title);
+                                    }
+                                    // if(r.data.vod_pic){
+                                    //     $('#vod_pic').val(r.data.vod_pic);
+                                    // }
+                                    if(r.data.vod_year){
+                                        $('#vod_year').val(r.data.vod_year);
+                                    }
+                                    if(r.data.vod_language){
+                                        $('#vod_lang').val(r.data.vod_language);
+                                    }
+                                    if(r.data.vod_area){
+                                        $('#vod_area').val(r.data.vod_area);
+                                    }
+                                    if(r.data.vod_states){
+                                        $('#vod_state').val(r.data.vod_states);
+                                    }
+                                    if(r.data.vod_type){
+                                        $('#vod_type').val(r.data.vod_type);
+                                    }
+                                    if(r.data.vod_tag){
+                                        $('#vod_tag').val(r.data.vod_tag);
+                                    }
+                                    if(r.data.vod_actor){
+                                        $('#vod_actor').val(r.data.vod_actor);
+                                    }
+                                    if(r.data.vod_director){
+                                        $('#vod_director').val(r.data.vod_director);
+                                    }
+                                    if(r.data.vod_pubdate){
+                                        $('#vod_pubdate').val(r.data.vod_pubdate);
+                                    }
+                                    if(r.data.vod_writer){
+                                        $('#vod_writer').val(r.data.vod_writer);
+                                    }
+                                    if(r.data.vod_score){
+                                        $('#vod_score').val(r.data.vod_score);
+                                    }
+                                    if(r.data.vod_score_num){
+                                        $('#vod_score_num').val(r.data.vod_score_num);
+                                    }
+                                    if(r.data.vod_score_all){
+                                        $('#vod_score_all').val(r.data.vod_score_all);
+                                    }
+                                    if(r.data.vod_douban_score){
+                                        $('#vod_douban_score').val(r.data.vod_douban_score);
+                                    }
+                                    if(r.data.vod_duration){
+                                        $('#vod_duration').val(r.data.vod_duration);
+                                    }
+                                    if(r.data.vod_content){
+                                        ue.setContent(r.data.vod_content);
+                                    }
+                                    if(r.data.vod_class){
+                                        $('#vod_class').val(r.data.vod_class);
+                                    }
+                                    if(r.data.vod_reurl) {
+                                        $('#vod_reurl').val(r.data.vod_reurl);
+                                    }
+                                    if(r.data.vod_author) {
+                                        $('#vod_author').val(r.data.vod_author);
+                                    }
+                                }
+                            }
+                        });
                     }
                     else{
                         if(r.data.vod_total){
@@ -795,6 +991,9 @@
                     }
                 }
             });
+
+
+
         });
 
 

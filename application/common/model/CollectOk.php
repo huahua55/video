@@ -6,6 +6,7 @@ use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
 use think\Request;
+use similar_text\similarText;
 
 class CollectOk extends Base
 {
@@ -137,6 +138,15 @@ class CollectOk extends Base
 
     public function vod_xml($param, $html = '')
     {
+
+        // 获取缓存中的当前页
+        $cache_current_page = Cache::get('collect_ok_current_page');
+        if (empty($param['h'])) {
+            if (!empty($cache_current_page) && empty($param['page'])) {
+                $param['page'] = $cache_current_page;
+            }
+        }
+
         $url_param = [];
         $url_param['ac'] = $param['ac'] ?? '';
         $url_param['t'] = $param['t'] ?? '';
@@ -192,6 +202,15 @@ class CollectOk extends Base
         $array_page['pagesize'] = (string)$xml->list->attributes()->pagesize;
         $array_page['recordcount'] = (string)$xml->list->attributes()->recordcount;
         $array_page['url'] = $url;
+
+        if (empty($param['h'])) {
+            // 记录当前页数  防止人为停掉任务导致的从第一页开始爬取数据
+            if ($array_page['page'] >= $array_page['pagecount']) {
+                Cache::set('collect_ok_current_page', '');
+            } else {
+                Cache::set('collect_ok_current_page', $array_page['page']);
+            }
+        }
 
         $type_list = model('Type')->getCache('type_list');
         $bind_list = config('bind');
@@ -411,6 +430,7 @@ class CollectOk extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+
                 $color = 'red';
                 $des = '';
                 $msg = '';
@@ -516,8 +536,10 @@ class CollectOk extends Base
                     }
 
                     if (empty($v['vod_blurb'])) {
-                        $v['vod_blurb'] = mac_substring(strip_tags($v['vod_content']), 100);
+                        $v['vod_blurb'] = strip_tags($v['vod_content']);
                     }
+
+                    $v['vod_content'] = strip_tags($v['vod_content']);
 
                     $where = [];
                     $where['vod_name'] = $v['vod_name'];
@@ -538,7 +560,10 @@ class CollectOk extends Base
                         $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
                     }
                     if (strpos($config['inrule'], 'g') !== false) {
-                        $where['vod_director'] = $v['vod_director'];
+                        $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
+
+                        $str_vod_director = implode(',', $arr_vod_director);
+                        $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
                     }
                     if ($config['tag'] == 1) {
                         $v['vod_tag'] = mac_get_tag($v['vod_name'], $v['vod_content']);
@@ -648,20 +673,89 @@ class CollectOk extends Base
                     $v['vod_down_server'] = (string)join('$$$', $cj_down_server_arr);
                     $v['vod_down_note'] = (string)join('$$$', $cj_down_note_arr);
 
-//                p($where);
-                    if ($blend === false) {
-                        $info = model('Vod')->where($where)->find();
-                    } else {
-                        $info = model('Vod')->where($where)->where(function ($query) {
-                            $qWhere1 = [];
-                            $qWhere12 = [];
-                            $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
-                            $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
-                            $query->where($qWhere1)->whereOr($qWhere12);
-                        })->find();
+
+                    $new_check_data['vod_content'] = $v['vod_content'];
+                    $new_check_data['vod_blurb'] = $v['vod_blurb'];
+                    $new_check_data['vod_actor'] = $v['vod_actor'];
+                    $new_check_data['vod_director'] = $v['vod_director'];
+                    $new_check_data['type_id'] = $v['type_id'];
+                    $new_check_data['vod_play_url'] = $v['vod_play_url'];
+                    $new_check_data['type_id_1'] = $v['type_id_1'];
+
+
+                    $filter_vod_actor = self::_arrayIntersectCount('未知,内详', $v['vod_actor']);
+                    $filter_vod_director =  self::_arrayIntersectCount('未知,内详', $v['vod_director']);
+                    $check_actor_and_director = [];
+                    if (empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) {
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
+                        // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+                        $check_actor_and_director = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                        if (empty( $check_actor_and_director )) {
+                            // 库中不存在  则不再入库
+                            if (empty($v['vod_actor'])) {
+                                mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
+                            }
+                            if (empty($v['vod_director'])) {
+                                mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
+                            }
+                            if ($filter_vod_actor >= 1) {
+                                mac_echo("主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                            }
+                            if ($filter_vod_director >= 1) {
+                                mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                            }
+                            continue;
+                        }
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
                     }
 
+//                p($where);
+                    if (empty($check_actor_and_director)) { 
+                        if ($blend === false) {
+                            $info = model('Vod')->where($where)->find();
+                        } else {
+                            $info = model('Vod')->where($where)->where(function ($query) {
+                                $qWhere1 = [];
+                                $qWhere12 = [];
+                                $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
+                                $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
+                                $query->where($qWhere1)->whereOr($qWhere12);
+                            })->find();
+                        }
 
+                        self::_logWrite('ok视频名称::' . $v['vod_name']);
+                        if ( empty($info) ) {
+                            self::_logWrite("ok未查询到视频信息::" . $v['vod_name']);
+                            // 根据vod_name获取数据
+                            $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                        } else {
+                            self::_logWrite("ok数据库查询到的视频id：：" . $info['vod_id']);
+                            if ( empty($info['vod_content']) &&
+                                empty($info['vod_blurb']) &&
+                                empty($info['vod_actor']) &&
+                                empty($info['vod_director'])
+                             ) {
+                                // 考虑内容、简介、导演、演员为空的情况
+                                $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                            } else {
+                                $old_check_data['vod_content'] = $info['vod_content'];
+                                $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                                $old_check_data['vod_actor'] = $info['vod_actor'];
+                                $old_check_data['vod_director'] = $info['vod_director'];
+                                $old_check_data['type_id'] = $info['type_id'];
+                                $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                                $old_check_data['type_id_1'] = $info['type_id_1'];
+                                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                                if (!$check_vod_rade) {
+                                    // 添加
+                                    $info = '';
+                                }
+                            }
+                        }
+                    } else {
+                        self::_logWrite('OK主演导演校验：视频名称:' . $v['vod_name'] . '更新数据');
+                        $info = $check_actor_and_director;
+                    }
                     if (!$info) {
                         if ($param['opt'] == 2) {
                             $des = '数据操作没有勾选新增，跳过。';
@@ -701,6 +795,12 @@ class CollectOk extends Base
                                 $v['vod_down_note'] = (string)join('$$$', $collect_filter['down'][$param['filter']]['cj_down_note_arr']);
                             }
 
+                            if (isset($v['vod_director']) && !empty($v['vod_director'])) {
+                                $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
+
+                                $v['vod_director'] = implode(',', $arr_vod_director);
+                            }
+
                             $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                             $v['vod_pic'] = (string)$tmp['pic'];
                             $msg = $tmp['msg'];
@@ -712,6 +812,7 @@ class CollectOk extends Base
                             $des = '新加入库，成功ok。';
                         }
                     } else {
+                        self::_logWrite("ok需要处理的视频id：：" . $info['vod_id']);
                         if (empty($config['uprule'])) {
                             $des = '没有设置任何二次更新项目，跳过。';
                         } elseif ($info['vod_lock'] == 1) {
@@ -883,7 +984,7 @@ class CollectOk extends Base
                             if (strpos(',' . $config['uprule'], 'i') !== false && !empty($v['vod_lang']) && $v['vod_lang'] != $info['vod_lang']) {
                                 $update['vod_lang'] = $v['vod_lang'];
                             }
-                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
+                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http" || substr($info["vod_pic"], 0, 4) == "uplo" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
                                 $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                                 $update['vod_pic'] = (string)$tmp['pic'];
                                 $msg = $tmp['msg'];
@@ -930,7 +1031,12 @@ class CollectOk extends Base
                                 $update['vod_plot_detail'] = $v['vod_plot_detail'];
                             }
 
+                            // 处理导演
+                            if (isset($update['vod_director']) && !empty($update['vod_director'])) {
+                                $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
 
+                                $update['vod_director'] = implode(',', $arr_vod_director);
+                            }
                             if (count($update) > 0) {
                                 $update['vod_time'] = time();
                                 $where = [];
@@ -968,9 +1074,9 @@ class CollectOk extends Base
                 die;
             }
 
-            if (empty($GLOBALS['config']['app']['collect_timespan'])) {
-                $GLOBALS['config']['app']['collect_timespan'] = 3;
-            }
+            // if (empty($GLOBALS['config']['app']['collect_timespan'])) {
+                $GLOBALS['config']['app']['collect_timespan'] = 5;
+            // }
             if ($show == 1) {
                 if ($param['ac'] == 'cjsel') {
                     Cache::rm('collect_break_vod');
@@ -1000,6 +1106,7 @@ class CollectOk extends Base
                 }
             }
         } catch (\Exception $e) {
+            self::_logWrite('OK_collect异常信息：：' . $e->getMessage());
             print_r($e->getMessage());
         }
     }
@@ -2143,6 +2250,168 @@ class CollectOk extends Base
                 }
             }
         }
+    }
+
+    /**
+     * 比较详情百分比
+     * @param  [type] $old_content [description]
+     * @param  [type] $new_content [description]
+     * @return [type]              [description]
+     */
+    private function _checkVodContentRade($old_content = NULL, $new_content = NULL)
+    {
+        // 字符串对比算法
+        $lcs = new similarText();
+
+        $rade = $lcs->getSimilar(mac_trim_all(mac_characters_format($old_content)), mac_trim_all(mac_characters_format($new_content))) * 100;
+
+        return $rade;
+    }
+
+    /**
+     * 视频相似度比较
+     * @param  [type] $old_check_data [description]
+     * @param  [type] $new_check_data [description]
+     * @return [type]                 [description]
+     */
+    private function _checkVodRade( $old_check_data, $new_check_data ){
+        $check_vod_content_rade = 0;
+        $check_vod_blurb_rade = 0;
+        $vod_actor_count = 0;
+        $vod_director_count = 0;
+        $vod_play_url_rade = 0;
+        // 校验视频内容百分比
+        if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
+            $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
+        } 
+        // 简介比
+        if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
+            $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
+        }
+        // 主演比
+        if (!empty($old_check_data['vod_actor']) && !empty($new_check_data['vod_actor'])) {
+            $vod_actor_count = self::_arrayIntersectCount(mac_trim_all($old_check_data['vod_actor']), mac_trim_all($new_check_data['vod_actor']));
+        }
+        // 导演比
+        if (!empty($old_check_data['vod_director']) && !empty($new_check_data['vod_director'])) {
+            $vod_director_count = self::_arrayIntersectCount(mac_trim_all($old_check_data['vod_director']), mac_trim_all($new_check_data['vod_director']));
+        }
+
+        // 类型比
+        if ($old_check_data['type_id_1'] == 0) {
+            $old_type_pid = get_type_pid_type_id($old_check_data['type_id']);
+        } else {
+            $old_type_pid = $old_check_data['type_id_1'];
+        }
+
+        if ($new_check_data['type_id_1'] == 0) {
+            $new_type_pid = get_type_pid_type_id($new_check_data['type_id']);
+        } else {
+            $new_type_pid = $new_check_data['type_id_1'];
+        }
+
+        if (!empty($old_check_data['vod_play_url']) && !empty($new_check_data['vod_play_url'])) {
+            // 链接比
+            $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
+            $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
+            foreach ($new_play_url as $v) {
+                $new_play_url_arr = implode(',', explode('#', $v));
+                foreach ($old_play_url as $v1) {
+                    $old_play_url_arr = implode(',', explode('#', $v1));
+                    $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
+                    if ($play_url_rade >= 80) {
+                        $vod_play_url_rade = $play_url_rade;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $condition = [];
+        if ($check_vod_content_rade >= 50) {
+            $condition['check_vod_content_rade'] = $check_vod_content_rade;
+        }
+        if ($check_vod_blurb_rade >= 50) {
+            $condition['check_vod_blurb_rade'] = $check_vod_blurb_rade;
+        }
+        if ($vod_actor_count >= 1) {
+            $condition['vod_actor_count'] = $vod_actor_count;
+        }
+        if ($vod_director_count >= 1) {
+            $condition['vod_director_count'] = $vod_director_count;
+        }
+        if ($vod_play_url_rade >= 95) {
+            $condition['vod_play_url_rade'] = $vod_play_url_rade;
+        }
+        if ($old_type_pid == $new_type_pid) {
+            $condition['type_pid_eq'] = 1;
+        }
+
+        self::_logWrite("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
+
+        if ( count($condition) >= 2 ){
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    //交集相似度
+    private function _arrayIntersectCount($str1, $str2)
+    {
+        $array1 = array_filter(explode(',', $str1));
+        $array2 = array_filter(explode(',', $str2));
+        $count = array_intersect($array1, $array2);
+        return count( $count );
+    }
+
+    /**
+     * 根据vod_name获取vod数据
+     * @param  [type] $vod_name [description]
+     * @return [type]           [description]
+     */
+    private function _getVodByVodName($vod_name, $new_check_data)
+    {
+        $info = '';
+        $vod_sec_where['vod_name'] = $vod_name;
+        $vod_sec_info = model('Vod')->where($vod_sec_where)->select();
+        if (!empty($vod_sec_info)) {
+            foreach ($vod_sec_info as $key => $value) {
+                $old_check_data['vod_content'] = $value['vod_content'];
+                $old_check_data['vod_blurb'] = $value['vod_blurb'];
+                $old_check_data['vod_actor'] = $value['vod_actor'];
+                $old_check_data['vod_director'] = $value['vod_director'];
+                $old_check_data['type_id'] = $value['type_id'];
+                $old_check_data['vod_play_url'] = $value['vod_play_url'];
+                $old_check_data['type_id_1'] = $value['type_id_1'];
+                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                if ($check_vod_rade) {
+                    // 更新
+                    $info = $vod_sec_info[$key];
+                    break;
+                }
+            }
+        }
+        return $info;
+    }
+
+    /**
+     * 重新定义日志文件路径存储采集比较信息
+     * @param  [type] $log_content [description]
+     * @return [type]              [description]
+     */
+    private function _logWrite($log_content){
+        $dir = LOG_PATH .'collect'. DS;
+        if (!file_exists($dir)){
+            mkdir($dir,0777,true);
+        }
+        \think\Log::init([
+            'type' => \think\Env::get('log.type', 'test'), 
+            'path' => $dir,
+            'level' => ['info'],
+            'max_files' => 30]);
+        \think\Log::info($log_content);
     }
 
 }

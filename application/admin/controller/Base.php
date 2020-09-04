@@ -33,8 +33,18 @@ class Base extends All
             $this->_pagesize = $GLOBALS['config']['app']['pagesize'];
             $this->_makesize = $GLOBALS['config']['app']['makesize'];
 
-            if($this->_cl!='Update' && !$this->check_auth($this->_cl,$this->_ac)){
+            if($this->_cl!='Update' && !$this->check_auth($this->_cl,$this->_ac) && Request()->isAjax()){
                 return $this->error('您没有权限访问此页面');
+            }
+            if(($this->_cl!='Update' && !$this->check_auth($this->_cl,$this->_ac) && !Request()->isAjax())){
+                echo '<script type="text/javascript">
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        parent.layer.msg("您没有权限访问此页面");
+                        </script>';
+                die;
+                // alert("您没有权限访问此页面");
+                // parent.location.reload();
             }
         }
 

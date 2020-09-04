@@ -43,10 +43,9 @@ class Video extends Base
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
-        $data['msg'] = 'succ';
         $data['data'] = $res['list'];
 
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function getExamine()
@@ -66,7 +65,7 @@ class Video extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     /**
@@ -115,12 +114,13 @@ class Video extends Base
             if ( $video_edit !== false && $video_collection_edit !== false ) {
                 Db::commit();
 
-                $data['msg'] = 'succ';
+                return $this->success('修改成功！');
             } else {
                 Db::rollback();
+                return $this->error('修改失败！');
             }
         }
-        return $data;
+        return $this->error('参数错误！');
     }
 
 
@@ -258,7 +258,7 @@ class Video extends Base
 
         $is_master = $param['is_master'];
         if ($is_master != 1 && $is_master != 0) {
-            return $data;
+            return $this->error('参数错误！');
         }
         // 根据集表主键id获取相关数据
         $collention_info = self::_getCollectionData( $collection_where );
@@ -304,11 +304,11 @@ class Video extends Base
         if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
             Db::commit();
 
-            $data['msg'] = 'succ';
+            return $this->success('修改成功！');
         } else {
             Db::rollback();
         }
-        return $data;
+        return $this->error('修改失败！');
     }
     /**
      * 过滤搜索条件

@@ -61,31 +61,36 @@ class Admin extends Base
         $this->assign('info',$res['info']);
 
         //权限列表
-        $menus = @include MAC_ADMIN_COMM . 'auth.php';
+        // $menus = @include MAC_ADMIN_COMM . 'auth.php';
 
-        foreach($menus as $k1=>$v1){
-            $all = [];
-            $cs = [];
-            $menus[$k1]['ck'] = '';
-            foreach($v1['sub'] as $k2=>$v2){
-                $one = $v2['controller'] . '/' . $v2['action'];
-                $menus[$k1]['sub'][$k2]['url'] = url($one);
-                $menus[$k1]['sub'][$k2]['ck']= '';
-                $all[] = $one;
+        // foreach($menus as $k1=>$v1){
+        //     $all = [];
+        //     $cs = [];
+        //     $menus[$k1]['ck'] = '';
+        //     foreach($v1['sub'] as $k2=>$v2){
+        //         $one = $v2['controller'] . '/' . $v2['action'];
+        //         $menus[$k1]['sub'][$k2]['url'] = url($one);
+        //         $menus[$k1]['sub'][$k2]['ck']= '';
+        //         $all[] = $one;
 
-                if(strpos(','.$res['info']['admin_auth'],$one)>0){
-                    $cs[] = $one;
-                    $menus[$k1]['sub'][$k2]['ck'] = 'checked';
-                }
-                if($k2==11){
-                    $menus[$k1]['sub'][$k2]['ck'] = ' checked  readonly="readonly" ';
-                }
-            }
-            if($all == $cs){
-                $menus[$k1]['ck'] = 'checked';
-            }
-        }
-        $this->assign('menus',$menus);
+        //         if(strpos(','.$res['info']['admin_auth'],$one)>0){
+        //             $cs[] = $one;
+        //             $menus[$k1]['sub'][$k2]['ck'] = 'checked';
+        //         }
+        //         if($k2==11){
+        //             $menus[$k1]['sub'][$k2]['ck'] = ' checked  readonly="readonly" ';
+        //         }
+        //     }
+        //     if($all == $cs){
+        //         $menus[$k1]['ck'] = 'checked';
+        //     }
+        // }
+        // $this->assign('menus',$menus);
+
+        $role_data = self::_getUserRole( $id );
+
+        $this->assign('role_data',$role_data);
+        $this->assign('admin_id',$id);
 
 
         $this->assign('title','管理员信息');
@@ -135,4 +140,14 @@ class Admin extends Base
         return $this->error('参数错误');
     }
 
+    /**
+     * 获取用户的角色
+     * @return [type] [description]
+     */
+    private function _getUserRole( $admin_id ) {
+        $all_roles = model('roles')->allRoleList();
+        $user_role = model('admin_role')->getRoleByUserId( $admin_id );
+
+        return ['all_roles' => $all_roles, 'user_role' => $user_role['data']];
+    }
 }

@@ -118,9 +118,9 @@ class Common extends Command
         $port_data = [];
         if (empty($port_log_data) || $i == true) {
             if(!empty($code)){
-                $url = 'http://webapi.http.zhimacangku.com/getip?num=5&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=10&type=2&pro=&city=0&yys=0&port=1&pack='.$code.'&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
             }else{
-                $url = 'http://webapi.http.zhimacangku.com/getip?num=2&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
+                $url = 'http://webapi.http.zhimacangku.com/getip?num=10&type=2&pro=&city=0&yys=0&port=1&time=1&ts=1&ys=1&cs=1&lb=1&sb=0&pb=4&mr=2&regions=';
             }
 //            if($s==true){
 //                $url = 'http://api.shenlongip.com/ip?key=erysr7kz&pattern=json&count=5&need=1111';
@@ -149,7 +149,7 @@ class Common extends Command
         $port_log_data = array_merge($port_log_data,$port_data);
 
         $count = count($port_log_data);//数量
-        if($count < 2){
+        if($count < 10){
             $this->get_zm_port(true);
         }
         $count = count($port_log_data);//数量
@@ -538,9 +538,9 @@ class Common extends Command
         if (isset($get_url_search_id_data['pubdate']) && !empty($get_url_search_id_data['pubdate'])) {
             $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdate'];
         }
-        if(!isset($get_url_search_id_data['pubdate']) && empty($vod_data['vod_pubdate'])){
+        if(empty($get_url_search_id_data['pubdate']) && empty($vod_data['vod_pubdate'])){
             if (isset($get_url_search_id_data['pubdates']) && !empty($get_url_search_id_data['pubdates'])) {
-                $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdates'];
+                $vod_data['vod_pubdate'] = $get_url_search_id_data['pubdates'][0];
                 if (strpos($vod_data['vod_pubdate'], '(') !== false) {
                     $vod_data['vod_pubdate'] = explode('(', $vod_data['vod_pubdate'])[0] ?? $vod_data['vod_pubdate'];
                 }
@@ -569,6 +569,10 @@ class Common extends Command
         }
         if (isset($get_url_search_id_data['share_url'])) {
             $vod_data['vod_reurl'] = $get_url_search_id_data['share_url'];
+        }
+        // 豆瓣简介
+        if (isset($get_url_search_id_data['summary']) && !empty($get_url_search_id_data['summary'])) {
+            $vod_data['vod_blurb'] = mac_str_is_html( $get_url_search_id_data['summary'] );
         }
         $vod_data['vod_author'] = '豆瓣';
         return $vod_data;

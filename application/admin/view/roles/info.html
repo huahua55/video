@@ -1,0 +1,169 @@
+{include file="../../../application/admin/view/public/head" /}
+
+<div class="page-container p10">
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">基本信息</a></li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">角色名称：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" lay-verify="required|role_name" value="{$info.role_name}" placeholder="请输入" name="role_name" id="role_name">
+                        </div>
+                    </div>
+                    {notin name="admin_id" value="1,2"}
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">所属角色组：</label>
+                        <div class="layui-input-inline w500">
+                            <select name="parent_id" lay-verify="required" lay-search="">
+                                <option value="{$user_role_group.role_id}" selected>{$user_role_group.role_name}</option>
+                            </select>
+                        </div>
+                    </div>
+                    {/notin}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态：</label>
+                        <div class="layui-input-block">
+                          <input type="radio" name="status" value="1" title="正常" 
+                          {if condition="($info['status'] == 1)"} checked {/if} lay-verify="required|status">
+                          <input type="radio" name="status" value="0" title="关闭" {if condition="($info['status'] == 0)"} checked {/if} lay-verify="required|status">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">权限：</label>
+                        <div class="layui-input-block">
+                            <blockquote class="layui-elem-quote layui-quote-nm">
+                                提示：<br>
+                                1.权限控制精准到每个操作，超级管理员拥有所有权限。
+                            </blockquote>
+
+                            <div class="role-list-form ">
+                                {volist name="all_rules" id="vo" key="k1"}
+                                <dl class="role-list-form-top permission-list">
+                                    <dt>
+                                        <input type="checkbox" value="{$vo.id}" {$vo.checked} lay-skin="primary" data-id="{$vo.id}" lay-filter="roleAuth1" title="{$vo.rule_name}" name="rule_ids[{$vo.id}]">
+                                    </dt>
+                                    
+                                    <dd>
+                                        {volist name="$vo['children_info']" id="sub" key="k2"}
+                                            <input type="checkbox" value="{$sub.id}" name="rule_ids[{$vo.id}][]" {$sub.checked} data-pid="{$sub.parent_id}" title="{$sub.rule_name}" lay-skin="primary" lay-filter="roleAuth2">
+                                        {/volist}
+                                    </dd>
+                                </dl>
+                                {/volist}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-normal formCheckAll" lay-filter="formCheckAll" >全选</button>
+                <button type="button" class="layui-btn layui-btn-normal formCheckOther" lay-filter="formCheckOther">反选</button>
+                <button type="button" class="layui-btn layui-btn-normal formCheckAllEmpty" lay-filter="formCheckOther">清空</button>
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery
+
+        // 验证
+        form.verify({
+            role_name: function (value) {
+                if (value.length > 60) {
+                    return "角色名称最多不能超过60个字符";
+                }
+            },
+            status: function (value) {
+                var default_status = ',0,1,';
+                if (default_status.indexOf(',' + value + ',') == -1) {
+                    return "角色状态必须为0或1";
+                }
+            }
+        });
+
+        form.on('checkbox(roleAuth1)', function(data) {
+            var child = $(data.elem).parent('dt').siblings('dd').find('input');
+            /* 自动选中子节点 */
+            child.each(function(index, item) {
+                if(item.disabled == true){
+
+                }
+                else {
+                    item.checked = data.elem.checked;
+                }
+            });
+            form.render('checkbox');
+        });
+
+        form.on('checkbox(roleAuth2)', function(data) {
+            var child = $(data.elem).parent().find('input');
+            var parent = $(data.elem).parent('dd').siblings('dt').find('input');
+            var parent_ck= true;
+            /* 自动选中子节点 */
+            child.each(function(index, item) {
+                if(!item.checked){
+                    parent_ck = false;
+                }
+            });
+            parent.each(function(index, item) {
+                item.checked = parent_ck;
+            });
+            form.render('checkbox');
+        });
+
+
+        $('.formCheckAll').click(function(){
+            var child = $('.role-list-form-top').find('input');
+            /* 自动选中子节点 */
+            child.each(function(index, item) {
+                item.checked = true;
+            });
+            form.render('checkbox');
+        });
+        $('.formCheckOther').click(function(){
+            var child = $('.role-list-form-top').find('input');
+            /* 自动选中子节点 */
+            child.each(function(index, item) {
+                item.checked = (item.checked  ? false : true);
+            });
+            form.render('checkbox');
+        });
+
+        $('.formCheckAllEmpty').click(function(){
+            var child = $('.role-list-form-top').find('input');
+            /* 自动选中子节点 */
+            child.each(function(index, item) {
+                item.checked = false;
+            });
+            form.render('checkbox');
+        });
+    });
+
+</script>
+
+</body>
+</html>

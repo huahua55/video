@@ -90,7 +90,7 @@ class VideoVod extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function getExamine()

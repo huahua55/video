@@ -516,7 +516,7 @@ class Collect0709 extends Base {
                 }
 
                 if(empty($v['vod_blurb'])){
-                    $v['vod_blurb'] = mac_substring( strip_tags($v['vod_content']) ,100);
+                    $v['vod_blurb'] = strip_tags($v['vod_content']);
                 }
 
                 $where = [];

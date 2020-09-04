@@ -38,7 +38,7 @@ class Svideo extends Base {
 
         $total = Db::name('Svideo')
                     ->where( $whereOr )
-                    ->where( $where )->group('vod_id')->limit($limit_str)->count();
+                    ->where( $where )->group('vod_id')->count();
 
         $videos = Db::name('Svideo')
                 ->field( $field_a )
