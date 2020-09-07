@@ -341,6 +341,10 @@ class PushData extends Common
         }
         return $new_play_url;
     }
+    protected function find_record($find_name){
+        $vod_where['vod_name'] = array('like', '%'.$find_name.'%');
+        return Db::name('video_record')->where($vod_where)->find();
+    }
 
 
     protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, $i = 'i')
@@ -372,6 +376,7 @@ class PushData extends Common
         $new_url['down_time'] = time();
         $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
+
         $new_url['weight'] = '0';
         if ($i != 'i') {
             $new_url['weight'] = $v['b_weight'] ?? '0';
@@ -384,6 +389,12 @@ class PushData extends Common
                     $b_weight = 98;
                 }
                 $new_url['weight'] = $b_weight;
+        }
+        if (!empty( $new_url['vod_name'])){
+            $find_record = $this->find_record($new_url['vod_name']);
+            if (!empty($find_record)){
+                $new_url['weight'] = 99;
+            }
         }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
