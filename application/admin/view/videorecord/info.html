@@ -1,0 +1,53 @@
+{include file="../../../application/admin/view/public/head" /}
+
+<div class="page-container p10">
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">基本信息</a></li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">视频名称：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" lay-verify="required" value="{$info.vod_name}" placeholder="请输入" name="vod_name" id="vod_name">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery
+
+        // 验证
+        form.verify({
+
+        });
+
+    });
+</script>
+
+</body>
+</html>
