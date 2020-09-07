@@ -239,7 +239,9 @@ class PushData extends Common
                 foreach ($vData as $v_k => $v_v) {
                     $v_v_m3u8_url = $v_v;
                     if (in_array($v['type_id'],$this->zy_list)){
-                        $v_v = str_replace('-','',$v_v);
+                        $ser = explode('$',$v_v)[0];
+                        $v_vs = str_replace('-','',$ser);
+                        $v_v = str_replace($ser,$v_vs,$v_v);
                     }
                     $count = substr_count($v_v, $type);
                     if ($count != 0) {
@@ -390,6 +392,7 @@ class PushData extends Common
                 }
                 $new_url['weight'] = $b_weight;
         }
+
         if (!empty( $new_url['vod_name'])){
             $find_record = $this->find_record($new_url['vod_name']);
             if (!empty($find_record)){
