@@ -57,7 +57,7 @@ class PushData extends Common
             $this->getWhile2($name, $id);
             //不存在添加
             $this->getWhile($name);
-        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay') {
+        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy'  ) {
             //这里写业务逻辑
             $this->getWhile2($name, $id);
         } else {
@@ -141,6 +141,8 @@ class PushData extends Common
             $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
+        }elseif ($name == 'upZy') {
+            $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //电影
         } elseif ($name == 'upDay') {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
