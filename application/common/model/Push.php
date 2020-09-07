@@ -6,9 +6,12 @@ use app\common\util\Pinyin;
 use think\Log;
 
 class Push extends Base {
+
+    protected $zy_list= [3,25,26,27,28];
     // 设置数据表（不含前缀）
     public function getWhile($id)
     {
+        p($this->zy_list);
         $start = 0;
         $page = 1;
         $page1 = 1;
@@ -47,6 +50,7 @@ class Push extends Base {
 
     public function getWhile2($id)
     {
+        p($this->zy_list);
 
         $start = 0;
         $page = 1;
@@ -88,22 +92,13 @@ class Push extends Base {
     {
         $new_array = [];
         foreach ($arr as $k => $v) {
-            if (!isset($new_array[$v['collection']])) {
-                $new_array[$v['collection']] = $v;
-            } else {
-                $i_data = [];
-                $id = $new_array[$v['collection']]['id'];
-                $task_id_find = Db::table('video_err_abnormal')->where(['task_id' => $v['id']])->find();
-                $task_id_id = Db::table('video_err_abnormal')->where(['task_id' => $id])->find();
-                if (empty($task_id_find)) {
-                    $i_data[0]['task_id'] = $v['id'];
-                }
-                if (empty($task_id_id)) {
-                    $i_data[1]['task_id'] = $id;
-                }
-                if (!empty($i_data)) {
-                    Db::table('video_err_abnormal')->insertAll($i_data);
-                }
+            if (in_array($v['type_id'],$this->zy_list)){
+                $m3u8_url_key=  explode('$',explode('#',$v['m3u8_url'])[0])[0];
+            }else{
+                $m3u8_url_key = $v['collection'];
+            }
+            if (!isset($new_array[$m3u8_url_key])) {
+                $new_array[$m3u8_url_key] = $v;
             }
         }
         return $new_array;
@@ -136,6 +131,7 @@ class Push extends Base {
                 }
                 $vData = explode('#', $cj_url_arr[$kk]);
                 foreach ($vData as $v_k => $v_v) {
+                    $v_v_m3u8_url = $v_v;
                     $count = substr_count($v_v, $type);
                     if ($count != 0) {
                         $count2 = substr_count($v_v, '$');
@@ -159,8 +155,21 @@ class Push extends Base {
                                 $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                             }
                         }
-                        if (!isset($collect_filter[$vv][$new_v_k_])) {
-                            $collect_filter[$vv][$new_v_k_] = $v_v;
+                        if (in_array($v['type_id'],$this->zy_list)){
+                            $m3u8_url_key=  explode('$',explode('#',$v_v_m3u8_url)[0])[0];
+                            if(!empty($m3u8_url_key)){
+                                if (!isset($collect_filter[$vv][$m3u8_url_key])) {
+                                    $collect_filter[$vv][$m3u8_url_key] = $v_v;
+                                }
+                            }else{
+                                if (!isset($collect_filter[$vv][$new_v_k_])) {
+                                    $collect_filter[$vv][$new_v_k_] = $v_v;
+                                }
+                            }
+                        }else{
+                            if (!isset($collect_filter[$vv][$new_v_k_])) {
+                                $collect_filter[$vv][$new_v_k_] = $v_v;
+                            }
                         }
                     }
                 }
@@ -168,6 +177,8 @@ class Push extends Base {
         }
         return $collect_filter;
     }
+
+
 
     //获取所有连接
     protected function getAll($v, $type)
@@ -281,6 +292,14 @@ class Push extends Base {
 
     }
 
+    protected function getFindLikeVideo($id, $collection)
+    {
+        $where = [];
+        $where['vod_id'] = $id;
+        $where['m3u8_url'] =  array('like', '%'.$collection.'%');
+        return Db::name('video_vod')->where($where)->find();
+    }
+
     public function getUrlLike($v, $type = '.m3u8', $i = 'install', $n = [])
     {
         //验证地址
@@ -291,7 +310,7 @@ class Push extends Base {
         }
         if (!empty($collect_filter['play'])) {
             $new_play_url = $this->pingJieUrl($collect_filter, 'play');
-//            p($new_down_url);
+
             foreach ($new_play_url as $k_p_play => $k_p_val) {
                 if ($i == 'install') {
                     $title = findTitle($k_p_val, 0);
@@ -303,11 +322,15 @@ class Push extends Base {
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                        if (in_array($v['type_id'],$this->zy_list)) {
+                            $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
+                        }else{
+                            $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                        }
                         if (empty($getFindVideo)) {
                             $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                             if (!empty($n_url)) {
-                                $res = Db::name('video_vod')->insert($n_url);
+                                $res = $this->videoVodModel->insert($n_url);
                                 if ($res) {
                                     log::write('成功q3-' . $v['b_vod_id']);
                                 } else {
@@ -326,11 +349,19 @@ class Push extends Base {
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        if (isset($n[$title])) {
-                            if ($n[$title]['is_sync'] != 1) {
+
+                        if (in_array($v['type_id'],$this->zy_list)){
+                            $new_key = $k_p_play;
+                        }else{
+                            $new_key = $title;
+                        }
+
+                        if (isset($n[$new_key])) {
+//                            print_r($k_p_val);
+                            if ($n[$new_key]['is_sync'] != 1) {
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
-                                    $res = Db::name('video_vod')->where(['id' => $n[$title]['id']])->update($up_data);
+                                    $res = $this->videoVodModel->where(['id' => $n[$new_key]['id']])->update($up_data);
                                     if ($res) {
                                         log::write('成功q-' . $n[$title]['id']);
                                     } else {
@@ -339,11 +370,15 @@ class Push extends Base {
                                 }
                             }
                         } else {
-                            $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                            if (in_array($v['type_id'],$this->zy_list)) {
+                                $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
+                            }else{
+                                $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
+                            }
                             if (empty($getFindVideo)) {
                                 $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                                 if (!empty($n_url)) {
-                                    $res = Db::name('video_vod')->insert($n_url);
+                                    $res = $this->videoVodModel->insert($n_url);
                                     if ($res) {
                                         log::write('成功q1-' . $v['b_vod_id']);
                                     } else {
