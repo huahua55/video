@@ -150,21 +150,16 @@ class videoVod extends Base {
      */
     private function _formatCollection($v1, $v){
         if (!empty($v1['b_video_id'])) {
-            // 根据任务id和视频id去集表中查询title
+            // 已下载的 根据任务id和视频id去集表中查询title
             $video_collection_where['task_id'] = $v1['b_id'];
             $video_collection_where['video_id'] = $v1['b_video_id'];
             return Db::name('video_collection')->where($video_collection_where)->column('title')[0];
         }
         if (empty($v1['b_video_id'])) {
             $collection_ext = '';
-            // 检查m3u8_url中是否包含上或者下
-            if (strpos($v1['b_m3u8_url'], '上') !== false) {
-                $collection_ext = '上';
-            }
-            if (strpos($v1['b_m3u8_url'], '下') !== false) {
-                $collection_ext = '下';
-            }
-            return $v1['collection'] . $collection_ext;
+            // 未下载的 截取m3u8_url中的第一个作为集
+            $first_url_title = explode('$', explode('#', $v1['b_m3u8_url'])[0])[0];
+            return $first_url_title;
         }
     }
 
