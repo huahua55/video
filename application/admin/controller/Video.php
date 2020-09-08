@@ -344,4 +344,31 @@ class Video extends Base
         $where['id'] = $id;
         return Db::table('video')->where( $where )->update($data);
     }
+
+    /**
+     * 视频集信息
+     * @return [type] [description]
+     */
+    public function collection() 
+    {
+        if (Request()->isPost()) {
+            $param = input('post.');
+            $save_video = model('video')->saveCollectionData( $param );
+            if($save_video['code']>1){
+                return $this->error($save_video['msg']);
+            }
+            return $this->success($save_video['msg']);
+        }
+
+        $id = input('id');
+        $where=[];
+        $where['id'] = $id;
+        // 获取集
+        $video_collection_data = Db::table('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,bitrate,duration,size,resolution,is_selected')->where( $where )->find();
+        
+        $this->assign('info',$video_collection_data);
+
+        $this->assign('title','视频集信息');
+        return $this->fetch('admin@video/collection_info');
+    }
 }

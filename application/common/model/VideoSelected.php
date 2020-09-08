@@ -646,4 +646,25 @@ class VideoSelected extends Base
         }
         return ['code' => 1, 'msg' => '更新成功'];
     }
+
+    /**
+     * 集信息维护
+     * @return [type] [description]
+     */
+    public function saveCollectionData($data)
+    {
+        if(!empty($data['id'])){
+            $where=[];
+            $where['id'] = ['eq',$data['id']];
+            $data['time_up'] = time();
+            $res = Db::table('video_collection_selected')->where($where)->update($data);
+        }
+        else{
+            return ['code'=>1002,'msg'=>'缺失集id'];
+        }
+        if(false === $res){
+            return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
+        }
+        return ['code'=>1,'msg'=>'保存成功'];
+    }
 }

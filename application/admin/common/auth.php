@@ -23,6 +23,7 @@ return array(
         '1903' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'video', 'action' => 'updateExamine'),
         '1904' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'video', 'action' => 'info'),
         '1905' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'video', 'action' => 'updateStatus'),
+        '1906' => array("show" => 0, "name" => '--视频集信息维护', 'controller' => 'video', 'action' => 'collection'),
 		'20' => array("show" => 1, "name" => '迅雷下载任务-旧版', 'controller' => 'videoVodOld', 'action' => 'index'),
         '2001' => array("show" => 0, "name" => '--迅雷下载任务-旧版列表', 'controller' => 'videoVodOld', 'action' => 'index1'),
         '2002' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoVodOld', 'action' => 'getExamine'),
@@ -36,6 +37,7 @@ return array(
         '2104' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'videoSelected', 'action' => 'info'),
         '2105' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'videoSelected', 'action' => 'updateStatus'),
         '2106' => array("show" => 0, "name" => '--替换普通视频vod_url', 'controller' => 'videoSelected', 'action' => 'replaceVideo'),
+        '2107' => array("show" => 0, "name" => '--视频集信息维护', 'controller' => 'videoSelected', 'action' => 'collection'),
 		//'51' => array("show"=>1,'name' => '文章数据', 'controller' => 'art', 'action' => 'data'),
 
 		'1001' => array("show" => 0, "name" => '--切换布局', 'controller' => 'index', 'action' => 'iframe'),

@@ -1,0 +1,137 @@
+{include file="../../../application/admin/view/public/head" /}
+<script type="text/javascript" src="__STATIC__/js/jquery.jscolor.js"></script>
+{include file="../../../application/admin/view/public/editor" flag="vod_editor"/}
+<div class="page-container p10">
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160"></div>
+
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input type="hidden" name="id" value="{$info.id}">
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title ">
+                <li class="layui-this">基本信息</a></li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">参数：</label>
+                        <div class="layui-input-inline w120">
+                            <select name="status">
+                                <option value="0" {if condition="$info.status eq '0'"}selected{/if}>等待自动检测</option>
+                                <option value="1" {if condition="$info.status eq '1'"}selected{/if}>正常</option>
+                                <option value="2" {if condition="$info.status eq '2'"}selected{/if}>下线</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="is_sync">
+                                <option value="0" {if condition="$info.is_sync eq '0'"}selected{/if}>未上传</option>
+                                <option value="1" {if condition="$info.is_sync eq '1'"}selected{/if}>成功</option>
+                                <option value="2" {if condition="$info.is_sync eq '2'"}selected{/if}>上传中</option>
+                                <option value="3" {if condition="$info.is_sync eq '3'"}selected{/if}>上传失败</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline w120">
+                            <select name="auto_testing">
+                                <option value="0" {if condition="$info.auto_testing eq '0'"}selected{/if}>未检测</option>
+                                <option value="1" {if condition="$info.auto_testing eq '1'"}selected{/if}>检测通过</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">标题：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.title}" placeholder="请输入" name="title" id="title">
+                        </div>
+                        <label class="layui-form-label">机器编号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.code}" placeholder="" name="code" id="code">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">影片名：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.name}" placeholder="请输入影片名" name="name" id="name">
+                        </div>
+                        <label class="layui-form-label">导演：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.director}" placeholder="请输入导演" name="director" id="director">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">视频video_id：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.video_id}" placeholder="请输入视频id"  name="video_id" id="video_id">
+                        </div>
+                        <label class="layui-form-label">任务task_id：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.task_id}" placeholder="" name="task_id" id="task_id">
+                        </div>
+                        <label class="layui-form-label">集数：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.collection}" placeholder="" name="collection" id="collection">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类型：</label>
+                        <div class="layui-input-inline">
+                            <select name="type">
+                                <option value="1" {if condition="$info.type eq '1'"}selected{/if}>标清</option>
+                                <option value="2" {if condition="$info.type eq '2'"}selected{/if}>高清</option>
+                                <option value="3" {if condition="$info.type eq '3'"}selected{/if}>超清</option>
+                                <option value="4" {if condition="$info.type eq '4'"}selected{/if}>蓝光</option>
+                                <option value="5" {if condition="$info.type eq '5'"}selected{/if}>4k</option>
+                            </select>
+                        </div>
+                        <label class="layui-form-label">视频分辨率：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.resolution}" placeholder="请输入视频分辨率" name="resolution" id="resolution">
+                        </div>
+                        <label class="layui-form-label">视频码率：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.bitrate}" placeholder="请输入视频码率" name="bitrate" id="bitrate">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">时长：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.duration}" placeholder="请输入视频时长" name="duration" id="duration">
+                        </div>
+                        <label class="layui-form-label">大小：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" value="{$info.size}" placeholder="请输入视频大小" name="size" id="size">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">视频地址：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.vod_url}" placeholder="请输入视频地址" name="vod_url" id="vod_url">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

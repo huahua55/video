@@ -375,4 +375,31 @@ class VideoSelected extends Base
             return $this->success('修改成功！');
         }
     }
+
+    /**
+     * 视频集信息
+     * @return [type] [description]
+     */
+    public function collection() 
+    {
+        if (Request()->isPost()) {
+            $param = input('post.');
+            $save_video = model('video_selected')->saveCollectionData( $param );
+            if($save_video['code']>1){
+                return $this->error($save_video['msg']);
+            }
+            return $this->success($save_video['msg']);
+        }
+
+        $id = input('id');
+        $where=[];
+        $where['id'] = $id;
+        // 获取集
+        $video_collection_data = Db::table('video_collection_selected')->field('id,video_id,code,task_id,title,collection,vod_url,type,status,is_sync,bitrate,duration,size,resolution,name,director,auto_testing')->where( $where )->find();
+        
+        $this->assign('info',$video_collection_data);
+
+        $this->assign('title','视频集信息');
+        return $this->fetch('admin@videoselected/collection_info');
+    }
 }
