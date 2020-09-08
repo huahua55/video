@@ -42,7 +42,7 @@ class videoVod extends Base {
 
         $field_video_vod_1 = 'b.vod_name,b.vod_id,b.type_id_1,b.type_id,max(b.up_time) as max_up_time';
 
-        $field_video_vod = 'b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.vod_name,b.is_sync as b_is_sync,b.collection,b.type_id,b.type_id_1';
+        $field_video_vod = 'b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.vod_name,b.is_sync as b_is_sync,b.collection,b.type_id,b.type_id_1,b.m3u8_url as b_m3u8_url';
 
         $total = Db::table('video_vod')
                     ->alias('b')
@@ -107,6 +107,11 @@ class videoVod extends Base {
                 ->order( 'b.collection asc' )
                 ->select();
             foreach ($video_vod_collection as $v1) {
+                if (in_array($v1['type_id'], [3,25,26,27,28])) {
+                    // 综艺格式化集
+                    $v1['collection'] = self::_formatCollection($v1, $v);
+                }
+                
                 $v1['is_master'] = 0;
                 $list[] = $v1;
             }
@@ -135,6 +140,32 @@ class videoVod extends Base {
         // log::write('数组处理结束-'.'-'.msectime());
         //分类
         return ['code'=>1,'msg'=>'数据列表','page'=>$page,'pagecount'=>ceil($total/$limit),'limit'=>$limit,'total'=>$total,'list'=>$list];
+    }
+
+    /**
+     * 综艺 格式化集
+     * @param  [type] $v1 [description]
+     * @param  [type] $v  [description]
+     * @return [type]     [description]
+     */
+    private function _formatCollection($v1, $v){
+        if (!empty($v1['b_video_id'])) {
+            // 根据任务id和视频id去集表中查询title
+            $video_collection_where['task_id'] = $v1['b_id'];
+            $video_collection_where['video_id'] = $v1['b_video_id'];
+            return Db::name('video_collection')->where($video_collection_where)->column('title')[0];
+        }
+        if (empty($v1['b_video_id'])) {
+            $collection_ext = '';
+            // 检查m3u8_url中是否包含上或者下
+            if (strpos($v1['b_m3u8_url'], '上') !== false) {
+                $collection_ext = '上';
+            }
+            if (strpos($v1['b_m3u8_url'], '下') !== false) {
+                $collection_ext = '下';
+            }
+            return $v1['collection'] . $collection_ext;
+        }
     }
 
     public function listData1($where,$order,$page=1,$limit=20,$start=0)

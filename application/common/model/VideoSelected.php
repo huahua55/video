@@ -116,6 +116,9 @@ class VideoSelected extends Base
                 ->order( 'b.collection asc' )
                 ->select();
             foreach ($video_collection as $v1) {
+                if (in_array($v['type_id'], [3,25,26,27,28])) {
+                    $v1['collection'] = $v1['title'];
+                }
                 $v1['pid'] = $v['aid'] . '_' . $v['aid'];
                 $v1['m_eid'] = $v1['b_eid'];
                 $v1['m_time_auto_up'] = $v1['time_auto_up'];
