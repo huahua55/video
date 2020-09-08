@@ -11,7 +11,6 @@ class Push extends Base {
     // 设置数据表（不含前缀）
     public function getWhile($id)
     {
-        p($this->zy_list);
         $start = 0;
         $page = 1;
         $page1 = 1;
@@ -50,8 +49,6 @@ class Push extends Base {
 
     public function getWhile2($id)
     {
-        p($this->zy_list);
-
         $start = 0;
         $page = 1;
         $limit = 1;
