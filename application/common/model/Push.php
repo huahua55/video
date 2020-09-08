@@ -347,7 +347,7 @@ class Push extends Base {
                         if (empty($getFindVideo)) {
                             $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                             if (!empty($n_url)) {
-                                $res = $this->videoVodModel->insert($n_url);
+                                $res = Db::name('video_vod')->insert($n_url);
                                 if ($res) {
                                     log::write('成功q3-' . $v['b_vod_id']);
                                 } else {
@@ -378,7 +378,7 @@ class Push extends Base {
                             if ($n[$new_key]['is_sync'] != 1) {
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
-                                    $res = $this->videoVodModel->where(['id' => $n[$new_key]['id']])->update($up_data);
+                                    $res = Db::name('video_vod')->where(['id' => $n[$new_key]['id']])->update($up_data);
                                     if ($res) {
                                         log::write('成功q-' . $n[$title]['id']);
                                     } else {
@@ -395,7 +395,7 @@ class Push extends Base {
                             if (empty($getFindVideo)) {
                                 $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                                 if (!empty($n_url)) {
-                                    $res = $this->videoVodModel->insert($n_url);
+                                    $res = Db::name('video_vod')->insert($n_url);
                                     if ($res) {
                                         log::write('成功q1-' . $v['b_vod_id']);
                                     } else {
