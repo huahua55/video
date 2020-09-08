@@ -255,6 +255,11 @@ class VideoVod extends Base
             $res['info']['history_down_url'] = implode("\n", $history_down_url);
         }
 //        p($res);die;
+//        
+        //分类
+        $type_tree = model('Type')->getCache('type_tree');
+        $this->assign('type_tree',$type_tree);
+        
         $this->assign('is_master', input('is_master'));
         $this->assign('info', $res['info']);
         $this->assign('title', '编辑');

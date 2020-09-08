@@ -124,11 +124,14 @@
     {{#  if(d.is_master == 1){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     {{#  } else { }}
+
+        <a class="layui-btn layui-btn-xs" lay-event="collection">编辑</a>
+
         {{#  if(d.is_replace == 0 && d.b_eid == 0 && d.b_is_examine == 1 && d.status == 1 && d.is_sync == 1){ }}
-        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger replace_vod" lay-event="replace" >替换</a>
         {{#  } }}
         {{# if(d.is_replace == 1){ }}
-        &nbsp;&nbsp;<a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
+        <a class="layui-btn layui-btn-xs layui-btn-disabled" >已替换</a>
         {{#  } }}
     {{#  } }}
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
@@ -324,7 +327,7 @@
                         [ {
                             fixed: 'right',
                             title: '操作',
-                            width: 60,
+                            width: 130,
                             toolbar: '#barDemo'
                         }, {
                             field: 'video_id',
@@ -475,7 +478,6 @@
                 //监听行工具事件
                 treeTable.on('tool(test)', function (obj) {
                     var data = obj.data;
-                    
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             obj.del();
@@ -523,6 +525,20 @@
                                     layer.msg(data.msg);
                                 }
                             },
+                        });
+                    } else if (obj.event === 'collection') {
+
+                        // console.log(data)
+                        layer.open({
+                            type: 2,
+                            skin: 'layui-layer-demo', //样式类名
+                            title: '编辑',
+                            closeBtn: 1, //不显示关闭按钮
+                            anim: 2,
+                            area: ['100%', '100%'],
+                            offset: ['0px', '0px'],
+                            shadeClose: true, //开启遮罩关闭
+                            content: '/admin/video_selected/collection?id=' + data.bid
                         });
                     }
 

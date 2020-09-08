@@ -81,7 +81,7 @@
                     if (result_data.code == 0) {
                         layer.msg(result_data.msg);
                     } else {
-                        test(result_data['data']['data']);
+                        test(result_data['data']);
 
                         laypageRender( result_data['data'] );
                     }
@@ -125,7 +125,7 @@
                                     } else {
                                         showloading(false);//关闭loading
 
-                                        test(result_data['data']['data']);
+                                        test(result_data['data']);
                                     }
                                 },
                                 complete: function(){
@@ -167,7 +167,7 @@
                 // 渲染表格
                 table.render({
                     elem: '#test',
-                    data: result_data,
+                    data: result_data['data'],
                     id: 'testReload',
                     toolbar: '#toolbarDemo',
                     defaultToolbar: ['filter', 'print', 'exports', {
@@ -176,7 +176,7 @@
                         icon: 'layui-icon-tips'
                     }],
                     cellMinWidth: 100,
-                    limit: 20,
+                    limit: result_data['limit'],
                     cols: [
                         [ {
                             fixed: 'right',
