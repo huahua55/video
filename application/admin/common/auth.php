@@ -44,7 +44,7 @@ return array(
 
 		'1004' => array("show" => 0, "name" => '--公共下拉选择框', 'controller' => 'index', 'action' => 'select'),
 		'1005' => array("show" => 0, "name" => '文件上传', 'controller' => 'upload', 'action' => 'upload'),
-		'110' => array("show" => 1, "name" => '视频记录', 'controller' => 'videoRecord', 'action' => 'index'),
+		'110' => array("show" => 1, "name" => '即将上线视频', 'controller' => 'videoRecord', 'action' => 'index'),
 		'1101' => array("show" => 0, "name" => '--视频记录列表', 'controller' => 'videoRecord', 'action' => 'index1'),
 		'1102' => array("show" => 0, "name" => '--视频记录信息维护', 'controller' => 'videoRecord', 'action' => 'info'),
 		'1103' => array("show" => 0, "name" => '--删除视频记录', 'controller' => 'videoRecord', 'action' => 'del'),
