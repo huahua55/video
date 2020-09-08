@@ -149,13 +149,17 @@ class videoVod extends Base {
      * @return [type]     [description]
      */
     private function _formatCollection($v1, $v){
+        $title = '';
         if (!empty($v1['b_video_id'])) {
             // 已下载的 根据任务id和视频id去集表中查询title
             $video_collection_where['task_id'] = $v1['b_id'];
             $video_collection_where['video_id'] = $v1['b_video_id'];
-            return Db::name('video_collection')->where($video_collection_where)->column('title')[0];
+            $title = Db::name('video_collection')->where($video_collection_where)->column('title')[0];
+            if (!empty($title)) {
+                return $title;
+            }
         }
-        if (empty($v1['b_video_id'])) {
+        if (empty($v1['b_video_id']) || empty($title)) {
             $collection_ext = '';
             // 未下载的 截取m3u8_url中的第一个作为集
             $first_url_title = explode('$', explode('#', $v1['b_m3u8_url'])[0])[0];
