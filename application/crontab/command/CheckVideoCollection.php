@@ -47,7 +47,7 @@ class CheckVideoCollection extends Common
 
             // 处理普通视频
             self::_checkVideoWhile();
-            log::info('------------------------------------------------');
+            self::_logWrite('------------------------------------------------');
             // 精选和普通视频分割
             $data['video_id'] = '';
             $data['vod_name'] = '';
@@ -56,9 +56,9 @@ class CheckVideoCollection extends Common
             $data['more_collections'] = '';
             $data['lack_collections_total'] = '';
             // 处理结果 写入文件
-            self::_setReturnToTable($data);
+            // self::_setReturnToTable($data);
             // 处理精选视频
-            self::_checkVideoSelectedWhile();
+            // self::_checkVideoSelectedWhile();
 
         } catch (Exception $e) {
             $output->writeln("检查视频集是否完整异常信息：" . $e);
@@ -73,14 +73,15 @@ class CheckVideoCollection extends Common
     private function _checkVideoWhile(){
         $is_true = true;
         Cache::set('video_current_select_video_id', '');
-        log::info('普通视频,检查视频集是否完整::start------');
+
+        self::_logWrite('普通视频,检查视频集是否完整::start------');
         while ($is_true) {
             $return = self::_checkVideo();
             if ($return['error'] == '-1') {
                 $is_true = false;
             }
         }
-        log::info('普通视频,检查视频集是否完整::end------');
+        self::_logWrite('普通视频,检查视频集是否完整::end------');
     }
 
     /**
@@ -96,7 +97,7 @@ class CheckVideoCollection extends Common
             $video_where['id'] = ['lt', $current_select_video_id];
         }
         // 查video表  排除电影 type_pid!=1 or type_id not between 6 and 12
-        $video_info = $this->videoDb->field('id,vod_total,vod_name')
+        $video_info = $this->videoDb->field('id,vod_total,vod_name,type_pid')
                                     ->where('type_pid != 1 or type_id not between 6 and 12')
                                     ->where($video_where)
                                     ->order('id desc')
@@ -119,18 +120,19 @@ class CheckVideoCollection extends Common
             // echo $this->videoCollectionDb->getLastSql();die;
             
             if (empty($video_collection_info)) {
-                log::info('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::集数等于0');
+                self::_logWrite('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::集数等于0'  . ',视频类型=' . $v['type_pid']);
                 continue;
             }
 
             $collections = array_column($video_collection_info, 'collection');
+            self::_logWrite('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '-----start-----');
 
             $return = self::_checkNumContinue($collections, $v['vod_total']);
 
             Cache::set('video_current_select_video_id', $v['id']);
 
             if ($return['need_log']) {
-                log::info('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::');
+                self::_logWrite('记录集数信息');
                 $data['video_id'] = $v['id'];
                 $data['vod_name'] = $v['vod_name'];
                 $data['eq_collections'] = $return['eq_collections'];
@@ -140,9 +142,10 @@ class CheckVideoCollection extends Common
                 // 处理结果 写入文件
                 $result = self::_setReturnToTable($data);
                 if ($result) {
-                    log::info('写入数据库成功');
+                    self::_logWrite('写入数据库成功');
                 }
             }
+            self::_logWrite('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '-----end-----');
         }
     }
 
@@ -153,14 +156,14 @@ class CheckVideoCollection extends Common
     private function _checkVideoSelectedWhile(){
         $is_true = true;
         Cache::set('video_selected_current_select_video_id', '');
-        log::info('精选视频,检查视频集是否完整::start------');
+        self::_logWrite('精选视频,检查视频集是否完整::start------');
         while ($is_true) {
             $return = self::_checkVideoSelected();
             if ($return['error'] == '-1') {
                 $is_true = false;
             }
         }
-        log::info('精选视频,检查视频集是否完整::end------');
+        self::_logWrite('精选视频,检查视频集是否完整::end------');
     }
 
     /**
@@ -199,7 +202,7 @@ class CheckVideoCollection extends Common
                                     // echo $this->videoSelectedCollectionDb->getLastSql();die;
             
             if (empty($video_collection_selected_info)) {
-                log::info('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::集数等于0');
+                self::_logWrite('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::集数等于0');
                 continue;
             }
 
@@ -210,7 +213,7 @@ class CheckVideoCollection extends Common
             Cache::set('video_selected_current_select_video_id', $v['id']);
 
             if ($return['need_log']) {
-                log::info('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::');
+                self::_logWrite('------视频：id=' . $v['id'] . ',视频名称=' . $v['vod_name'] . '::');
                 $data['video_id'] = $v['id'];
                 $data['vod_name'] = $v['vod_name'];
                 $data['eq_collections'] = $return['eq_collections'];
@@ -220,7 +223,7 @@ class CheckVideoCollection extends Common
                 // 处理结果 写入文件
                 $result = self::_setReturnToTable($data);
                 if ($result) {
-                    log::info('写入数据库成功');
+                    self::_logWrite('写入数据库成功');
                 }
             }
         }
@@ -294,7 +297,7 @@ class CheckVideoCollection extends Common
             $with_vod_total = self::_withVodTotalCompore($count, $vod_total, array_pop($collections));
         } else {
             $with_vod_total = ['more_collections' => '', 'lack_collections' => ''];
-            // log::info('总集数为0现在没有比较意义,不做比较');
+            // self::_logWrite('总集数为0现在没有比较意义,不做比较');
         }
 
         if ($is_continue && (empty($with_vod_total['lack_collections']) && empty($with_vod_total['more_collections']))) {
@@ -314,13 +317,20 @@ class CheckVideoCollection extends Common
      * @return [type]        [description]
      */
     private function _setReturnToTable( $data ){
-        $db_config = 'mysql://root:root@127.0.0.1:3306/video#utf8';
+        // 本地连接线上数据库时使用     现在本地不能连接线上数据库
+        // $db_config = 'mysql://root:root@127.0.0.1:3306/video#utf8';
+        // try{
+        //     return Db::connect($db_config) //创建数据库连接
+        //         ->table('check_video_collection') //选择数据表
+        //         ->insert($data);
+        // } catch (\Exception $e) {
+        //     self::_logWrite('写入数据库异常：：' . $e);
+        // }
+        
         try{
-            return Db::connect($db_config) //创建数据库连接
-                ->table('check_video_collection') //选择数据表
-                ->insert($data);
+            return Db::name('check_video_collection')->insert($data);
         } catch (\Exception $e) {
-            log::info('写入数据库异常：：' . $e);
+            self::_logWrite('写入数据库异常：：' . $e);
         }
         
     }
@@ -334,20 +344,20 @@ class CheckVideoCollection extends Common
      */
     private function _setReturn( $return ){
         if (!empty($return['eq_collections'])) {
-            log::info('存在集数等同的，集数为('. $return['eq_collections'] . ')');
+            self::_logWrite('存在集数等同的，集数为('. $return['eq_collections'] . ')');
         }
 
         if (!empty($return['lack_collections'])) {
-            log::info('存在缺失的集，集数为('. $return['lack_collections'] . ')');
+            self::_logWrite('存在缺失的集，集数为('. $return['lack_collections'] . ')');
         }
 
         if (!empty($return['with_vod_total'])) {
             if (!empty($return['with_vod_total']['more_collections'])) {
-                log::info('视频集数连续但现有集数大于总集数，存在多余的集，集数为('. $return['with_vod_total']['more_collections'] . ')');
+                self::_logWrite('视频集数连续但现有集数大于总集数，存在多余的集，集数为('. $return['with_vod_total']['more_collections'] . ')');
             }
 
             if (!empty($return['with_vod_total']['lack_collections'])) {
-                log::info('视频集数连续但现有集数小于总集数，存在缺失的集，集数为('. $return['with_vod_total']['lack_collections'] . ')');
+                self::_logWrite('视频集数连续但现有集数小于总集数，存在缺失的集，集数为('. $return['with_vod_total']['lack_collections'] . ')');
             }
         }
     }
@@ -383,4 +393,22 @@ class CheckVideoCollection extends Common
         }
         return ['more_collections' => $more_collections, 'lack_collections' => $lack_collections];
     }    
+
+    /**
+     * 重新定义日志文件路径存储采集比较信息
+     * @param  [type] $log_content [description]
+     * @return [type]              [description]
+     */
+    private function _logWrite($log_content){
+        $dir = LOG_PATH .'check_collect'. DS;
+        if (!file_exists($dir)){
+            mkdir($dir,0777,true);
+        }
+        \think\Log::init([
+            'type' => \think\Env::get('log.type', 'test'),
+            'path' => $dir,
+            'level' => ['info'],
+            'max_files' => 30]);
+        \think\Log::info($log_content);
+    }
 }
