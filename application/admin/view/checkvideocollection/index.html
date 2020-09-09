@@ -1,0 +1,262 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    td[data-field="role_name"] .ew-tree-table-cell.single-line > .ew-tree-table-cell-content {
+        text-overflow: unset;
+    }
+</style>
+
+<div class="page-container p10">
+    当前普通视频id：
+    <div class="layui-inline">
+        <input class="layui-input" placeholder="当前普通视频id" name="current_video_id" id="current_video_id" autocomplete="off">
+    </div>
+    &nbsp; 当前精选视频id：
+    <div class="layui-inline">
+        <input class="layui-input" placeholder="当前精选视频id" name="current_selected_video_id" id="current_selected_video_id" autocomplete="off">
+    </div>
+    &nbsp; 视频类型：
+    <div class="layui-inline">
+        <select class="layui-select" name="video_type" id="video_type">
+            <option value="1">普通视频</option>
+            <option value="2">精选视频</option>
+        </select>
+    </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+    <div id="pages" class="center"></div>
+
+</div>
+<input type="hidden" name="cur_page" id="cur_page" value="">
+<input type="hidden" name="cur_limit" id="cur_limit" value="">
+<input type="hidden" name="search_data" id="search_data" value="">
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-danger" lay-event="del">删除选中行数据</button>
+        <button class="layui-btn layui-btn-danger" lay-event="execute">执行校验</button>
+        <div class="layui-form-mid layui-word-aux"  style="font-size: 14px;display: inline-block;float: none;">每次执行校验请先删除数据</div>
+    </div>
+</script>
+
+<script>
+
+</script>
+<!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+        init_table();
+        function init_table( page = 1, limit = 20, param = '' ) { 
+            var data = {
+                    'page' : page,
+                    'limit' : limit
+                };
+            if ( param != '' ) {
+                Object.assign( data, JSON.parse( param ) );
+            }
+            
+            $.ajax({
+                url :'/admin/check_video_collection/index1',
+                data : data,
+                type : 'get',
+                dataType : 'json',
+                beforeSend: function () {
+                    //loading层
+                    showloading(true);
+                },
+                success : function(result_data){
+
+                    showloading(false);//关闭loading
+                    if (result_data.code == 0) {
+                        layer.msg(result_data.msg);
+                    } else {
+                        test(result_data['data']);
+
+                        laypageRender( result_data['data'] );
+                    }
+                },
+                complete: function(){
+                    
+                    showloading(false);//关闭loading
+                }
+            });
+        }
+        
+        function laypageRender( result_data ){
+            layui.use(['laypage', 'layer'],function(){
+                var laypage = layui.laypage
+                    ,layer = layui.layer;
+                //分页
+                laypage.render({
+                    elem: 'pages'
+                    ,count: result_data.count
+                    ,limit: result_data.limit
+                    ,curr: result_data.page
+                    ,limits: [10,20,30,50,200,500]
+                    ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    ,jump: function(obj, first){
+                        $('#cur_page').val(obj.curr);
+                        $('#cur_limit').val(obj.limit);
+                        result_data.param.page = obj.curr;
+                        result_data.param.limit = obj.limit;
+                        if(!first){
+                            $.ajax({
+                                url :'/admin/check_video_collection/index1',
+                                data : result_data.param,
+                                type : 'get',
+                                dataType : 'json',
+                                beforeSend: function () {
+                                    //loading层
+                                    showloading(true);
+                                },
+                                success : function(result_data){
+                                    if (result_data.code == 0) {
+                                        layer.msg(result_data.msg);
+                                    } else {
+                                        showloading(false);//关闭loading
+
+                                        test(result_data['data']);
+                                    }
+                                },
+                                complete: function(){
+                                    
+                                    showloading(false);//关闭loading
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        // 加载中方法
+        function showloading(flag = true){
+            layui.use(['table','layer'], function(){
+                var layer = layui.layer;
+                var index = '';
+                if ( flag ) {
+                    index = layer.load(1, {
+                        shade: [0.1,'#fff'], //0.1透明度的白色背景
+                        offset: ['50%'] // 向上偏移量
+                    });
+                } else {
+                    // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
+                    layer.closeAll('loading');
+                }
+            });
+        }
+
+        function test(result_data){
+            layui.use(['form', 'jquery', 'layer', 'table', 'laypage'], function () {
+                var table = layui.table;
+                var form = layui.form;
+                var laypage = layui.laypage //分页
+                var layer = layui.layer //弹层
+                var $ = layui.jquery
+                // 渲染表格
+                table.render({
+                    elem: '#test',
+                    data: result_data['data'],
+                    id: 'testReload',
+                    toolbar: '#toolbarDemo',
+                    defaultToolbar: ['filter', 'print', 'exports', {
+                        title: '提示',
+                        layEvent: 'LAYTABLE_TIPS',
+                        icon: 'layui-icon-tips'
+                    }],
+                    cellMinWidth: 100,
+                    limit: result_data['limit'],
+                    cols: [
+                        [ {type:'checkbox'}, {
+                            field: 'video_id',
+                            title: '视频id',
+                            width: 100
+                        }, {
+                            field: 'vod_name',
+                            title: '视频名称',
+                        }, {
+                            field: 'eq_collections',
+                            title: '相同的集',
+                            width: 150
+                        }, {
+                            field: 'lack_collections',
+                            title: '缺失的集',
+                        }, {
+                            field: 'more_collections',
+                            title: '集数连续现有集数大于总集数，有多余的集',
+                        }, {
+                            field: 'lack_collections_total',
+                            title: '集数连续现有集数小于总集数，有缺失的集',
+                        }
+                        ]
+                    ], style: 'margin-top:0;',
+                    done: function() {
+                        layer.closeAll();
+                    }
+                });
+
+                //头工具栏事件
+                table.on('toolbar(test)', function (obj) {
+                    switch(obj.event){
+                        case 'del':
+                            var ids = [];
+                            var data = table.checkStatus(obj.config.id).data;
+                            console.log('table.checkStatus(obj.config.id)',table.checkStatus(obj.config.id))
+                            for(j = 0,len = data.length; j < len; j++) {
+                                ids.push(data[j]['id']);
+                            }
+                            layer.confirm('真的删除选中的数据么', function (index) {
+                                layer.close(index);
+                                $.ajax({
+                                    type: "post",
+                                    url: "/admin/check_video_collection/del",
+                                    data: {
+                                        'ids': ids
+                                    },
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (data.code == 0) {
+                                            layer.closeAll();
+                                            layer.msg(data.msg);
+                                        } else {
+                                            init_table();
+                                            layer.msg(data.msg);
+                                        }
+                                    }
+                                });
+                            });
+                        break;
+                        case 'execute':
+                            showloading(true);
+                            var data = {
+                                current_video_id: $('#current_video_id').val(),
+                                current_selected_video_id: $('#current_selected_video_id').val(),
+                                video_type: $("#video_type").val()
+                            };
+                            // 更新权限
+                            $.ajax({
+                                type: "get",
+                                url: "/admin/check_video_collection/execute",
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.code == 0) {
+                                        layer.closeAll();
+                                        layer.msg(data.msg);
+                                    } else {
+                                        layer.closeAll();
+                                        layer.msg(data.msg);
+                                        init_table();
+                                        $('#current_video_id').val(data.data.current_video_id)
+                                        $('#current_selected_video_id').val(data.data.current_selected_video_id)
+                                    }
+                                },
+                            });
+                        break;
+                    };
+                });
+            });
+        }
+</script>
+</body>
+</html>
