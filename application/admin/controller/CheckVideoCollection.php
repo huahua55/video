@@ -39,7 +39,7 @@ class CheckVideoCollection extends Base
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
 
-        $order = 'id desc';
+        $order = 'video_id desc';
 
         $res = self::_listData(
                     [],
@@ -100,7 +100,6 @@ class CheckVideoCollection extends Base
             $res = $this->checkVideoCollectionDb->where($where)->delete();
             if (false !== $res) {
                 return $this->success('删除成功');
-                
             }
             return $this->error('删除失败');
         }
@@ -132,7 +131,8 @@ class CheckVideoCollection extends Base
             self::_checkVideoWhile($current_video_id);
         } else if ($video_type == 2) {
             // 处理精选视频
-            self::_checkVideoSelectedWhile($current_selected_video_id);
+            return $this->error('精选视频不做处理');
+            // self::_checkVideoSelectedWhile($current_selected_video_id);
         } else {
             return $this->error('视频类型错误');
         }
@@ -382,8 +382,8 @@ class CheckVideoCollection extends Base
             // 集数和总集数的差异 返回多余的集  总集数为0现在没有比较意义
             $with_vod_total = self::_withVodTotalCompore($count, $vod_total, array_pop($collections));
         } else {
+            // 总集数为0现在没有比较意义,不做比较
             $with_vod_total = ['more_collections' => '', 'lack_collections' => ''];
-            // self::_logWrite('总集数为0现在没有比较意义,不做比较');
         }
 
         if ($is_continue && (empty($with_vod_total['lack_collections']) && empty($with_vod_total['more_collections']))) {
@@ -403,48 +403,12 @@ class CheckVideoCollection extends Base
      * @return [type]        [description]
      */
     private function _setReturnToTable( $data ){
-        // 本地连接线上数据库时使用     现在本地不能连接线上数据库
-        // $db_config = 'mysql://root:root@127.0.0.1:3306/video#utf8';
-        // try{
-        //     return Db::connect($db_config) //创建数据库连接
-        //         ->table('check_video_collection') //选择数据表
-        //         ->insert($data);
-        // } catch (\Exception $e) {
-        //     self::_logWrite('写入数据库异常：：' . $e);
-        // }
-        
+
         $add =  $this->checkVideoCollectionDb->insertAll($data);
         if (count($data) == $add) {
             return true;
         } else {
             return false;
-        }
-    }
-
-
-    /**
-     * 处理结果
-     * @param  [type] $return 结果
-     * @param  [type] $type   视频类型
-     * @return [type]        [description]
-     */
-    private function _setReturn( $return ){
-        if (!empty($return['eq_collections'])) {
-            self::_logWrite('存在集数等同的，集数为('. $return['eq_collections'] . ')');
-        }
-
-        if (!empty($return['lack_collections'])) {
-            self::_logWrite('存在缺失的集，集数为('. $return['lack_collections'] . ')');
-        }
-
-        if (!empty($return['with_vod_total'])) {
-            if (!empty($return['with_vod_total']['more_collections'])) {
-                self::_logWrite('视频集数连续但现有集数大于总集数，存在多余的集，集数为('. $return['with_vod_total']['more_collections'] . ')');
-            }
-
-            if (!empty($return['with_vod_total']['lack_collections'])) {
-                self::_logWrite('视频集数连续但现有集数小于总集数，存在缺失的集，集数为('. $return['with_vod_total']['lack_collections'] . ')');
-            }
         }
     }
 
@@ -478,23 +442,5 @@ class CheckVideoCollection extends Base
             $lack_collections = implode(',', $lack_collections_arr);
         }
         return ['more_collections' => $more_collections, 'lack_collections' => $lack_collections];
-    }    
-
-    /**
-     * 重新定义日志文件路径存储采集比较信息
-     * @param  [type] $log_content [description]
-     * @return [type]              [description]
-     */
-    private function _logWrite($log_content){
-        $dir = LOG_PATH .'check_collect'. DS;
-        if (!file_exists($dir)){
-            mkdir($dir,0777,true);
-        }
-        \think\Log::init([
-            'type' => \think\Env::get('log.type', 'test'),
-            'path' => $dir,
-            'level' => ['info'],
-            'max_files' => 30]);
-        \think\Log::info($log_content);
     }
 }
