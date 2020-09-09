@@ -47,9 +47,13 @@ return array(
 		'1004' => array("show" => 0, "name" => '--公共下拉选择框', 'controller' => 'index', 'action' => 'select'),
 		'1005' => array("show" => 0, "name" => '文件上传', 'controller' => 'upload', 'action' => 'upload'),
 		'110' => array("show" => 1, "name" => '即将上线视频', 'controller' => 'videoRecord', 'action' => 'index'),
-		'1101' => array("show" => 0, "name" => '--视频记录列表', 'controller' => 'videoRecord', 'action' => 'index1'),
-		'1102' => array("show" => 0, "name" => '--视频记录信息维护', 'controller' => 'videoRecord', 'action' => 'info'),
-		'1103' => array("show" => 0, "name" => '--删除视频记录', 'controller' => 'videoRecord', 'action' => 'del'),
+		'11001' => array("show" => 0, "name" => '--视频记录列表', 'controller' => 'videoRecord', 'action' => 'index1'),
+		'11002' => array("show" => 0, "name" => '--视频记录信息维护', 'controller' => 'videoRecord', 'action' => 'info'),
+		'11003' => array("show" => 0, "name" => '--删除视频记录', 'controller' => 'videoRecord', 'action' => 'del'),
+		'111' => array("show" => 1, "name" => '校验视频集', 'controller' => 'checkVideoCollection', 'action' => 'index'),
+		'11101' => array("show" => 0, "name" => '--校验视频集列表', 'controller' => 'checkVideoCollection', 'action' => 'index1'),
+		'11102' => array("show" => 0, "name" => '--执行校验', 'controller' => 'checkVideoCollection', 'action' => 'execute'),
+		'11103' => array("show" => 0, "name" => '--删除数据', 'controller' => 'checkVideoCollection', 'action' => 'del'),
 
 	)),
     '13' => array('name' => '任务', 'icon' => 'xe625', 'sub' => array(
