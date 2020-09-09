@@ -41,9 +41,14 @@ class CheckVideoCollection extends Base
 
         $order = 'video_id desc';
 
+        $where = [];
+        if (isset($param['ids']) && !empty($param['ids'])) {
+            $where['id'] = ['in', $param['ids']];
+        }
+
         $res = self::_listData(
                     [],
-                    [],
+                    $where,
                     $order, 
                     $param['page'],
                     $param['limit']
@@ -77,11 +82,11 @@ class CheckVideoCollection extends Base
         
         $field_a = 'id,video_id,vod_name,eq_collections,lack_collections,more_collections,lack_collections_total';
 
-        $total = $this->checkVideoCollectionDb->limit($limit_str)->count();
+        $total = $this->checkVideoCollectionDb->where($where)->limit($limit_str)->count();
 
         $list = $this->checkVideoCollectionDb
                 ->field( $field_a )
-                ->order( $order )->limit( $limit_str )->select();
+                ->order( $order )->where($where)->limit( $limit_str )->select();
 
         return ['code' => 1, 'msg' => '数据列表', 'page' => $page, 'pagecount' => ceil($total / $limit), 'limit' => $limit, 'total' => $total, 'list' => $list];
     }
@@ -159,13 +164,17 @@ class CheckVideoCollection extends Base
         } else {
             Cache::set('video_current_select_video_id', '');
         }
-
-        while ($is_true) {
-            $return = self::_checkVideo();
-            if ($return['error'] == '-1') {
-                $is_true = false;
-                Cache::rm('video_current_select_video_id');
+        try {
+            while ($is_true) {
+                $return = self::_checkVideo();
+                if ($return['error'] == '-1') {
+                    $is_true = false;
+                    Cache::rm('video_current_select_video_id');
+                }
             }
+        } catch (Exception $e) {
+            self::_logWrite('普通视频异常：：');
+            self::_logWrite($e);
         }
     }
 
@@ -242,13 +251,17 @@ class CheckVideoCollection extends Base
         } else {
             Cache::set('video_selected_current_select_video_id', '');
         }
-        
-        while ($is_true) {
-            $return = self::_checkVideoSelected();
-            if ($return['error'] == '-1') {
-                $is_true = false;
-                Cache::rm('video_selected_current_select_video_id');
+        try {
+            while ($is_true) {
+                $return = self::_checkVideoSelected();
+                if ($return['error'] == '-1') {
+                    $is_true = false;
+                    Cache::rm('video_selected_current_select_video_id');
+                }
             }
+        } catch (Exception $e) {
+            self::_logWrite('精选视频异常：：');
+            self::_logWrite($e);
         }
     }
 
@@ -442,5 +455,23 @@ class CheckVideoCollection extends Base
             $lack_collections = implode(',', $lack_collections_arr);
         }
         return ['more_collections' => $more_collections, 'lack_collections' => $lack_collections];
+    }
+
+    /**
+     * 重新定义日志文件路径存储采集比较信息
+     * @param  [type] $log_content [description]
+     * @return [type]              [description]
+     */
+    private function _logWrite($log_content){
+        $dir = LOG_PATH .'check_collection'. DS;
+        if (!file_exists($dir)){
+            mkdir($dir,0777,true);
+        }
+        \think\Log::init([
+            'type' => \think\Env::get('log.type', 'test'),
+            'path' => $dir,
+            'level' => ['info'],
+            'max_files' => 30]);
+        \think\Log::info($log_content);
     }
 }
