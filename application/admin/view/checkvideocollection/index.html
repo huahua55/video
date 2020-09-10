@@ -282,6 +282,9 @@
                                         $('#current_selected_video_id').val(data.data.current_selected_video_id)
                                     }
                                 },
+                                complete: function(){
+                                    layer.closeAll();
+                                }
                             });
                         break;
                         case 'export':
@@ -303,6 +306,9 @@
                                 dataType : 'json',
                                 success : function(result_data){
                                     table_export.exportFile('exportTable', result_data.data.data, 'xls');
+                                },
+                                complete: function(){
+                                    layer.closeAll();
                                 }
                             });
                         break;
