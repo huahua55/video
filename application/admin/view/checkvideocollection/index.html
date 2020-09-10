@@ -23,7 +23,7 @@
     </div>
     <table class="layui-hide" id="test" lay-filter="test"></table>
     <div id="pages" class="center"></div>
-
+    <div style="display: none"><table id="table"></table></div>
 </div>
 <input type="hidden" name="cur_page" id="cur_page" value="">
 <input type="hidden" name="cur_limit" id="cur_limit" value="">
@@ -33,6 +33,7 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-danger" lay-event="export">导出全部(选中)数据</button>
         <button class="layui-btn layui-btn-danger" lay-event="del">删除选中行数据</button>
         <button class="layui-btn layui-btn-danger" lay-event="execute">执行校验</button>
         <div class="layui-form-mid layui-word-aux"  style="font-size: 14px;display: inline-block;float: none;">每次执行校验请先删除数据</div>
@@ -195,13 +196,43 @@
                     }
                 });
 
+                // 导出数据配置
+                var table_export = layui.table;
+                table_export.render({
+                    elem: '#table',
+                    id: 'exportTable',
+                    title: '校验视频集是否完整',
+                    cols: [
+                        [{
+                            field: 'video_id',
+                            title: '视频id',
+                            width: 100
+                        }, {
+                            field: 'vod_name',
+                            title: '视频名称',
+                        }, {
+                            field: 'eq_collections',
+                            title: '相同的集',
+                            width: 150
+                        }, {
+                            field: 'lack_collections',
+                            title: '缺失的集',
+                        }, {
+                            field: 'more_collections',
+                            title: '集数连续现有集数大于总集数，有多余的集',
+                        }, {
+                            field: 'lack_collections_total',
+                            title: '集数连续现有集数小于总集数，有缺失的集',
+                        }]
+                    ]
+                });
+
                 //头工具栏事件
                 table.on('toolbar(test)', function (obj) {
                     switch(obj.event){
                         case 'del':
                             var ids = [];
                             var data = table.checkStatus(obj.config.id).data;
-                            console.log('table.checkStatus(obj.config.id)',table.checkStatus(obj.config.id))
                             for(j = 0,len = data.length; j < len; j++) {
                                 ids.push(data[j]['id']);
                             }
@@ -251,6 +282,34 @@
                                         $('#current_selected_video_id').val(data.data.current_selected_video_id)
                                     }
                                 },
+                                complete: function(){
+                                    layer.closeAll();
+                                }
+                            });
+                        break;
+                        case 'export':
+                            var selected_ids = [];
+                            var data = table.checkStatus(obj.config.id).data;
+                            for(j = 0,len = data.length; j < len; j++) {
+                                selected_ids.push(data[j]['id']);
+                            }
+                            //使用ajax请求获取所有数据
+                            var data = {
+                                    'page' : 1,
+                                    'limit' : 9999999,
+                                    'ids': selected_ids
+                                };
+                            $.ajax({
+                                url :'/admin/check_video_collection/index1',
+                                data : data,
+                                type : 'get',
+                                dataType : 'json',
+                                success : function(result_data){
+                                    table_export.exportFile('exportTable', result_data.data.data, 'xls');
+                                },
+                                complete: function(){
+                                    layer.closeAll();
+                                }
                             });
                         break;
                     };
