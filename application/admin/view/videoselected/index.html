@@ -450,9 +450,9 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == 0) {
-                                layer.closeAll()
                                 layer.msg(data.msg);
                             } else {
+                                layer.closeAll();
                                 layer.msg(data.msg);
                             }
                         },
@@ -615,9 +615,9 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == 0) {
-                                layer.closeAll();
                                 layer.msg(data.msg);
                             } else {
+                                layer.closeAll();
                                 layer.msg(data.msg);
                             }
                         },
