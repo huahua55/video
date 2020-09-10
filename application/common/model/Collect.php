@@ -407,7 +407,7 @@ class Collect extends Base
         // 图片
         if (substr($pic_url, 0, 4) != 'http') {
             exec("python3  /data/www/video/t10.py $pic_url", $res, $rc);
-            $des += implode(',',$res);
+            $des .= implode(',',$res);
         }
         return ['pic' => $pic_url, 'msg' => $des];
     }

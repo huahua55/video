@@ -406,7 +406,7 @@ class CollectOk extends Base
         if (substr($pic_url, 0, 4) != 'http') {
             $cmd = "python3  /data/www/video/t10.py $pic_url";
             exec($cmd, $res, $rc);
-            $des .= implode(',',$res). $cmd;
+            $des .= implode(',',$res);
         }
         return ['pic' => $pic_url, 'msg' => $des];
     }
@@ -993,11 +993,11 @@ class CollectOk extends Base
                                 $update['vod_lang'] = $v['vod_lang'];
                             }
                             // || substr($info["vod_pic"], 0, 4) == "uplo"
-//                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http"  || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
+                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http"  || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
                                 $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                                 $update['vod_pic'] = (string)$tmp['pic'];
                                 $msg = $tmp['msg'];
-//                            }
+                            }
                             if (strpos(',' . $config['uprule'], 'k') !== false && !empty($v['vod_content']) && $v['vod_content'] != $info['vod_content']) {
                                 $update['vod_content'] = $v['vod_content'];
                             }
