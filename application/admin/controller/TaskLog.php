@@ -57,7 +57,7 @@ class TaskLog extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function getExamine()
@@ -76,7 +76,7 @@ class TaskLog extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     /**
@@ -174,12 +174,13 @@ class TaskLog extends Base
             if ( $video_edit !== false && $video_collection_edit !== false ) {
                 Db::commit();
 
-                $data['msg'] = 'succ';
+                return $this->success('修改成功！');
             } else {
                 Db::rollback();
+                return $this->error('修改失败！');
             }
         }
-        return $data;
+        return $this->error('参数错误！');
     }
 
     public function updateStatus()
@@ -249,11 +250,11 @@ class TaskLog extends Base
         if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
             Db::commit();
 
-            $data['msg'] = 'succ';
+            return $this->success('修改成功！');
         } else {
             Db::rollback();
         }
-        return $data;
+        return $this->error('修改失败！');
     }
 
     public function info()

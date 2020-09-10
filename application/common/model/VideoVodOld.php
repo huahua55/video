@@ -36,11 +36,11 @@ class videoVodOld extends Base {
         $limit_str = ($limit * ($page-1) + $start) .",".$limit;
 //        log::write('两表联查sql开始--'.msectime());
         if(empty($whereOr)){
-            $total = Db::table('video_vod')->alias('b')->field('b.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->where($where)->order($order)->limit($limit_str)->count();
-            $list = Db::table('video_vod')->alias('b')->field('b.vod_name,b.collection,b.m3u8_url,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->where($where)->order($order)->limit($limit_str)->select();
+            $total = Db::table('video_vod')->alias('b')->field('b.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync,b.type_id as b_type_id')->where($where)->order($order)->limit($limit_str)->count();
+            $list = Db::table('video_vod')->alias('b')->field('b.vod_name,b.collection,b.m3u8_url,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync,b.type_id as b_type_id')->where($where)->order($order)->limit($limit_str)->select();
         }else{
-            $total = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->count();
-            $list = Db::table('video_vod')->alias('b')->field('b.vod_name,b.collection,b.m3u8_url,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
+            $total = Db::table('video_vod')->alias('b')->field('a.vod_name,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync,b.type_id as b_type_id')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->count();
+            $list = Db::table('video_vod')->alias('b')->field('b.vod_name,b.collection,b.m3u8_url,b.id as b_id,b.examine_id as b_examine_id,b.sum as b_sum,b.is_examine as b_is_examine,b.is_section as b_is_section,b.reason as b_reason,b.code as b_code,b.vod_id as b_vod_id,b.video_id as b_video_id,b.down_ts_url as b_down_ts_url,b.down_mp4_url as b_down_mp4_url,b.down_url as b_down_url,b.down_time as b_down_time,b.weight as b_weight,b.is_down as b_is_down,b.is_sync as b_is_sync,b.type_id as b_type_id')->whereOr($whereOr)->where($where)->order($order)->limit($limit_str)->select();
         }
 
 //        log::write('两表联查sql开始-'.Db::table('video_vod')->getLastSql().'-'.msectime());
@@ -63,6 +63,11 @@ class videoVodOld extends Base {
                 if(isset($video_examine[$v['b_examine_id']])){
                     $list[$k]['examine_txt'] = $video_examine[$v['b_examine_id']];
                 }
+            }
+
+            if (in_array($v['b_type_id'], [3,25,26,27,28])) {
+                // 综艺格式化集
+                $list[$k]['collection'] = self::_formatCollection($v);
             }
         }
 //        log::write('数组处理结束-'.'-'.msectime());
@@ -207,6 +212,30 @@ class videoVodOld extends Base {
             return ['code'=>1001,'msg'=>'设置失败：'.$this->getError() ];
         }
         return ['code'=>1,'msg'=>'设置成功'];
+    }
+
+    /**
+     * 综艺 格式化集
+     * @param  [type] $v  [description]
+     * @return [type]     [description]
+     */
+    private function _formatCollection($v){
+        $title = '';
+        if (!empty($v['b_video_id'])) {
+            // 已下载的 根据任务id和视频id去集表中查询title
+            $video_collection_where['task_id'] = $v['b_id'];
+            $video_collection_where['video_id'] = $v['b_video_id'];
+            $title = Db::name('video_collection')->where($video_collection_where)->column('title')[0];
+            if (!empty($title)) {
+                return $title;
+            }
+        }
+        if (empty($v['b_video_id']) || empty($title)) {
+            $collection_ext = '';
+            // 未下载的 截取m3u8_url中的第一个作为集
+            $first_url_title = explode('$', explode('#', $v['m3u8_url'])[0])[0];
+            return $first_url_title;
+        }
     }
 
 }

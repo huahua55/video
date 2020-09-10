@@ -154,6 +154,7 @@
 <!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+    $('.examine').css('display','none');
     layui.use('table', function () {
         var table = layui.table;
         var form = layui.form;
@@ -173,7 +174,20 @@
             limit: 10,
             toolbar: '#toolbarDemo'
             // , height: 310
-            ,
+            ,parseData: function(res){ //res 即为原始返回的数据
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                } else {
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.count, //解析数据长度
+                        "data": res.data.data //解析数据列表
+                    };
+                }
+                
+            },
             cols: [
                 [{
                     checkbox: true,
@@ -208,7 +222,7 @@
                 } , {
                     field: 'collection',
                     title: '集',
-                    width: 90,
+                    width: 120,
                 } , {
                     field: 'b_sum',
                     title: '视频文件数量',
@@ -273,9 +287,9 @@
         });
 		//监听排序事件
 		table.on('sort(test)', function(obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-			console.log(obj.field); //当前排序的字段名
-			console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
-			console.log(this); //当前排序的 th 对象
+			// console.log(obj.field); //当前排序的字段名
+			// console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+			// console.log(this); //当前排序的 th 对象
 			//尽管我们的 table 自带排序功能，但并没有请求服务端。
 			//有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
 			table.reload('testReload', {
@@ -311,15 +325,19 @@
                             data: '',
                             dataType: "json",
                             success: function (data) {
-                                console.log(data)
-                                var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
-                                    ' "><option value="">请选择一个理由</option>'
-                                for (var i = 0; i < data.data.length; i++) {
-                                    str += "<option value='" + data.data[i].id + "'>" + data.data[i].reasons + "</option>"
+                                if (data.code == 0) {
+                                    layer.closeAll()
+                                    layer.msg(data.msg);
+                                } else {
+                                    var str = '<select name="examine" lay-verify="" lay-filter="examine"  data-id = " ' + datas.elem.name +
+                                        ' "><option value="">请选择一个理由</option>'
+                                    for (var i = 0; i < data.data.data.length; i++) {
+                                        str += "<option value='" + data.data.data[i].id + "'>" + data.data.data[i].reasons + "</option>"
+                                    }
+                                    str += "</select>"
+                                    $("#examineForm").append(str)
+                                    form.render('select');
                                 }
-                                str += "</select>"
-                                $("#examineForm").append(str)
-                                form.render('select');
                             },
                         })
                     }
@@ -356,13 +374,12 @@
                 data: data,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
                     if (data.code == 0) {
-                        layer.closeAll()
-                        layer.msg('修改成功！！！');
-                        table.reload('testReload')
+                        layer.msg(data.msg);
                     } else {
-                        layer.msg('修改失败！！！');
+                        layer.closeAll();
+                        layer.msg(data.msg);
+                        table.reload('testReload');
                     }
                 },
             })

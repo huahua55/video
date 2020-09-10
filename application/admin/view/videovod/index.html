@@ -430,9 +430,9 @@
             });
             //监听排序事件
             table.on('sort(test)', function(obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-                console.log(obj.field); //当前排序的字段名
-                console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
-                console.log(this); //当前排序的 th 对象
+                // console.log(obj.field); //当前排序的字段名
+                // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+                // console.log(this); //当前排序的 th 对象
                 //尽管我们的 table 自带排序功能，但并没有请求服务端。
                 //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
                 table.reload('testReload', {

@@ -54,7 +54,11 @@ class TaskLog extends Base
         # video
         $array_video_vod = Db::name('video')->whereIn('id', $inId)->column(null, 'id');
         # video_collection
-        $array_vod_collection_vod = Db::name('video_collection')->whereIn('video_id', $inId)->column(null, 'video_id');
+        $array_vod_collection_vods = Db::name('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,e_id,is_examine,resolution,bitrate,duration,size,is_selected')->whereIn('video_id', $inId)->select();
+        $array_vod_collection_vod = [];
+        foreach ($array_vod_collection_vods as $value) {
+            $array_vod_collection_vod[$value['task_id']] = $value;
+        }
         $q = [];
         $q_list = [];
         foreach ($list as $key_video_vod => &$val_video_vod) {
@@ -98,10 +102,10 @@ class TaskLog extends Base
             }
             $val_video_vod['collection'] =$ii;
             $val_video_vod['m_status'] = $val_video_vod['collection_status'];
-            $val_video_vod['m_eid'] = isset($array_vod_collection_vod[$val_video_vod['video_id']]['e_id']) ? $array_vod_collection_vod[$val_video_vod['video_id']]['e_id'] : 0;
+            $val_video_vod['m_eid'] = isset($array_vod_collection_vod[$val_video_vod['video_vod_id']]['e_id']) ? $array_vod_collection_vod[$val_video_vod['video_vod_id']]['e_id'] : 0;
             $val_video_vod['is_master'] = 0;
-            $val_video_vod['vod_url'] = $video_domain['vod_domain'] . $array_vod_collection_vod[$val_video_vod['video_id']]['vod_url'];
-            $val_video_vod['m_reasons'] = isset($video_examine[$array_vod_collection_vod[$val_video_vod['video_id']]['e_id']]) ? $video_examine[$array_vod_collection_vod[$val_video_vod['video_id']]['e_id']] : '';
+            $val_video_vod['vod_url'] = $video_domain['vod_domain'] . $array_vod_collection_vod[$val_video_vod['video_vod_id']]['vod_url'];
+            $val_video_vod['m_reasons'] = isset($video_examine[$array_vod_collection_vod[$val_video_vod['video_vod_id']]['e_id']]) ? $video_examine[$array_vod_collection_vod[$val_video_vod['video_vod_id']]['e_id']] : '';
             $val_video_vod['bid'] = $val_video_vod['collection_id'];
             $val_video_vod['m_is_examine'] = $val_video_vod['collection_is_examine'];
             $val_video_vod['pid'] = $val_video_vod['video_id'] . '_' . $val_video_vod['video_id'];

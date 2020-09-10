@@ -97,7 +97,7 @@ class VideoVodOld extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function getExamine()
@@ -117,7 +117,7 @@ class VideoVodOld extends Base
         $data['count'] = $res['total'];
         $data['msg'] = 'succ';
         $data['data'] = $res['list'];
-        return $data;
+        return $this->success('succ', null, $data);
     }
 
     public function updateExamine()
@@ -131,7 +131,7 @@ class VideoVodOld extends Base
         $data['data'] = [];
         if (!empty($id)) {
 
-
+            Db::startTrans();
             $where['id'] = $id;
             $collection_where['task_id'] = $id;
             $update = [];
@@ -162,11 +162,16 @@ class VideoVodOld extends Base
             $collection_update['time_up'] = time();
             $res = Db::table('video_vod')->where($where)->update($update);
             $res_collection = Db::table('video_collection')->where($collection_where)->update($collection_update);
+
             if ($res && $res_collection) {
-                $data['msg'] = 'succ';
+                Db::commit();
+                return $this->success('修改成功！');
+            } else {
+                Db::rollback();
+                return $this->error('修改失败！');
             }
         }
-        return $data;
+        return $this->error('参数错误！');
     }
 
 
