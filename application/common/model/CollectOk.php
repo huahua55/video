@@ -404,8 +404,9 @@ class CollectOk extends Base
             }
         }
         if (substr($pic_url, 0, 4) != 'http') {
-            exec("python3  /data/www/video/t10.py $pic_url", $res, $rc);
-            $des += implode(',',$res);
+            $cmd = "python3  /data/www/video/t10.py $pic_url";
+            exec($cmd, $res, $rc);
+            $des .= implode(',',$res). $cmd;
         }
         return ['pic' => $pic_url, 'msg' => $des];
     }
