@@ -404,6 +404,11 @@ class Collect extends Base
                 $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
             }
         }
+        // 图片
+        if (substr($pic_url, 0, 4) != 'http') {
+            exec("python3  /data/www/video/t10.py $pic_url", $res, $rc);
+            $des += $res[0]??'';
+        }
         return ['pic' => $pic_url, 'msg' => $des];
     }
 
@@ -682,16 +687,16 @@ class Collect extends Base
                     $new_check_data['type_id_1'] = $v['type_id_1'];
 
                     $filter_vod_actor = self::_arrayIntersectCount('未知,内详', $v['vod_actor']);
-                    $filter_vod_director =  self::_arrayIntersectCount('未知,内详', $v['vod_director']);
+                    $filter_vod_director = self::_arrayIntersectCount('未知,内详', $v['vod_director']);
                     $check_actor_and_director = [];
                     // 如果是动漫或者综艺则不再校验导演和主演
                     $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
 
-                    if ((empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) && in_array($get_type_pid_type_id, [1,2])) {
+                    if ((empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) && in_array($get_type_pid_type_id, [1, 2])) {
                         self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
                         // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
                         $check_actor_and_director = self::_getVodByVodName($v['vod_name'], $new_check_data);
-                        if (empty( $check_actor_and_director )) {
+                        if (empty($check_actor_and_director)) {
                             // 库中不存在  则不再入库
                             if (empty($v['vod_actor'])) {
                                 mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
@@ -711,7 +716,7 @@ class Collect extends Base
                     }
 
 //                p($where);
-                    if (empty($check_actor_and_director)) {                
+                    if (empty($check_actor_and_director)) {
                         if ($blend === false) {
                             $info = model('Vod')->where($where)->find();
                         } else {
@@ -724,19 +729,19 @@ class Collect extends Base
                             })->find();
                         }
 
-                        
+
                         self::_logWrite('视频名称::' . $v['vod_name']);
-                        if ( empty($info) ) {
+                        if (empty($info)) {
                             self::_logWrite("未查询到视频信息::" . $v['vod_name']);
                             // 根据vod_name获取数据
                             $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                         } else {
                             self::_logWrite("数据库查询到的视频id：：" . $info['vod_id']);
-                            if ( empty($info['vod_content']) &&
+                            if (empty($info['vod_content']) &&
                                 empty($info['vod_blurb']) &&
                                 empty($info['vod_actor']) &&
                                 empty($info['vod_director'])
-                             ) {
+                            ) {
                                 // 考虑内容、简介、导演、演员为空的情况
                                 $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
                             } else {
@@ -764,29 +769,29 @@ class Collect extends Base
                             $des = '数据操作没有勾选新增，跳过。';
                         } else {
                             if ($param['filter'] == 1 || $param['filter'] == 2) {
-                                if(!is_array($collect_filter['play'][$param['filter']]['cj_play_from_arr'])){
-                                    mac_echo('cj_play_from_arr'.$collect_filter['play'][$param['filter']]['cj_play_from_arr']);
+                                if (!is_array($collect_filter['play'][$param['filter']]['cj_play_from_arr'])) {
+                                    mac_echo('cj_play_from_arr' . $collect_filter['play'][$param['filter']]['cj_play_from_arr']);
                                 }
-                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_url'])){
-                                    mac_echo('vod_play_url'.$collect_filter['play'][$param['filter']]['vod_play_url']);
+                                if (!is_array($collect_filter['play'][$param['filter']]['vod_play_url'])) {
+                                    mac_echo('vod_play_url' . $collect_filter['play'][$param['filter']]['vod_play_url']);
                                 }
-                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_server'])){
-                                    mac_echo('vod_play_server'.$collect_filter['play'][$param['filter']]['vod_play_server']);
+                                if (!is_array($collect_filter['play'][$param['filter']]['vod_play_server'])) {
+                                    mac_echo('vod_play_server' . $collect_filter['play'][$param['filter']]['vod_play_server']);
                                 }
-                                if(!is_array($collect_filter['play'][$param['filter']]['vod_play_note'])){
-                                    mac_echo('vod_play_note'.$collect_filter['play'][$param['filter']]['vod_play_note']);
+                                if (!is_array($collect_filter['play'][$param['filter']]['vod_play_note'])) {
+                                    mac_echo('vod_play_note' . $collect_filter['play'][$param['filter']]['vod_play_note']);
                                 }
-                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_from'])){
-                                    mac_echo('vod_down_from'.$collect_filter['down'][$param['filter']]['vod_down_from']);
+                                if (!is_array($collect_filter['down'][$param['filter']]['vod_down_from'])) {
+                                    mac_echo('vod_down_from' . $collect_filter['down'][$param['filter']]['vod_down_from']);
                                 }
-                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_url'])){
-                                    mac_echo('vod_down_url'.$collect_filter['down'][$param['filter']]['vod_down_url']);
+                                if (!is_array($collect_filter['down'][$param['filter']]['vod_down_url'])) {
+                                    mac_echo('vod_down_url' . $collect_filter['down'][$param['filter']]['vod_down_url']);
                                 }
-                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_server'])){
-                                    mac_echo('vod_down_server'.$collect_filter['down'][$param['filter']]['vod_down_server']);
+                                if (!is_array($collect_filter['down'][$param['filter']]['vod_down_server'])) {
+                                    mac_echo('vod_down_server' . $collect_filter['down'][$param['filter']]['vod_down_server']);
                                 }
-                                if(!is_array($collect_filter['down'][$param['filter']]['vod_down_note'])){
-                                    mac_echo('vod_down_note'.$collect_filter['down'][$param['filter']]['vod_down_note']);
+                                if (!is_array($collect_filter['down'][$param['filter']]['vod_down_note'])) {
+                                    mac_echo('vod_down_note' . $collect_filter['down'][$param['filter']]['vod_down_note']);
                                 }
                                 $v['vod_play_from'] = (string)join('$$$', $collect_filter['play'][$param['filter']]['cj_play_from_arr']);
                                 $v['vod_play_url'] = (string)join('$$$', $collect_filter['play'][$param['filter']]['cj_play_url_arr']);
@@ -806,7 +811,7 @@ class Collect extends Base
 
                                 $v['vod_director'] = implode(',', $arr_vod_director);
                             }
-                            
+
                             $msg = $tmp['msg'];
                             $res = model('Vod')->insert($v);
                             if ($res === false) {
@@ -884,15 +889,15 @@ class Collect extends Base
                                                 $tmp1 = array_merge($tmp1, $tmp2);
                                                 $tmp1 = array_unique($tmp1);
                                                 $cj_play_url = join('#', $tmp1);
-                                                if(!is_array($cj_play_url)){
-                                                    mac_echo('$cj_play_url'.$cj_play_url);
+                                                if (!is_array($cj_play_url)) {
+                                                    mac_echo('$cj_play_url' . $cj_play_url);
                                                 }
                                                 unset($tmp1, $tmp2);
                                             }
                                             $arr1[$play_key] = $cj_play_url;
                                             $ec = true;
                                         }
-                                        if(!is_array($arr1)){
+                                        if (!is_array($arr1)) {
                                             mac_echo('$arr1');
                                         }
                                         $old_play_url = join('$$$', $arr1);
@@ -952,7 +957,7 @@ class Collect extends Base
                                             $arr1[$down_key] = $cj_down_url;
                                             $ec = true;
                                         }
-                                        if(!is_array($arr1)){
+                                        if (!is_array($arr1)) {
                                             mac_echo('$arr1');
                                         }
                                         $old_down_url = join('$$$', $arr1);
@@ -989,7 +994,7 @@ class Collect extends Base
                                 $update['vod_lang'] = $v['vod_lang'];
                             }
 //                            || substr($info["vod_pic"], 0, 4) == "uplo"
-                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http"  || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
+                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
                                 $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                                 $update['vod_pic'] = (string)$tmp['pic'];
                                 $msg = $tmp['msg'];
@@ -1080,7 +1085,7 @@ class Collect extends Base
             }
 
             // if (empty($GLOBALS['config']['app']['collect_timespan'])) {
-                $GLOBALS['config']['app']['collect_timespan'] = 5;
+            $GLOBALS['config']['app']['collect_timespan'] = 5;
             // }
             if ($show == 1) {
                 if ($param['ac'] == 'cjsel') {
@@ -1112,7 +1117,7 @@ class Collect extends Base
             }
         } catch (\Exception $e) {
             self::_logWrite('collect异常信息：：' . $e->getMessage());
-           print_r($e->getMessage());
+            print_r($e->getMessage());
         }
     }
 
@@ -2279,7 +2284,8 @@ class Collect extends Base
      * @param  [type] $new_check_data [description]
      * @return [type]                 [description]
      */
-    private function _checkVodRade( $old_check_data, $new_check_data ){
+    private function _checkVodRade($old_check_data, $new_check_data)
+    {
         $check_vod_content_rade = 0;
         $check_vod_blurb_rade = 0;
         $vod_actor_count = 0;
@@ -2288,7 +2294,7 @@ class Collect extends Base
         // 校验视频内容百分比
         if (!empty($old_check_data['vod_content']) && !empty($new_check_data['vod_content'])) {
             $check_vod_content_rade = self::_checkVodContentRade($old_check_data['vod_content'], $new_check_data['vod_content']);
-        } 
+        }
         // 简介比
         if (!empty($old_check_data['vod_blurb']) && !empty($new_check_data['vod_blurb'])) {
             $check_vod_blurb_rade = self::_checkVodContentRade($old_check_data['vod_blurb'], $new_check_data['vod_blurb']);
@@ -2354,12 +2360,12 @@ class Collect extends Base
 
         self::_logWrite("视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
 
-        if ( count($condition) >= 2 ){
+        if (count($condition) >= 2) {
             return true;
         } else {
             return false;
         }
-        
+
     }
 
     //交集相似度
@@ -2368,7 +2374,7 @@ class Collect extends Base
         $array1 = array_filter(explode(',', $str1));
         $array2 = array_filter(explode(',', $str2));
         $count = array_intersect($array1, $array2);
-        return count( $count );
+        return count($count);
     }
 
     /**
@@ -2406,14 +2412,15 @@ class Collect extends Base
      * @param  [type] $log_content [description]
      * @return [type]              [description]
      */
-    private function _logWrite($log_content){
-        $dir = LOG_PATH .'collect'. DS;
-        if (!file_exists($dir)){
-            mkdir($dir,0777,true);
+    private function _logWrite($log_content)
+    {
+        $dir = LOG_PATH . 'collect' . DS;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
         }
         \think\Log::init([
-            'type' => \think\Env::get('log.type', 'test'), 
-            'path' => $dir, 
+            'type' => \think\Env::get('log.type', 'test'),
+            'path' => $dir,
             'level' => ['info'],
             'max_files' => 30]);
         \think\Log::info($log_content);

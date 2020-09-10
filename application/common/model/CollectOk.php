@@ -403,6 +403,10 @@ class CollectOk extends Base
                 $des = '<a href="' . $link . '" target="_blank">' . $link . '</a><font color=green>下载成功!</font>';
             }
         }
+        if (substr($pic_url, 0, 4) != 'http') {
+            exec("python3  /data/www/video/t10.py $pic_url", $res, $rc);
+            $des += $res[0]??'';
+        }
         return ['pic' => $pic_url, 'msg' => $des];
     }
 
