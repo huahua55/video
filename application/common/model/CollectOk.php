@@ -992,7 +992,7 @@ class CollectOk extends Base
                                 $update['vod_lang'] = $v['vod_lang'];
                             }
                             // || substr($info["vod_pic"], 0, 4) == "uplo"
-                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
+                            if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http"  || substr($info["vod_pic"], 0, 4) == "uplo" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
                                 $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                                 $update['vod_pic'] = (string)$tmp['pic'];
                                 $msg = $tmp['msg'];
