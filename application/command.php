@@ -28,5 +28,4 @@ return [
     'app\crontab\command\VodPicEditZd',
     'app\crontab\command\Task',
     'app\crontab\command\TaskLog',
-    'app\crontab\command\CheckVideoCollection',// 检查视频集是否连续
 ];
