@@ -191,7 +191,7 @@ class CheckVideoCollection extends Base
         }
         // 查video表  排除电影 type_pid!=1 or type_id not between 6 and 12
         $video_info = $this->videoDb->field('id,vod_total,vod_name,type_pid')
-                                    ->where('type_pid != 1 or type_id not between 6 and 12')
+                                    ->where('type_pid not in (1,3) or type_id not in (1,3,6,7,8,9,10,11,12,25,26,27,28)')
                                     ->where($video_where)
                                     ->order('id desc')
                                     ->limit('0, 30')
@@ -279,7 +279,7 @@ class CheckVideoCollection extends Base
         }
         // 查video表  排除电影 type_pid!=1 or type_id not between 6 and 12
         $video_selected_info = $this->videoSelectedDb->field('id,vod_total,vod_name')
-                                    ->where('type_pid != 1 or type_id not between 6 and 12')
+                                    ->where('type_pid not in (1,3) or type_id not in (1,3,6,7,8,9,10,11,12,25,26,27,28)')
                                     ->where($video_selected_where)
                                     ->order('id desc')
                                     ->limit('0, 20')
