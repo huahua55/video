@@ -98,8 +98,8 @@ def StrOfSize(size):
     return '{} {}'.format(integer + remainder, units[level])
 
 
-# path = '/data/www/video'
-path = os.getcwd()
+path = '/data/www/video'
+# path = os.getcwd()
 # print(path)
 # exit()
 up_path = str(sys.argv[1:][0])
