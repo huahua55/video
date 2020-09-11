@@ -21,7 +21,7 @@ return [
     'password'        => \think\Env::get('database.password'),
     // 端口
 //    'hostport'        => '8889',
-    'hostport'        => '3306',
+    'hostport'        => '6306',
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数
