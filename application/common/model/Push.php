@@ -272,7 +272,7 @@ class Push extends Base {
         $new_url['duration'] = '';
         $new_url['video_id'] = 0;
         $new_url['sum'] = 0;
-        if ($i == 'i') {
+        if ($i == 'i' || $i == 'iup') {
             $new_url['down_add_time'] = time();
         }
         $new_url['up_time'] = time();
@@ -401,7 +401,7 @@ class Push extends Base {
                                 $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                             }
                             if (empty($getFindVideo)) {
-                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
+                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,'iup');
                                 if (!empty($n_url)) {
                                     $res = Db::name('video_vod')->insert($n_url);
                                     if ($res) {

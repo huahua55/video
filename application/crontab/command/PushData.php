@@ -30,7 +30,7 @@ class PushData extends Common
         $config = config('log');
         $config['keyp'] = 'data';
         $this->vodModel = Db::name('vod');
-        $this->zy_list = [3,25,26,27,28];
+        $this->zy_list = [3, 25, 26, 27, 28];
         $this->videoVodModel = Db::name('video_vod');
         $this->setName('pushData')->addArgument('parameter')->setDescription("获取数据-插入任务表");//这里的setName和php文件名一致,setDescription随意
     }
@@ -57,7 +57,7 @@ class PushData extends Common
             $this->getWhile2($name, $id);
             //不存在添加
             $this->getWhile($name);
-        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy'  ) {
+        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy') {
             //这里写业务逻辑
             $this->getWhile2($name, $id);
         } else {
@@ -141,7 +141,7 @@ class PushData extends Common
             $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
-        }elseif ($name == 'upZy') {
+        } elseif ($name == 'upZy') {
             $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //电影
         } elseif ($name == 'upDay') {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
@@ -198,9 +198,9 @@ class PushData extends Common
     {
         $new_array = [];
         foreach ($arr as $k => $v) {
-            if (in_array($v['type_id'],$this->zy_list)){
-                $m3u8_url_key=  explode('$',explode('#',$v['m3u8_url'])[0])[0];
-            }else{
+            if (in_array($v['type_id'], $this->zy_list)) {
+                $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
+            } else {
                 $m3u8_url_key = $v['collection'];
             }
             if (!isset($new_array[$m3u8_url_key])) {
@@ -269,18 +269,18 @@ class PushData extends Common
                                 $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                             }
                         }
-                        if (in_array($v['type_id'],$this->zy_list)){
-                            $m3u8_url_key=  explode('$',explode('#',$v_v_m3u8_url)[0])[0];
-                            if(!empty($m3u8_url_key)){
+                        if (in_array($v['type_id'], $this->zy_list)) {
+                            $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
+                            if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
                                     $collect_filter[$vv][$m3u8_url_key] = $v_v;
                                 }
-                            }else{
+                            } else {
                                 if (!isset($collect_filter[$vv][$new_v_k_])) {
                                     $collect_filter[$vv][$new_v_k_] = $v_v;
                                 }
                             }
-                        }else{
+                        } else {
                             if (!isset($collect_filter[$vv][$new_v_k_])) {
                                 $collect_filter[$vv][$new_v_k_] = $v_v;
                             }
@@ -346,11 +346,15 @@ class PushData extends Common
         }
         return $new_play_url;
     }
-    protected function find_record($find_name){
-        $vod_where['vod_name'] = array('like', '%'.$find_name.'%');
+
+    protected function find_record($find_name)
+    {
+        $vod_where['vod_name'] = array('like', '%' . $find_name . '%');
         return Db::name('video_record')->where($vod_where)->find();
     }
-    protected function find_records(){
+
+    protected function find_records()
+    {
         return Db::name('video_record')->field('vod_name')->column('vod_name');
     }
 
@@ -377,7 +381,7 @@ class PushData extends Common
         $new_url['duration'] = '';
         $new_url['video_id'] = 0;
         $new_url['sum'] = 0;
-        if ($i == 'i') {
+        if ($i == 'i' || $i == 'iup') {
             $new_url['down_add_time'] = time();
         }
         $new_url['up_time'] = time();
@@ -389,19 +393,19 @@ class PushData extends Common
         if ($i != 'i') {
             $new_url['weight'] = $v['b_weight'] ?? '0';
         } else {
-                $b_weight = 98 - (2020 - $v['vod_year']);
-                if ($b_weight < 0) {
-                    $b_weight = 0;
-                }
-                if ($b_weight > 99) {
-                    $b_weight = 98;
-                }
-                $new_url['weight'] = $b_weight;
+            $b_weight = 98 - (2020 - $v['vod_year']);
+            if ($b_weight < 0) {
+                $b_weight = 0;
+            }
+            if ($b_weight > 99) {
+                $b_weight = 98;
+            }
+            $new_url['weight'] = $b_weight;
         }
 
-        if (!empty( $new_url['vod_name'])){
+        if (!empty($new_url['vod_name'])) {
             $find_records = $this->find_records();
-            foreach ($find_records as $find_records_key => $find_records_val){
+            foreach ($find_records as $find_records_key => $find_records_val) {
                 $count3 = substr_count($find_records_val, $new_url['vod_name']);
                 if ($count3 > 0) {
                     $new_url['weight'] = 99;
@@ -423,11 +427,12 @@ class PushData extends Common
         return $this->videoVodModel->where($where)->find();
 
     }
+
     protected function getFindLikeVideo($id, $collection)
     {
         $where = [];
         $where['vod_id'] = $id;
-        $where['m3u8_url'] =  array('like', '%'.$collection.'%');
+        $where['m3u8_url'] = array('like', '%' . $collection . '%');
         return $this->videoVodModel->where($where)->find();
     }
 
@@ -453,9 +458,9 @@ class PushData extends Common
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        if (in_array($v['type_id'],$this->zy_list)) {
+                        if (in_array($v['type_id'], $this->zy_list)) {
                             $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
-                        }else{
+                        } else {
                             $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                         }
                         if (empty($getFindVideo)) {
@@ -481,9 +486,9 @@ class PushData extends Common
                             $title = 1;
                         }
 
-                        if (in_array($v['type_id'],$this->zy_list)){
+                        if (in_array($v['type_id'], $this->zy_list)) {
                             $new_key = $k_p_play;
-                        }else{
+                        } else {
                             $new_key = $title;
                         }
 
@@ -501,9 +506,9 @@ class PushData extends Common
                                 }
                             }
                         } else {
-                            if (in_array($v['type_id'],$this->zy_list)) {
+                            if (in_array($v['type_id'], $this->zy_list)) {
                                 $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
-                            }else{
+                            } else {
                                 $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                             }
                             if (empty($getFindVideo)) {
