@@ -14,7 +14,7 @@ import math
 # 内网地址
 logPathFile = '/data/www/video/' + '/runtime/log/' + time.strftime("%Y/%m/%d", time.localtime())
 
-mysql_config = {'host': '45.120.216.57', 'port': '3306', 'user': 'uservide', 'passwd': 'C@HjduTY793CKLp', 'dbname': 'video',
+mysql_config = {'host': '45.120.216.57', 'port': '6306', 'user': 'uservide', 'passwd': 'C@HjduTY793CKLp', 'dbname': 'video',
                 'charset': 'utf8mb4'}
 
 
