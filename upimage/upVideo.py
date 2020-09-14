@@ -116,10 +116,10 @@ total_page = math.ceil(total_count / 20)
 # 循环分页取值
 page = 1
 common_print_log("总条数:" + str(total_count) + "总页数:" + str(total_page), logName='up_Video_TxVideo',
-                 logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                 logPath=logPathFile)
 while total_page > 0:
     common_print_log("当前页码" + str(page), logName='up_Video_TxVideo',
-                     logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                     logPath=logPathFile)
     if page == 1:
         page_limit = 0
     else:
@@ -136,7 +136,7 @@ while total_page > 0:
                     index_val['type_pid']) + ';type_id:' + str(index_val['type_id']) + ';名称:' + index_val[
                     'vod_name'] + ';演员:' + index_val['vod_actor'] + ';导演:' + index_val['vod_director'] + ';内容:' +
                 index_val['vod_blurb'], logName='up_Video_TxVideo',
-                logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                logPath=logPathFile)
             vod_name = str(index_val['vod_name']).strip()  # 名称
             type_pid = index_val['type_pid']  # 名称
             where = 'vod_name =  "' + vod_name + '" and type_pid =  "' + str(type_pid) + '"  '
@@ -167,7 +167,7 @@ while total_page > 0:
                         "    --tx_vod未找到数据 过滤：" + str(index_val['id']) + '；名称：' + str(
                             index_val['vod_name']) + ";类型：" + str(
                             type_pid) + "；sql : " + str(tx_vod_sql), logName='up_Video_TxVideo',
-                        logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                        logPath=logPathFile)
                     continue
                 else:
                     if len(result_tx_vod) > 1:
@@ -176,16 +176,16 @@ while total_page > 0:
                             index_val['vod_name']) + ";类型：" + str(type_pid) + "；sql : " + str(
                             tx_vod_sql) + ";tx_vod查找结果条数大于1 暂时取第一个 ：" + str(len(result_tx_vod)),
                                          logName='up_Video_TxVideo',
-                                         logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                         logPath=logPathFile)
                         common_print_log(result_tx_vod, logName='up_Video_TxVideo',
-                                         logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                         logPath=logPathFile)
                         d_id_list.append(index_val['id'])
                         tx_vod_array = result_tx_vod[0]
                         # continue
                     else:
                         tx_vod_array = result_tx_vod[0]
                         common_print_log("查找tx_vod视频表数据:" + str(tx_vod_array), logName='up_Video_TxVideo',
-                                         logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                         logPath=logPathFile)
                         common_print_log(
                             "  查找tx_vod视频表数据:id:" + str(tx_vod_array['id']) + ';type_pid:' + str(
                                 tx_vod_array['type_pid']) + ';type_id:' + str(tx_vod_array[
@@ -194,13 +194,13 @@ while total_page > 0:
                                 'vod_actor'] + ';导演:' +
                             tx_vod_array['vod_director'] + ';内容:' + tx_vod_array['vod_blurb'],
                             logName='up_Video_TxVideo',
-                            logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                            logPath=logPathFile)
                         if len(tx_vod_array['vod_blurb']) > 1:
                             round_vod_blurb = round(
                                 get_Levenshtein_rate(index_val['vod_blurb'], tx_vod_array['vod_blurb']) * 100, 2)
                             # 简介相似度
                             common_print_log('简介相似度:' + str(round_vod_blurb), logName='up_Video_TxVideo',
-                                             logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                             logPath=logPathFile)
                         up_data = {}
                         # 判断 tx_vod 是否存在此数据
                         up_list_key = [
@@ -247,21 +247,21 @@ while total_page > 0:
                             succ_id_list.append(index_val['id'])
                             common_print_log("up_succ ：" + str(res) + ';id:' + str(index_val['id']),
                                              logName='up_Video_TxVideo',
-                                             logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                             logPath=logPathFile)
                             common_print_log(result_tx_vod, logName='up_Video_TxVideo',
-                                             logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                                             logPath=logPathFile)
             except Exception as e:
                 error_id_list.append(index_val['id'])
                 common_print_log(
                     "error ：" + str(e) + ';sql:' + str(tx_vod_sql) + str(e) + ':id;' + str(index_val['id']),
                     logName='up_Video_TxVideo',
-                    logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                    logPath=logPathFile)
                 continue
     page = page + 1
     total_page = total_page - 1
 common_print_log("成功更改总数量:" + str(len(succ_id_list)) + '条;ID:' + str(succ_id_list), logName='up_Video_TxVideo',
-                 logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                 logPath=logPathFile)
 common_print_log("事物报错总数量:" + str(len(error_id_list)) + '条;ID:' + str(error_id_list), logName='up_Video_TxVideo',
-                 logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                 logPath=logPathFile)
 common_print_log("影响调试大于1总数量:" + str(len(d_id_list)) + '条;ID:' + str(d_id_list), logName='up_Video_TxVideo',
-                 logPath='/Users/zongbozhu/Downloads/wwwroot/python/qdhy/td/upimage/runtime')
+                 logPath=logPathFile)
