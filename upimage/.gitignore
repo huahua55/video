@@ -1,0 +1,9 @@
+m3u8/
+gaoqing/
+*.pyc
+.idea/qqykiqy.iml
+.idea/
+runtime
+*.log
+*.ts
+*.m3u8
