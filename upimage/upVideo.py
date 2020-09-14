@@ -195,61 +195,61 @@ while total_page > 0:
                             tx_vod_array['vod_director'] + ';内容:' + tx_vod_array['vod_blurb'],
                             logName='up_Video_TxVideo',
                             logPath=logPathFile)
-                        if len(tx_vod_array['vod_blurb']) > 1:
-                            round_vod_blurb = round(
-                                get_Levenshtein_rate(index_val['vod_blurb'], tx_vod_array['vod_blurb']) * 100, 2)
-                            # 简介相似度
-                            common_print_log('简介相似度:' + str(round_vod_blurb), logName='up_Video_TxVideo',
-                                             logPath=logPathFile)
-                        up_data = {}
-                        # 判断 tx_vod 是否存在此数据
-                        up_list_key = [
-                            'vod_sub',
-                            'vod_en',
-                            'vod_tag',
-                            # 'vod_pic',
-                            'vod_pic_thumb',
-                            'vod_pic_slide',
-                            'vod_actor',
-                            'vod_director',
-                            'vod_writer',
-                            'vod_behind',
-                            'vod_blurb',
-                            'vod_remarks',
-                            'vod_pubdate',
-                            'vod_total',
-                            'vod_serial',
-                            'vod_tv',
-                            'vod_weekday',
-                            'vod_area',
-                            'vod_lang',
-                            'vod_year',
-                            'vod_version',
-                            'vod_state',
-                            'vod_duration',
-                            'vod_isend',
-                            'vod_is_from',
-                            # 'vod_is_advance', #是否 超前点播
-                            # 'vod_is_pay_mark', #是否 vip
-                        ]
-                        # 获取 修改 up_data 数据
-                        for up_list_key_key, up_list_key_val in enumerate(up_list_key):
-                            if len(str(tx_vod_array[up_list_key_val])) >= 1 and str(
-                                    tx_vod_array[up_list_key_val]) != ' ':
-                                if up_list_key_val == 'vod_is_from':
-                                    up_data['is_from'] = str(tx_vod_array[up_list_key_val])
-                                else:
-                                    up_data[up_list_key_val] = str(tx_vod_array[up_list_key_val])
-                        if len(up_data) > 1:
-                            up_data['tx_vod_id'] = tx_vod_array['id']  # 获取tx_vod_id标识id
-                        res = db1.update("video", up_data, "id = %s" % str(index_val['id']))
-                        if res:
-                            succ_id_list.append(index_val['id'])
-                            common_print_log("up_succ ：" + str(res) + ';id:' + str(index_val['id']),
-                                             logName='up_Video_TxVideo',
-                                             logPath=logPathFile)
-                            common_print_log(result_tx_vod, logName='up_Video_TxVideo',
-                                             logPath=logPathFile)
+                    if len(tx_vod_array['vod_blurb']) > 1:
+                        round_vod_blurb = round(
+                            get_Levenshtein_rate(index_val['vod_blurb'], tx_vod_array['vod_blurb']) * 100, 2)
+                        # 简介相似度
+                        common_print_log('简介相似度:' + str(round_vod_blurb), logName='up_Video_TxVideo',
+                                         logPath=logPathFile)
+                    up_data = {}
+                    # 判断 tx_vod 是否存在此数据
+                    up_list_key = [
+                        'vod_sub',
+                        'vod_en',
+                        'vod_tag',
+                        # 'vod_pic',
+                        'vod_pic_thumb',
+                        'vod_pic_slide',
+                        'vod_actor',
+                        'vod_director',
+                        'vod_writer',
+                        'vod_behind',
+                        'vod_blurb',
+                        'vod_remarks',
+                        'vod_pubdate',
+                        'vod_total',
+                        'vod_serial',
+                        'vod_tv',
+                        'vod_weekday',
+                        'vod_area',
+                        'vod_lang',
+                        'vod_year',
+                        'vod_version',
+                        'vod_state',
+                        'vod_duration',
+                        'vod_isend',
+                        'vod_is_from',
+                        # 'vod_is_advance', #是否 超前点播
+                        # 'vod_is_pay_mark', #是否 vip
+                    ]
+                    # 获取 修改 up_data 数据
+                    for up_list_key_key, up_list_key_val in enumerate(up_list_key):
+                        if len(str(tx_vod_array[up_list_key_val])) >= 1 and str(
+                                tx_vod_array[up_list_key_val]) != ' ':
+                            if up_list_key_val == 'vod_is_from':
+                                up_data['is_from'] = str(tx_vod_array[up_list_key_val])
+                            else:
+                                up_data[up_list_key_val] = str(tx_vod_array[up_list_key_val])
+                    if len(up_data) > 1:
+                        up_data['tx_vod_id'] = tx_vod_array['id']  # 获取tx_vod_id标识id
+                    res = db1.update("video", up_data, "id = %s" % str(index_val['id']))
+                    if res:
+                        succ_id_list.append(index_val['id'])
+                        common_print_log("up_succ ：" + str(res) + ';id:' + str(index_val['id']),
+                                         logName='up_Video_TxVideo',
+                                         logPath=logPathFile)
+                        common_print_log(result_tx_vod, logName='up_Video_TxVideo',
+                                         logPath=logPathFile)
             except Exception as e:
                 error_id_list.append(index_val['id'])
                 common_print_log(
