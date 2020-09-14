@@ -242,7 +242,6 @@ while total_page > 0:
                                     up_data[up_list_key_val] = str(tx_vod_array[up_list_key_val])
                         if len(up_data) > 1:
                             up_data['tx_vod_id'] = tx_vod_array['id']  # 获取tx_vod_id标识id
-                        time.sleep(10)
                         res = db1.update("video", up_data, "id = %s" % str(index_val['id']))
                         if res:
                             succ_id_list.append(index_val['id'])
