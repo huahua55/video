@@ -112,7 +112,8 @@ succ_id_list = []
 # 总数量
 total_count = sql_count("select count(id) as total_count from video where tx_vod_id = 0")
 # 总页码数
-total_page = math.ceil(total_count / 20)
+# total_page = math.ceil(total_count / 20)
+total_page = 1
 # 循环分页取值
 page = 1
 common_print_log("总条数:" + str(total_count) + "总页数:" + str(total_page), logName='up_Video_TxVideo',
@@ -124,8 +125,9 @@ while total_page > 0:
         page_limit = 0
     else:
         page_limit = page * 20
-    video_sql = "select `id`, `type_pid`, `type_id`, `vod_name`, `vod_sub`, `vod_en`, `vod_tag`, `vod_pic`, `vod_pic_thumb`, `vod_pic_slide`, `vod_actor`, `vod_director`, `vod_writer`, `vod_behind`, `vod_blurb`, `vod_remarks`, `vod_pubdate`, `vod_total`, `vod_serial`, `vod_tv`, `vod_weekday`, `vod_area`, `vod_lang`, `vod_year`, `vod_version`, `e_id`, `vod_state`, `vod_duration`, `vod_isend`, `vod_douban_id`, `vod_douban_score`, `vod_time`, `vod_time_add`, `is_from`, `is_examine`, `vod_status`, `vod_id`, `is_selected` from video where tx_vod_id = 0 limit  " + str(
-        page_limit) + ",20"
+#     video_sql = "select `id`, `type_pid`, `type_id`, `vod_name`, `vod_sub`, `vod_en`, `vod_tag`, `vod_pic`, `vod_pic_thumb`, `vod_pic_slide`, `vod_actor`, `vod_director`, `vod_writer`, `vod_behind`, `vod_blurb`, `vod_remarks`, `vod_pubdate`, `vod_total`, `vod_serial`, `vod_tv`, `vod_weekday`, `vod_area`, `vod_lang`, `vod_year`, `vod_version`, `e_id`, `vod_state`, `vod_duration`, `vod_isend`, `vod_douban_id`, `vod_douban_score`, `vod_time`, `vod_time_add`, `is_from`, `is_examine`, `vod_status`, `vod_id`, `is_selected` from video where tx_vod_id = 0 limit  " + str(
+#         page_limit) + ",20"
+    video_sql = "select `id`, `type_pid`, `type_id`, `vod_name`, `vod_sub`, `vod_en`, `vod_tag`, `vod_pic`, `vod_pic_thumb`, `vod_pic_slide`, `vod_actor`, `vod_director`, `vod_writer`, `vod_behind`, `vod_blurb`, `vod_remarks`, `vod_pubdate`, `vod_total`, `vod_serial`, `vod_tv`, `vod_weekday`, `vod_area`, `vod_lang`, `vod_year`, `vod_version`, `e_id`, `vod_state`, `vod_duration`, `vod_isend`, `vod_douban_id`, `vod_douban_score`, `vod_time`, `vod_time_add`, `is_from`, `is_examine`, `vod_status`, `vod_id`, `is_selected` from video where tx_vod_id = 0"
     result = db1.fetchall(video_sql)
     # 数据存在
     if result is not None:
