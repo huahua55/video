@@ -295,7 +295,7 @@ class Push extends Base {
         if (!empty( $new_url['vod_name'])){
             $find_records = $this->find_records();
             foreach ($find_records as $find_records_key => $find_records_val){
-                $count3 = substr_count($find_records_val, '张');
+                $count3 = substr_count($find_records_val, $new_url['vod_name']);
                 if ($count3 > 0) {
                     $new_url['weight'] = 99;
                     break;
