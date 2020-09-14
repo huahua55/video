@@ -350,6 +350,9 @@ class PushData extends Common
         $vod_where['vod_name'] = array('like', '%'.$find_name.'%');
         return Db::name('video_record')->where($vod_where)->find();
     }
+    protected function find_records(){
+        return Db::name('video_record')->field('vod_name')->column('vod_name');
+    }
 
 
     protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, $i = 'i')
@@ -397,9 +400,13 @@ class PushData extends Common
         }
 
         if (!empty( $new_url['vod_name'])){
-            $find_record = $this->find_record($new_url['vod_name']);
-            if (!empty($find_record)){
-                $new_url['weight'] = 99;
+            $find_records = $this->find_records();
+            foreach ($find_records as $find_records_key => $find_records_val){
+                $count3 = substr_count($find_records_val, '张');
+                if ($count3 > 0) {
+                    $new_url['weight'] = 99;
+                    break;
+                }
             }
         }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
