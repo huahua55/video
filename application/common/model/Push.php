@@ -1,13 +1,17 @@
 <?php
+
 namespace app\common\model;
+
 use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
 use think\Log;
 
-class Push extends Base {
+class Push extends Base
+{
 
-    protected $zy_list= [3,25,26,27,28];
+    protected $zy_list = [3, 25, 26, 27, 28];
+
     // 设置数据表（不含前缀）
     public function getWhile($id)
     {
@@ -89,9 +93,9 @@ class Push extends Base {
     {
         $new_array = [];
         foreach ($arr as $k => $v) {
-            if (in_array($v['type_id'],$this->zy_list)){
-                $m3u8_url_key=  explode('$',explode('#',$v['m3u8_url'])[0])[0];
-            }else{
+            if (in_array($v['type_id'], $this->zy_list)) {
+                $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
+            } else {
                 $m3u8_url_key = $v['collection'];
             }
             if (!isset($new_array[$m3u8_url_key])) {
@@ -129,7 +133,7 @@ class Push extends Base {
                 $vData = explode('#', $cj_url_arr[$kk]);
                 foreach ($vData as $v_k => $v_v) {
                     $v_v_m3u8_url = $v_v;
-                    if (in_array($v['type_id'],$this->zy_list)){
+                    if (in_array($v['type_id'], $this->zy_list)) {
 //                        $ser_data = explode('$',$v_v);
 //                        if(count($ser_data) > 1){
 //                            $ser = $ser_data[0];
@@ -160,18 +164,18 @@ class Push extends Base {
                                 $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                             }
                         }
-                        if (in_array($v['type_id'],$this->zy_list)){
-                            $m3u8_url_key=  explode('$',explode('#',$v_v_m3u8_url)[0])[0];
-                            if(!empty($m3u8_url_key)){
+                        if (in_array($v['type_id'], $this->zy_list)) {
+                            $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
+                            if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
                                     $collect_filter[$vv][$m3u8_url_key] = $v_v;
                                 }
-                            }else{
+                            } else {
                                 if (!isset($collect_filter[$vv][$new_v_k_])) {
                                     $collect_filter[$vv][$new_v_k_] = $v_v;
                                 }
                             }
-                        }else{
+                        } else {
                             if (!isset($collect_filter[$vv][$new_v_k_])) {
                                 $collect_filter[$vv][$new_v_k_] = $v_v;
                             }
@@ -182,7 +186,6 @@ class Push extends Base {
         }
         return $collect_filter;
     }
-
 
 
     //获取所有连接
@@ -239,45 +242,31 @@ class Push extends Base {
         return $new_play_url;
     }
 
-    protected function find_record($find_name){
-        $vod_where['vod_name'] = array('like', '%'.$find_name.'%');
+    protected function find_record($find_name)
+    {
+        $vod_where['vod_name'] = array('like', '%' . $find_name . '%');
         return Db::name('video_record')->where($vod_where)->find();
     }
 
-    protected function find_records(){
+    protected function find_records()
+    {
         return Db::name('video_record')->field('vod_name')->column('vod_name');
     }
 
 
-
     protected function vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, $i = 'i')
     {
+
+        $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
+        $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
+        $new_url['up_time'] = time();
+        $new_url['down_time'] = time();
         $new_url['vod_name'] = $v['vod_name'] ?? '';
         $new_url['type_id'] = $v['type_id'] ?? '';
         $new_url['type_id_1'] = $v['type_id_1'] ?? '';
         $new_url['down_ts_url'] = '';
         $new_url['down_mp4_url'] = '';
         $new_url['collection'] = intval($title);
-        $new_url['is_down'] = 0;
-        $new_url['is_sync'] = 0;
-        $new_url['is_section'] = 0;
-        $new_url['is_down_mp4'] = 0;
-        $new_url['is_down_m3u8'] = 0;
-        $new_url['type'] = 2;
-        $new_url['examine_id'] = 0;
-        $new_url['reason'] = '';
-        $new_url['size'] = '';
-        $new_url['bitrate'] = '';
-        $new_url['resolution'] = '';
-        $new_url['duration'] = '';
-        $new_url['video_id'] = 0;
-        $new_url['sum'] = 0;
-        if ($i == 'i' || $i == 'iup') {
-            $new_url['down_add_time'] = time();
-        }
-        $new_url['up_time'] = time();
-        $new_url['down_time'] = time();
-        $new_url['code'] = '-1';
         $new_url['vod_id'] = $v['vod_id'];
         $new_url['weight'] = '0';
         if ($i != 'i') {
@@ -291,10 +280,10 @@ class Push extends Base {
                 $b_weight = 98;
             }
             $new_url['weight'] = $b_weight;
-            if (!empty( $new_url['vod_name'])){
+            if (!empty($new_url['vod_name'])) {
                 $find_records = $this->find_records();
-                foreach ($find_records as $find_records_key => $find_records_val){
-                    $count3 = substr_count( $new_url['vod_name'],$find_records_val);
+                foreach ($find_records as $find_records_key => $find_records_val) {
+                    $count3 = substr_count($new_url['vod_name'], $find_records_val);
                     if ($count3 > 0) {
                         $new_url['weight'] = 99;
                         break;
@@ -302,11 +291,53 @@ class Push extends Base {
                 }
             }
         }
+        if ($i != 'u') {
+            $new_url['is_down'] = 0;
+            $new_url['is_sync'] = 0;
+            $new_url['is_section'] = 0;
+            $new_url['is_down_mp4'] = 0;
+            $new_url['is_down_m3u8'] = 0;
+            $new_url['type'] = 2;
+            $new_url['examine_id'] = 0;
+            $new_url['reason'] = '';
+            $new_url['size'] = '';
+            $new_url['bitrate'] = '';
+            $new_url['resolution'] = '';
+            $new_url['duration'] = '';
+            $new_url['video_id'] = 0;
 
-//        p($new_url);
+            $new_url['sum'] = 0;
+            if ($i == 'i' || $i == 'iup') {
+                $new_url['down_add_time'] = time();
+            }
+
+            $new_url['code'] = '-1';
+            $new_url['vod_id'] = $v['vod_id'];
+            $new_url['weight'] = '0';
+            if ($i != 'i') {
+                $new_url['weight'] = $v['b_weight'] ?? '0';
+            } else {
+                $b_weight = 98 - (2020 - $v['vod_year']);
+                if ($b_weight < 0) {
+                    $b_weight = 0;
+                }
+                if ($b_weight > 99) {
+                    $b_weight = 98;
+                }
+                $new_url['weight'] = $b_weight;
+                if (!empty($new_url['vod_name'])) {
+                    $find_records = $this->find_records();
+                    foreach ($find_records as $find_records_key => $find_records_val) {
+                        $count3 = substr_count($new_url['vod_name'], $find_records_val);
+                        if ($count3 > 0) {
+                            $new_url['weight'] = 99;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
-        $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
-        $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
         return $new_url;
     }
 
@@ -323,7 +354,7 @@ class Push extends Base {
     {
         $where = [];
         $where['vod_id'] = $id;
-        $where['m3u8_url'] =  array('like', '%'.$collection.'%');
+        $where['m3u8_url'] = array('like', '%' . $collection . '%');
         return Db::name('video_vod')->where($where)->find();
     }
 
@@ -349,9 +380,9 @@ class Push extends Base {
                         if ($v['type_id_1'] == 1) {
                             $title = 1;
                         }
-                        if (in_array($v['type_id'],$this->zy_list)) {
+                        if (in_array($v['type_id'], $this->zy_list)) {
                             $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
-                        }else{
+                        } else {
                             $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                         }
                         if (empty($getFindVideo)) {
@@ -377,9 +408,9 @@ class Push extends Base {
                             $title = 1;
                         }
 
-                        if (in_array($v['type_id'],$this->zy_list)){
+                        if (in_array($v['type_id'], $this->zy_list)) {
                             $new_key = $k_p_play;
-                        }else{
+                        } else {
                             $new_key = $title;
                         }
 
@@ -397,13 +428,13 @@ class Push extends Base {
                                 }
                             }
                         } else {
-                            if (in_array($v['type_id'],$this->zy_list)) {
+                            if (in_array($v['type_id'], $this->zy_list)) {
                                 $getFindVideo = $this->getFindLikeVideo($v['vod_id'], $k_p_play);
-                            }else{
+                            } else {
                                 $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                             }
                             if (empty($getFindVideo)) {
-                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val,'iup');
+                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'iup');
                                 if (!empty($n_url)) {
                                     $res = Db::name('video_vod')->insert($n_url);
                                     if ($res) {
