@@ -149,12 +149,17 @@ class Video extends Base
         $info = $res['info'];
         $this->assign('info',$info);
 
-        $type_tree_list = Db::table('type')->field('type_id,type_name')->where(['type_pid'=>0])->select();
+        $type_tree_list = Db::table('type')->field('type_id,type_name')->where(['type_pid'=>0,'type_status'=>1])->select();
 
-
+        $new_type_tree_list_pid=[];
+        $type_tree_list_pid = Db::table('type')->field('type_pid,type_id,type_name')->where(['type_pid'=>['neq',0],'type_status'=>1])->select();
+        foreach ($type_tree_list_pid as $k=>$v){
+            $new_type_tree_list_pid[$v['type_pid']][] = $v;
+        }
         //分类
         $type_tree = model('Type')->getCache('type_tree');
         $this->assign('type_tree',$type_tree);
+        $this->assign('new_type_tree',$new_type_tree_list_pid);
         $this->assign('type_tree_list',$type_tree_list);
 
         //地区、语言
@@ -164,8 +169,6 @@ class Video extends Base
         $this->assign('area_list',$area_list);
         $this->assign('lang_list',$lang_list);
 //        p($info);
-
-
         $this->assign('title','视频信息');
         return $this->fetch('admin@video/info');
     }
