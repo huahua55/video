@@ -5,7 +5,7 @@ namespace app\common\model;
 use think\Db;
 use think\Cache;
 use think\helper\Arr;
-
+use app\common\util\Pinyin;
 class Video extends Base
 {
     // 设置数据表（不含前缀）
@@ -248,6 +248,7 @@ class Video extends Base
 
     public function saveData($data)
     {
+
         $validate = \think\Loader::validate('video');
         if(!$validate->check($data)){
             return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
@@ -268,7 +269,7 @@ class Video extends Base
             $type_list = model('Type')->getCache('type_list');
         }
         $type_info = $type_list[$data['type_id']];
-        $data['type_pid'] = $type_info['type_pid'];
+//        $data['type_pid'] = $type_info['type_pid'];
 
         if(empty($data['vod_en'])){
             $data['vod_en'] = Pinyin::get($data['vod_name']);

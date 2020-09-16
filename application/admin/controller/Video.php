@@ -149,9 +149,13 @@ class Video extends Base
         $info = $res['info'];
         $this->assign('info',$info);
 
+        $type_tree_list = Db::table('type')->field('type_id,type_name')->where(['type_pid'=>0])->select();
+
+
         //分类
         $type_tree = model('Type')->getCache('type_tree');
         $this->assign('type_tree',$type_tree);
+        $this->assign('type_tree_list',$type_tree_list);
 
         //地区、语言
         $config = config('maccms.app');
@@ -159,6 +163,7 @@ class Video extends Base
         $lang_list = explode(',',$config['vod_lang']);
         $this->assign('area_list',$area_list);
         $this->assign('lang_list',$lang_list);
+//        p($info);
 
 
         $this->assign('title','视频信息');

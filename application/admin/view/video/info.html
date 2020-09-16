@@ -16,7 +16,17 @@
                 <div class="layui-tab-item layui-show">
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">参数：</label>
+                        <label class="layui-form-label">主级分类：</label>
+                        <div class="layui-input-inline w150">
+                            <select name="type_pid" lay-filter="type_pid">
+                                <option value="">请选择分类</option>
+                                {volist name="type_tree_list" id="vo"}
+                                <option value="{$vo.type_id}" {if condition="$info.type_pid eq $vo.type_id"}selected{/if}>{$vo.type_name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+
+                        <label class="layui-form-label">二级分类：</label>
                         <div class="layui-input-inline w150">
                             <select name="type_id" lay-filter="type_id">
                                 <option value="">请选择分类</option>
