@@ -167,6 +167,7 @@ class PushData extends Common
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page . '-共-' . $pagecount);
 //            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
+//            p($this->vodModel->getlastsql());
             log::info('页码-' . $page . '-共-更新sql语句：' . $this->vodModel->getlastsql());
 //            p($pagecount);
             if (!empty($data)) {
@@ -371,31 +372,32 @@ class PushData extends Common
         $new_url['down_ts_url'] = '';
         $new_url['down_mp4_url'] = '';
         $new_url['collection'] = intval($title);
-        $new_url['vod_id'] = $v['vod_id'];
-        $new_url['weight'] = '0';
-        if ($i != 'i') {
-            $new_url['weight'] = $v['b_weight'] ?? '0';
-        } else {
-            $b_weight = 98 - (2020 - $v['vod_year']);
-            if ($b_weight < 0) {
-                $b_weight = 0;
-            }
-            if ($b_weight > 99) {
-                $b_weight = 98;
-            }
-            $new_url['weight'] = $b_weight;
-            if (!empty($new_url['vod_name'])) {
-                $find_records = $this->find_records();
-                foreach ($find_records as $find_records_key => $find_records_val) {
-                    $count3 = substr_count($new_url['vod_name'], $find_records_val);
-                    if ($count3 > 0) {
-                        $new_url['weight'] = 99;
-                        break;
+        if ($i != 'u') {
+            $new_url['vod_id'] = $v['vod_id'];
+            $new_url['weight'] = '0';
+            if ($i != 'i') {
+                $new_url['weight'] = $v['b_weight'] ?? '0';
+            } else {
+                $b_weight = 98 - (2020 - $v['vod_year']);
+                if ($b_weight < 0) {
+                    $b_weight = 0;
+                }
+                if ($b_weight > 99) {
+                    $b_weight = 98;
+                }
+                $new_url['weight'] = $b_weight;
+                if (!empty($new_url['vod_name'])) {
+                    $find_records = $this->find_records();
+                    foreach ($find_records as $find_records_key => $find_records_val) {
+                        $count3 = substr_count($new_url['vod_name'], $find_records_val);
+                        if ($count3 > 0) {
+                            $new_url['weight'] = 99;
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if ($i != 'u') {
+
             $new_url['is_down'] = 0;
             $new_url['is_sync'] = 0;
             $new_url['is_section'] = 0;
@@ -516,10 +518,8 @@ class PushData extends Common
                         } else {
                             $new_key = $title;
                         }
-
                         if (isset($n[$new_key])) {
-//                            print_r($k_p_val);
-                            if ($n[$new_key]['is_sync'] != 1) {
+                            if ($n[$new_key]['is_sync'] != 1 and $n[$new_key]['is_sync'] !=2 ) {
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = $this->videoVodModel->where(['id' => $n[$new_key]['id']])->update($up_data);
