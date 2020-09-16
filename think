@@ -20,6 +20,7 @@ if(version_compare(PHP_VERSION,'5.5.0','<'))  die('PHP版本过低，最少需�
 // 定义应用目录
 define('ROOT_PATH', __DIR__ . '/');
 define('APP_PATH', __DIR__ . '/application/');
+define('APP_PATH_CRONTAB', __DIR__ . '/deploy/crontab/');
 define('MAC_COMM', __DIR__.'/application/common/common/');
 define('MAC_HOME_COMM', __DIR__.'/application/index/common/');
 define('MAC_ADMIN_COMM', __DIR__.'/application/admin/common/');

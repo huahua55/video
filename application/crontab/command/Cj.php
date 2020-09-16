@@ -73,7 +73,52 @@ class Cj extends Command
                     mac_echo('保存配置文件失败，请重试!');
                 }
                 $file = $v['file'];
-                $this->$file($v['param']);
+                $re_txt = $this->$file($v['param']);
+                $count1 = substr_count('连接API资源库失败', $re_txt);
+                if ($count1 > 0) {
+                    $key = 'ding_'.$name;
+                    $key_val = Cache::get($key);
+                    $key_count = 0;
+                    if (empty($key_val)){
+                        $day_time =date("Y-m-d H:i:s",time() + 60*30);
+                        $day_time = $day_time . '*0';
+                        Cache::set($key,$day_time,0);
+                        $key_count = 1;
+                    }else{
+                        $key_val_list = explode('*',$key_val);
+//                    var_dump(date("Y-m-d H:i:s",time()));
+//                    var_dump($key_val_list[0]);
+                        if (time() > strtotime($key_val_list[0])){
+                            $key_counts =  ($key_val_list[1]+ 1);
+                            if ($key_count >= 5){
+                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
+                                $day_time = $day_time . '*1';
+                                Cache::set($key,$day_time,0);
+                                $key_count = 5;
+                            }else{
+                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
+                                $day_time = $day_time . '*1';
+                                Cache::set($key,$day_time,0);
+                                $key_count = 0;
+                            }
+                        }else{
+                            $key_count =  ($key_val_list[1]+ 1);
+                            $day_time = $key_val_list[0] . '*' . $key_count;
+                            Cache::set($key,$day_time,0);
+                        }
+                    }
+                    if ($key_count >= 5){
+                        $count3 = substr_count('ok', $name);
+                        if ($count3 > 0) {
+                            $zd_sh_path = APP_PATH_CRONTAB.'cj_zd.sh';
+                            exec($zd_sh_path, $res, $rc);
+                        }else{
+                            $ok_sh_path = APP_PATH_CRONTAB.'cj_ok.sh';
+                            exec($ok_sh_path, $res, $rc);
+                        }
+                    }
+                }
+                unset($re_txt);
                 die;
 //            } else {
 //                mac_echo('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---跳过');
@@ -108,7 +153,7 @@ class Cj extends Command
         } else {
             $this->Collect = 'Collect';
         }
-        $this->api($output);
+       return $this->api($output);
     }
 
     public function api($param = [])
@@ -138,10 +183,10 @@ class Cj extends Command
             Cache::set('collect_break_vod', url('collect/api') . '?' . http_build_query($param));
         }
         $res = model($this->Collect)->vod($param);
-
+//        p($res);
         if ($res['code'] > 1) {
             mac_echo($res['msg']);
-            return false;
+            return $res['msg'];
         }
 
         if ($param['ac'] == 'list') {

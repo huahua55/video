@@ -11,6 +11,8 @@ ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 #php think Cj name=cjokzyxs
 php think Cj name=zuidacj
+
+
 #sleep 1
 
 # 任务
