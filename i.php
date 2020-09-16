@@ -1,7 +1,10 @@
 <?php
 
+$pic_url = 'upload/vod/20200416-1/1a12e1e77dd38ed2c60f0332c085ad01.jpg';
 
-
+exec("python3  /Users/zongbozhu/Downloads/wwwroot/php/qdhy/sp1/video/t10.py $pic_url", $res, $rc);
+print_r($res[0]);
+print_r($rc);
 echo 'ok';die;
 
 

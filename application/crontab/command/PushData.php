@@ -537,7 +537,7 @@ class PushData extends Common
                                 $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                             }
                             if (empty($getFindVideo)) {
-                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
+                                $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'iup');
                                 if (!empty($n_url)) {
                                     $res = $this->videoVodModel->insert($n_url);
                                     if ($res) {
