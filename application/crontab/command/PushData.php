@@ -401,18 +401,19 @@ class PushData extends Common
                 $b_weight = 98;
             }
             $new_url['weight'] = $b_weight;
-        }
-
-        if (!empty($new_url['vod_name'])) {
-            $find_records = $this->find_records();
-            foreach ($find_records as $find_records_key => $find_records_val) {
-                $count3 = substr_count( $new_url['vod_name'],$find_records_val);
-                if ($count3 > 0) {
-                    $new_url['weight'] = 99;
-                    break;
+            if (!empty($new_url['vod_name'])) {
+                $find_records = $this->find_records();
+                foreach ($find_records as $find_records_key => $find_records_val) {
+                    $count3 = substr_count( $new_url['vod_name'],$find_records_val);
+                    if ($count3 > 0) {
+                        $new_url['weight'] = 99;
+                        break;
+                    }
                 }
             }
         }
+
+
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         $new_url['down_url'] = $new_down_url[$k_p_play]['down_url'] ?? '';
         $new_url['m3u8_url'] = $k_p_val['m3u8_url'] ?? '';
