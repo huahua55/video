@@ -419,29 +419,7 @@ class PushData extends Common
 
             $new_url['code'] = '-1';
             $new_url['vod_id'] = $v['vod_id'];
-            $new_url['weight'] = '0';
-            if ($i != 'i') {
-                $new_url['weight'] = $v['b_weight'] ?? '0';
-            } else {
-                $b_weight = 98 - (2020 - $v['vod_year']);
-                if ($b_weight < 0) {
-                    $b_weight = 0;
-                }
-                if ($b_weight > 99) {
-                    $b_weight = 98;
-                }
-                $new_url['weight'] = $b_weight;
-                if (!empty($new_url['vod_name'])) {
-                    $find_records = $this->find_records();
-                    foreach ($find_records as $find_records_key => $find_records_val) {
-                        $count3 = substr_count($new_url['vod_name'], $find_records_val);
-                        if ($count3 > 0) {
-                            $new_url['weight'] = 99;
-                            break;
-                        }
-                    }
-                }
-            }
+
         }
         return $new_url;
     }

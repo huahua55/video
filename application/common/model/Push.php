@@ -23,7 +23,7 @@ class Push extends Base
         $order = 'a.vod_id desc';
         //where
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,23,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
 
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $vod_where['a.vod_id'] = $id;
@@ -59,7 +59,7 @@ class Push extends Base
         $is_true = true;
         $order = 'b.weight desc';
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,23,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $vod_where['a.vod_id'] = $id;
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
@@ -293,6 +293,9 @@ class Push extends Base
                         }
                     }
                 }
+                if ( $new_url['type_id']  == 23){
+                    $new_url['weight']  =0;
+                }
             }
 
 
@@ -317,29 +320,7 @@ class Push extends Base
 
             $new_url['code'] = '-1';
             $new_url['vod_id'] = $v['vod_id'];
-            $new_url['weight'] = '0';
-            if ($i != 'i') {
-                $new_url['weight'] = $v['b_weight'] ?? '0';
-            } else {
-                $b_weight = 98 - (2020 - $v['vod_year']);
-                if ($b_weight < 0) {
-                    $b_weight = 0;
-                }
-                if ($b_weight > 99) {
-                    $b_weight = 98;
-                }
-                $new_url['weight'] = $b_weight;
-                if (!empty($new_url['vod_name'])) {
-                    $find_records = $this->find_records();
-                    foreach ($find_records as $find_records_key => $find_records_val) {
-                        $count3 = substr_count($new_url['vod_name'], $find_records_val);
-                        if ($count3 > 0) {
-                            $new_url['weight'] = 99;
-                            break;
-                        }
-                    }
-                }
-            }
+
         }
 //        $new_url['weight'] = $v['vod_douban_score'] ?? '0';
         return $new_url;
