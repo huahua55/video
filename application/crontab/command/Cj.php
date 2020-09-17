@@ -113,6 +113,7 @@ class Cj extends Command
                             $zd_sh_path = APP_PATH_CRONTAB.'cj_zd.sh';
                             exec($zd_sh_path, $res, $rc);
                         }else{
+                            mac_echo('ok采集，请重试!');
                             $ok_sh_path = APP_PATH_CRONTAB.'cj_ok.sh';
                             exec($ok_sh_path, $res, $rc);
                         }
