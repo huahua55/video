@@ -90,7 +90,7 @@ class Cj extends Command
 //                    var_dump($key_val_list[0]);
                         if (time() > strtotime($key_val_list[0])){
                             $key_counts =  ($key_val_list[1]+ 1);
-                            if ($key_count >= 5){
+                            if ($key_count >= 10){
                                 $day_time =date("Y-m-d H:i:s",time() + 60*30);
                                 $day_time = $day_time . '*1';
                                 Cache::set($key,$day_time,0);
