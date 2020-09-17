@@ -61,7 +61,7 @@
                 unset($p1['ac']);
                 $p1_str = http_build_query($p1);
             {/php}
-            <a data-href="{:url('api')}?{$p1_str}&ac=cjsel" data-ajax="no" class="layui-btn layui-btn-primary j-page-btns"><i class="layui-icon">&#xe654;</i>采选中</a>
+            <a data-href="{:url('api')}?{$p1_str}&ac=cjsel&glzyha=ok" data-ajax="no" class="layui-btn layui-btn-primary j-page-btns"><i class="layui-icon">&#xe654;</i>采选中</a>
             <a data-href="{:url('api')}?{$p1_str}&h=24&ac=cjday" data-checkbox="no" data-ajax="no" class="layui-btn layui-btn-primary j-page-btns"><i class="layui-icon">&#xe654;</i>采当天</a>
             <a data-href="{:url('api')}?{$p1_str}&ac=cjall" data-checkbox="no" data-ajax="no" class="layui-btn layui-btn-primary j-page-btns"><i class="layui-icon">&#xe654;</i>采全部</a>
         </div>

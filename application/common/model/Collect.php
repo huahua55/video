@@ -710,7 +710,11 @@ class Collect extends Base
                             if ($filter_vod_director >= 1) {
                                 mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                             }
-                            continue;
+                            if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+                                mac_echo("手动允许入库");
+                            }else{
+                                continue;
+                            }
                         }
                         self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
                     }
