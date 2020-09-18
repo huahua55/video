@@ -40,7 +40,7 @@ class Push extends Base
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-                        mac_echo('开始处理' . $val['vod_name']);
+                        mac_echo('开始处理-插入逻辑-' . $val['vod_name']);
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
@@ -74,7 +74,7 @@ class Push extends Base
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-                        mac_echo('开始处理' . $val['b_vod_name']);
+                        mac_echo('开始处理-更新逻辑-' . $val['b_vod_name']);
                         $val['chren'] = Db::name('video_vod')->where(['vod_id' => $val['b_vod_id']])->select();
                         $chren_data = $this->childrenUnArr($val['chren']);
                         $this->getUrlLike($val, '.m3u8', 'update', $chren_data);
@@ -353,7 +353,7 @@ class Push extends Base
         }
         if (!empty($collect_filter['play'])) {
             $new_play_url = $this->pingJieUrl($collect_filter, 'play');
-
+            mac_echo('获取到m3u8链接------');
             foreach ($new_play_url as $k_p_play => $k_p_val) {
                 if ($i == 'install') {
                     $title = findTitle($k_p_val, 0);
@@ -375,14 +375,17 @@ class Push extends Base
                             if (!empty($n_url)) {
                                 $res = Db::name('video_vod')->insert($n_url);
                                 if ($res) {
+                                    mac_echo('全新插入成功------');
                                     log::write('成功q3-' . $v['b_vod_id']);
                                 } else {
+                                    mac_echo('全新插入失败------');
                                     log::write('失败q3-' . $v['b_vod_id']);
                                 }
                             }
                         }
                     }
                 } else {
+                    mac_echo('更新开始中------');
                     $title = findTitle($k_p_val, 0);
                     if (!empty($title)) {
                         $title = intval(findNumAll($title));
@@ -400,17 +403,24 @@ class Push extends Base
                         }
 
                         if (isset($n[$new_key])) {
+                            mac_echo('更新开始中-up--');
 //                            print_r($k_p_val);
                             if ($n[$new_key]['is_sync'] != 1 and $n[$new_key]['is_sync'] !=2) {
+                                mac_echo('更新开始中-up中-');
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = Db::name('video_vod')->where(['id' => $n[$new_key]['id']])->update($up_data);
                                     if ($res) {
+                                        mac_echo('更新开始中-更新成功--'. $up_data['m3u8_url']);
                                         log::write('成功q-' . $n[$title]['id']);
                                     } else {
                                         log::write('失败q-' . $n[$title]['id']);
                                     }
+                                }else{
+                                    mac_echo('更新开始中-更新失败理由url--' .$up_data['m3u8_url'].'--'.$v['b_m3u8_url']);
                                 }
+                            }else{
+                                mac_echo('更新开始中-up--下载更新中不更新url链接,请稍后更新');
                             }
                         } else {
                             if (in_array($v['type_id'], $this->zy_list)) {
@@ -418,9 +428,11 @@ class Push extends Base
                             } else {
                                 $getFindVideo = $this->getFindVideo($v['vod_id'], intval($title));
                             }
+                            mac_echo('更新开始中-插入中--');
                             if (empty($getFindVideo)) {
                                 $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'iup');
                                 if (!empty($n_url)) {
+                                    mac_echo('更新开始中-插入--成功');
                                     $res = Db::name('video_vod')->insert($n_url);
                                     if ($res) {
                                         log::write('成功q1-' . $v['b_vod_id']);
@@ -428,6 +440,8 @@ class Push extends Base
                                         log::write('失败q2-' . $v['b_vod_id']);
                                     }
                                 }
+                            }else{
+                                mac_echo('更新开始中-插入--失败');
                             }
                         }
                     }
