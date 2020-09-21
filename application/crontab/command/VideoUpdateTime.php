@@ -24,7 +24,7 @@ class VideoUpdateTime extends Common
     protected function configure()
     {
         $this->vodDb = Db::name('video');
-        $this->setName('videoUpdateTime')->addArgument('parameter')
+        $this->setName('VideoUpdateTime')->addArgument('parameter')
             ->setDescription('定时计划：修改数据库的更新时间');
     }
 
