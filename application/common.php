@@ -1733,6 +1733,20 @@ function mac_str_is_html($str)
 //    }
 }
 
+//查看是否存在html字符
+function mac_str_is_htmls($str)
+{
+    $str1 = $str;
+    $str = trim($str);
+    $strip_str = htmlspecialchars_decode($str);
+    $strip_str = mac_trim_all($strip_str);
+    $strip_str = DeleteHtml($strip_str);
+    if($str1 != $strip_str){
+        return $strip_str;
+    }else{
+        return false;
+    }
+}
 function mac_play_list_one($url_one, $from_one, $server_one = '')
 {
 

@@ -26,6 +26,7 @@ return [
     'app\crontab\command\CheckVideoCollection',//定时修改 检查视频集是否完整
     'app\crontab\command\VodPicEdit',
     'app\crontab\command\VodPicEditZd',
+    'app\crontab\command\videoUpdateTime',
     'app\crontab\command\Task',
     'app\crontab\command\TaskLog',
 ];

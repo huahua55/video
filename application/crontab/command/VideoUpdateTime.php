@@ -54,32 +54,35 @@ class VideoUpdateTime extends Common
 
         $order = 'id asc';
         //进入循环 取出数据
-        while ($is_true) {
+//        while ($is_true) {
             //取出数据
 //            usleep(50000);
             $douBanScoreData = $this->getVodDoubanScoreData($where, $order, $page, $limit, $start);
-//            p($douBanScoreData);
+
             if (!empty($douBanScoreData)) {
                 $pagecount = $douBanScoreData['pagecount'] ?? 0;
                 if ($page > $pagecount) {
                     $is_true = false;
                     $output->writeln("结束...");
-                    break;
+//                    break;
                 }
                 foreach ($douBanScoreData['list'] as $k => $v) {
                     $upWhere = [];
-                    if (strpos($v['vod_actor'], '更多...') !== false) {
-                        $vod_actor = explode('更多...', $v['vod_actor']);
-                        $upWhere['vod_actor'] = $vod_actor[0] ?? '';
-                        unset($vod_actor);
-                    }
-                    $vod_blurb = mac_str_is_html($v['vod_blurb']);
-//                    if($vod_blurb != false){
-                    $upWhere['vod_blurb'] = $vod_blurb;
+//                    if (strpos($v['vod_actor'], '更多...') !== false) {
+//                        $vod_actor = explode('更多...', $v['vod_actor']);
+//                        $upWhere['vod_actor'] = $vod_actor[0] ?? '';
+//                        unset($vod_actor);
 //                    }
-                    $vod_content = mac_str_is_html($v['vod_content']);
+                    $vod_blurb = mac_str_is_htmls($v['vod_blurb']);
+//                    print_r($v['vod_blurb']);
+
+                    if ($vod_blurb != false) {
+                        $upWhere['vod_blurb'] = $vod_blurb;
+                    }
+//                    p($upWhere);
+//                    $vod_content = mac_str_is_html($v['vod_content']);
 //                    if($vod_content != false){
-                    $upWhere['vod_content'] = $vod_content;
+//                    $upWhere['vod_content'] = $vod_content;
 //                    }
 //                    p($upWhere);
 //                    if (strpos($v['vod_reurl'], ',') !== false) {
@@ -182,14 +185,11 @@ class VideoUpdateTime extends Common
 //                            unset($upWhere['vod_time']);
 //                        }
 //                    }
-                    if(!empty($upWhere)){
+                    if (!empty($upWhere)) {
                         try {
                             log::info('time-su::' . $v['id']);
-                            $this->vodDb->where(['id'=>$v['id']])->update($upWhere);
+                            $this->vodDb->where(['id' => $v['id']])->update($upWhere);
                         } catch (Exception $e) {
-                            log::info('time-error::' . $e);
-                            log::info('time-error::' . $upWhere);
-                            $output->writeln("end.311---:" . $e);
                             $output->writeln("end.311---:" . $this->vodDb->getlastsql());
                         }
                     }
@@ -197,7 +197,7 @@ class VideoUpdateTime extends Common
             }
             $page = $page + 1;
             log::info('页码' . $page);
-        }
+//        }
         $output->writeln("CjUpdateTimeEd....");
     }
 
@@ -208,7 +208,7 @@ class VideoUpdateTime extends Common
 
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         $total = $this->vodDb->where($where)->count();
-        $list = $this->vodDb->where($where)->order($order)->limit($limit_str)->select();
+        $list = $this->vodDb->where($where)->order($order)->select();
         return ['pagecount' => ceil($total / $limit), 'list' => $list];
     }
 
