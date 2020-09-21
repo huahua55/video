@@ -75,50 +75,50 @@ class Cj extends Command
                 $file = $v['file'];
                 $re_txt = $this->$file($v['param']);
                 $count1 = substr_count('连接API资源库失败', $re_txt);
-                if ($count1 > 0) {
-                    $key = 'ding_'.$name;
-                    $key_val = Cache::get($key);
-                    $key_count = 0;
-                    if (empty($key_val)){
-                        $day_time =date("Y-m-d H:i:s",time() + 60*30);
-                        $day_time = $day_time . '*0';
-                        Cache::set($key,$day_time,0);
-                        $key_count = 1;
-                    }else{
-                        $key_val_list = explode('*',$key_val);
-//                    var_dump(date("Y-m-d H:i:s",time()));
-//                    var_dump($key_val_list[0]);
-                        if (time() > strtotime($key_val_list[0])){
-                            $key_counts =  ($key_val_list[1]+ 1);
-                            if ($key_count >= 5){
-                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
-                                $day_time = $day_time . '*1';
-                                Cache::set($key,$day_time,0);
-                                $key_count = 5;
-                            }else{
-                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
-                                $day_time = $day_time . '*1';
-                                Cache::set($key,$day_time,0);
-                                $key_count = 0;
-                            }
-                        }else{
-                            $key_count =  ($key_val_list[1]+ 1);
-                            $day_time = $key_val_list[0] . '*' . $key_count;
-                            Cache::set($key,$day_time,0);
-                        }
-                    }
-                    if ($key_count >= 5){
-                        $count3 = substr_count('ok', $name);
-                        if ($count3 > 0) {
-                            $zd_sh_path = APP_PATH_CRONTAB.'cj_zd.sh';
-                            exec($zd_sh_path, $res, $rc);
-                        }else{
-                            mac_echo('ok采集，请重试!');
-                            $ok_sh_path = APP_PATH_CRONTAB.'cj_ok.sh';
-                            exec($ok_sh_path, $res, $rc);
-                        }
-                    }
-                }
+//                if ($count1 > 0) {
+//                    $key = 'ding_'.$name;
+//                    $key_val = Cache::get($key);
+//                    $key_count = 0;
+//                    if (empty($key_val)){
+//                        $day_time =date("Y-m-d H:i:s",time() + 60*30);
+//                        $day_time = $day_time . '*0';
+//                        Cache::set($key,$day_time,0);
+//                        $key_count = 1;
+//                    }else{
+//                        $key_val_list = explode('*',$key_val);
+////                    var_dump(date("Y-m-d H:i:s",time()));
+////                    var_dump($key_val_list[0]);
+//                        if (time() > strtotime($key_val_list[0])){
+//                            $key_counts =  ($key_val_list[1]+ 1);
+//                            if ($key_count >= 5){
+//                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
+//                                $day_time = $day_time . '*1';
+//                                Cache::set($key,$day_time,0);
+//                                $key_count = 5;
+//                            }else{
+//                                $day_time =date("Y-m-d H:i:s",time() + 60*30);
+//                                $day_time = $day_time . '*1';
+//                                Cache::set($key,$day_time,0);
+//                                $key_count = 0;
+//                            }
+//                        }else{
+//                            $key_count =  ($key_val_list[1]+ 1);
+//                            $day_time = $key_val_list[0] . '*' . $key_count;
+//                            Cache::set($key,$day_time,0);
+//                        }
+//                    }
+//                    if ($key_count >= 5){
+//                        $count3 = substr_count('ok', $name);
+//                        if ($count3 > 0) {
+//                            $zd_sh_path = APP_PATH_CRONTAB.'cj_zd.sh';
+//                            exec($zd_sh_path, $res, $rc);
+//                        }else{
+//                            mac_echo('ok采集，请重试!');
+//                            $ok_sh_path = APP_PATH_CRONTAB.'cj_ok.sh';
+//                            exec($ok_sh_path, $res, $rc);
+//                        }
+//                    }
+//                }
                 unset($re_txt);
                 die;
 //            } else {

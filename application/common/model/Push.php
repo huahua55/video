@@ -95,6 +95,12 @@ class Push extends Base
         foreach ($arr as $k => $v) {
             if (in_array($v['type_id'], $this->zy_list)) {
                 $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
+                if (substr_count($m3u8_url_key, '下期') > 0){
+                    $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+                }
+                if (substr_count($m3u8_url_key, '上期') > 0){
+                    $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+                }
             } else {
                 $m3u8_url_key = $v['collection'];
             }
@@ -166,6 +172,18 @@ class Push extends Base
                         }
                         if (in_array($v['type_id'], $this->zy_list)) {
                             $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
+                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
+                                $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
+                                $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '下期') > 0){
+                                $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '上期') > 0){
+                                $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+                            }
                             if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
                                     $collect_filter[$vv][$m3u8_url_key] = $v_v;

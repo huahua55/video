@@ -31,6 +31,7 @@ class PushData extends Common
         $config['keyp'] = 'data';
         $this->vodModel = Db::name('vod');
         $this->zy_list = [3, 25, 26, 27, 28];
+        $this->guo_lv = [1,6,7,8,9,10,11,12];
         $this->videoVodModel = Db::name('video_vod');
         $this->setName('pushData')->addArgument('parameter')->setDescription("获取数据-插入任务表");//这里的setName和php文件名一致,setDescription随意
     }
@@ -78,23 +79,24 @@ class PushData extends Common
         $order = 'a.vod_id desc';
         //where
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28'];
 //        ['13','14','15','16','24'];
-        $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
-//        if ($name == 'iAll') {
-//        } else {
-//            $s = strtotime(date("Y-m-d H:00:00", time()));
-//            $e = strtotime(date("Y-m-d H:59:59", time()));
-//            $vod_where['a.vod_time_add'] = ['between', [$s, $e]];
-//        }
+
+        if ($name == 'iAll') {
+            $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
+        }  elseif ($name == 'iAllDy'){
+            $vod_where['a.type_id'] = ['in', '1,6,7,8,9,10,11,12'];
+        } else {
+            $s = strtotime(date("Y-m-d 00:00:00", time()));
+            $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
+            $vod_where['a.vod_time_add'] = ['between', [$s, $e]];
+        }
 //        $vod_where['a.vod_area']  = array(array('like','%韩国%'), array('like','%美国%'), 'or');
         //$vod_where['vod_lang']  = array(array('like','%英语%'), array('like','%韩语%'),  'or');
 //        $vod_where['a.vod_douban_id']  = ['gt',0]; //豆瓣限制
 //        $vod_where['a.vod_douban_score']  = ['gt',7];
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
-//        $vod_where['a.vod_down_url'] = array(array('like', '%.m3u8%'), array('like', '%.mp4%'), 'or');
         $vod_where['b.is_down'] = ['EXP', Db::raw('IS NULL')];
-
         $pagecount = $this->getDataJoinit($vod_where, $order, $page, $limit, $start);
         while ($is_true) {
             $data = $this->getDataJoini($vod_where, $order, $page, $limit, $start);
@@ -108,6 +110,11 @@ class PushData extends Common
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
+                        if (in_array($val['type_id'], $this->zy_list)) {
+                            if($val['vod_year'] < 2020){
+                                continue;
+                            }
+                        }
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
@@ -136,17 +143,21 @@ class PushData extends Common
         $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28']; //电影
 //        $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //电影
         if (!empty($name) && $name == 'upAll') {
+            $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
         } elseif ($name == 'upSan') {
             $t_time = 3 * (60 * 60 * 24);
             $s = strtotime(date("Y-m-d 00:00:00", (time() - $t_time)));
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
+            $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
         } elseif ($name == 'upZy') {
-            $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //电影
+            $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //综艺
+            $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
         } elseif ($name == 'upDay') {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
+            $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
         } elseif ($name == 'upId') {
             $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
@@ -154,30 +165,26 @@ class PushData extends Common
             $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
-        $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
-//        $vod_where['b.vod_id'] = ['eq', 392512];//
-//        $vod_where['b.vod_id'] = ['eq', 452786];//
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
-//        $vod_where['a.vod_play_url'] = array(array('like', '%.m3u8%'), array('like', '%上%'), 'and');
-
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
-        log::info($pagecount);
         $qii = 0;
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
             log::write('页码-' . $page . '-共-' . $pagecount);
-//            log::write('页码-'.$page.'-共-'.$this->vodModel->getlastsql());
 //            p($this->vodModel->getlastsql());
             log::info('页码-' . $page . '-共-更新sql语句：' . $this->vodModel->getlastsql());
-//            p($pagecount);
             if (!empty($data)) {
                 if ($page > $pagecount) {
                     $is_true = false;
                     break;
                 }
-
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
+                        if (in_array($val['type_id'], $this->zy_list)) {
+                            if($val['vod_year'] < 2020){
+                                continue;
+                            }
+                        }
                         $qii = $qii + 1;
                         log::info($val['vod_name']);
                         $val['chren'] = $this->videoVodModel->where(['vod_id' => $val['b_vod_id']])->select();
@@ -201,6 +208,12 @@ class PushData extends Common
         foreach ($arr as $k => $v) {
             if (in_array($v['type_id'], $this->zy_list)) {
                 $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
+                if (substr_count($m3u8_url_key, '下期') > 0){
+                    $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+                }
+                if (substr_count($m3u8_url_key, '上期') > 0){
+                    $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+                }
             } else {
                 $m3u8_url_key = $v['collection'];
             }
@@ -272,6 +285,18 @@ class PushData extends Common
                         }
                         if (in_array($v['type_id'], $this->zy_list)) {
                             $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
+                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
+                                $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
+                                $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '下期') > 0){
+                                $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+                            }
+                            if (substr_count($m3u8_url_key, '上期') > 0){
+                                $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+                            }
                             if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
                                     $collect_filter[$vv][$m3u8_url_key] = $v_v;
@@ -561,9 +586,8 @@ class PushData extends Common
 
     protected function getDataJoinT($where, $order, $page, $limit, $start)
     {
-        $total = $this->vodModel->alias('a')->field('a.vod_id,a.vod_year,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->count();
-        log::info($total);
-        log::info($limit);
+//        p($where2);
+        $total = $this->vodModel->alias('a')->field('a.vod_id,a.vod_year,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->where($where)->group('b.vod_id')->order($order)->count();
         $pagecount = ceil($total / $limit);
         return $pagecount;
     }
