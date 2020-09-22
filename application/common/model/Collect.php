@@ -815,7 +815,9 @@ class Collect extends Base
 
                                 $v['vod_director'] = implode(',', $arr_vod_director);
                             }
-                            print_r($v);die;
+                            if ($v['vod_year'] == 0 || $v['vod_year'] == ''){
+                                $v['vod_year'] = date("Y");
+                            }
 
                             $msg = $tmp['msg'];
                             $res = model('Vod')->insert($v);
@@ -1056,6 +1058,11 @@ class Collect extends Base
                                 $update['vod_time'] = time();
                                 $where = [];
                                 $where['vod_id'] = $info['vod_id'];
+                                if($info['vod_year'] == 0 || $info['vod_year'] == ''){
+                                    if ($update['vod_year'] == 0 || $update['vod_year'] == ''){
+                                        $update['vod_year'] = date("Y");
+                                    }
+                                }
                                 $res = model('Vod')->where($where)->update($update);
                                 $color = 'green';
                                 if ($res === false) {
