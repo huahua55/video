@@ -815,6 +815,7 @@ class Collect extends Base
 
                                 $v['vod_director'] = implode(',', $arr_vod_director);
                             }
+                            print_r($v);die;
 
                             $msg = $tmp['msg'];
                             $res = model('Vod')->insert($v);
