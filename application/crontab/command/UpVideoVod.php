@@ -33,7 +33,6 @@ class UpVideoVod extends Common
             $m3u8_url_key = $m3u8_url_key . '期';
         }
         if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0 ){
-            print_r(11);die;
             $m3u8_url_key = str_replace('集','期',$m3u8_url_key);;
         }
         if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
