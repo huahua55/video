@@ -714,8 +714,20 @@ class CollectOk extends Base
                             if ($filter_vod_director >= 1) {
                                 mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                             }
+
+                            $find_records_stata = false;
+                            $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
+                            foreach ($find_records as $find_records_key => $find_records_val) {
+                                $count3 = substr_count($v['vod_name'], $find_records_val);
+                                if ($count3 > 0) {
+                                    $find_records_stata = true;
+                                    break;
+                                }
+                            }
                             if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
                                 mac_echo("手动允许入库");
+                            }elseif ($find_records_stata == true){
+                                mac_echo("关键词命中允许入库");
                             }else{
                                 continue;
                             }

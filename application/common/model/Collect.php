@@ -5,6 +5,7 @@ namespace app\common\model;
 use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
+use think\process\exception\Failed;
 use think\Request;
 use similar_text\similarText;
 
@@ -692,6 +693,7 @@ class Collect extends Base
                     // 如果是动漫或者综艺则不再校验导演和主演
                     $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
 
+
                     if ((empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) && in_array($get_type_pid_type_id, [1, 2])) {
                         self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
                         // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
@@ -710,8 +712,19 @@ class Collect extends Base
                             if ($filter_vod_director >= 1) {
                                 mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                             }
+                            $find_records_stata = false;
+                            $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
+                            foreach ($find_records as $find_records_key => $find_records_val) {
+                                $count3 = substr_count($v['vod_name'], $find_records_val);
+                                if ($count3 > 0) {
+                                    $find_records_stata = true;
+                                    break;
+                                }
+                            }
                             if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
                                 mac_echo("手动允许入库");
+                            }elseif ($find_records_stata == true){
+                                mac_echo("关键词命中允许入库");
                             }else{
                                 continue;
                             }
