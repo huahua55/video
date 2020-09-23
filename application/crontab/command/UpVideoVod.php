@@ -24,10 +24,65 @@ class UpVideoVod extends Common
         $this->setName('upVideoVod')->setDescription("获取数据");//这里的setName和php文件名一致,setDescription随意
     }
 
+
+    public function title_cl($m3u8_url_key){
+        if (substr_count($m3u8_url_key, '-') >0 and substr_count($m3u8_url_key, 'http') == 0 ){
+            $m3u8_url_key = trim(str_replace('-','',$m3u8_url_key));
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0 ){
+            $m3u8_url_key = $m3u8_url_key . '期';
+        }
+        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0 ){
+            print_r(11);die;
+            $m3u8_url_key = str_replace('集','期',$m3u8_url_key);;
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
+            $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
+            $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '下期') > 0){
+            $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '上期') > 0){
+            $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+        }
+        return $m3u8_url_key;
+    }
+    protected function get_tit_ca($v_v){
+        $vData = explode('#', $v_v);
+        foreach ($vData as $kk => $vv) {
+            $v_list_key = explode('$', $vv);
+            if(substr_count($v_list_key[0], 'http')==0){
+                $m3u8_url_key =$this->title_cl($v_list_key[0]);
+                $vData[$kk] = $m3u8_url_key .'$'.$v_list_key[1];
+            }
+        }
+        return implode('#', $vData);
+    }
+
+    protected function execute(Input $input, Output $output)
+    {
+
+        $output->writeln('init');
+        $sql = "SELECT id,m3u8_url from video_vod WHERE type_id  in (3, 25, 26, 27, 28)";
+        $list = Db::query($sql);
+        foreach ($list as $key => $val) {
+            $m3u8_url = $this->get_tit_ca($val['m3u8_url']);
+//            p($m3u8_url);
+            if ($m3u8_url != $val['m3u8_url']){
+                $video_data['m3u8_url'] = $m3u8_url;
+                $res = Db::table('video_vod')->where(['id' => $val['id']])->update($video_data);
+            }
+        }
+
+        $output->writeln("结束...");
+    }
     /*
      * 下载
      */
-    protected function execute(Input $input, Output $output)
+    protected function execute1(Input $input, Output $output)
     {
 
         $output->writeln('init');

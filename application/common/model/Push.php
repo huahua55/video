@@ -87,6 +87,30 @@ class Push extends Base
         }
 
     }
+    public function title_cl($m3u8_url_key){
+        if (substr_count($m3u8_url_key, '-') >0 and substr_count($m3u8_url_key, 'http') == 0 ){
+            $m3u8_url_key = trim(str_replace('-','',$m3u8_url_key));
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0 ){
+            $m3u8_url_key = $m3u8_url_key . '期';
+        }
+        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0 ){
+            $m3u8_url_key = str_replace('集','期',$m3u8_url_key);;
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
+            $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
+            $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '下期') > 0){
+            $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '上期') > 0){
+            $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+        }
+        return $m3u8_url_key;
+    }
 
 
     protected function childrenUnArr($arr)
@@ -95,12 +119,7 @@ class Push extends Base
         foreach ($arr as $k => $v) {
             if (in_array($v['type_id'], $this->zy_list)) {
                 $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
-                if (substr_count($m3u8_url_key, '下期') > 0){
-                    $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
-                }
-                if (substr_count($m3u8_url_key, '上期') > 0){
-                    $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
-                }
+                $m3u8_url_key =$this->title_cl($m3u8_url_key);
             } else {
                 $m3u8_url_key = $v['collection'];
             }
@@ -109,6 +128,17 @@ class Push extends Base
             }
         }
         return $new_array;
+    }
+    protected function get_tit_ca($v_v){
+        $vData = explode('#', $v_v);
+        foreach ($vData as $kk => $vv) {
+            $v_list_key = explode('$', $vv);
+            if(substr_count($v_list_key[0], 'http')==0){
+                $m3u8_url_key =$this->title_cl($v_list_key[0]);
+                $vData[$kk] = $m3u8_url_key .'$'.$v_list_key[1];
+            }
+        }
+       return implode('#', $vData);
     }
 
     //获取列表
@@ -139,14 +169,6 @@ class Push extends Base
                 $vData = explode('#', $cj_url_arr[$kk]);
                 foreach ($vData as $v_k => $v_v) {
                     $v_v_m3u8_url = $v_v;
-                    if (in_array($v['type_id'], $this->zy_list)) {
-//                        $ser_data = explode('$',$v_v);
-//                        if(count($ser_data) > 1){
-//                            $ser = $ser_data[0];
-//                            $v_vs = str_replace('-','',$ser);
-//                            $v_v = str_replace($ser,$v_vs,$v_v);
-//                        }
-                    }
                     $count = substr_count($v_v, $type);
                     if ($count != 0) {
                         $count2 = substr_count($v_v, '$');
@@ -167,30 +189,23 @@ class Push extends Base
                         } else {
                             $new_v_k_ = $v_k + 1;
                             if (substr_count($v_v, 'http') > 0) {
-                                $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
+                                if (in_array($v['type_id'], $this->zy_list)) {
+                                    $v_v = '第' . ($new_v_k_) . '期$' . $v_v;
+                                }else{
+                                    $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
+                                }
                             }
                         }
                         if (in_array($v['type_id'], $this->zy_list)) {
                             $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
-                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
-                                $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
-                            }
-                            if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
-                                $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
-                            }
-                            if (substr_count($m3u8_url_key, '下期') > 0){
-                                $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
-                            }
-                            if (substr_count($m3u8_url_key, '上期') > 0){
-                                $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
-                            }
+                            $m3u8_url_key =$this->title_cl($m3u8_url_key);
                             if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
-                                    $collect_filter[$vv][$m3u8_url_key] = $v_v;
+                                    $collect_filter[$vv][$m3u8_url_key] = $this->get_tit_ca($v_v);
                                 }
                             } else {
                                 if (!isset($collect_filter[$vv][$new_v_k_])) {
-                                    $collect_filter[$vv][$new_v_k_] = $v_v;
+                                    $collect_filter[$vv][$new_v_k_] = $this->get_tit_ca($v_v);
                                 }
                             }
                         } else {
