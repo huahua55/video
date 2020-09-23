@@ -442,12 +442,13 @@ class CollectOk extends Base
                 $des = '';
                 $msg = '';
                 $tmp = '';
+//                unset($param['glzyha']);
 
                 if ($v['type_id'] == 0) {
                     $des = '分类未绑定，跳过err';
                 } elseif (empty($v['vod_name'])) {
                     $des = '数据不完整，跳过err';
-                } elseif (mac_array_filter($filter_arr, $v['vod_name']) !== false) {
+                } elseif (mac_array_filter($filter_arr, $v['vod_name']) !== false  && (!isset($param['glzyha']) && $param['glzyha'] != 'ok')) {
                     $des = '数据在过滤单中，跳过err';
                 } else {
                     unset($v['vod_id']);
