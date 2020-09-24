@@ -58,11 +58,15 @@ class VideoRecord extends Base{
     {
         if (Request()->isPost()) {
             $param = input('post.');
-            $save_video = model('VideoRecord')->saveData( $param );
-            if($save_video['code']>1){
-                return $this->error($save_video['msg']);
+            try {
+                $save_video = model('VideoRecord')->saveData( $param );
+                if($save_video['code']>1){
+                    return $this->error($save_video['msg']);
+                }
+                return $this->success($save_video['msg']);
+            } catch (\Exception $e) {
+                return $this->error('重复添加');
             }
-            return $this->success($save_video['msg']);
         }
 
         $id = input('id');
