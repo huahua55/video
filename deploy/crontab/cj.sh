@@ -2,6 +2,7 @@
 PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # 1.执行 php 命令不需要到thinkphp项目的目录下 2.index.php为入口文件 3.第三个参数为需要执行方法的路由
 # 当天
+
 cd /data/www/video/
 
 chown -R www:www ../video
@@ -10,8 +11,23 @@ chown -R www:www ../video
 ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 php think Cj name=cjokzyxs
-php think Cj name=zuidacj
-php think Cj name=mhysday
+#php think Cj name=zuidacj
+
+# 处理 shell
+time1=$(date "+%M")
+len_time=${#time1}
+if ((len_time==2));then
+  time1_str=${time1:1}
+else
+  time1_str=${time1:0:1}
+fi
+if (($time1_str!=5));then
+  # 不存在 5 的时候跑麻花
+  php think Cj name=mhysday
+else
+  # 暂不处理
+  echo $time1_str
+fi
 
 
 #sleep 1
