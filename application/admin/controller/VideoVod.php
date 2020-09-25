@@ -112,6 +112,26 @@ class VideoVod extends Base
         $data['data'] = $res['list'];
         return $data;
     }
+    public function up_type(){
+        $param = input();
+        $id = $param['id'] ?? '';
+        if (!empty($id)){
+            $data['is_down'] = 0;
+            $data['is_section'] = 0;
+            $data['is_sync'] = 0;
+            $data['fail_count'] = 0;
+            $data['is_down_m3u8'] = 0;
+            $data['code'] = -1;
+            $res = Db::table('video_vod')->where(['vod_id'=>$id])->update($data);
+            if ($res){
+                return ['code'=>0,'msg'=>'修改成功','data'=>''];
+            }else{
+                return ['code'=>0,'msg'=>'重复修改','data'=>''];
+            }
+        }
+
+        return ['code'=>0,'msg'=>'修改失败','data'=>''];
+    }
 
     public function updateExamine()
     {
@@ -179,10 +199,10 @@ class VideoVod extends Base
             # t_x_type
 
             if ( $is_master == 1 ) {
-                $t_x_type =  input('t_x_type');
+//                $t_x_type =  input('t_x_type');
 
                 // 编辑主集
-                $res = model('VideoVod')->editWeight($param,$t_x_type);
+                $res = model('VideoVod')->editWeight($param,$t_x_type = '');
             } else {
                 $count = count(explode(',', $param['rel_ids']));
                 if ($count > 1) {
@@ -259,7 +279,7 @@ class VideoVod extends Base
             $res['info']['history_down_url'] = implode("\n", $history_down_url);
         }
 //        p($res);die;
-//        
+//
         //分类
         $type_tree = model('Type')->getCache('type_tree');
         $this->assign('type_tree',$type_tree);

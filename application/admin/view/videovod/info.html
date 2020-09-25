@@ -21,14 +21,19 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">全集重新下载：</label>
-            <div class="layui-input-inline">
-                <select name="t_x_type">
-                    <option value="1" >是</option>
-                    <option value="2" selected >否</option>
-                </select>
-            </div>
+            <label class="layui-form-label onclick" style="color: red">全集重新下载</label>
         </div>
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">全集重新下载：</label>-->
+<!--            <div class="layui-input-inline">-->
+<!--                <select name="t_x_type">-->
+<!--                    <option value="1" >是</option>-->
+<!--                    <option value="2" selected >否</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
         {else /}
         <div class="layui-tab">
             <ul class="layui-tab-title ">
@@ -233,7 +238,23 @@
         var form = layui.form
                 , layer = layui.layer
                 , $ = layui.jquery;
+        $(".onclick").click(function () {
+           var id_val =  $("input[name='id']").val()
+            $.ajax({
+                type: 'get',
+                dataType:'json',
+                url: "{:url('video_vod/up_type')}",
+                data:{id:id_val},
+                success:function(res){
+                    layer.msg(res.msg);
+                    // console.log(res)
+                },
+                complete:function(){
 
+                }
+            });
+
+        })
         // 验证
         form.verify({
             name: function (value) {
