@@ -65,6 +65,7 @@ class Cj extends Command
 //            if ((isset($param['force']) && !empty($param['force'])) || ($v['status'] == '1' && (empty($v['runtime']) || ($oldweek . "-" . $oldhours) != ($curweek . "-" . $curhours)
 //                        && strpos($v['weeks'], $curweek) !== false && strpos($v['hours'], $curhours) !== false))) {
                 $output->writeln('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---执行');
+                Log::info('任务：' . $v['name'] . '，状态：' . $status . '，上次执行时间：' . $last . '---执行');
                 $list[$k]['runtime'] = time();
 
                 $res = mac_arr2file(APP_PATH . 'extra/timming.php', $list);

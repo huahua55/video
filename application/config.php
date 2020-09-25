@@ -173,7 +173,7 @@ return [
         'path'  => LOG_PATH,
         // 日志记录级别
         'level' => ['log', 'error', 'notice', 'info', 'debug', 'sql'],
-        'max_files'	=> 30
+//        'max_files'	=> 30
     ],
 
     // +----------------------------------------------------------------------
