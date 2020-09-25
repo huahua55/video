@@ -20,6 +20,25 @@
                 <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight" lay-verify="weight">
             </div>
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <div class="layui-form-item">
             <label class="layui-form-label onclick" style="color: red">全集重新下载</label>
         </div>
@@ -146,18 +165,18 @@
             		<div class="layui-form-item">
             			<label class="layui-form-label">mp4下载标记：</label>
             			<div class="layui-input-block">
-            				<input name="is_down_mp4" type="radio" id="is_mp4-0" value="0" title="未下载过" {if condition="$info['is_down_mp4'] eq 0" }checked {/if}> 
-            				<input name="is_down_mp4" type="radio" id="is_mp4-1" value="1" title="下载过" {if condition="$info['is_down_mp4'] eq 1" }checked {/if}> 
-            				<input name="is_down_mp4" type="radio" id="is_mp4-2" value="2" title="下载失败" {if condition="$info['is_down_mp4'] eq 2" }checked {/if}> 
-            			</div> 
+            				<input name="is_down_mp4" type="radio" id="is_mp4-0" value="0" title="未下载过" {if condition="$info['is_down_mp4'] eq 0" }checked {/if}>
+            				<input name="is_down_mp4" type="radio" id="is_mp4-1" value="1" title="下载过" {if condition="$info['is_down_mp4'] eq 1" }checked {/if}>
+            				<input name="is_down_mp4" type="radio" id="is_mp4-2" value="2" title="下载失败" {if condition="$info['is_down_mp4'] eq 2" }checked {/if}>
+            			</div>
             		</div>
             		<div class="layui-form-item">
             			<label class="layui-form-label">m3u8下载标记：</label>
             			<div class="layui-input-block">
-            				<input name="is_down_m3u8" type="radio" id="is_m3u8-0" value="0" title="未下载过" {if condition="$info['is_down_m3u8'] eq 0" }checked {/if}> 
-            				<input name="is_down_m3u8" type="radio" id="is_m3u8-1" value="1" title="下载过" {if condition="$info['is_down_m3u8'] eq 1" }checked {/if}> 
-            				<input name="is_down_m3u8" type="radio" id="is_m3u8-2" value="2" title="下载失败" {if condition="$info['is_down_m3u8'] eq 2" }checked {/if}> 
-            			</div> 
+            				<input name="is_down_m3u8" type="radio" id="is_m3u8-0" value="0" title="未下载过" {if condition="$info['is_down_m3u8'] eq 0" }checked {/if}>
+            				<input name="is_down_m3u8" type="radio" id="is_m3u8-1" value="1" title="下载过" {if condition="$info['is_down_m3u8'] eq 1" }checked {/if}>
+            				<input name="is_down_m3u8" type="radio" id="is_m3u8-2" value="2" title="下载失败" {if condition="$info['is_down_m3u8'] eq 2" }checked {/if}>
+            			</div>
             		</div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">下载失败次数：</label>
@@ -225,7 +244,7 @@
                 <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
             </div>
         </div>
-        
+
     </form>
 
 </div>
@@ -239,20 +258,24 @@
                 , layer = layui.layer
                 , $ = layui.jquery;
         $(".onclick").click(function () {
-           var id_val =  $("input[name='id']").val()
-            $.ajax({
-                type: 'get',
-                dataType:'json',
-                url: "{:url('video_vod/up_type')}",
-                data:{id:id_val},
-                success:function(res){
-                    layer.msg(res.msg);
-                    // console.log(res)
-                },
-                complete:function(){
+            var choice = confirm("你确认提交吗?提交后将不可更改。");//确认框。
+            if (choice == true) {
+                var id_val =  $("input[name='id']").val()
+                 $.ajax({
+                     type: 'get',
+                     dataType:'json',
+                     url: "{:url('video_vod/up_type')}",
+                     data:{id:id_val},
+                     success:function(res){
+                         layer.msg(res.msg);
+                         // console.log(res)
+                     },
+                     complete:function(){
 
-                }
-            });
+                     }
+                 });
+            }
+
 
         })
         // 验证
