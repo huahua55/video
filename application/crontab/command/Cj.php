@@ -218,7 +218,7 @@ class Cj extends Command
         }
 
         mac_echo('<style type="text/css">body{font-size:12px;color: #333333;line-height:21px;}span{font-weight:bold;color:#FF0000}</style>');
-        model($this->Collect)->vod_data($param, $res);
+        return model($this->Collect)->vod_data($param, $res);
 
     }
 
