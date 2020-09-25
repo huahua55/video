@@ -336,8 +336,8 @@ class videoVod extends Base {
                 $data['fail_count'] = 0;
                 $data['is_down_m3u8'] = 0;
                 $data['code'] = -1;
-                $video_up['vod_status'] = 2;
-                Db::table('video')->where(['vod_id'=>$where['vod_id']])->update($video_up);
+//                $video_up['vod_status'] = 2;
+//                Db::table('video')->where(['vod_id'=>$where['vod_id']])->update($video_up);
             }
             $res = $this->allowField(true)->where($where)->update($data);
         }
