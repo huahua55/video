@@ -74,6 +74,7 @@ class Cj extends Command
                 }
                 $file = $v['file'];
                 $re_txt = $this->$file($v['param']);
+                Log::info($re_txt);
                 $count1 = substr_count('连接API资源库失败', $re_txt);
 //                if ($count1 > 0) {
 //                    $key = 'ding_'.$name;
