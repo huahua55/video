@@ -6,9 +6,17 @@
 
 
     td {
-        overflow: hidden;
+        /*overflow: hidden;*/
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+    /*!* 防止下拉框的下拉列表被隐藏---必须设置--- *!*/
+    .layui-table-cell {            overflow: visible !important;        }
+    /* 使得下拉框与单元格刚好合适 */
+    td .layui-form-select{
+        margin-top: -10px;
+        margin-left: -10px;
+        margin-right: -10px;
     }
 </style>
 
@@ -213,13 +221,14 @@
                 <th width="25"><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
                 <th width="50">编号</th>
                 <th >名称</th>
-                <th width="50">人气</th>
+                <th width="70">绑定资源站</th>
                 <th width="30">评分</th>
                 <th width="30">推荐</th>
                 <th width="30">浏览</th>
                 <th width="80">播放器</th>
                 <th width="120">更新时间</th>
-                <th width="170">操作</th>
+<!--                <th width="">绑定</th>-->
+                <th width="150">操作</th>
             </tr>
             </thead>
 
@@ -235,11 +244,17 @@
                     {if condition="$vo.vod_remarks neq ''"} <span class="layui-badge layui-bg-orange">{$vo.vod_remarks}</span>{/if}
                     {if condition="$vo.vod_plot eq 1"} <span class="layui-badge layui-bg-cyan">剧情</span>{/if}
                 </td>
-                <td>{$vo.vod_hits}</td>
+                <td>
+                    <select name="vod_re_type" id="{$vo.vod_id}" lay-filter="vod_re_type" >
+                        {volist name="$vo.retype" id="vos"}
+                        <option value="{$vos.id}" {if condition="$vos.id eq $vo.vod_re_type"}selected{/if}>{$vos.name}</option>
+                        {/volist}
+                    </select>
+                </td>
                 <td>{$vo.vod_score}</td>
                 <td><a data-href="{:url('index/select')}?tab=vod&col=vod_level&tpl=select_level&url=vod/field&ids={$vo.vod_id}" data-width="270" data-height="100" class=" j-select"><span class="layui-badge layui-bg-orange">{$vo.vod_level}</span></a></td>
-                <td>{if condition="$vo.ismake eq 1"}<a target="_blank" class="layui-badge layui-bg-green " href="{:mac_url_vod_detail($vo)}">Y</a>{else/}<a class="layui-badge" href="{:url('make/make?ac=info&tab=vod')}?ids={$vo.vod_id}&ref=1">N</a>{/if}</td>
-                <td><span title="{$vo.vod_play_from|str_replace='$$$',',',###}-{$vo.vod_down_from|str_replace='$$$',',',###}">{$vo.vod_play_from|str_replace='$$$',',',###}-{$vo.vod_down_from|str_replace='$$$',',',###}</span></td>
+                <td>{if condition="$vo.ismake eq 1"}<a target="_blank" class="layui-badge  layui-bg-green " href="{:mac_url_vod_detail($vo)}">Y</a>{else/}<a class="layui-badge" href="{:url('make/make?ac=info&tab=vod')}?ids={$vo.vod_id}&ref=1">N</a>{/if}</td>
+                <td><span style="overflow:hidden;display: block" title="{$vo.vod_play_from|str_replace='$$$',',',###}-{$vo.vod_down_from|str_replace='$$$',',',###}">{$vo.vod_play_from|str_replace='$$$',',',###}-{$vo.vod_down_from|str_replace='$$$',',',###}</span></td>
                 <td>{$vo.vod_time|mac_day=color}</td>
                 <td>
                     <a class="layui-badge-rim j-iframe" data-full="1" data-href="{:url('info?id='.$vo['vod_id'])}" href="javascript:;" title="编辑">编辑</a>
@@ -271,8 +286,32 @@
                 ,form = layui.form;
 
 
+        // vod_re_type
 
-        // var start = {
+        form.on('select(vod_re_type)', function (data) {
+            var val = data.value;
+            var data_id =data.elem.getAttribute("id");
+            $.ajax({
+                type: 'get',
+                dataType:'json',
+                url: "{:url('vod/up_re_type')}",
+                data:{id:data_id,val:val},
+                success:function(res){
+                    layer.msg(res.msg);
+                    // console.log(res)
+                },
+                complete:function(){
+
+                }
+            });
+
+
+        });
+
+
+
+
+            // var start = {
         //     min: laydate.now()
         //     ,max: '2099-06-16 23:59:59'
         //     ,istoday: false

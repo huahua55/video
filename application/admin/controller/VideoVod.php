@@ -176,9 +176,13 @@ class VideoVod extends Base
             if (empty($param)) {
                 return $this->error('参数错误');
             }
+            # t_x_type
+
             if ( $is_master == 1 ) {
+                $t_x_type =  input('t_x_type');
+
                 // 编辑主集
-                $res = model('VideoVod')->editWeight($param);
+                $res = model('VideoVod')->editWeight($param,$t_x_type);
             } else {
                 $count = count(explode(',', $param['rel_ids']));
                 if ($count > 1) {

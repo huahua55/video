@@ -13,6 +13,18 @@ class Vod extends Base
         parent::__construct();
     }
 
+    public function up_re_type()
+    {
+        $param = input();
+        if (isset($param['id'])) {
+            $update = [];
+            $update['vod_re_type'] = $param['val'];
+            Db::name('vod')->where(['vod_id' => $param['id']])->update($update);
+            return ['code'=>0,'msg'=>'修改成功','data'=>''];
+        }
+        return ['code'=>0,'msg'=>'修改失败','data'=>''];
+    }
+
     public function data()
     {
         $param = input();
@@ -145,9 +157,27 @@ class Vod extends Base
         } else {
             $res = model('Vod')->listData($where, $order, $param['page'], $param['limit']);
         }
+        # zuidam3u8$$$zuidall$$$kuyun$$$ckm3u8$$$xinyun$$$xinm3u8
+
+
 
 
         foreach ($res['list'] as $k => &$v) {
+            $vod_play_from =$v['vod_play_from'];
+            $vod_play_from_array = explode('$$$',$vod_play_from);
+            $retype = [
+                0=>[
+                    'id'=>'0',
+                    'name'=>'请绑定资源站'
+                ]
+            ];
+            foreach ($vod_play_from_array as $play_key=>$play_val){
+                $new_play = getM3u8($play_val);
+                if (!empty($new_play)){
+                    $retype[$new_play['id']] = $new_play;
+                }
+            }
+            $v['retype'] = $retype;
             $v['ismake'] = 1;
             if ($GLOBALS['config']['view']['vod_detail'] > 0 && $v['vod_time_make'] < $v['vod_time']) {
                 $v['ismake'] = 0;
@@ -555,21 +585,21 @@ class Vod extends Base
         $vod_where['vod_id'] = $vod_id;
         $vod_where['vod_play_url'] = array('like', '%.m3u8%');
         $vod_res = Db::name('vod')->where($vod_where)->find();
-        if (empty($vod_res)){
+        if (empty($vod_res)) {
             mac_echo('生成任务失败，当前视频不存在 m3u8');
-        }else{
-            if (empty($vod_id)){
+        } else {
+            if (empty($vod_id)) {
                 mac_echo($vod_res['vod_name'] . ' 生成任务失败，id为空');
-            }else{
-                $push =  new Push();
+            } else {
+                $push = new Push();
                 $where['vod_id'] = $vod_id;
                 $res = Db::name('video_vod')->where($where)->find();
-                if(empty($res)){
+                if (empty($res)) {
                     $push->getWhile($vod_id);
-                    mac_echo($vod_res['vod_name'] .' 添加任务成功 ');
-                }else{
+                    mac_echo($vod_res['vod_name'] . ' 添加任务成功 ');
+                } else {
                     $push->getWhile2($vod_id);
-                    mac_echo($vod_res['vod_name'] .' 添加任务生成成功！');
+                    mac_echo($vod_res['vod_name'] . ' 添加任务生成成功！');
                 }
             }
         }

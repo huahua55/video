@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\console\command\make\Model;
 use think\Db;
+use function Qiniu\entry;
 
 class Video extends Base
 {
@@ -361,6 +362,9 @@ class Video extends Base
     {
         if (Request()->isPost()) {
             $param = input('post.');
+            if(!empty($param['video_id'])){
+               $this->_editVideoVodTime($param['video_id']);
+            }
             $save_video = model('video')->saveCollectionData( $param );
             if($save_video['code']>1){
                 return $this->error($save_video['msg']);

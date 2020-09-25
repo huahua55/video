@@ -20,6 +20,15 @@
                 <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入顺序号" id="sort" name="weight" lay-verify="weight">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手动全部下线：</label>
+            <div class="layui-input-inline">
+                <select name="t_x_type">
+                    <option value="1" >是</option>
+                    <option value="2" selected >否</option>
+                </select>
+            </div>
+        </div>
         {else /}
         <div class="layui-tab">
             <ul class="layui-tab-title ">

@@ -266,10 +266,12 @@ class videoVod extends Base {
 
     public function saveData($data)
     {
+
         $data['down_time'] = time();
         if(!empty($data['id'])){
             $where=[];
             $where['id'] = ['eq',$data['id']];
+
             unset($data['down_time']);
             $res = $this->allowField(true)->where($where)->update($data);
         }
@@ -311,18 +313,32 @@ class videoVod extends Base {
      * @param  [type] $data [description]
      * @return [type]       [description]
      */
-    public function editWeight( $data )
+    public function editWeight( $data ,$t_x_type = '')
     {
         $validate = \think\Loader::validate('VideoVod');
         if(!$validate->check($data)){
             return ['code'=>1001,'msg'=>'参数错误：'.$validate->getError() ];
         }
+
         if(!empty($data['id'])){
             Db::startTrans();
+            if (isset($data['t_x_type']) && !empty($data['t_x_type'])){
+                unset($data['t_x_type']);
+            }
             $where['vod_id'] = ['eq',$data['id']];
             unset( $data['id'] );
             unset( $data['vod_id'] );
             $data['up_time'] = time();
+            if ($t_x_type == 1){
+                $data['is_down'] = 0;
+                $data['is_section'] = 0;
+                $data['is_sync'] = 0;
+                $data['fail_count'] = 0;
+                $data['is_down_m3u8'] = 0;
+                $data['code'] = -1;
+                $video_up['vod_status'] = 2;
+                Db::table('video')->where(['vod_id'=>$where['vod_id']])->update($video_up);
+            }
             $res = $this->allowField(true)->where($where)->update($data);
         }
         else{

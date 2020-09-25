@@ -1733,6 +1733,62 @@ function mac_str_is_html($str)
 //    }
 }
 
+function getM3u8($m3u8,$type=1){
+    $list = [
+        'ckm3u8'=>[
+            'id'=>'1',
+            'key'=>'ckm3u8',
+            'name'=>'ok'
+        ],
+        'zuidam3u8'=>[
+            'id'=>'2',
+            'key'=>'zuidam3u8',
+            'name'=>'最大'
+        ],
+        'zkm3u8'=>[
+            'id'=>'3',
+            'key'=>'zkm3u8',
+            'name'=>'最快'
+        ],
+        'xinm3u8'=>[
+            'id'=>'4',
+            'key'=>'xinm3u8',
+            'name'=>'最新'
+        ],
+        'mahua'=>[
+            'id'=>'5',
+            'key'=>'mahua',
+            'name'=>'麻花'
+        ],
+        'kkm3u8'=>[
+            'id'=>'6',
+            'key'=>'kkm3u8',
+            'name'=>'酷云'
+        ],
+
+        'mbckm3u8'=>[
+            'id'=>'7',
+            'key'=>'mbckm3u8',
+            'name'=>'秒播'
+        ],
+        '135m3u8'=>[
+            'id'=>'8',
+            'key'=>'135m3u8',
+            'name'=>'135'
+        ],
+        '123kum3u8'=>[
+            'id'=>'9',
+            'key'=>'123kum3u8',
+            'name'=>'123'
+        ],
+    ];
+    if ($type == 1){
+        return isset($list[$m3u8])?$list[$m3u8]:[];
+    }else{
+        return $list;
+    }
+}
+
 //查看是否存在html字符
 function mac_str_is_htmls($str)
 {
