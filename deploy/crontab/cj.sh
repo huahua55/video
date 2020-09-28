@@ -11,50 +11,6 @@ chown -R www:www ../video
 ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 php think Cj name=cjokzyxs
-php think Cj name=zuidacj
-# 处理 shell
-
-
-#sleep 1
-
-# 任务
-
-a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
-if [ ! -n "$a" ]; then
-#   echo 1
-  #空的
-  php think pushData name=i
-else
-  # 不是空的 先不杀死
-  ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
-  php think pushData name=i
-fi
-
-function rand(){
-    min=$1
-    max=$(($2-$min+1))
-    num=$(($RANDOM+1000000000)) #增加一个10位的数再求余
-    echo $(($num%$max+$min))
-}
-
-rnd=$(rand 1 2)
-
-a=`ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}'`
-if [ ! -n "$a" ]; then
-  #空的
-  php think pushData name=up
-#   echo 1
-else
-  if (($rnd==2));then
-     echo 1
-  else
-#    echo 1
-     ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
-     php think pushData name=up
-  fi
-  # 不是空的 先不杀死
-fi
-
 
 
 
