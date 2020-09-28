@@ -6,4 +6,10 @@ cd /data/www/video/
 
 chown -R www:www ../video
 
-php think Cj name=zuidacj
+time1=$(date "+%M")
+len_time=${#time1}
+if ((len_time==2));then
+  if [ "$time1" = 30 ] || [ "$time1" = "00" ];then
+    php think Cj name=zuidacj
+  fi
+fi

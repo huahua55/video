@@ -6,4 +6,17 @@ cd /data/www/video/
 
 chown -R www:www ../video
 
-php think Cj name=cjokzyxs
+time1=$(date "+%M")
+len_time=${#time1}
+if ((len_time==2));then
+  time1_str=${time1:1}
+else
+  time1_str=${time1:0:1}
+fi
+if (($time1_str!=5));then
+  # 不存在 5 的时候跑麻花
+  php think Cj name=mhysday
+else
+  # 暂不处理
+  echo $time1_str
+fi
