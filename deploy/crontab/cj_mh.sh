@@ -6,6 +6,7 @@ cd /data/www/video/
 
 chown -R www:www ../video
 
+
 time1=$(date "+%M")
 len_time=${#time1}
 if ((len_time==2));then
