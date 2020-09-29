@@ -8,6 +8,7 @@ use app\common\util\Pinyin;
 use think\process\exception\Failed;
 use think\Request;
 use similar_text\similarText;
+use function GuzzleHttp\Psr7\str;
 
 class Collect extends Base
 {
@@ -781,6 +782,10 @@ class Collect extends Base
                         $info = $check_actor_and_director;
                     }
 
+
+
+
+
                     if (!$info) {
                         if ($param['opt'] == 2) {
                             $des = '数据操作没有勾选新增，跳过。';
@@ -831,9 +836,17 @@ class Collect extends Base
                             if ($v['vod_year'] == 0 || $v['vod_year'] == ''){
                                 $v['vod_year'] = date("Y");
                             }
-
                             $msg = $tmp['msg'];
-                            $res = model('Vod')->insert($v);
+                            if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'],'zuidam3u8') > 0 || substr_count($v['vod_play_from'],'zuidall') > 0 ) ){
+                                //最大 暂不处理
+//                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){$res = model('Vod')->insert($v);}
+                                $msg = '最大---全新数据，暂不处理';
+                                $res = true;
+
+                            }else{
+                                $res = model('Vod')->insert($v);
+                            }
+
                             if ($res === false) {
 
                             }
