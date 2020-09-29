@@ -1,5 +1,6 @@
 <?php
 namespace app\admin\controller;
+use Cassandra\Date;
 use think\Hook;
 
 class Index extends Base
@@ -70,6 +71,19 @@ class Index extends Base
     {
         $this->assign('video',self::_getVideoStatistics());
         $this->assign('dmachine',self::_getMachineInfo());
+        $list = config('timming');
+        $d = date("Y-m-d");
+        $lzd = date("Y-m-d",(time() - (60*60*24)));
+//        $list_data = array_column($list,'runtime','id');
+        foreach ($list as $k=>$v){
+            $dd = date("Y-m-d",$v['runtime']);
+            if ( $dd == $lzd || $dd == $d ){
+               //ok 成功
+            }else{
+                unset($list[$k]);
+            }
+        }
+        $this->assign('list_data',$list);
         $this->assign('info',$this->_admin);
         $this->assign('title','欢迎页面');
         return $this->fetch('admin@index/welcome');
