@@ -9,7 +9,7 @@ chown -R www:www ../video
 time1=$(date "+%M")
 len_time=${#time1}
 if ((len_time==2));then
-  if [ "$time1" = 30 ] || [ "$time1" = 00 ];then
+  if [ "$time1" = 31 ] || [ "$time1" = 01 ];then
     php think Cj name=zuidacj
   fi
 fi
