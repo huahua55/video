@@ -1140,7 +1140,7 @@ class CollectOk extends Base
                     $query->where($qWhere1)->whereOr($qWhere12);
                 })->find();
             }
-            p($info);
+
 
             self::_logWrite('视频名称::' . $v['vod_name']);
             if (empty($info)) {
@@ -1165,6 +1165,7 @@ class CollectOk extends Base
                     $old_check_data['vod_play_url'] = $info['vod_play_url'];
                     $old_check_data['type_id_1'] = $info['type_id_1'];
                     $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                    p($check_vod_rade);
                     if (!$check_vod_rade) {
                         // 添加
                         $info = '';
