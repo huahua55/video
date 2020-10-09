@@ -719,6 +719,7 @@ class CollectOk extends Base
                             continue;
                         }
                     }
+                    p($info);
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
