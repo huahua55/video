@@ -2387,9 +2387,8 @@ class CollectOk extends Base
                 $new_play_url_arr = implode(',', explode('#', $v));
                 foreach ($old_play_url as $v1) {
                     $old_play_url_arr = implode(',', explode('#', $v1));
-                    var_dump($new_play_url_arr);
+                    var_dump('11----'.$new_play_url_arr . '---;22----'.$old_play_url_arr);
                     echo "<br/>";
-                    var_dump($old_play_url_arr);
                     $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
                     if ($play_url_rade >= 80) {
                         $vod_play_url_rade = $play_url_rade;
