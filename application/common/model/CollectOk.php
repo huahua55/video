@@ -719,7 +719,7 @@ class CollectOk extends Base
                             continue;
                         }
                     }
-                    p(model('Vod')->getLastSql());
+                    p($info);
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
@@ -1127,6 +1127,7 @@ class CollectOk extends Base
             }
             self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
         }
+        p($check_actor_and_director);
         if (empty($check_actor_and_director)) {
             if ($blend === false) {
                 $info = model('Vod')->where($where)->find();
