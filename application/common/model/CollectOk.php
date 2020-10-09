@@ -1014,6 +1014,7 @@ class CollectOk extends Base
                                         $update['vod_year'] = date("Y");
                                     }
                                 }
+
 //                                p($update);
                                 $res = model('Vod')->where($where)->update($update);
                                 $color = 'green';

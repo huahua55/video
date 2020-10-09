@@ -696,6 +696,7 @@ class Collect extends Base
 
 
                     # 原始数据
+
                     $vod_name_ys = $v['vod_name'];
                     if (substr_count($vod_name_ys, '2020') > 0) {
                         $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
