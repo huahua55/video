@@ -1134,8 +1134,10 @@ class Collect extends Base
             self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
         }
         if (empty($check_actor_and_director)) {
+
             if ($blend === false) {
                 $info = model('Vod')->where($where)->find();
+                $infos = model('Vod')->where($where)->select();
             } else {
                 $info = model('Vod')->where($where)->where(function ($query) {
                     $qWhere1 = [];
@@ -1144,7 +1146,16 @@ class Collect extends Base
                     $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
                     $query->where($qWhere1)->whereOr($qWhere12);
                 })->find();
+
+                $infos = model('Vod')->where($where)->where(function ($query) {
+                    $qWhere1 = [];
+                    $qWhere12 = [];
+                    $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
+                    $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
+                    $query->where($qWhere1)->whereOr($qWhere12);
+                })->select();
             }
+
             self::_logWrite('视频名称::' . $v['vod_name']);
             if (empty($info)) {
                 self::_logWrite("未查询到视频信息::" . $v['vod_name']);
@@ -1165,7 +1176,8 @@ class Collect extends Base
                     $old_check_data['vod_actor'] = $info['vod_actor'];
                     $old_check_data['vod_director'] = $info['vod_director'];
                     $old_check_data['type_id'] = $info['type_id'];
-                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
+//                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                    $old_check_data['vod_play_url'] = join('$$$', array_column($infos,'vod_play_url'));
                     $old_check_data['type_id_1'] = $info['type_id_1'];
                     $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
                     if (!$check_vod_rade) {

@@ -719,7 +719,7 @@ class CollectOk extends Base
                             continue;
                         }
                     }
-                    p($info);
+//                    p($info);
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
@@ -1131,6 +1131,7 @@ class CollectOk extends Base
         if (empty($check_actor_and_director)) {
             if ($blend === false) {
                 $info = model('Vod')->where($where)->find();
+                $infos = model('Vod')->where($where)->select();
             } else {
                 $info = model('Vod')->where($where)->where(function ($query) {
                     $qWhere1 = [];
@@ -1139,6 +1140,14 @@ class CollectOk extends Base
                     $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
                     $query->where($qWhere1)->whereOr($qWhere12);
                 })->find();
+                $infos = model('Vod')->where($where)->where(function ($query) {
+                    $qWhere1 = [];
+                    $qWhere12 = [];
+                    $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
+                    $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
+                    $query->where($qWhere1)->whereOr($qWhere12);
+                })->select();
+
             }
 
 
@@ -1162,10 +1171,10 @@ class CollectOk extends Base
                     $old_check_data['vod_actor'] = $info['vod_actor'];
                     $old_check_data['vod_director'] = $info['vod_director'];
                     $old_check_data['type_id'] = $info['type_id'];
-                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
+//                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                    $old_check_data['vod_play_url'] = join('$$$', array_column($infos,'vod_play_url'));
                     $old_check_data['type_id_1'] = $info['type_id_1'];
                     $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                    p($check_vod_rade);
                     if (!$check_vod_rade) {
                         // 添加
                         $info = '';
@@ -2381,14 +2390,13 @@ class CollectOk extends Base
 
         if (!empty($old_check_data['vod_play_url']) && !empty($new_check_data['vod_play_url'])) {
             // 链接比
+//            p($old_check_data);
             $new_play_url = explode('$$$', $new_check_data['vod_play_url']);
             $old_play_url = explode('$$$', $old_check_data['vod_play_url']);
             foreach ($new_play_url as $v) {
                 $new_play_url_arr = implode(',', explode('#', $v));
                 foreach ($old_play_url as $v1) {
                     $old_play_url_arr = implode(',', explode('#', $v1));
-                    var_dump('11----'.$new_play_url_arr . '---;22----'.$old_play_url_arr);
-                    echo "<br/>";
                     $play_url_rade = mac_intersect($new_play_url_arr, $old_play_url_arr);
                     if ($play_url_rade >= 80) {
                         $vod_play_url_rade = $play_url_rade;
@@ -2397,9 +2405,6 @@ class CollectOk extends Base
                 }
             }
         }
-        p($vod_play_url_rade);
-
-
         $condition = [];
         if ($check_vod_content_rade >= 50) {
             $condition['check_vod_content_rade'] = $check_vod_content_rade;
@@ -2421,8 +2426,6 @@ class CollectOk extends Base
         }
 
         self::_logWrite("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
-
-        p($condition);
         if ( count($condition) >= 2 ){
             return true;
         } else {
