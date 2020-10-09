@@ -409,7 +409,7 @@ class Collect extends Base
         // 图片
         if (substr($pic_url, 0, 4) != 'http') {
             exec("python3  /data/www/video/t10.py $pic_url", $res, $rc);
-            $des .= implode(',',$res);
+            $des .= implode(',', $res);
         }
         return ['pic' => $pic_url, 'msg' => $des];
     }
@@ -446,7 +446,7 @@ class Collect extends Base
                     $des = '分类未绑定，跳过err';
                 } elseif (empty($v['vod_name'])) {
                     $des = '数据不完整，跳过err';
-                } elseif (mac_array_filter($filter_arr, $v['vod_name']) !== false  && (!isset($param['glzyha']) && $param['glzyha'] != 'ok')) {
+                } elseif (mac_array_filter($filter_arr, $v['vod_name']) !== false && (!isset($param['glzyha']) && $param['glzyha'] != 'ok')) {
                     $des = '数据在过滤单中，跳过err';
                 } else {
                     unset($v['vod_id']);
@@ -690,100 +690,32 @@ class Collect extends Base
 
                     $filter_vod_actor = self::_arrayIntersectCount('未知,内详', $v['vod_actor']);
                     $filter_vod_director = self::_arrayIntersectCount('未知,内详', $v['vod_director']);
-                    $check_actor_and_director = [];
+
                     // 如果是动漫或者综艺则不再校验导演和主演
                     $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
 
 
-                    if ((empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) && in_array($get_type_pid_type_id, [1, 2])) {
-                        self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
-                        // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
-                        $check_actor_and_director = self::_getVodByVodName($v['vod_name'], $new_check_data);
-                        if (empty($check_actor_and_director)) {
-                            // 库中不存在  则不再入库
-                            if (empty($v['vod_actor'])) {
-                                mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
-                            }
-                            if (empty($v['vod_director'])) {
-                                mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
-                            }
-                            if ($filter_vod_actor >= 1) {
-                                mac_echo("主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
-                            }
-                            if ($filter_vod_director >= 1) {
-                                mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
-                            }
-                            $find_records_stata = false;
-                            $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
-                            foreach ($find_records as $find_records_key => $find_records_val) {
-                                $count3 = substr_count($v['vod_name'], $find_records_val);
-                                if ($count3 > 0) {
-                                    $find_records_stata = true;
-                                    break;
-                                }
-                            }
-                            if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
-                                mac_echo("手动允许入库");
-                            }elseif ($find_records_stata == true){
-                                mac_echo("关键词命中允许入库");
-                            }else{
+                    # 原始数据
+                    $vod_name_ys = $v['vod_name'];
+                    if (substr_count($vod_name_ys, '2020') > 0) {
+                        $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
+                        if ($info == 'continue') {
+                            continue;
+                        }
+                        if (!$info) {
+                            # 全新
+                            $where['vod_name'] = $v['vod_name'] = trim(str_replace('2020', '', $vod_name_ys));
+                            $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
+                            if ($info == 'continue') {
                                 continue;
                             }
                         }
-                        self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
-                    }
-
-//                p($where);
-                    if (empty($check_actor_and_director)) {
-                        if ($blend === false) {
-                            $info = model('Vod')->where($where)->find();
-                        } else {
-                            $info = model('Vod')->where($where)->where(function ($query) {
-                                $qWhere1 = [];
-                                $qWhere12 = [];
-                                $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
-                                $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
-                                $query->where($qWhere1)->whereOr($qWhere12);
-                            })->find();
-                        }
-
-
-                        self::_logWrite('视频名称::' . $v['vod_name']);
-                        if (empty($info)) {
-                            self::_logWrite("未查询到视频信息::" . $v['vod_name']);
-                            // 根据vod_name获取数据
-                            $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
-                        } else {
-                            self::_logWrite("数据库查询到的视频id：：" . $info['vod_id']);
-                            if (empty($info['vod_content']) &&
-                                empty($info['vod_blurb']) &&
-                                empty($info['vod_actor']) &&
-                                empty($info['vod_director'])
-                            ) {
-                                // 考虑内容、简介、导演、演员为空的情况
-                                $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
-                            } else {
-                                $old_check_data['vod_content'] = $info['vod_content'];
-                                $old_check_data['vod_blurb'] = $info['vod_blurb'];
-                                $old_check_data['vod_actor'] = $info['vod_actor'];
-                                $old_check_data['vod_director'] = $info['vod_director'];
-                                $old_check_data['type_id'] = $info['type_id'];
-                                $old_check_data['vod_play_url'] = $info['vod_play_url'];
-                                $old_check_data['type_id_1'] = $info['type_id_1'];
-                                $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
-                                if (!$check_vod_rade) {
-                                    // 添加
-                                    $info = '';
-                                }
-                            }
-                        }
                     } else {
-                        self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '更新数据');
-                        $info = $check_actor_and_director;
+                        $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
+                        if ($info == 'continue') {
+                            continue;
+                        }
                     }
-
-
-
 
 
                     if (!$info) {
@@ -833,17 +765,17 @@ class Collect extends Base
 
                                 $v['vod_director'] = implode(',', $arr_vod_director);
                             }
-                            if ($v['vod_year'] == 0 || $v['vod_year'] == ''){
+                            if ($v['vod_year'] == 0 || $v['vod_year'] == '') {
                                 $v['vod_year'] = date("Y");
                             }
                             $msg = $tmp['msg'];
-                            if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'],'zuidam3u8') > 0 || substr_count($v['vod_play_from'],'zuidall') > 0 ) ){
+                            if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'], 'zuidam3u8') > 0 || substr_count($v['vod_play_from'], 'zuidall') > 0)) {
                                 //最大 暂不处理
 //                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){$res = model('Vod')->insert($v);}
                                 $msg = '最大---全新数据，暂不处理';
                                 $res = true;
 
-                            }else{
+                            } else {
                                 $res = model('Vod')->insert($v);
                             }
 
@@ -1084,8 +1016,8 @@ class Collect extends Base
                                 $update['vod_time'] = time();
                                 $where = [];
                                 $where['vod_id'] = $info['vod_id'];
-                                if($info['vod_year'] == 0 || $info['vod_year'] == ''){
-                                    if ($update['vod_year'] == 0 || $update['vod_year'] == ''){
+                                if ($info['vod_year'] == 0 || $info['vod_year'] == '') {
+                                    if ($update['vod_year'] == 0 || $update['vod_year'] == '') {
                                         $update['vod_year'] = date("Y");
                                     }
                                 }
@@ -1157,6 +1089,95 @@ class Collect extends Base
             self::_logWrite('collect异常信息：：' . $e->getMessage());
             print_r($e->getMessage());
         }
+    }
+
+    protected function getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend)
+    {
+        $check_actor_and_director = [];
+        if ((empty($v['vod_actor']) || empty($v['vod_director']) || $filter_vod_actor >= 1 || $filter_vod_director >= 1) && in_array($get_type_pid_type_id, [1, 2])) {
+            self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . ':导演:' . $v['vod_director'] . ':主演:' . $v['vod_actor']);
+            // 如果查询过来的数据中主演和导演都为空则不再入库，防止出现内容和简介都为空、播放链接（不同的资源站数据不同）不一致导致重复插入数据的情况。因为原有的程序是根据类型、导演、主演查询出一条数据
+            $check_actor_and_director = self::_getVodByVodName($v['vod_name'], $new_check_data);
+            if (empty($check_actor_and_director)) {
+                // 库中不存在  则不再入库
+                if (empty($v['vod_actor'])) {
+                    mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
+                }
+                if (empty($v['vod_director'])) {
+                    mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
+                }
+                if ($filter_vod_actor >= 1) {
+                    mac_echo("主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                }
+                if ($filter_vod_director >= 1) {
+                    mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                }
+                $find_records_stata = false;
+                $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
+                foreach ($find_records as $find_records_key => $find_records_val) {
+                    $count3 = substr_count($v['vod_name'], $find_records_val);
+                    if ($count3 > 0) {
+                        $find_records_stata = true;
+                        break;
+                    }
+                }
+                if (isset($param['glzyha']) and $param['glzyha'] == 'ok') {
+                    mac_echo("手动允许入库");
+                } elseif ($find_records_stata == true) {
+                    mac_echo("关键词命中允许入库");
+                } else {
+//                    continue;
+                    return 'continue';
+                }
+            }
+            self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
+        }
+        if (empty($check_actor_and_director)) {
+            if ($blend === false) {
+                $info = model('Vod')->where($where)->find();
+            } else {
+                $info = model('Vod')->where($where)->where(function ($query) {
+                    $qWhere1 = [];
+                    $qWhere12 = [];
+                    $qWhere1['vod_director'] = $GLOBALS['blend']['vod_director'] ?? '';
+                    $qWhere12['vod_actor'] = $GLOBALS['blend']['vod_actor'] ?? '';
+                    $query->where($qWhere1)->whereOr($qWhere12);
+                })->find();
+            }
+            self::_logWrite('视频名称::' . $v['vod_name']);
+            if (empty($info)) {
+                self::_logWrite("未查询到视频信息::" . $v['vod_name']);
+                // 根据vod_name获取数据
+                $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+            } else {
+                self::_logWrite("数据库查询到的视频id：：" . $info['vod_id']);
+                if (empty($info['vod_content']) &&
+                    empty($info['vod_blurb']) &&
+                    empty($info['vod_actor']) &&
+                    empty($info['vod_director'])
+                ) {
+                    // 考虑内容、简介、导演、演员为空的情况
+                    $info = self::_getVodByVodName($v['vod_name'], $new_check_data);
+                } else {
+                    $old_check_data['vod_content'] = $info['vod_content'];
+                    $old_check_data['vod_blurb'] = $info['vod_blurb'];
+                    $old_check_data['vod_actor'] = $info['vod_actor'];
+                    $old_check_data['vod_director'] = $info['vod_director'];
+                    $old_check_data['type_id'] = $info['type_id'];
+                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
+                    $old_check_data['type_id_1'] = $info['type_id_1'];
+                    $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
+                    if (!$check_vod_rade) {
+                        // 添加
+                        $info = '';
+                    }
+                }
+            }
+        } else {
+            self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '更新数据');
+            $info = $check_actor_and_director;
+        }
+        return $info;
     }
 
     public function art_json($param)
