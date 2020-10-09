@@ -2418,6 +2418,7 @@ class CollectOk extends Base
 
         self::_logWrite("ok视频相似度：：" . '内容:' . $check_vod_content_rade . '简介:' . $check_vod_blurb_rade . '主演:' . $vod_actor_count . '导演:' . $vod_director_count . "链接:" . $vod_play_url_rade . "类型:" . $old_type_pid . '-' . $new_type_pid . '最终条件:' . json_encode($condition));
 
+        p($condition);
         if ( count($condition) >= 2 ){
             return true;
         } else {
