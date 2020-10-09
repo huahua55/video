@@ -719,7 +719,7 @@ class CollectOk extends Base
                             continue;
                         }
                     }
-                    p($info);
+                    p(model('Vod')->getLastSql());
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
