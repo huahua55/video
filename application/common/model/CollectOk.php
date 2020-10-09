@@ -1127,7 +1127,7 @@ class CollectOk extends Base
             }
             self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
         }
-        p($check_actor_and_director);
+
         if (empty($check_actor_and_director)) {
             if ($blend === false) {
                 $info = model('Vod')->where($where)->find();
@@ -1140,7 +1140,7 @@ class CollectOk extends Base
                     $query->where($qWhere1)->whereOr($qWhere12);
                 })->find();
             }
-
+            p($info);
 
             self::_logWrite('视频名称::' . $v['vod_name']);
             if (empty($info)) {
