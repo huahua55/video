@@ -71,9 +71,11 @@
     {{#  if(d.is_master == 1){ }}
         <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
         <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
     {{#  } else{ }}
         <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
         <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
     {{#  } }}
 </script>
 <script type="text/html" id="is_downTpl">
@@ -163,7 +165,7 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
         init_table();
-        function init_table( page = 1, limit = 20, param = '' ) { 
+        function init_table( page = 1, limit = 20, param = '' ) {
             var data = {
                     'page' : page,
                     'limit' : limit
@@ -171,7 +173,7 @@
             if ( param != '' ) {
                 Object.assign( data, JSON.parse( param ) );
             }
-            
+
             $.ajax({
                 url :'/admin/video/index1',
                 data : data,
@@ -195,12 +197,12 @@
                     }
                 },
                 complete: function(){
-                    
+
                     showloading(false);//关闭loading
                 }
             });
         }
-        
+
         function laypageRender( result_data ){
             layui.use(['laypage', 'layer'],function(){
                 var laypage = layui.laypage
@@ -237,7 +239,7 @@
                                     }
                                 },
                                 complete: function(){
-                                    
+
                                     showloading(false);//关闭loading
                                 }
                             });
@@ -261,7 +263,7 @@
                     // 这里关闭之后还会重新加载loading  需要在数据渲染到table中之后关闭
                     layer.closeAll('loading');
                 }
-                
+
             });
         }
 
@@ -538,7 +540,7 @@
                     };
                     $('#search_data').val( JSON.stringify( data ) );
                     init_table( $('#cur_page').val(), $('#cur_limit').val(), JSON.stringify( data ) );
-                    
+
                 });
                 // 监听radio
                 form.on('radio(status)', function (datas) {
