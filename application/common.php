@@ -894,7 +894,6 @@ function mac_characters_format($vod_name)
     if (!empty($matches) && isset($matches[0])) {
         foreach ($matches[0] as $m_k => $m_v) {
             $vod_name = str_replace($m_v, str_replace(' ', '', $m_v), $vod_name);
-
         }
     }
     return $vod_name;

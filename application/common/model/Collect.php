@@ -542,10 +542,10 @@ class Collect extends Base
                     }
 
                     if (empty($v['vod_blurb'])) {
-                        $v['vod_blurb'] = strip_tags($v['vod_content']);
+                        $v['vod_blurb'] = mac_str_is_htmls(strip_tags($v['vod_content']));
                     }
 
-                    $v['vod_content'] = strip_tags($v['vod_content']);
+                    $v['vod_content'] = mac_str_is_htmls(strip_tags($v['vod_content']));
 
                     $where = [];
                     $where['vod_name'] = $v['vod_name'];
