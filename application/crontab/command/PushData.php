@@ -161,8 +161,8 @@ class PushData extends Common
         } elseif ($name == 'upId') {
             $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
-            $s = strtotime(date("Y-m-d H:00:00", time()));
-            $e = strtotime(date("Y-m-d 00:00:00", strtotime("+1 day")));
+            $s = strtotime(date("Y-m-d H:00:00",time() - (60 * 60 *1) ));
+            $e = time() + (60*60*24);
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
