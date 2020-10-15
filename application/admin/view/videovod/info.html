@@ -41,6 +41,11 @@
         <br>
         <div class="layui-form-item">
             <label class="layui-form-label onclick" style="color: red">全集重新下载</label>
+<!--            &nbsp;&nbsp;&nbsp;-->
+<!--            <label class="layui-form-label sb_onclick" style="color: red">失败重新下载</label>-->
+        </div>
+        <div class="layui-form-item1w">
+            <label class="layui-form-label sb_onclick" style="color: red">失败重新下载</label>
         </div>
 
 <!--        <div class="layui-form-item">-->
@@ -275,9 +280,26 @@
                      }
                  });
             }
+        });
+        $(".sb_onclick").click(function () {
+            var choice = confirm("你确认提交失败重新下载吗?提交后将不可更改。");//确认框。
+            if (choice == true) {
+                var id_val =  $("input[name='id']").val()
+                $.ajax({
+                    type: 'get',
+                    dataType:'json',
+                    url: "{:url('video_vod/up_type_out')}",
+                    data:{id:id_val},
+                    success:function(res){
+                        layer.msg(res.msg);
+                        // console.log(res)
+                    },
+                    complete:function(){
 
-
-        })
+                    }
+                });
+            }
+        });
         // 验证
         form.verify({
             name: function (value) {
