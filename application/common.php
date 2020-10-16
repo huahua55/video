@@ -460,6 +460,17 @@ function mac_echo($str)
         ob_flush();
         flush();
     }
+
+    $dir = LOG_PATH . 'cjLog' . DS;
+    if (!file_exists($dir)) {
+        mkdir($dir, 0777, true);
+    }
+    \think\Log::init([
+        'type' => \think\Env::get('log.type', 'test'),
+        'path' => $dir,
+        'level' => ['info'],
+        'max_files' => 30]);
+    \think\Log::info($str);
 }
 
 function findNum($str = '')
@@ -477,6 +488,7 @@ function findNum($str = '')
     }
     return $result;
 }
+
 
 function mac_day($t, $f = '', $c = '#FF0000')
 {
