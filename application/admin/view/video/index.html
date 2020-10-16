@@ -71,11 +71,11 @@
     {{#  if(d.is_master == 1){ }}
         <input type="radio" class="{{d.bid}}_{{d.type_pid}}_true" name="{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
         <input type="radio" class="{{d.bid}}_{{d.type_pid}}_false" name="{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="已删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.bid}}_{{d.type_pid}}_del" name="{{d.bid}}_{{d.is_master}}" value="3" title="已删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
     {{#  } else{ }}
         <input type="radio" class="{{d.pid}}_{{d.type_pid}}_true" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="1" title="正常" {{# if(d.m_status == 1){ }} checked {{# } }} lay-filter="status">
         <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="2" title="下线" {{# if(d.m_status == 2){ }} checked {{# } }} lay-filter="status">
-        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_false" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="已删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
+        <input type="radio" class="{{d.pid}}_{{d.type_pid}}_del" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="已删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
     {{#  } }}
 </script>
 <script type="text/html" id="is_downTpl">
