@@ -535,9 +535,6 @@ class PushData extends Common
                                 $new_vod_log_where['date'] = date("Y-m-d",time());
                                 $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
                                 if (!empty($new_vod_log_data)){
-                                    if(empty($new_vod_log_data['push_add_date'])){
-                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
-                                    }
                                     if(empty($new_vod_log_data['push_up_date'])){
                                         Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
                                     }
@@ -576,9 +573,6 @@ class PushData extends Common
                                     $new_vod_log_where['date'] = date("Y-m-d",time());
                                     $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
                                     if (!empty($new_vod_log_data)){
-                                        if(empty($new_vod_log_data['push_add_date'])){
-                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
-                                        }
                                         if(empty($new_vod_log_data['push_up_date'])){
                                             Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
                                         }
@@ -606,9 +600,6 @@ class PushData extends Common
                                     $new_vod_log_where['date'] = date("Y-m-d",time());
                                     $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
                                     if (!empty($new_vod_log_data)){
-                                        if(empty($new_vod_log_data['push_add_date'])){
-                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
-                                        }
                                         if(empty($new_vod_log_data['push_up_date'])){
                                             Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
                                         }

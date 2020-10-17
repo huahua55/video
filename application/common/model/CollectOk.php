@@ -812,7 +812,8 @@ class CollectOk extends Base
                             $new_vod_log_where['date'] = date("Y-m-d",time());
                             $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
                             if (empty($new_vod_log_data)){
-                                $new_vod_log_where['add_date'] = time();
+                                $new_vod_log_where['up_date'] = time();
+                                $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
                                 Db::table('vod_log')->insert($new_vod_log_where);
                             }
                             if ($res === false) {
@@ -1063,13 +1064,19 @@ class CollectOk extends Base
                                 $new_vod_log_where['vod_name'] = $v['vod_name'];
                                 $new_vod_log_where['date'] = date("Y-m-d",time());
                                 $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-
                                 if (empty($new_vod_log_data)){
-                                    $new_vod_log_where['add_date'] = time();
+                                    $new_vod_log_where['up_date'] = time();
+                                    $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
                                     Db::table('vod_log')->insert($new_vod_log_where);
                                 }else{
                                     if(empty($new_vod_log_data['up_date'])){
-                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['up_date'=>time()]);
+                                        $new_vod_log_n['up_date'] = time();
+                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks']??'';
+                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update($new_vod_log_n);
+                                    }
+                                    if(empty($new_vod_log_data['vod_remarks'])){
+                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks']??'';
+                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update($new_vod_log_n);
                                     }
                                 }
 

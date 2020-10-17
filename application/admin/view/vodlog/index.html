@@ -162,16 +162,8 @@
                     field: 'date',
                     title: '日期',
                 }, {
-                    field: 'add_date',
-                    title: 'vod插入时间',
-                    width:170,
-                    templet: function (d) {
-                        if (d.add_date > 0) {
-                            return util.toDateString(d.add_date * 1000, "yyyy-MM-dd HH:mm:ss");
-                        } else {
-                            return '';
-                        }
-                    }
+                    field: 'vod_remarks',
+                    title: '简介',
                 }, {
                     field: 'up_date',
                     title: 'vod更新时间',
@@ -179,17 +171,6 @@
                     templet: function (d) {
                         if (d.up_date > 0) {
                             return util.toDateString(d.up_date * 1000, "yyyy-MM-dd HH:mm:ss");
-                        } else {
-                            return '';
-                        }
-                    }
-                }, {
-                    field: 'push_add_date',
-                    title: '分解插入时间',
-                    width:170,
-                    templet: function (d) {
-                        if (d.push_add_date > 0) {
-                            return util.toDateString(d.push_add_date * 1000, "yyyy-MM-dd HH:mm:ss");
                         } else {
                             return '';
                         }

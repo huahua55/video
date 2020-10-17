@@ -469,7 +469,7 @@ function mac_echo($str)
         'type' => \think\Env::get('log.type', 'test'),
         'path' => $dir,
         'level' => ['info'],
-        'max_files' => 30]);
+    ]);
     \think\Log::info($str);
 }
 
