@@ -12,6 +12,7 @@ class VodLog extends Base
     protected $vodLogDb; // 视频表
 
 
+
     public function __construct()
     {
         parent::__construct();
