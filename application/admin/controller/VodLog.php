@@ -36,7 +36,7 @@ class VodLog extends Base
         $param['task_date']= empty($param['task_date']) ?date("Y-m-d"): $param['task_date'];
 
 
-        $order = 'add_date desc';
+        $order = 'up_date desc';
         $where = [];
 
         if (!empty($param['idName'])) {
