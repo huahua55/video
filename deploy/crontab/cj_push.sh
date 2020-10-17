@@ -6,7 +6,7 @@ cd /data/www/video/
 
 chown -R www:www ../video
 
-ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
+#ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
 php think pushData name=i
 
 #a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
@@ -29,7 +29,7 @@ php think pushData name=i
 #
 #rnd=$(rand 1 2)
 
-ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
+#ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
 
 
 php think pushData name=up
