@@ -7,7 +7,7 @@ use think\Db;
 use think\Log;
 use Exception;
 
-class vodLog extends Base
+class VodLog extends Base
 {
     protected $vodLogDb; // 视频表
 
