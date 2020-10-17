@@ -435,6 +435,7 @@ class Push extends Base
                                         Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
                                     }
                                 }
+
                                 if ($res) {
                                     mac_echo('全新插入成功------');
                                     log::write('成功q3-' . $v['b_vod_id']);
