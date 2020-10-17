@@ -1,0 +1,316 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container p10">
+
+    <div class="demoTable">
+        搜索：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="查询当前视频名称" name="id" id="demoReload" autocomplete="off">
+        </div>
+        &nbsp;
+        机器编码：
+        <div class="layui-input-inline w150">
+            <input class="layui-input laydate-icon" name="task_date" value=""  autocomplete="off" placeholder="日期" id="task_date">
+        </div>
+
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
+
+    <div class="examine">
+        <form class="layui-form" action="" lay-filter="example">
+            <div id="examineForm" style="padding: 20px;">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{include file="../../../application/admin/view/public/foot" /}
+<script type="text/html" id="is_downTpl">
+    {{#  if(d.b_is_down == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未下载</button>
+    {{#  } else if(d.b_is_down == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">下载成功</button>
+    {{#  } else if(d.b_is_down == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">下载中</button>
+    {{#  } else if(d.b_is_down == '3'){ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">下载失败</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-disabled layui-btn-xs">异常</button>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="is_sectionTpl">
+    {{#  if(d.b_is_section == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未切片</button>
+    {{#  } else if(d.b_is_section == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">切片成功</button>
+    {{#  } else if(d.b_is_section == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">切片中</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">切片失败</button>
+    {{#  } }}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+<script type="text/html" id="is_syncTpl">
+    {{#  if(d.b_is_sync == 0){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">未上传</button>
+    {{#  } else if(d.b_is_sync == '1'){ }}
+    <button class="layui-btn ayui-btn-sm layui-btn-xs">上传成功</button>
+    {{#  } else if(d.b_is_sync == '2'){ }}
+    <button class="layui-btn layui-btn-warm layui-btn-xs">上传中</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs">上传失败</button>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="is_nameTpl">
+    {{#  if(d.mu_url == ''){ }}
+    <button class="layui-btn layui-btn-normal layui-btn-xs">{{d.vod_name}}</button>
+    {{#  } else{ }}
+    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="javascript:window.open('{{d.mu_url}}','_blank')">
+        {{d.vod_name}}
+    </button>
+    {{#  } }}
+</script>
+<script type="text/html" id="is_examineTpl">
+    {{#  if(d.b_is_examine == 0){ }}
+    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" checked lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" lay-filter="shenhe">
+    {{#  } else if(d.b_is_examine == 1){ }}
+    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" checked lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" lay-filter="shenhe">
+    {{#  }else if(d.b_is_examine == 2){ }}
+    <input type="radio" name="{{d.b_id}}" value="0" title="未审核" lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="1" title="审核通过" lay-filter="shenhe">
+    <input type="radio" name="{{d.b_id}}" value="2" title="审核失败" checked lay-filter="shenhe">
+    {{#  } }}
+</script>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>
+    </div>
+</script>
+
+<script>
+
+</script>
+<!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $('.examine').css('display','none');
+    layui.use(['form', 'jquery','util','laydate',  'layer', 'table', 'laypage'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var aypage = layui.laypage //分页
+        var layer = layui.layer //弹层
+        var $ = layui.jquery
+        var laydate = layui.laydate
+        var util = layui.util; //注意这行，很重要
+
+        //日期范围
+        laydate.render({
+            elem: '#task_date',
+        });
+
+        //方法级渲染
+        table.render({
+            elem: '#test',
+            url: '/admin/vod_log/index1',
+            id: 'testReload',
+            page: true
+            // , even: 10
+            ,
+            limit: 10,
+            toolbar: '#toolbarDemo'
+            // , height: 310
+            ,parseData: function(res){ //res 即为原始返回的数据
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                } else {
+                    $("#task_date").val(res.data.param.task_date)
+                    // console.log()
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.count, //解析数据长度
+                        "data": res.data.data //解析数据列表
+                    };
+                }
+
+            },
+            cols: [
+                [{
+                    field: 'id',
+                    title: 'ID',
+                }, {
+                    field: 'vod_id',
+                    title: 'vod视频ID',
+                }, {
+                    field: 'vod_name',
+                    title: '视频名称',
+                }, {
+                    field: 'date',
+                    title: '日期',
+                }, {
+                    field: 'add_date',
+                    title: 'vod插入时间',
+                    width:170,
+                    templet: function (d) {
+                        if (d.add_date > 0) {
+                            return util.toDateString(d.add_date * 1000, "yyyy-MM-dd HH:mm:ss");
+                        } else {
+                            return '';
+                        }
+                    }
+                }, {
+                    field: 'up_date',
+                    title: 'vod更新时间',
+                    width:170,
+                    templet: function (d) {
+                        if (d.up_date > 0) {
+                            return util.toDateString(d.up_date * 1000, "yyyy-MM-dd HH:mm:ss");
+                        } else {
+                            return '';
+                        }
+                    }
+                }, {
+                    field: 'push_add_date',
+                    title: '分解插入时间',
+                    width:170,
+                    templet: function (d) {
+                        if (d.push_add_date > 0) {
+                            return util.toDateString(d.push_add_date * 1000, "yyyy-MM-dd HH:mm:ss");
+                        } else {
+                            return '';
+                        }
+                    }
+                }, {
+                    field: 'push_up_date',
+                    title: '分解更新时间',
+                    width:170,
+                    templet: function (d) {
+                        if (d.push_up_date > 0) {
+                            return util.toDateString(d.push_up_date * 1000, "yyyy-MM-dd HH:mm:ss");
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+                ]
+            ]
+
+        });
+        //监听排序事件
+        table.on('sort(test)', function(obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            // console.log(obj.field); //当前排序的字段名
+            // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            // console.log(this); //当前排序的 th 对象
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            table.reload('testReload', {
+                initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field, //排序字段
+                    order: obj.type //排序方式
+                }
+            });
+            // layer.msg('服务端排序。order by ' + obj.field + ' ' + obj.type);
+        });
+        // 监听radio
+
+        //
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data; //获取选中行数据
+                    layer.open({
+                        type: 2,
+                        skin: 'layui-layer-demo', //样式类名
+                        title: '编辑',
+                        closeBtn: 1, //不显示关闭按钮
+                        anim: 2,
+                        area: ['100%', '100%'],
+                        offset: ['0px', '0px'],
+                        shadeClose: true, //开启遮罩关闭
+                        content: '/admin/video_vod_old/info'
+                    });
+                    break;
+            }
+        });
+        //监听行工具事件
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                // console.log(data)
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-demo', //样式类名
+                    title: '编辑',
+                    closeBtn: 1, //不显示关闭按钮
+                    anim: 2,
+                    area: ['100%', '100%'],
+                    offset: ['0px', '0px'],
+                    shadeClose: true, //开启遮罩关闭
+                    content: '/admin/vod_log/info?id=' + data.b_id
+                });
+            } else if (obj.event === 'edits') {
+                layer.prompt({
+                    formType: 2,
+                    value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+
+        });
+
+        var $ = layui.$,
+            active = {
+                reload: function () {
+                    var demoReload = $('#demoReload');
+                    var task_date = $("input[name='task_date']").val();
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        },
+                        where: {
+                            // key: {
+                            idName: demoReload.val(),
+                            task_date:task_date,
+                            // }
+                        }
+                    }, 'data');
+                }
+            };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

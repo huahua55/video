@@ -530,6 +530,15 @@ class PushData extends Common
                             $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                             if (!empty($n_url)) {
                                 $res = $this->videoVodModel->insert($n_url);
+                                $new_vod_log_where = [];
+                                $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                $new_vod_log_where['date'] = date("Y-m-d",time());
+                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                if (!empty($new_vod_log_data)){
+                                    if(empty($new_vod_log_data['push_add_date'])){
+                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
+                                    }
+                                }
                                 if ($res) {
                                     log::write('成功q3-' . $v['b_vod_id']);
                                 } else {
@@ -559,6 +568,15 @@ class PushData extends Common
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = $this->videoVodModel->where(['id' => $n[$new_key]['id']])->update($up_data);
+                                    $new_vod_log_where = [];
+                                    $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                    $new_vod_log_where['date'] = date("Y-m-d",time());
+                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)){
+                                        if(empty($new_vod_log_data['push_up_date'])){
+                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
+                                        }
+                                    }
                                     if ($res) {
                                         log::write('成功q-' . $n[$title]['id']);
                                     } else {
@@ -576,6 +594,16 @@ class PushData extends Common
                                 $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'iup');
                                 if (!empty($n_url)) {
                                     $res = $this->videoVodModel->insert($n_url);
+
+                                    $new_vod_log_where = [];
+                                    $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                    $new_vod_log_where['date'] = date("Y-m-d",time());
+                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)){
+                                        if(empty($new_vod_log_data['push_add_date'])){
+                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
+                                        }
+                                    }
                                     if ($res) {
                                         log::write('成功q1-' . $v['b_vod_id']);
                                     } else {
@@ -604,11 +632,9 @@ class PushData extends Common
 
     protected function getDataJoinit($where, $order, $page, $limit, $start)
     {
-
         $total = $this->vodModel->alias('a')->field('a.vod_id,a.vod_re_type,a.vod_year,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'LEFT')->where($where)->order($order)->count();
         return ceil($total / $limit);
     }
-
 
     protected function getDataJoini($where, $order, $page, $limit, $start)
     {

@@ -24,12 +24,15 @@ return array(
         '1904' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'video', 'action' => 'info'),
         '1905' => array("show" => 0, "name" => '--修改视频状态', 'controller' => 'video', 'action' => 'updateStatus'),
         '1906' => array("show" => 0, "name" => '--视频集信息维护', 'controller' => 'video', 'action' => 'collection'),
+
 		'20' => array("show" => 1, "name" => '迅雷下载任务-旧版', 'controller' => 'videoVodOld', 'action' => 'index'),
         '2001' => array("show" => 0, "name" => '--迅雷下载任务-旧版列表', 'controller' => 'videoVodOld', 'action' => 'index1'),
         '2002' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoVodOld', 'action' => 'getExamine'),
         '2003' => array("show" => 0, "name" => '--修改视频审核状态', 'controller' => 'videoVodOld', 'action' => 'updateExamine'),
         '2004' => array("show" => 0, "name" => '--视频管理信息维护', 'controller' => 'videoVodOld', 'action' => 'info'),
         '2005' => array("show" => 0, "name" => '--删除视频', 'controller' => 'videoVodOld', 'action' => 'del'),
+
+
 		'21' => array("show" => 1, "name" => '精选视频管理', 'controller' => 'videoSelected', 'action' => 'index'),
         '2101' => array("show" => 0, "name" => '--精选视频管理列表', 'controller' => 'videoSelected', 'action' => 'index1'),
         '2102' => array("show" => 0, "name" => '--获取审核信息', 'controller' => 'videoSelected', 'action' => 'getExamine'),
@@ -50,10 +53,16 @@ return array(
 		'11001' => array("show" => 0, "name" => '--视频记录列表', 'controller' => 'videoRecord', 'action' => 'index1'),
 		'11002' => array("show" => 0, "name" => '--视频记录信息维护', 'controller' => 'videoRecord', 'action' => 'info'),
 		'11003' => array("show" => 0, "name" => '--删除视频记录', 'controller' => 'videoRecord', 'action' => 'del'),
+
 		'111' => array("show" => 1, "name" => '校验视频集', 'controller' => 'checkVideoCollection', 'action' => 'index'),
 		'11101' => array("show" => 0, "name" => '--校验视频集列表', 'controller' => 'checkVideoCollection', 'action' => 'index1'),
 		'11102' => array("show" => 0, "name" => '--执行校验', 'controller' => 'checkVideoCollection', 'action' => 'execute'),
 		'11103' => array("show" => 0, "name" => '--删除数据', 'controller' => 'checkVideoCollection', 'action' => 'del'),
+
+        '112' => array("show" => 1, "name" => '数据更新列表', 'controller' => 'vodLog', 'action' => 'index'),
+        '11201' => array("show" => 0, "name" => '--数据更新列表', 'controller' => 'vodLog', 'action' => 'index1'),
+        '11202' => array("show" => 0, "name" => '--执行数据更新', 'controller' => 'vodLog', 'action' => 'execute'),
+        '11203' => array("show" => 0, "name" => '--删除数据', 'controller' => 'vodLog', 'action' => 'del'),
 
 	)),
     '13' => array('name' => '任务', 'icon' => 'xe625', 'sub' => array(

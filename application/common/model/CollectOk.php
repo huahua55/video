@@ -471,6 +471,12 @@ class CollectOk extends Base
                         $v['vod_status'] = intval($v['vod_status']);
                     }
                     $v['vod_year'] = intval($v['vod_year']);
+                    if(!empty($v['vod_year'])){
+                        if ( $v['vod_year'] < 2020){
+                            mac_echo($v['vod_name'] .':'.$v['vod_year']. '--小于2020年过滤');
+                            continue;
+                        }
+                    }
                     $vod_level = $v['vod_level'] ?? '';
                     $v['vod_level'] = intval($vod_level);
                     $v['vod_hits'] = intval($v['vod_hits'] ?? '0');
@@ -551,9 +557,21 @@ class CollectOk extends Base
 
                     $where = [];
                     $where['vod_name'] = $v['vod_name'];
-                    $blend = false;
+                    $blend = true;
                     if (strpos($config['inrule'], 'b') !== false) {
-                        $where['type_id'] = $v['type_id'];
+                        if ($v['type_id_1'] == 0) {
+                            $old_type_id_1_where = get_type_pid_type_id($v['type_id']);
+                        } else {
+                            $old_type_id_1_where = $v['type_id_1'];
+                        }
+                        if (!empty($old_type_id_1_where)){
+                            if ($old_type_id_1_where == 0){
+                                $where['type_id_1'] = ['in',[$v['type_id'],$old_type_id_1_where]];
+                            }else{
+                                $where['type_id_1'] = ['in',[0,$old_type_id_1_where]];
+                            }
+
+                        }
                     }
                     if (strpos($config['inrule'], 'c') !== false) {
                         $where['vod_year'] = $v['vod_year'];
@@ -565,13 +583,24 @@ class CollectOk extends Base
                         $where['vod_lang'] = $v['vod_lang'];
                     }
                     if (strpos($config['inrule'], 'f') !== false) {
-                        $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
+                        if (!empty($v['vod_actor'])){
+                            $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
+                        }else{
+                            $v['vod_actor'] = '内详';
+                            $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
+                        }
+
                     }
                     if (strpos($config['inrule'], 'g') !== false) {
                         $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
-
                         $str_vod_director = implode(',', $arr_vod_director);
-                        $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
+                        if (!empty($str_vod_director)){
+                            $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
+                        }else{
+                            $v['vod_director'] = '内详';
+                            $str_vod_director = '内详';
+                            $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
+                        }
                     }
                     if ($config['tag'] == 1) {
                         $v['vod_tag'] = mac_get_tag($v['vod_name'], $v['vod_content']);
@@ -773,6 +802,15 @@ class CollectOk extends Base
                                 $v['vod_year'] = date("Y");
                             }
                             $res = model('Vod')->insert($v);
+                            $new_vod_log_where = [];
+                            $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
+                            $new_vod_log_where['vod_name'] = $v['vod_name'];
+                            $new_vod_log_where['date'] = date("Y-m-d",time());
+                            $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                            if (empty($new_vod_log_data)){
+                                $new_vod_log_where['add_date'] = time();
+                                Db::table('vod_log')->insert($new_vod_log_where);
+                            }
                             if ($res === false) {
 
                             }
@@ -1013,6 +1051,21 @@ class CollectOk extends Base
                                 if($info['vod_year'] == 0 || $info['vod_year'] == ''){
                                     if ($update['vod_year'] == 0 || $update['vod_year'] == ''){
                                         $update['vod_year'] = date("Y");
+                                    }
+                                }
+
+                                $new_vod_log_where = [];
+                                $new_vod_log_where['vod_id'] = $where['vod_id'];
+                                $new_vod_log_where['vod_name'] = $v['vod_name'];
+                                $new_vod_log_where['date'] = date("Y-m-d",time());
+                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+
+                                if (empty($new_vod_log_data)){
+                                    $new_vod_log_where['add_date'] = time();
+                                    Db::table('vod_log')->insert($new_vod_log_where);
+                                }else{
+                                    if(empty($new_vod_log_data['up_date'])){
+                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['up_date'=>time()]);
                                     }
                                 }
 

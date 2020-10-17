@@ -423,6 +423,15 @@ class Push extends Base
                             $n_url = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val);
                             if (!empty($n_url)) {
                                 $res = Db::name('video_vod')->insert($n_url);
+                                $new_vod_log_where = [];
+                                $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                $new_vod_log_where['date'] = date("Y-m-d",time());
+                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                if (!empty($new_vod_log_data)){
+                                    if(empty($new_vod_log_data['push_add_date'])){
+                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
+                                    }
+                                }
                                 if ($res) {
                                     mac_echo('全新插入成功------');
                                     log::write('成功q3-' . $v['b_vod_id']);
@@ -459,6 +468,15 @@ class Push extends Base
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = Db::name('video_vod')->where(['id' => $n[$new_key]['id']])->update($up_data);
+                                    $new_vod_log_where = [];
+                                    $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                    $new_vod_log_where['date'] = date("Y-m-d",time());
+                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)){
+                                        if(empty($new_vod_log_data['push_up_date'])){
+                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
+                                        }
+                                    }
                                     if ($res) {
                                         mac_echo('更新开始中-更新成功--'. $up_data['m3u8_url']);
                                         log::write('成功q-' . $n[$title]['id']);
@@ -483,6 +501,15 @@ class Push extends Base
                                 if (!empty($n_url)) {
                                     mac_echo('更新开始中-插入--成功');
                                     $res = Db::name('video_vod')->insert($n_url);
+                                    $new_vod_log_where = [];
+                                    $new_vod_log_where['vod_id'] = $v['vod_id'];
+                                    $new_vod_log_where['date'] = date("Y-m-d",time());
+                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)){
+                                        if(empty($new_vod_log_data['push_add_date'])){
+                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_add_date'=>time()]);
+                                        }
+                                    }
                                     if ($res) {
                                         log::write('成功q1-' . $v['b_vod_id']);
                                     } else {
