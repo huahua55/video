@@ -469,12 +469,7 @@ class Collect extends Base
                         $v['vod_status'] = intval($v['vod_status']);
                     }
                     $v['vod_year'] = intval($v['vod_year']);
-                    if(!empty($v['vod_year'])){
-                        if (  $v['vod_year'] < 2020){
-                            mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
-                            continue;
-                        }
-                    }
+
 
                     $vod_level = $v['vod_level'] ?? '';
                     $v['vod_level'] = intval($vod_level);
@@ -801,6 +796,17 @@ class Collect extends Base
                             }
                             $msg = $tmp['msg'];
 
+                            if(!empty($v['vod_year'])){
+                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+                                    //允许
+                                }else{
+                                    if (  $v['vod_year'] < 2020){
+                                        mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
+                                        continue;
+                                    }
+                                }
+                            }
+
                             if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'], 'zuidam3u8') > 0 || substr_count($v['vod_play_from'], 'zuidall') > 0)) {
                                 //最大 暂不处理
                                 $msg = '最大---全新数据，手动入库';
@@ -817,7 +823,6 @@ class Collect extends Base
                                         Db::table('vod_log')->insert($new_vod_log_where);
                                     }
                                 }
-
 
                             } else {
                                 $res = model('Vod')->insert($v);

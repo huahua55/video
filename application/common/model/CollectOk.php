@@ -471,12 +471,7 @@ class CollectOk extends Base
                         $v['vod_status'] = intval($v['vod_status']);
                     }
                     $v['vod_year'] = intval($v['vod_year']);
-                    if(!empty($v['vod_year'])){
-                        if ( $v['vod_year'] < 2020){
-                            mac_echo($v['vod_name'] .':'.$v['vod_year']. '--小于2020年过滤');
-                            continue;
-                        }
-                    }
+
                     $vod_level = $v['vod_level'] ?? '';
                     $v['vod_level'] = intval($vod_level);
                     $v['vod_hits'] = intval($v['vod_hits'] ?? '0');
@@ -791,16 +786,25 @@ class CollectOk extends Base
 
                             if (isset($v['vod_director']) && !empty($v['vod_director'])) {
                                 $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
-
                                 $v['vod_director'] = implode(',', $arr_vod_director);
                             }
-
+                            if(!empty($v['vod_year'])){
+                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+                                    //允许
+                                }else{
+                                    if (  $v['vod_year'] < 2020){
+                                        mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
+                                        continue;
+                                    }
+                                }
+                            }
                             $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                             $v['vod_pic'] = (string)$tmp['pic'];
                             $msg = $tmp['msg'];
                             if ($v['vod_year'] == 0 || $v['vod_year'] == ''){
                                 $v['vod_year'] = date("Y");
                             }
+
                             $res = model('Vod')->insert($v);
                             $new_vod_log_where = [];
                             $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
