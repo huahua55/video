@@ -30,6 +30,7 @@ php think pushData name=i
 #rnd=$(rand 1 2)
 
 ps -ef | grep pushData |grep name=up | grep -v grep | awk '{print $2}' | xargs kill -9
+
 php think pushData name=up
 #if [ ! -n "$a" ]; then
 #  #空的
