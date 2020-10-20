@@ -1018,6 +1018,7 @@ class Collect extends Base
                             }
 //                            || substr($info["vod_pic"], 0, 4) == "uplo"
                             if (strpos(',' . $config['uprule'], 'j') !== false && (substr($info["vod_pic"], 0, 4) == "http" || empty($info['vod_pic'])) && $v['vod_pic'] != $info['vod_pic']) {
+                                $des .= ' - 图片更新';
                                 $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
                                 $update['vod_pic'] = (string)$tmp['pic'];
                                 $msg = $tmp['msg'];
