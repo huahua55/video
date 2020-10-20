@@ -783,8 +783,7 @@ class Collect extends Base
                                 $v['vod_down_note'] = (string)join('$$$', $collect_filter['down'][$param['filter']]['cj_down_note_arr']);
                             }
 
-                            $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
-                            $v['vod_pic'] = (string)$tmp['pic'];
+
 
                             if (isset($v['vod_director']) && !empty($v['vod_director'])) {
                                 $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
@@ -794,7 +793,7 @@ class Collect extends Base
                             if ($v['vod_year'] == 0 || $v['vod_year'] == '') {
                                 $v['vod_year'] = date("Y");
                             }
-                            $msg = $tmp['msg'];
+
 
                             if(!empty($v['vod_year'])){
                                 if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
@@ -812,6 +811,9 @@ class Collect extends Base
                                 $msg = '最大---全新数据，手动入库';
                                 $res = true;
                                 if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+                                    $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
+                                    $v['vod_pic'] = (string)$tmp['pic'];
+                                    $msg = $tmp['msg'];
                                     $res = model('Vod')->insert($v);
                                     $new_vod_log_where = [];
                                     $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
@@ -826,6 +828,9 @@ class Collect extends Base
                                 }
 
                             } else {
+                                $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
+                                $v['vod_pic'] = (string)$tmp['pic'];
+                                $msg = $tmp['msg'];
                                 $res = model('Vod')->insert($v);
                                 $new_vod_log_where = [];
                                 $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
