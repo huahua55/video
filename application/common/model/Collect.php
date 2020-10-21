@@ -918,7 +918,7 @@ class Collect extends Base
                                                 $tmp1 = array_unique($tmp1);
                                                 $cj_play_url = join('#', $tmp1);
                                                 if (!is_array($cj_play_url)) {
-                                                    mac_echo('$cj_play_url' . $cj_play_url);
+//                                                    mac_echo('$cj_play_url' . $cj_play_url);
                                                 }
                                                 unset($tmp1, $tmp2);
                                             }
