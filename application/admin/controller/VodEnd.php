@@ -63,6 +63,7 @@ class VodEnd extends Base
         $where = [];
         $where['vod_isend'] = 0;
         $where['vod_status'] = 1;
+        $where['vod_area'] = ['like', ['%中国%','%大陆%','%华语%','%台湾%','%香港%','%内地%','%国产%'],'OR'];;
 
         if (!empty($param['idName'])) {
             $where['vod_name'] = ['like','%'.$param['idName'].'%'];
@@ -75,6 +76,7 @@ class VodEnd extends Base
         }else{
             $where['type_pid'] = ['in',[2,4]];
         }
+
         $res = self::_listData(
             [],
             $where,
@@ -82,23 +84,22 @@ class VodEnd extends Base
             $param['page'],
             $param['limit']
         );
+//        p($res['list']);
         $data['page'] = $res['page'];
         $data['limit'] = $res['limit'];
         $data['param'] = $param;
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $id_in = array_column($res['list'],'id');
-        $collection =Db::table('video_collection')->field('video_id,max(collection) as collection,max(title) as title')->where(['status'=>1])->whereIn('video_id',$id_in)->group('video_id')->select();
+        $collection =Db::table('video_collection')->field('video_id,max(collection) as collection')->where(['status'=>1])->whereIn('video_id',$id_in)->group('video_id')->select();
         $collection = array_column($collection,null,'video_id');
         foreach ($res['list'] as $k=>$v){
             if(!empty($v['vod_pic'])){
                 $res['list'][$k]['vod_pic'] = $video_selected_domain['img_domain'] .$v['vod_pic'];
             }
             $res['list'][$k]['video_collection']  = '';
-            $res['list'][$k]['video_title']  = '';
             if (isset($collection[$v['id']])){
                 $res['list'][$k]['video_collection'] = $collection[$v['id']]['collection'];
-                $res['list'][$k]['video_title'] = $collection[$v['id']]['title'];
             }
         }
         $data['data'] = $res['list'];
