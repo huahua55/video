@@ -24,7 +24,27 @@ class VodEnd extends Base
     public function index()
     {
         $param['task_date']= empty($param['task_date']) ?date("Y-m-d"): $param['limit'];
+        $param['type']= empty($param['type']) ?"": $param['type'];
         $this->assign('title', '未完结数据');
+        $type_tree =[
+//            [
+//                'type_id'=>1,
+//                'type_name'=>'电影',
+//            ], [
+//                'type_id'=>3,
+//                'type_name'=>'综艺',
+//            ],
+
+            [
+                'type_id'=>2,
+                'type_name'=>'电视剧',
+            ],
+            [
+                'type_id'=>4,
+                'type_name'=>'动漫',
+            ]
+        ];
+        $this->assign('type_tree',$type_tree);
         $this->assign('param', $param);
         return $this->fetch('admin@vodend/index');
     }
@@ -36,6 +56,7 @@ class VodEnd extends Base
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
         $param['task_date']= empty($param['task_date']) ?'': $param['task_date'];
+        $param['type']= empty($param['type']) ?'': $param['type'];
 
 
         $order = 'vod_time_auto_up desc';
@@ -47,6 +68,11 @@ class VodEnd extends Base
         }
         if (!empty($param['task_date'])) {
             $where['vod_time_auto_up'] = ['like','%'.$param['task_date'].'%'];
+        }
+        if (!empty($param['type'])) {
+            $where['type_pid'] = $param['type'];
+        }else{
+            $where['type_pid'] = ['in',[2,4]];
         }
         $res = self::_listData(
             [],
@@ -60,9 +86,18 @@ class VodEnd extends Base
         $data['param'] = $param;
         $data['code'] = 0;
         $data['count'] = $res['total'];
+        $id_in = array_column($res['list'],'id');
+        $collection =Db::table('video_collection')->field('video_id,max(collection) as collection,max(title) as title')->where(['status'=>1])->whereIn('video_id',$id_in)->group('video_id')->select();
+        $collection = array_column($collection,null,'video_id');
         foreach ($res['list'] as $k=>$v){
             if(!empty($v['vod_pic'])){
                 $res['list'][$k]['vod_pic'] = $video_selected_domain['img_domain'] .$v['vod_pic'];
+            }
+            $res['list'][$k]['video_collection']  = '';
+            $res['list'][$k]['video_title']  = '';
+            if (isset($collection[$v['id']])){
+                $res['list'][$k]['video_collection'] = $collection[$v['id']]['collection'];
+                $res['list'][$k]['video_title'] = $collection[$v['id']]['title'];
             }
         }
         $data['data'] = $res['list'];

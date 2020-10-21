@@ -7,6 +7,16 @@
             <input class="layui-input" placeholder="查询当前视频名称" name="id" id="demoReload" autocomplete="off">
         </div>
         &nbsp;
+        影视分类：
+        <div class="layui-inline">
+            <select class="layui-select " name="type">
+                <option value="" >选择分类</option>
+                {volist name="type_tree" id="vo"}
+                <option value="{$vo.type_id}" {if condition="$param['type'] eq $vo.type_id"}selected {/if}>{$vo.type_name}</option>
+                {/volist}
+            </select>
+        </div>
+        &nbsp;&nbsp;
         日期：
         <div class="layui-input-inline w150">
             <input class="layui-input laydate-icon" name="task_date" value=""  autocomplete="off" placeholder="日期" id="task_date">
@@ -163,6 +173,12 @@
                     field: 'vod_name',
                     title: '视频名称',
                 }, {
+                    field: 'video_collection',
+                    title: '集',
+                },{
+                    field: 'video_title',
+                    title: '集标题',
+                },{
                     field: 'vod_pic',
                     title: '图片',
                     width:70,
@@ -253,6 +269,7 @@
                 reload: function () {
                     var demoReload = $('#demoReload');
                     var task_date = $("input[name='task_date']").val();
+                    var type = $("select[name='type']").val();
                     //执行重载
                     table.reload('testReload', {
                         page: {
@@ -262,6 +279,7 @@
                             // key: {
                             idName: demoReload.val(),
                             task_date:task_date,
+                            type:type,
                             // }
                         }
                     }, 'data');
