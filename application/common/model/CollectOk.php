@@ -1161,16 +1161,16 @@ class CollectOk extends Base
             if (empty($check_actor_and_director)) {
                 // 库中不存在  则不再入库
                 if (empty($v['vod_actor'])) {
-                    mac_echo("主演为空过滤不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] ."主演为空过滤不采集 过滤 请手动采集入库 ");
                 }
                 if (empty($v['vod_director'])) {
-                    mac_echo("导演为空过滤不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] ."导演为空过滤不采集 过滤 请手动采集入库 ");
                 }
                 if ($filter_vod_actor >= 1) {
-                    mac_echo("主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] ."主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                 }
                 if ($filter_vod_director >= 1) {
-                    mac_echo("导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] ."导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                 }
                 $find_records_stata = false;
                 $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
