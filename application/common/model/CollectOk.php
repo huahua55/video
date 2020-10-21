@@ -1186,7 +1186,8 @@ class CollectOk extends Base
                 }elseif ($find_records_stata == true){
                     mac_echo("关键词命中允许入库");
                 }else{
-                    return 'continue';
+                    mac_echo($v['vod_name'] ."主演数据不详(包含未知或内详)不采集-暂时不过滤-采集入库 ");
+//                    return 'continue';
 //                    continue;
                 }
             }

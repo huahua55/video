@@ -1212,8 +1212,9 @@ class Collect extends Base
                 } elseif ($find_records_stata == true) {
                     mac_echo("关键词命中允许入库");
                 } else {
+                    mac_echo($v['vod_name'] ."主演数据不详(包含未知或内详)不采集-暂时不过滤-采集入库 ");
 //                    continue;
-                    return 'continue';
+//                    return 'continue';
                 }
             }
             self::_logWrite('主演导演校验：视频名称:' . $v['vod_name'] . '：查询到数据。' . 'vod_id=' . $check_actor_and_director['vod_id']);
