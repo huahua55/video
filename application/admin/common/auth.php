@@ -64,6 +64,11 @@ return array(
         '11202' => array("show" => 0, "name" => '--执行数据更新', 'controller' => 'vodLog', 'action' => 'execute'),
         '11203' => array("show" => 0, "name" => '--删除数据', 'controller' => 'vodLog', 'action' => 'del'),
 
+        '113' => array("show" => 1, "name" => '未完结数据', 'controller' => 'vodEnd', 'action' => 'index'),
+        '11301' => array("show" => 0, "name" => '--未完结数据列表', 'controller' => 'vodEnd', 'action' => 'index1'),
+        '11302' => array("show" => 0, "name" => '--未完结数据更新', 'controller' => 'vodEnd', 'action' => 'execute'),
+        '11303' => array("show" => 0, "name" => '--删除数据', 'controller' => 'vodEnd', 'action' => 'del'),
+
 	)),
     '13' => array('name' => '任务', 'icon' => 'xe625', 'sub' => array(
         '131' => array("show"=>1,"name" => '任务管理', 'controller' => 'task', 'action' => 'index'),
