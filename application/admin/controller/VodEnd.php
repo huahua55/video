@@ -62,6 +62,7 @@ class VodEnd extends Base
         $order = 'vod_time_auto_up desc';
         $where = [];
         $where['vod_isend'] = 0;
+        $where['vod_status'] = 1;
 
         if (!empty($param['idName'])) {
             $where['vod_name'] = ['like','%'.$param['idName'].'%'];
