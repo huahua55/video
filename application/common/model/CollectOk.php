@@ -5,6 +5,7 @@ namespace app\common\model;
 use think\Db;
 use think\Cache;
 use app\common\util\Pinyin;
+use think\process\exception\Failed;
 use think\Request;
 use similar_text\similarText;
 
@@ -410,6 +411,10 @@ class CollectOk extends Base
         }
         return ['pic' => $pic_url, 'msg' => $des];
     }
+    protected function find_records()
+    {
+        return Db::name('video_record')->field('vod_name')->column('vod_name');
+    }
 
     public function vod_data($param, $data, $show = 1)
     {
@@ -435,9 +440,6 @@ class CollectOk extends Base
 
 
             foreach ($data['data'] as $k => $v) {
-//                glzyha
-
-                
                 $color = 'red';
                 $des = '';
                 $msg = '';
@@ -792,9 +794,21 @@ class CollectOk extends Base
                                 if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
                                     //允许
                                 }else{
-                                    if (  $v['vod_year'] < 2020){
-                                        mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
-                                        continue;
+                                    //
+                                    $records_status= false;
+                                    $find_records = $this->find_records();
+                                    foreach ($find_records as $find_records_key => $find_records_val) {
+                                        $count3 = substr_count($v['vod_name'], $find_records_val);
+                                        if ($count3 > 0) {
+                                            $records_status = true;
+                                            break;
+                                        }
+                                    }
+                                    if ($records_status == false){
+                                        if (  $v['vod_year'] < 2020){
+                                            mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
+                                            continue;
+                                        }
                                     }
                                 }
                             }

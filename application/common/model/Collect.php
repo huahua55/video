@@ -391,6 +391,10 @@ class Collect extends Base
         $res = ['code' => 1, 'msg' => 'json', 'page' => $array_page, 'type' => $array_type, 'data' => $array_data];
         return $res;
     }
+    protected function find_records()
+    {
+        return Db::name('video_record')->field('vod_name')->column('vod_name');
+    }
 
     public function syncImages($pic_status, $pic_url, $flag = 'vod')
     {
@@ -799,9 +803,21 @@ class Collect extends Base
                                 if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
                                     //允许
                                 }else{
-                                    if (  $v['vod_year'] < 2020){
-                                        mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
-                                        continue;
+
+                                    $records_status= false;
+                                    $find_records = $this->find_records();
+                                    foreach ($find_records as $find_records_key => $find_records_val) {
+                                        $count3 = substr_count($v['vod_name'], $find_records_val);
+                                        if ($count3 > 0) {
+                                            $records_status = true;
+                                            break;
+                                        }
+                                    }
+                                    if ($records_status == false){
+                                        if (  $v['vod_year'] < 2020){
+                                            mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
+                                            continue;
+                                        }
                                     }
                                 }
                             }
