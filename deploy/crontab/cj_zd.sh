@@ -5,9 +5,28 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 
 cd /data/www/video/
 chown -R www:www ../video
+
 time1=$(date "+%M")
-echo $time1
-if [ "$time1" = 30 ] || [ "$time1" = 00 ];then
-  sleep 5
-  php think Cj name=zuidacj
+len_time=${#time1}
+if ((len_time==2));then
+  time1_str=${time1:1}
+else
+  time1_str=${time1:0:1}
 fi
+if (($time1_str!=5));then
+  # 不存在 5 的时候跑麻花
+  sleep 3
+  php think Cj name=zuidacj
+else
+  # 暂不处理
+  echo $time1_str
+fi
+
+
+#time1=$(date "+%M")
+#echo $time1
+#if [ "$time1" = 30 ] || [ "$time1" = 00 ];then
+#  sleep 5
+#  php think Cj name=zuidacj
+#fi
+
