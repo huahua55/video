@@ -892,8 +892,8 @@ class Index extends Base{
 
     public function conf(){
         $data  = [
-            'cdn_domain'=>'https://spws1.vknlynd.cn/',
-            'api_domain'=>'https://api.lanhu.tv/',
+            'cdn_domain'=>'https://sp1.wzwugej.cn/',
+            'api_domain'=>'http://api.cfshfw.cn/',
         ];
         return json_return($data);
     }
