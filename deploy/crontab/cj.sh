@@ -3,18 +3,20 @@ PATH=/usr/local/php/bin:/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbi
 # 1.执行 php 命令不需要到thinkphp项目的目录下 2.index.php为入口文件 3.第三个参数为需要执行方法的路由
 # 当天
 
-cd /data/www/video/
-
-chown -R www:www ../video
+#cd /data/www/video/
+#
+#chown -R www:www ../video
 
 ## 强制采集 #force=1
-ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
+time1=$(date "+%M")
+echo $time1
+if [ "$time1" = 30 ] || [ "$time1" = 00 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ]  || [ "$time1" = 10 ] || [ "$time1" = 20 ];then
+  echo 1
+  ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
+fi
 sleep 1
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 php think Cj name=cjokzyxs
-
-
-
 
 ###卧龙采集
 #php think Cj name=wlzyxs
