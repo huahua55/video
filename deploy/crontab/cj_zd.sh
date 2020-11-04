@@ -15,7 +15,7 @@ else
 fi
 if (($time1_str!=5));then
   # 不存在 5 的时候跑麻花
-  sleep 1
+  sleep 3
   php think Cj name=zuidacj
 else
   # 暂不处理

@@ -14,7 +14,7 @@ if [ "$time1" = 30 ] || [ "$time1" = 00 ]];then
   sleep 6
   ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 fi
-sleep 6
+sleep 1
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 php think Cj name=cjokzyxs
 ###卧龙采集
