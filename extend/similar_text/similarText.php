@@ -24,10 +24,20 @@ class similarText
 */
     function getSimilar($str1, $str2)
     {
-        $len1 = strlen($str1);
-        $len2 = strlen($str2);
-        $len = strlen($this->getLCS($str1, $str2, $len1, $len2));
-        return $len * 2 / ($len1 + $len2);
+        if ($str1 == '&nbsp;' && $str2 == '&nbsp;') {
+            return 100;
+        } elseif ($str1 != '&nbsp;' && $str2 != '&nbsp;') {
+            if (empty($str1) || empty($str2)) {
+                return 0;
+            } else {
+                $len1 = strlen($str1);
+                $len2 = strlen($str2);
+                $len = strlen($this->getLCS($str1, $str2, $len1, $len2));
+                return $len * 2 / ($len1 + $len2);
+            }
+        } else {
+            return 0;
+        }
     }
 
     function initC($len1, $len2)
