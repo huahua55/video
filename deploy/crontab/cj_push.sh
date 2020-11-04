@@ -6,9 +6,12 @@ cd /data/www/video/
 
 chown -R www:www ../video
 
-#ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
+time1=$(date "+%M")
+echo $time1
+if [ "$time1" = 30 ];then
+  ps -ef | grep pushData |grep name=i | grep -v grep | awk '{print $2}' | xargs kill -9
+fi
 php think pushData name=i
-
 #a=`ps -ef | grep pushData |grep name= | grep -v grep | awk '{print $2}'`
 #if [ ! -n "$a" ]; then
 ##   echo 1
