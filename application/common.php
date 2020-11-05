@@ -3023,7 +3023,7 @@ function build_url_query($param, $static = false)
  * @return [type]          [description]
  */
 function get_type_pid_type_id( $type_id ){
-    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1){
+    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1 || $type_id == 30){
         $type_pid = 1;
     } else if (($type_id >= 13 &&  $type_id <= 16) || $type_id == 24 || $type_id == 2){
         $type_pid = 2;
@@ -3034,5 +3034,6 @@ function get_type_pid_type_id( $type_id ){
     } else if ($type_id == 4){
         $type_pid = 4;
     }
+
     return $type_pid;
 }
