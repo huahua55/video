@@ -79,7 +79,7 @@ class PushData extends Common
         $order = 'a.vod_id desc';
         //where
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28'];
+        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,30'];
 //        ['13','14','15','16','24'];
 
         if ($name == 'iAll') {
@@ -140,7 +140,7 @@ class PushData extends Common
             $order = 'b.weight desc';
         }
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,30']; //电影
 //        $vod_where['a.type_id'] = ['in', '3,25,26,27,28']; //电影
         if (!empty($name) && $name == 'upAll') {
             $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
