@@ -46,7 +46,7 @@ class PushData extends Common
         log::info('任务表脚本开始');
 
         set_time_limit(0);
-        $output->writeln('获取数据-插入任务表-获取数据开始:init');
+        $output->writeln('获取数据11-插入任务表-获取数据开始:init');
         $myparme = $input->getArguments();
         $parameter = $myparme['parameter'];
         //参数转义解析
