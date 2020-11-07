@@ -212,7 +212,7 @@ class PushData extends Common
                 $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
                 $m3u8_url_key =$this->title_cl($m3u8_url_key);
             } else {
-                $m3u8_url_key = $v['collection'];
+                $m3u8_url_key = int_zhuanhuan($v['collection']);
             }
             if (!isset($new_array[$m3u8_url_key])) {
                 $new_array[$m3u8_url_key] = $v;
@@ -429,7 +429,7 @@ class PushData extends Common
         $new_url['type_id_1'] = $v['type_id_1'] ?? '';
         $new_url['down_ts_url'] = '';
         $new_url['down_mp4_url'] = '';
-        $new_url['collection'] = intval($title);
+        $new_url['collection'] = intval(int_zhuanhuan($title));
         if ($i != 'u') {
             $new_url['vod_id'] = $v['vod_id'];
             $new_url['weight'] = '0';
@@ -487,7 +487,7 @@ class PushData extends Common
     {
         $where = [];
         $where['vod_id'] = $id;
-        $where['collection'] = $collection;
+        $where['collection'] = int_zhuanhuan($collection);
         return $this->videoVodModel->where($where)->find();
 
     }
@@ -496,7 +496,7 @@ class PushData extends Common
     {
         $where = [];
         $where['vod_id'] = $id;
-        $where['m3u8_url'] = array('like', '%' . $collection . '%');
+        $where['m3u8_url'] = array('like', '%' . int_zhuanhuan($collection) . '%');
         return $this->videoVodModel->where($where)->find();
     }
 
