@@ -1476,7 +1476,7 @@ function mac_filter_html($str)
     return strip_tags($str);
 }
 function int_zhuanhuan($str){
-    if (strlen($str) > 10){
+    if (strlen(intval($str)) > 10){
         return preg_replace('|[a-zA-Z/]+|','',$str);
     }else{
         return $str;
