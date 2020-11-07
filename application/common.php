@@ -1476,7 +1476,12 @@ function mac_filter_html($str)
     return strip_tags($str);
 }
 function int_zhuanhuan($str){
-    return preg_replace('|[a-zA-Z/]+|','',$str);
+    $len = preg_replace('|[a-zA-Z/]+|','',$str);
+    if (strlen($len) > 10){
+        return 1;
+    }else{
+        return $len;
+    }
 }
 //推算主级id
 function getTypePid($id, $i = 1)
