@@ -60,8 +60,10 @@ class PushData extends Common
             $this->getWhile($name);
         } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy') {
             //这里写业务逻辑
+            $output->writeln('更新-获取数据开始:init');
             $this->getWhile2($name, $id);
         } else {
+            $output->writeln('插入-获取数据开始:init');
             //这里写业务逻辑
             $this->getWhile($name);
         }
