@@ -440,6 +440,9 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+                if ($v['type_id'] == 30){
+                    $v['vod_name'] = $v['vod_name'].'预告片';
+                }
 
                 $color = 'red';
                 $des = '';
