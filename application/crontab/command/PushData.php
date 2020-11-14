@@ -649,13 +649,14 @@ class PushData extends Common
     {
 //        p($where2);
         $total = $this->vodModel->alias('a')->field('a.vod_id,a.vod_re_type,a.vod_year,a.type_id,a.type_id_1,a.vod_douban_score,a.vod_name,a.vod_down_url,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.video_id as b_video_id,b.is_down,b.is_section,b.is_sync')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->where($where)->group('b.vod_id')->order($order)->count();
-        $pagecount = ceil($total / $limit);
-        return $pagecount;
+//        $pagecount = ceil($total / $limit);
+//        return $pagecount;
+        return 1;
     }
 
     protected function getDataJoin1($where, $order, $page, $limit, $start)
     {
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
-        return $this->vodModel->alias('a')->field('a.vod_id,a.vod_re_type,a.vod_year,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,b.is_down,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.vod_name as b_vod_name,b.m3u8_url as b_m3u8_url,b.id as bid,b.vod_id as b_vod_id,max(b.weight) as b_weight')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->limit($limit_str)->select();
+        return $this->vodModel->alias('a')->field('a.vod_id,a.vod_re_type,a.vod_year,a.type_id,a.vod_play_from,a.vod_play_server,a.vod_play_note,a.type_id_1,a.vod_play_url,a.vod_douban_score,a.vod_name,a.vod_down_url,b.is_down,a.vod_down_note,a.vod_down_server,a.vod_down_from,a.type_id,b.vod_name as b_vod_name,b.m3u8_url as b_m3u8_url,b.id as bid,b.vod_id as b_vod_id,max(b.weight) as b_weight')->join('video_vod b', 'a.vod_id=b.vod_id', 'RIGHT')->group('b.vod_id')->where($where)->order($order)->select();
     }
 }
