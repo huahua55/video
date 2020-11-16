@@ -112,11 +112,11 @@ class PushData extends Common
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-                        if (in_array($val['type_id'], $this->zy_list)) {
-                            if($val['vod_year'] < 2020){
-                                continue;
-                            }
-                        }
+//                        if (in_array($val['type_id'], $this->zy_list)) {
+//                            if($val['vod_year'] < 2020){
+//                                continue;
+//                            }
+//                        }
                         $vod_collection_url = $this->getUrlLike($val);
                     }
                 }
@@ -182,11 +182,11 @@ class PushData extends Common
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
-                        if (in_array($val['type_id'], $this->zy_list)) {
-                            if($val['vod_year'] < 2020){
-                                continue;
-                            }
-                        }
+//                        if (in_array($val['type_id'], $this->zy_list)) {
+//                            if($val['vod_year'] < 2020){
+//                                continue;
+//                            }
+//                        }
                         $qii = $qii + 1;
                         log::info($val['vod_name']);
                         $val['chren'] = $this->videoVodModel->where(['vod_id' => $val['b_vod_id']])->select();
