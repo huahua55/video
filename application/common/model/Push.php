@@ -23,7 +23,7 @@ class Push extends Base
         $order = 'a.vod_id desc';
         //where
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,23,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29,30']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,23,4,6,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
 
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $vod_where['a.vod_id'] = $id;
@@ -59,7 +59,7 @@ class Push extends Base
         $is_true = true;
         $order = 'b.weight desc';
         $vod_where = [];
-        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,23,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29,30']; //电影
+        $vod_where['a.type_id'] = ['in', '1,2,3,4,6,23,7,8,9,10,11,12,13,14,15,16,24,19,20,21,22,25,26,27,28,29']; //电影
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $vod_where['a.vod_id'] = $id;
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);

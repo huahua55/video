@@ -1477,7 +1477,7 @@ function mac_filter_html($str)
 }
 function int_zhuanhuan($str){
     $len = preg_replace('|[a-zA-Z/]+|','',$str);
-    if (strlen($len) >= 10){
+    if (strlen($len) >= 50){
         return 1;
     }else{
         return $len;
