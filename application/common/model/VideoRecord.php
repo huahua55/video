@@ -29,7 +29,7 @@ class VideoRecord extends Base {
 	public function listData($whereOr = [], $where, $order, $page = 1, $limit = 20, $start = 0) {
 		$limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
 
-		$field_a = 'id,vod_name';
+		$field_a = 'id,vod_name,type,release_time';
 
 		$total = $this->where($where)->limit($limit_str)->count();
 
@@ -81,10 +81,16 @@ class VideoRecord extends Base {
 			$res = $this->allowField(true)->where($where)->update($data);
 
 		} else {
-			$data['create_time'] = time();
-			$res = $this->allowField(true)->insert($data);
+		    $data_info = $this->where(['vod_name'=> $data['vod_name']])->find();
+		    if (empty($data_info)){
+                $data['create_time'] = time();
+                $data['update_time'] = time();
+                unset($data['id']);
+                $res = $this->allowField(true)->insert($data);
+            }else{
+                $res= true;
+            }
 		}
-        
 		if (false === $res) {
 			return ['code' => 1002, 'msg' => '保存失败：' . $this->getError()];
 		}

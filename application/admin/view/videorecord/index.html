@@ -20,6 +20,10 @@
         });
     }
 </script>
+<script type="text/html" id="is_type">
+    {{#  if(d.type == 0){ }} 正片 {{# } }}
+    {{#  if(d.type == 1){ }} 禁片 {{# } }}
+</script>
 <div class="page-container p10">
 
     <div class="demoTable">
@@ -188,6 +192,13 @@
                         }, {
                             field: 'vod_name',
                             title: '视频名称',
+                        }, {
+                            field: 'type',
+                            title: '类型',
+                            templet: '#is_type',
+                        }, {
+                            field: 'release_time',
+                            title: '上映日期',
                         }
                         ]
                     ], style: 'margin-top:0;',

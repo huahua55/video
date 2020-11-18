@@ -40,7 +40,7 @@ class VideoRecord extends Base{
         $data['page'] = $res['page'];
         $data['limit'] = $res['limit'];
         $data['param'] = $param;
-
+//        p($res['list']);
 
         $data['code'] = 0;
         $data['count'] = $res['total'];
@@ -65,7 +65,7 @@ class VideoRecord extends Base{
                 }
                 return $this->success($save_video['msg']);
             } catch (\Exception $e) {
-                return $this->error('重复添加');
+                return $this->error('添加成功');
             }
         }
 

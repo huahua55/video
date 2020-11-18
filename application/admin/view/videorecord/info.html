@@ -10,7 +10,6 @@
                 <li class="layui-this">基本信息</a></li>
             </ul>
             <div class="layui-tab-content">
-
                 <div class="layui-tab-item layui-show">
 
                     <div class="layui-form-item ">
@@ -19,6 +18,21 @@
                             <input type="text" class="layui-input" lay-verify="required" value="{$info.vod_name}" placeholder="请输入" name="vod_name" id="vod_name">
                         </div>
                     </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态：</label>
+                        <div class="layui-input-block">
+                            <input name="type" type="radio" id="rad-0" value="0" title="正常" {if condition="$info['type'] neq 1"}checked {/if}>
+                            <input name="type" type="radio" id="rad-1" value="1" title="禁片" {if condition="$info['type'] eq 1"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上映日期：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="release_time"  id="release_time" class="layui-input layui-timeline  datetimepicker" value="{$info.release_time}" >
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -35,12 +49,19 @@
 {include file="../../../application/admin/view/public/foot" /}
 
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
+    layui.use(['form', 'layer','laydate'], function () {
+
+        //日期范围
+
         // 操作对象
         var form = layui.form
             , layer = layui.layer
+            , laydate = layui.laydate
             , $ = layui.jquery
-
+        laydate.render({
+            elem: '#release_time',
+            type: 'date'
+        });
         // 验证
         form.verify({
 
