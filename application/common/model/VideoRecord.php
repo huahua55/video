@@ -86,6 +86,9 @@ class VideoRecord extends Base {
                 $data['create_time'] = time();
                 $data['update_time'] = time();
                 unset($data['id']);
+                if (empty($data['release_time'])){
+                    $data['release_time'] = '1990-01-01';
+                }
                 $res = $this->allowField(true)->insert($data);
             }else{
                 $res= true;
