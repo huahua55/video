@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\console\command\make\Model;
 use think\Db;
+use function GuzzleHttp\Promise\unwrap;
 use function Qiniu\entry;
 
 class Video extends Base
@@ -129,6 +130,9 @@ class Video extends Base
     {
         if (Request()->isPost()) {
             $param = input('post.');
+            $vod_class = $param['vod_class'];
+            unset($param['vod_class']);
+            $param['vod_tag'] = $vod_class;
             $save_video = model('video')->saveData( $param );
             if($save_video['code']>1){
                 return $this->error($save_video['msg']);

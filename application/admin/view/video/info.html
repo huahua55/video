@@ -84,14 +84,11 @@
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">TAG：</label>
-                        <div class="layui-input-inline w500  ">
-                            <input type="text" class="layui-input" value="{$info.vod_tag}" placeholder=""  name="vod_tag" id="vod_tag">
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.vod_tag}" placeholder=""  name="vod_class" id="vod_class">
                         </div>
-                        <div class="layui-input-inline w120">
-                            <input type="checkbox" name="uptag" title="自动生成" value="1" class="layui-checkbox checkbox-ids" lay-skin="primary">
+                        <div class="layui-input-inline w500 vod_class_label">
                         </div>
-
-
                     </div>
 
                     <div class="layui-form-item">
@@ -317,11 +314,25 @@
             $('#type_id').html(proHtml);
             form.render();
         }
-
-
         $(document).on("click", ".extend", function(){
             $id = $(this).attr('data-id');
-            $("input[id='"+$id+"']").val($(this).text());
+            if($id == 'vod_class' || $id == 'vod_keywords'){
+                $val = $("input[id='"+$id+"']").val();
+                if($val!=''){
+                    $val = $val+',';
+                }
+                if($val.indexOf($(this).text())>-1){
+                    return;
+                }
+                $("input[id='"+$id+"']").val($val+$(this).text());
+            }else{
+                $("input[id='"+$id+"']").val($(this).text());
+            }
+        });
+
+
+        form.on('select(type_id)', function(data){
+            getExtend(data.value);
         });
 
 
@@ -354,6 +365,8 @@
                 }
             }
         });
+
+
 
         $('.upload-input').hover(function (e){
             var e = window.event || e;
@@ -417,8 +430,14 @@
                         if(r.data.vod_isend){
                             $('#vod_isend').val(r.data.vod_isend);
                         }
-                        if(r.data.vod_name){
-                            $('#vod_name').val(r.data.vod_name);
+
+                        var vod_names = $('#vod_name').val();
+                        if (vod_names.length > 1){
+                              //
+                        }else {
+                            if(r.data.vod_name){
+                                $('#vod_name').val(r.data.vod_name);
+                            }
                         }
                         if(r.data.vod_sub){
                             $('#vod_sub').val(r.data.vod_sub);
@@ -438,8 +457,8 @@
                         if(r.data.vod_state){
                             $('#vod_state').val(r.data.vod_state);
                         }
-                        if(r.data.vod_tag){
-                            $('#vod_tag').val(r.data.vod_tag);
+                        if(r.data.vod_class){
+                            $('#vod_class').val(r.data.vod_class);
                         }
                         if(r.data.vod_actor){
                             $('#vod_actor').val(r.data.vod_actor);
