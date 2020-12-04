@@ -391,6 +391,7 @@ class Collect extends Base
         $res = ['code' => 1, 'msg' => 'json', 'page' => $array_page, 'type' => $array_type, 'data' => $array_data];
         return $res;
     }
+
     protected function find_records()
     {
         return Db::name('video_record')->field('vod_name')->column('vod_name');
@@ -440,8 +441,8 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
-                if ($v['type_id'] == 30){
-                    $v['vod_name'] = $v['vod_name'].'预告片';
+                if ($v['type_id'] == 30) {
+                    $v['vod_name'] = $v['vod_name'] . '预告片';
                 }
 
                 $color = 'red';
@@ -565,11 +566,11 @@ class Collect extends Base
                         } else {
                             $old_type_id_1_where = $v['type_id_1'];
                         }
-                        if (!empty($old_type_id_1_where)){
-                            if ($old_type_id_1_where == 0){
-                                $where['type_id_1'] = ['in',[$v['type_id'],$old_type_id_1_where]];
-                            }else{
-                                $where['type_id_1'] = ['in',[0,$old_type_id_1_where]];
+                        if (!empty($old_type_id_1_where)) {
+                            if ($old_type_id_1_where == 0) {
+                                $where['type_id_1'] = ['in', [$v['type_id'], $old_type_id_1_where]];
+                            } else {
+                                $where['type_id_1'] = ['in', [0, $old_type_id_1_where]];
                             }
 
                         }
@@ -584,9 +585,9 @@ class Collect extends Base
                         $where['vod_lang'] = $v['vod_lang'];
                     }
                     if (strpos($config['inrule'], 'f') !== false) {
-                        if (!empty($v['vod_actor'])){
+                        if (!empty($v['vod_actor'])) {
                             $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
-                        }else{
+                        } else {
                             $v['vod_actor'] = '内详';
                             $where['vod_actor'] = ['like', mac_like_arr($v['vod_actor']), 'OR'];
                         }
@@ -595,9 +596,9 @@ class Collect extends Base
                     if (strpos($config['inrule'], 'g') !== false) {
                         $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
                         $str_vod_director = implode(',', $arr_vod_director);
-                        if (!empty($str_vod_director)){
+                        if (!empty($str_vod_director)) {
                             $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
-                        }else{
+                        } else {
                             $v['vod_director'] = '内详';
                             $str_vod_director = '内详';
                             $where['vod_director'] = ['like', mac_like_arr($str_vod_director), 'OR'];
@@ -737,7 +738,9 @@ class Collect extends Base
                         }
                         if (!$info) {
                             # 全新
-                            $where['vod_name'] = $v['vod_name'] = trim(str_replace('2020', '', $vod_name_ys));
+                            $q_name = trim(str_replace('2020', '', $vod_name_ys));
+                            $q_name = trim(str_replace('2021', '', $q_name));
+                            $where['vod_name'] = $v['vod_name'] = $q_name;
                             $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
                             if ($info == 'continue') {
                                 continue;
@@ -791,7 +794,6 @@ class Collect extends Base
                             }
 
 
-
                             if (isset($v['vod_director']) && !empty($v['vod_director'])) {
                                 $arr_vod_director = array_filter(explode(',', str_replace("，", ",", $v['vod_director'])));
 
@@ -802,12 +804,12 @@ class Collect extends Base
                             }
 
 
-                            if(!empty($v['vod_year'])){
-                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+                            if (!empty($v['vod_year'])) {
+                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok') {
                                     //允许
-                                }else{
+                                } else {
 
-                                    $records_status= false;
+                                    $records_status = false;
                                     $find_records = $this->find_records();
                                     foreach ($find_records as $find_records_key => $find_records_val) {
                                         $count3 = substr_count($v['vod_name'], $find_records_val);
@@ -816,52 +818,52 @@ class Collect extends Base
                                             break;
                                         }
                                     }
-                                    if ($records_status == false){
-                                        if (  $v['vod_year'] < 2020){
-                                            mac_echo($v['vod_name']  .':'.$v['vod_year']. '--小于2020年过滤');
+                                    if ($records_status == false) {
+                                        if ($v['vod_year'] < 2020) {
+                                            mac_echo($v['vod_name'] . ':' . $v['vod_year'] . '--小于2020年过滤');
                                             continue;
                                         }
                                     }
                                 }
                             }
 
-                            if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'], 'zuidam3u8') > 0 || substr_count($v['vod_play_from'], 'zuidall') > 0)) {
-                                //最大 暂不处理
-                                $msg = '最大---全新数据，手动入库';
-                                $res = true;
-                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
-                                    $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
-                                    $v['vod_pic'] = (string)$tmp['pic'];
-                                    $msg = $tmp['msg'];
-                                    $res = model('Vod')->insert($v);
-                                    $new_vod_log_where = [];
-                                    $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
-                                    $new_vod_log_where['vod_name'] = $v['vod_name'];
-                                    $new_vod_log_where['date'] = date("Y-m-d",time());
-                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-                                    if (empty($new_vod_log_data)){
-                                        $new_vod_log_where['up_date'] = time();
-                                        $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
-                                        Db::table('vod_log')->insert($new_vod_log_where);
-                                    }
-                                }
-
-                            } else {
-                                $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
-                                $v['vod_pic'] = (string)$tmp['pic'];
-                                $msg = $tmp['msg'];
-                                $res = model('Vod')->insert($v);
-                                $new_vod_log_where = [];
-                                $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
-                                $new_vod_log_where['vod_name'] = $v['vod_name'];
-                                $new_vod_log_where['date'] = date("Y-m-d",time());
-                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-                                if (empty($new_vod_log_data)){
-                                    $new_vod_log_where['up_date'] = time();
-                                    $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
-                                    Db::table('vod_log')->insert($new_vod_log_where);
-                                }
+//                            if (!empty($v['vod_play_from']) && (substr_count($v['vod_play_from'], 'zuidam3u8') > 0 || substr_count($v['vod_play_from'], 'zuidall') > 0)) {
+//                                //最大 暂不处理
+//                                $msg = '最大---全新数据，手动入库';
+//                                $res = true;
+//                                if (isset($param['glzyha']) and $param['glzyha'] == 'ok'){
+//                                    $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
+//                                    $v['vod_pic'] = (string)$tmp['pic'];
+//                                    $msg = $tmp['msg'];
+//                                    $res = model('Vod')->insert($v);
+//                                    $new_vod_log_where = [];
+//                                    $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
+//                                    $new_vod_log_where['vod_name'] = $v['vod_name'];
+//                                    $new_vod_log_where['date'] = date("Y-m-d",time());
+//                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+//                                    if (empty($new_vod_log_data)){
+//                                        $new_vod_log_where['up_date'] = time();
+//                                        $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
+//                                        Db::table('vod_log')->insert($new_vod_log_where);
+//                                    }
+//                                }
+//
+//                            } else {
+                            $tmp = $this->syncImages($config['pic'], $v['vod_pic'], 'vod');
+                            $v['vod_pic'] = (string)$tmp['pic'];
+                            $msg = $tmp['msg'];
+                            $res = model('Vod')->insert($v);
+                            $new_vod_log_where = [];
+                            $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
+                            $new_vod_log_where['vod_name'] = $v['vod_name'];
+                            $new_vod_log_where['date'] = date("Y-m-d", time());
+                            $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
+                            if (empty($new_vod_log_data)) {
+                                $new_vod_log_where['up_date'] = time();
+                                $new_vod_log_where['vod_remarks'] = $v['vod_remarks'] ?? '';
+                                Db::table('vod_log')->insert($new_vod_log_where);
                             }
+//                            }
                             if ($res === false) {
 
                             }
@@ -1108,22 +1110,22 @@ class Collect extends Base
                                 $new_vod_log_where = [];
                                 $new_vod_log_where['vod_id'] = $where['vod_id'];
                                 $new_vod_log_where['vod_name'] = $v['vod_name'];
-                                $new_vod_log_where['date'] = date("Y-m-d",time());
-                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
+                                $new_vod_log_where['date'] = date("Y-m-d", time());
+                                $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
 
-                                if (empty($new_vod_log_data)){
+                                if (empty($new_vod_log_data)) {
                                     $new_vod_log_where['up_date'] = time();
-                                    $new_vod_log_where['vod_remarks'] = $v['vod_remarks']??'';
+                                    $new_vod_log_where['vod_remarks'] = $v['vod_remarks'] ?? '';
                                     Db::table('vod_log')->insert($new_vod_log_where);
-                                }else{
-                                    if(empty($new_vod_log_data['up_date'])){
+                                } else {
+                                    if (empty($new_vod_log_data['up_date'])) {
                                         $new_vod_log_n['up_date'] = time();
-                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks']??'';
-                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update($new_vod_log_n);
+                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks'] ?? '';
+                                        Db::table('vod_log')->where(['id' => $new_vod_log_data['id']])->update($new_vod_log_n);
                                     }
-                                    if(empty($new_vod_log_data['vod_remarks'])){
-                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks']??'';
-                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update($new_vod_log_n);
+                                    if (empty($new_vod_log_data['vod_remarks'])) {
+                                        $new_vod_log_n['vod_remarks'] = $v['vod_remarks'] ?? '';
+                                        Db::table('vod_log')->where(['id' => $new_vod_log_data['id']])->update($new_vod_log_n);
                                     }
                                 }
                                 $res = model('Vod')->where($where)->update($update);
@@ -1206,16 +1208,16 @@ class Collect extends Base
             if (empty($check_actor_and_director)) {
                 // 库中不存在  则不再入库
                 if (empty($v['vod_actor'])) {
-                    mac_echo($v['vod_name'] ."主演为空过滤不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] . "主演为空过滤不采集 过滤 请手动采集入库 ");
                 }
                 if (empty($v['vod_director'])) {
-                    mac_echo($v['vod_name'] ."导演为空过滤不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] . "导演为空过滤不采集 过滤 请手动采集入库 ");
                 }
                 if ($filter_vod_actor >= 1) {
-                    mac_echo($v['vod_name'] ."主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] . "主演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                 }
                 if ($filter_vod_director >= 1) {
-                    mac_echo($v['vod_name'] ."导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
+                    mac_echo($v['vod_name'] . "导演数据不详(包含未知或内详)不采集 过滤 请手动采集入库 ");
                 }
                 $find_records_stata = false;
                 $find_records = Db::name('video_record')->field('vod_name')->column('vod_name');
@@ -1231,7 +1233,7 @@ class Collect extends Base
                 } elseif ($find_records_stata == true) {
                     mac_echo("关键词命中允许入库");
                 } else {
-                    mac_echo($v['vod_name'] ."主演数据不详(包含未知或内详)不采集-暂时不过滤-采集入库 ");
+                    mac_echo($v['vod_name'] . "主演数据不详(包含未知或内详)不采集-暂时不过滤-采集入库 ");
 //                    continue;
 //                    return 'continue';
                 }
@@ -1282,7 +1284,7 @@ class Collect extends Base
                     $old_check_data['vod_director'] = $info['vod_director'];
                     $old_check_data['type_id'] = $info['type_id'];
 //                    $old_check_data['vod_play_url'] = $info['vod_play_url'];
-                    $old_check_data['vod_play_url'] = join('$$$', array_column($infos,'vod_play_url'));
+                    $old_check_data['vod_play_url'] = join('$$$', array_column($infos, 'vod_play_url'));
                     $old_check_data['type_id_1'] = $info['type_id_1'];
                     $check_vod_rade = self::_checkVodRade($old_check_data, $new_check_data);
                     if (!$check_vod_rade) {
