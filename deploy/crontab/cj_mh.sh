@@ -9,7 +9,7 @@ chown -R www:www ../video
 
 time1=$(date "+%M")
 echo $time1
-if [ "$time1" = 00 ];then
+if [ "$time1" = 30 ] || [ "$time1" = 00 ];then
   sleep 60
   php think Cj name=mhysday
 fi
