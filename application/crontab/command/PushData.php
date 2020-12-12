@@ -182,6 +182,15 @@ class PushData extends Common
                 }
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
+                        $video_where = [];
+                        $video_where['vod_id'] = $val['vod_id'];
+                        $video_where['vod_status'] = ['neq',1];
+                        $video_where['is_selected'] = ['eq',0];
+                        $video_res = Db::table('video')->where($video_where)->find();
+                        if (!empty($video_res)){
+                            log::write($val['vod_name'] . '-----过滤--下架了');
+                            continue;
+                        }
 //                        if (in_array($val['type_id'], $this->zy_list)) {
 //                            if($val['vod_year'] < 2020){
 //                                continue;
