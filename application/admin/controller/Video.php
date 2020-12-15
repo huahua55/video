@@ -28,22 +28,23 @@ class Video extends Base
         $is_selected = $param['is_selected'];
         unset($param['is_selected']);
         // 过滤搜索条件
-        $search_data = self::_filterSearchData( $param );
-        if ($is_selected == 'all'){
+        $search_data = self::_filterSearchData($param);
+        if ($is_selected == 'all' or $is_selected == '') {
 
-        }elseif ($is_selected == '0'){
+        } elseif ($is_selected == '0') {
             $search_data['where']['where_a']['a.is_selected'] = 0;
-        }else{
+        } else {
             $search_data['where']['where_a']['a.is_selected'] = 1;
         }
+//        p($search_data);
         $order = 'a.vod_time desc';
         $res = model('video')->listData(
-                    $search_data['whereOr'],
-                    $search_data['where'],
-                    $order, 
-                    $param['page'],
-                    $param['limit']
-                );
+            $search_data['whereOr'],
+            $search_data['where'],
+            $order,
+            $param['page'],
+            $param['limit']
+        );
         $data['page'] = $res['page'];
         $data['limit'] = $res['limit'];
         $data['param'] = $param;
@@ -90,35 +91,35 @@ class Video extends Base
         $data['code'] = 0;
         $data['msg'] = 'error';
         $data['data'] = [];
-        if ( !empty( $collection_id ) ) {
+        if (!empty($collection_id)) {
 
             $collection_where['id'] = $collection_id;
             // 根据集表主键id获取相关数据
-            $collention_info = self::_getCollectionData( $collection_where );
+            $collention_info = self::_getCollectionData($collection_where);
             // 获取视频信息
-            $vedio_info = self::_getVedioData( ['id' => $collention_info['video_id'] ] ); 
-            
+            $vedio_info = self::_getVedioData(['id' => $collention_info['video_id']]);
+
             Db::startTrans();
             $video_edit = true;
-            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12) ) {
+            if ($vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12)) {
                 // 电影 此时需要修改video表
                 $video_where['id'] = $collention_info['video_id'];
                 $video_edit_data['is_examine'] = $is_examine;
                 $video_edit_data['e_id'] = $examine_id;
                 $video_edit_data['vod_time'] = time();
-                $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+                $video_edit = Db::table('video')->where($video_where)->update($video_edit_data);
             } else {
                 // 修改视频时间
-                self::_editVideoVodTime( $collention_info['video_id'] );
+                self::_editVideoVodTime($collention_info['video_id']);
             }
 
             // 修改集表
             $collection_edit_data['is_examine'] = $is_examine;
             $collection_edit_data['e_id'] = $examine_id;
             $collection_edit_data['time_up'] = time();
-            $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
-            
-            if ( $video_edit !== false && $video_collection_edit !== false ) {
+            $video_collection_edit = Db::table('video_collection')->where($collection_where)->update($collection_edit_data);
+
+            if ($video_edit !== false && $video_collection_edit !== false) {
                 Db::commit();
 
                 return $this->success('修改成功！');
@@ -138,48 +139,48 @@ class Video extends Base
             $vod_class = $param['vod_class'];
             unset($param['vod_class']);
             $param['vod_tag'] = $vod_class;
-            $save_video = model('video')->saveData( $param );
-            if($save_video['code']>1){
+            $save_video = model('video')->saveData($param);
+            if ($save_video['code'] > 1) {
                 return $this->error($save_video['msg']);
             }
             return $this->success($save_video['msg']);
         }
 
         $id = input('id');
-        $where=[];
+        $where = [];
         $where['id'] = $id;
 
         // 获取集
         // $video_collection_data = Db::table('video_collection')->field('id,video_id')->where( $where )->find();
 
         // $video_where['id'] = $video_collection_data['video_id'];
-        $res = model('video')->infoData( $where );
+        $res = model('video')->infoData($where);
 
 
         $info = $res['info'];
-        $this->assign('info',$info);
+        $this->assign('info', $info);
 
-        $type_tree_list = Db::table('type')->field('type_id,type_name')->where(['type_pid'=>0,'type_status'=>1])->select();
+        $type_tree_list = Db::table('type')->field('type_id,type_name')->where(['type_pid' => 0, 'type_status' => 1])->select();
 
-        $new_type_tree_list_pid=[];
-        $type_tree_list_pid = Db::table('type')->field('type_pid,type_id,type_name')->where(['type_pid'=>['neq',0],'type_status'=>1])->select();
-        foreach ($type_tree_list_pid as $k=>$v){
+        $new_type_tree_list_pid = [];
+        $type_tree_list_pid = Db::table('type')->field('type_pid,type_id,type_name')->where(['type_pid' => ['neq', 0], 'type_status' => 1])->select();
+        foreach ($type_tree_list_pid as $k => $v) {
             $new_type_tree_list_pid[$v['type_pid']][] = $v;
         }
         //分类
         $type_tree = model('Type')->getCache('type_tree');
-        $this->assign('type_tree',$type_tree);
-        $this->assign('new_type_tree',$new_type_tree_list_pid);
-        $this->assign('type_tree_list',$type_tree_list);
+        $this->assign('type_tree', $type_tree);
+        $this->assign('new_type_tree', $new_type_tree_list_pid);
+        $this->assign('type_tree_list', $type_tree_list);
 
         //地区、语言
         $config = config('maccms.app');
-        $area_list = explode(',',$config['vod_area']);
-        $lang_list = explode(',',$config['vod_lang']);
-        $this->assign('area_list',$area_list);
-        $this->assign('lang_list',$lang_list);
+        $area_list = explode(',', $config['vod_area']);
+        $lang_list = explode(',', $config['vod_lang']);
+        $this->assign('area_list', $area_list);
+        $this->assign('lang_list', $lang_list);
 //        p($info);
-        $this->assign('title','视频信息');
+        $this->assign('title', '视频信息');
         return $this->fetch('admin@video/info');
     }
 
@@ -205,9 +206,9 @@ class Video extends Base
      * @param  [type] $where [description]
      * @return [type]        [description]
      */
-    private function _getCollectionData( $where )
+    private function _getCollectionData($where)
     {
-        return Db::table('video_collection')->field('video_id,task_id,collection')->where( $where )->find();
+        return Db::table('video_collection')->field('video_id,task_id,collection')->where($where)->find();
     }
 
     /**
@@ -215,9 +216,9 @@ class Video extends Base
      * @param  [type] $where [description]
      * @return [type]        [description]
      */
-    private function _getVedioData( $where )
+    private function _getVedioData($where)
     {
-        return Db::table('video')->field('type_pid,type_id')->where( $where )->find();
+        return Db::table('video')->field('type_pid,type_id')->where($where)->find();
     }
 
     public function batch()
@@ -279,47 +280,47 @@ class Video extends Base
             return $this->error('参数错误！');
         }
         // 根据集表主键id获取相关数据
-        $collention_info = self::_getCollectionData( $collection_where );
+        $collention_info = self::_getCollectionData($collection_where);
 
         Db::startTrans();
 
         $video_edit = true;
-        if ( $is_master == 1 ) {
+        if ($is_master == 1) {
             // 处理除电影以外的状态
             // 主集 此时需要修改video表
             $video_where['id'] = $collection_id;
             $video_edit_data['vod_status'] = $status;
             $video_edit_data['vod_time'] = time();
-            $video_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+            $video_edit = Db::table('video')->where($video_where)->update($video_edit_data);
 
             // 根据视频id获取所有的集id
-            $video_collention_datas = Db::table('video_collection')->field('id')->where( ['video_id' => $collection_id] )->select();
+            $video_collention_datas = Db::table('video_collection')->field('id')->where(['video_id' => $collection_id])->select();
 
-            $collection_where['id'] = ['in', array_column( $video_collention_datas, 'id')];
+            $collection_where['id'] = ['in', array_column($video_collention_datas, 'id')];
         } else {
             // 获取视频信息
             $video_where['id'] = $collention_info['video_id'];
 
-            $vedio_info = self::_getVedioData( $video_where );
+            $vedio_info = self::_getVedioData($video_where);
             $video_is_film_edit = true;
 
-            if ( $vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12)) {
+            if ($vedio_info['type_pid'] == 1 || ($vedio_info['type_pid'] == 0 && $vedio_info['type_id'] >= 6 && $vedio_info['type_id'] <= 12)) {
                 // 是电影
                 $video_edit_data['vod_status'] = $status;
                 $video_edit_data['vod_time'] = time();
-                $video_is_film_edit = Db::table('video')->where( $video_where )->update($video_edit_data);
+                $video_is_film_edit = Db::table('video')->where($video_where)->update($video_edit_data);
             } else {
                 // 修改视频时间
-                self::_editVideoVodTime( $collention_info['video_id'] );
+                self::_editVideoVodTime($collention_info['video_id']);
             }
         }
 
         // 修改集表
         $collection_edit_data['status'] = $status;
         $collection_edit_data['time_up'] = time();
-        $video_collection_edit = Db::table('video_collection')->where( $collection_where )->update( $collection_edit_data );
+        $video_collection_edit = Db::table('video_collection')->where($collection_where)->update($collection_edit_data);
 
-        if ( $video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false ) {
+        if ($video_edit !== false && $video_collection_edit !== false && $video_is_film_edit !== false) {
             Db::commit();
 
             return $this->success('修改成功！');
@@ -328,11 +329,12 @@ class Video extends Base
         }
         return $this->error('修改失败！');
     }
+
     /**
      * 过滤搜索条件
      * @param string $data [description]
      */
-    private function _filterSearchData( $param='' )
+    private function _filterSearchData($param = '')
     {
         $where_a = [];
         $whereOr = [];
@@ -348,7 +350,7 @@ class Video extends Base
             $where_a['a.vod_status'] = $param['vod_status'];
         }
 
-        return ['whereOr' => $whereOr, 'where' => [ 'where_a' => $where_a]];
+        return ['whereOr' => $whereOr, 'where' => ['where_a' => $where_a]];
     }
 
     /**
@@ -356,40 +358,40 @@ class Video extends Base
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
-    private function _editVideoVodTime( $id )
+    private function _editVideoVodTime($id)
     {
         $data['vod_time'] = time();
         $where['id'] = $id;
-        return Db::table('video')->where( $where )->update($data);
+        return Db::table('video')->where($where)->update($data);
     }
 
     /**
      * 视频集信息
      * @return [type] [description]
      */
-    public function collection() 
+    public function collection()
     {
         if (Request()->isPost()) {
             $param = input('post.');
-            if(!empty($param['video_id'])){
-               $this->_editVideoVodTime($param['video_id']);
+            if (!empty($param['video_id'])) {
+                $this->_editVideoVodTime($param['video_id']);
             }
-            $save_video = model('video')->saveCollectionData( $param );
-            if($save_video['code']>1){
+            $save_video = model('video')->saveCollectionData($param);
+            if ($save_video['code'] > 1) {
                 return $this->error($save_video['msg']);
             }
             return $this->success($save_video['msg']);
         }
 
         $id = input('id');
-        $where=[];
+        $where = [];
         $where['id'] = $id;
         // 获取集
-        $video_collection_data = Db::table('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,bitrate,duration,size,resolution,is_selected')->where( $where )->find();
-        
-        $this->assign('info',$video_collection_data);
+        $video_collection_data = Db::table('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,bitrate,duration,size,resolution,is_selected')->where($where)->find();
 
-        $this->assign('title','视频集信息');
+        $this->assign('info', $video_collection_data);
+
+        $this->assign('title', '视频集信息');
         return $this->fetch('admin@video/collection_info');
     }
 }
