@@ -37,7 +37,7 @@ class Video extends Base
         //b.id,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id,b.is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up
         $limit_str = ($limit * ($page - 1) + $start) . "," . $limit;
         
-        $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.vod_time_auto_up';
+        $field_a = 'a.id as aid,a.type_pid,a.type_id,a.vod_name,a.vod_sub,a.vod_en,a.vod_tag,a.vod_pic,a.vod_pic_thumb,a.vod_pic_slide,a.vod_actor,a.e_id,a.vod_director,a.vod_writer,a.vod_behind,a.vod_blurb,a.vod_remarks,a.vod_pubdate,a.vod_total,a.vod_serial,a.vod_tv,a.vod_weekday,a.vod_area,a.vod_lang,a.vod_year,a.vod_version,a.vod_state,a.vod_duration,a.vod_isend,a.vod_douban_id,a.vod_douban_score,a.vod_time,a.vod_time_add,a.is_from,a.is_examine,a.vod_status,a.is_selected,a.vod_time_auto_up';
 
         $field_b = 'b.id as bid,b.video_id,b.task_id,b.title,b.collection,b.vod_url,b.type,b.status,b.e_id as b_eid,b.is_examine as b_is_examine,b.resolution,b.bitrate,b.duration,b.size,b.time_up,b.time_auto_up,b.is_selected';
 
@@ -96,6 +96,7 @@ class Video extends Base
                     'm_time_auto_up' => $v['vod_time_auto_up'],
                     'm_eid' => $v['e_id'],
                     'm_status' => $v['vod_status'],
+                    'm_is_selected' => $v['is_selected'],
                     'pid' => 0,
                     'type_pid' => $v['type_pid'],
                     'vod_pic' => ''
@@ -116,6 +117,7 @@ class Video extends Base
                 $v1['m_time_auto_up'] = $v1['time_auto_up'];
                 $v1['m_reasons'] = isset($video_examine[$v1['b_eid']])?$video_examine[$v1['b_eid']]:'';
                 $v1['m_status'] = $v1['status'];
+                $v1['m_is_selected'] = $v1['is_selected'];
                 $v1['is_master'] = 0;
                 $v1['vod_pic'] = $v['vod_pic'];
                 $v1['vod_name'] = $v['vod_name'];

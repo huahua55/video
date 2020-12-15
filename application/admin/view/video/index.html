@@ -88,6 +88,14 @@
         <input type="radio" class="{{d.pid}}_{{d.type_pid}}_del" name="{{d.aid}}_{{d.bid}}_{{d.is_master}}" value="3" title="已删除" {{# if(d.m_status == 3){ }} checked {{# } }} lay-filter="status">
     {{#  } }}
 </script>
+<script type="text/html" id="vod_selectedTpl">
+    {{#  if(d.m_is_selected == 0){ }}
+       否
+    {{#  } else{ }}
+       <span style="color: red">是</span>
+    {{#  } }}
+</script>
+
 <script type="text/html" id="is_downTpl">
     {{#  if(d.b_is_down == 0){ }}
     <button class="layui-btn layui-btn-normal layui-btn-xs">未下载</button>
@@ -316,6 +324,11 @@
                             width: 60,
                             toolbar: '#barDemo'
                         }, {
+                            field: 'm_is_selected',
+                            title: '是否精品',
+                            width: 60,
+                            templet: '#vod_selectedTpl'
+                        },{
                             field: 'video_id',
                             title: '视频ID',
                             width: 72,
