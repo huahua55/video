@@ -25,12 +25,18 @@ class Video extends Base
         $param = input();
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
-
+        $is_selected = $param['is_selected'];
+        unset($param['is_selected']);
         // 过滤搜索条件
         $search_data = self::_filterSearchData( $param );
+        if ($is_selected == 'all'){
 
+        }elseif ($is_selected == '0'){
+            $search_data['where']['where_a']['a.is_selected'] = 0;
+        }else{
+            $search_data['where']['where_a']['a.is_selected'] = 1;
+        }
         $order = 'a.vod_time desc';
-
         $res = model('video')->listData(
                     $search_data['whereOr'],
                     $search_data['where'],
@@ -41,11 +47,10 @@ class Video extends Base
         $data['page'] = $res['page'];
         $data['limit'] = $res['limit'];
         $data['param'] = $param;
-
-
         $data['code'] = 0;
         $data['count'] = $res['total'];
         $data['data'] = $res['list'];
+
 
         return $this->success('succ', null, $data);
     }

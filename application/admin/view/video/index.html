@@ -49,6 +49,16 @@
                 /if}>下线 </option>
             </select>
         </div>
+        &nbsp; 精选状态：
+        <div class="layui-inline">
+            <select class="layui-select" name="is_selected">
+                <option value="all">选择状态</option>
+                <option value="0" {if condition="$param['is_selected'] eq '0'" }selected {
+                /if}>否 </option>
+                <option value="1" {if condition="$param['is_selected'] neq '0'" }selected {
+                /if}>是 </option>
+            </select>
+        </div>
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
 
@@ -512,6 +522,7 @@
                             // var b_code = $("select[name='b_code']").val();
                             var b_is_examine = $("select[name='b_is_examine']").val();
                             var vod_status = $("select[name='vod_status']").val();
+                            var is_selected = $("select[name='is_selected']").val();
                             //执行重载
                             insTb.reload({
                                 page: {
@@ -520,6 +531,7 @@
                                 where: {
                                     // key: {
                                     idName: demoReload.val(),
+                                    is_selected:is_selected,
                                     // b_is_down: b_is_down,
                                     // b_code: b_code,
                                     // b_is_section: b_is_section,
@@ -536,6 +548,7 @@
                     var data = {
                         b_is_examine: $("select[name='b_is_examine']").val(),
                         vod_status: $("select[name='vod_status']").val(),
+                        is_selected: $("select[name='is_selected']").val(),
                         idName: $('#demoReload').val(),
                     };
                     $('#search_data').val( JSON.stringify( data ) );
