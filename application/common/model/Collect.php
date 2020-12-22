@@ -1146,7 +1146,7 @@ class Collect extends Base
                                 }
                                 $res = model('Vod')->where($where)->update($update);
                                 if ($get_type_pid_type_id == 1 && $is_ts_up == true) {
-                                    $vod_remarks = strtoupper($update['vod_remarks']);
+                                    $vod_remarks = strtoupper($info['vod_remarks']);
                                     if (strpos($vod_remarks, 'TC') !== false || strpos($vod_remarks, 'TS') !== false) {
                                         $new_vod_play_url = [];
                                         foreach (explode('$$$', $update['vod_play_url']) as $key => $val) {
@@ -1163,6 +1163,7 @@ class Collect extends Base
                                         $video_vod['fail_count'] = '0';
                                         $video_vod['reason'] = '切换影片清晰度';
                                         $video_vod['m3u8_url'] = join('#', $new_vod_play_url);
+                                        mac_echo($info['vod_name'].'切换影片清晰度');
                                         Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                     }
                                 }
