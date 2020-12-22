@@ -892,6 +892,7 @@ class Collect extends Base
                                 $cj_down_server_arr = $collect_filter['down'][$param['filter']]['cj_down_server_arr'] ?? [];
                                 $cj_down_note_arr = $collect_filter['down'][$param['filter']]['cj_down_note_arr'] ?? [];
                             }
+                            $is_ts_up = false;
 
                             if (strpos(',' . $config['uprule'], 'a') !== false && !empty($v['vod_play_from'])) {
                                 $old_play_from = $info['vod_play_from'];
@@ -936,6 +937,21 @@ class Collect extends Base
 
                                                 $tmp2 = explode('#', $cj_play_url);
                                                 $tmp1 = array_merge($tmp1, $tmp2);
+                                                if ($get_type_pid_type_id == 1) {
+                                                    if (count($tmp1) > 1) {
+                                                        foreach ($tmp1 as $tmp1_key => $tmp1_val) {
+                                                            $ex_tmp1_val = explode('$',$tmp1_val);
+                                                            $new_tmp1_val = $ex_tmp1_val[0]??'';
+                                                            $new_tmp1_val = strtoupper($new_tmp1_val);
+                                                            if (strpos($new_tmp1_val, 'TC') !== false || strpos($new_tmp1_val, 'TS') !== false  || strpos($new_tmp1_val, 'HC') !== false) {
+                                                                $tmp1 = $tmp2;
+                                                                mac_echo($info['vod_name'].'切换更新资源');
+                                                                $is_ts_up = true;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                                 $tmp1 = array_unique($tmp1);
                                                 $cj_play_url = join('#', $tmp1);
                                                 if (!is_array($cj_play_url)) {
@@ -1129,6 +1145,24 @@ class Collect extends Base
                                     }
                                 }
                                 $res = model('Vod')->where($where)->update($update);
+                                if ($get_type_pid_type_id == 1 && $is_ts_up == true) {
+                                    $new_vod_play_url = [];
+                                    foreach (explode('$$$',$update['vod_play_url']) as $key=>$val){
+                                        if (strpos($val, '.m3u8') !== false){
+                                            $new_vod_play_url[$key] = $val;
+                                        }
+                                    }
+                                    $video_vod = [];
+                                    $video_vod['code'] = '-1';
+                                    $video_vod['is_down'] = '0';
+                                    $video_vod['is_section'] = '0';
+                                    $video_vod['is_sync'] = '0';
+                                    $video_vod['is_down_m3u8'] = '0';
+                                    $video_vod['fail_count'] = '0';
+                                    $video_vod['reason'] = '切换影片清晰度';
+                                    $video_vod['m3u8_url'] = join('#', $new_vod_play_url);
+                                    Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
+                                }
                                 $color = 'green';
                                 if ($res === false) {
 
@@ -1798,6 +1832,7 @@ class Collect extends Base
                         $rc = true;
                         if ($rc) {
                             $update = [];
+
 
                             if (strpos(',' . $config['uprule'], 'a') !== false && !empty($v['actor_content']) && $v['actor_content'] != $info['actor_content']) {
                                 $update['actor_content'] = $v['actor_content'];
