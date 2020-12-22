@@ -913,12 +913,12 @@ class CollectOk extends Base
                                                 if ($get_type_pid_type_id == 1) {
                                                     if (count($tmp1) > 1) {
                                                         foreach ($tmp1 as $tmp1_key => $tmp1_val) {
-                                                            $ex_tmp1_val = explode('$',$tmp1_val);
-                                                            $new_tmp1_val = $ex_tmp1_val[0]??'';
+                                                            $ex_tmp1_val = explode('$', $tmp1_val);
+                                                            $new_tmp1_val = $ex_tmp1_val[0] ?? '';
                                                             $new_tmp1_val = strtoupper($new_tmp1_val);
-                                                            if (strpos($new_tmp1_val, 'TC') !== false || strpos($new_tmp1_val, 'TS') !== false  || strpos($new_tmp1_val, 'HC') !== false) {
+                                                            if (strpos($new_tmp1_val, 'TC') !== false || strpos($new_tmp1_val, 'TS') !== false || strpos($new_tmp1_val, 'HC') !== false) {
                                                                 $tmp1 = $tmp2;
-                                                                mac_echo($info['vod_name'].'切换更新资源');
+                                                                mac_echo($info['vod_name'] . '切换更新资源');
                                                                 $is_ts_up = true;
                                                                 break;
                                                             }
@@ -1120,22 +1120,25 @@ class CollectOk extends Base
 //                                p($update);
                                 $res = model('Vod')->where($where)->update($update);
                                 if ($get_type_pid_type_id == 1 && $is_ts_up == true) {
-                                    $new_vod_play_url = [];
-                                    foreach (explode('$$$',$update['vod_play_url']) as $key=>$val){
-                                        if (strpos($val, '.m3u8') !== false){
-                                            $new_vod_play_url[$key] = $val;
+                                    $vod_remarks = strtoupper($update['vod_remarks']);
+                                    if (strpos($vod_remarks, 'TC') !== false || strpos($vod_remarks, 'TS') !== false) {
+                                        $new_vod_play_url = [];
+                                        foreach (explode('$$$', $update['vod_play_url']) as $key => $val) {
+                                            if (strpos($val, '.m3u8') !== false) {
+                                                $new_vod_play_url[$key] = $val;
+                                            }
                                         }
+                                        $video_vod = [];
+                                        $video_vod['code'] = '-1';
+                                        $video_vod['is_down'] = '0';
+                                        $video_vod['is_section'] = '0';
+                                        $video_vod['is_sync'] = '0';
+                                        $video_vod['is_down_m3u8'] = '0';
+                                        $video_vod['fail_count'] = '0';
+                                        $video_vod['reason'] = '切换影片清晰度';
+                                        $video_vod['m3u8_url'] = join('#', $new_vod_play_url);
+                                        Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                     }
-                                    $video_vod = [];
-                                    $video_vod['code'] = '-1';
-                                    $video_vod['is_down'] = '0';
-                                    $video_vod['is_section'] = '0';
-                                    $video_vod['is_sync'] = '0';
-                                    $video_vod['is_down_m3u8'] = '0';
-                                    $video_vod['fail_count'] = '0';
-                                    $video_vod['reason'] = '切换影片清晰度';
-                                    $video_vod['m3u8_url'] = join('#', $new_vod_play_url);
-                                    Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                 }
                                 $color = 'green';
                                 if ($res === false) {
