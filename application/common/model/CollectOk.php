@@ -1125,7 +1125,14 @@ class CollectOk extends Base
                                         $new_vod_play_url = [];
                                         foreach (explode('$$$', $update['vod_play_url']) as $key => $val) {
                                             if (strpos($val, '.m3u8') !== false) {
-                                                $new_vod_play_url[$key] = $val;
+                                                $ex_tmp1_val = explode('$', $val);
+                                                $new_tmp1_val = $ex_tmp1_val[0] ?? '';
+                                                $new_tmp1_val = strtoupper($new_tmp1_val);
+                                                if (strpos($new_tmp1_val, 'TC') !== false || strpos($new_tmp1_val, 'TS') !== false) {
+                                                    continue;
+                                                }else{
+                                                    $new_vod_play_url[$key] = $val;
+                                                }
                                             }
                                         }
                                         $video_vod = [];
