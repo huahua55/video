@@ -387,10 +387,19 @@ class PushData extends Common
         $new_play_url = [];
         $key_data = array_keys($collect_filter[$type]);
         $key_data_new = [];//挑选值比较大的key
+        $isok = false;
         foreach ($key_data as $k_data => $v_data) {
+            if ($v_data == 'ckm3u8'){
+                $isok = true;
+            }
             $key_data_new[$v_data] = count($collect_filter[$type][$v_data]);
         }//挑选值比较大的key
         $max_key = array_search(max($key_data_new), $key_data_new);
+        if ($max_key == 'zuidam3u8' && $isok == true) {
+            if ($key_data_new['zuidam3u8'] == $key_data_new['ckm3u8']) {
+                $max_key = 'ckm3u8';
+            }
+        }
 //           unset($key_data_new[$max_key]);
         foreach ($collect_filter[$type][$max_key] as $key_data_k => $val_data) {
             $collect_push = [];
