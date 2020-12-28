@@ -117,7 +117,7 @@ class PushData extends Common
                                 continue;
                             }
                         }
-                        $vod_collection_url = $this->getUrlLike($val);
+                        $this->getUrlLike($val);
                     }
                 }
             } else {
@@ -598,9 +598,9 @@ class PushData extends Common
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q-' . $n[$title]['id']);
+                                        log::write('成功q-' . $n[$title]['id'] .'-'. $v['vod_name']);
                                     } else {
-                                        log::write('失败q-' . $n[$title]['id']);
+                                        log::write('失败q-' . $n[$title]['id'] .'-'. $v['vod_name']);
                                     }
                                 }
                             }
@@ -625,9 +625,9 @@ class PushData extends Common
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q1-' . $v['b_vod_id']);
+                                        log::write('成功q1-' . $v['b_vod_id'] .'-'. $v['vod_name']);
                                     } else {
-                                        log::write('失败q2-' . $v['b_vod_id']);
+                                        log::write('失败q2-' . $v['b_vod_id'] .'-'. $v['vod_name']);
                                     }
                                 }
                             }
