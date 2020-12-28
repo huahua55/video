@@ -560,9 +560,9 @@ class PushData extends Common
                                     }
                                 }
                                 if ($res) {
-                                    log::write('成功q3-' . $v['b_vod_id']);
+                                    log::write('成功q3-' . $v['b_vod_id'].'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
                                 } else {
-                                    log::write('失败q3-' . $v['b_vod_id']);
+                                    log::write('失败q3-' . $v['b_vod_id'].'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
                                 }
                             }
                         }
@@ -598,9 +598,9 @@ class PushData extends Common
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q-' . $n[$title]['id'] .'-'. $v['vod_name']);
+                                        log::write('成功q-' . $n[$title]['id'] .'-'. $v['vod_name'].'-'. $up_data['m3u8_url']);
                                     } else {
-                                        log::write('失败q-' . $n[$title]['id'] .'-'. $v['vod_name']);
+                                        log::write('失败q-' . $n[$title]['id'] .'-'. $v['vod_name'].'-'. $up_data['m3u8_url']);
                                     }
                                 }
                             }
@@ -625,9 +625,9 @@ class PushData extends Common
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q1-' . $v['b_vod_id'] .'-'. $v['vod_name']);
+                                        log::write('成功q1-' . $v['b_vod_id'] .'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
                                     } else {
-                                        log::write('失败q2-' . $v['b_vod_id'] .'-'. $v['vod_name']);
+                                        log::write('失败q2-' . $v['b_vod_id'] .'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
                                     }
                                 }
                             }
