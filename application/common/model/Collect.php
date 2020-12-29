@@ -17,8 +17,8 @@ class Collect extends Base
     protected $name = 'collect';
 
     // 定义时间戳字段名
-    protected $createTime = '';
-    protected $updateTime = '';
+//    protected $createTime = '';
+//    protected $updateTime = '';
 
     // 自动完成
     protected $auto = [];

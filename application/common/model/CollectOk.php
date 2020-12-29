@@ -16,8 +16,8 @@ class CollectOk extends Base
     protected $name = 'collect';
 
     // 定义时间戳字段名
-    protected $createTime = '';
-    protected $updateTime = '';
+//    protected $createTime = '';
+//    protected $updateTime = '';
 
     // 自动完成
     protected $auto = [];
@@ -730,7 +730,7 @@ class CollectOk extends Base
 
                     # 原始数据
                     $vod_name_ys = $v['vod_name'];
-                    if (substr_count($vod_name_ys, '2020') > 0) {
+                    if (substr_count($vod_name_ys, '2020') > 0 || substr_count($vod_name_ys, '2021') > 0) {
                         $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
                         if ($info == 'continue') {
                             continue;
