@@ -824,23 +824,40 @@ class CollectOk extends Base
                             if ($v['vod_year'] == 0 || $v['vod_year'] == '') {
                                 $v['vod_year'] = date("Y");
                             }
-
-                            $res = model('Vod')->insert($v);
-                            $new_vod_log_where = [];
-                            $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
-                            $new_vod_log_where['vod_name'] = $v['vod_name'];
-                            $new_vod_log_where['date'] = date("Y-m-d", time());
-                            $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
-                            if (empty($new_vod_log_data)) {
-                                $new_vod_log_where['up_date'] = time();
-                                $new_vod_log_where['vod_remarks'] = $v['vod_remarks'] ?? '';
-                                Db::table('vod_log')->insert($new_vod_log_where);
+                            $v_name_is_install = true;
+                            # 过滤重复过多
+                            $vod_name_sql = "SELECT COUNT(*) as y FROM vod  where vod_name = '" . $v['vod_name'] . "' GROUP BY vod_name";
+                            $vod_name_res = Db::query($vod_name_sql);
+                            if (!empty($vod_name_res)) {
+                                if ($vod_name_res[0]['y'] > 4) {
+                                    //过滤
+                                    $v_name_is_install = false;
+                                }
                             }
-                            if ($res === false) {
+                            if ($v_name_is_install) {
+                                $res = model('Vod')->insert($v);
+                                $new_vod_log_where = [];
+                                $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
+                                $new_vod_log_where['vod_name'] = $v['vod_name'];
+                                $new_vod_log_where['date'] = date("Y-m-d", time());
+                                $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
+                                if (empty($new_vod_log_data)) {
+                                    $new_vod_log_where['up_date'] = time();
+                                    $new_vod_log_where['vod_remarks'] = $v['vod_remarks'] ?? '';
+                                    Db::table('vod_log')->insert($new_vod_log_where);
+                                }
+                                if ($res === false) {
 
+                                }
                             }
-                            $color = 'green';
-                            $des = '新加入库，成功ok。';
+
+                            if ($v_name_is_install) {
+                                $color = 'green';
+                                $des = '新加入库，成功ok。';
+                            } else {
+                                $color = 'green';
+                                $des = '重复过多，过滤ok。' . $v['vod_name'];
+                            }
                         }
                     } else {
                         self::_logWrite("ok需要处理的视频id：：" . $info['vod_id']);
@@ -1130,9 +1147,9 @@ class CollectOk extends Base
                                                 $new_tmp1_val = strtoupper($new_tmp1_val);
                                                 if (strpos($new_tmp1_val, 'TC') !== false || strpos($new_tmp1_val, 'TS') !== false) {
                                                     continue;
-                                                }else{
+                                                } else {
                                                     $up_vod_play_from = explode('$$$', $update['vod_play_from']);
-                                                    $update['vod_play_from'] = $up_vod_play_from[$play_url_key]??'';
+                                                    $update['vod_play_from'] = $up_vod_play_from[$play_url_key] ?? '';
 
 
                                                     $new_vod_play_url[$play_url_key] = $val;
@@ -1154,7 +1171,7 @@ class CollectOk extends Base
                                         $update['vod_play_server'] = 'no';
                                         $update['vod_play_url'] = $video_vod['m3u8_url'];
 
-                                        mac_echo($info['vod_name'].'切换影片清晰度');
+                                        mac_echo($info['vod_name'] . '切换影片清晰度');
                                         Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                     }
                                 }
