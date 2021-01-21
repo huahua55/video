@@ -737,9 +737,11 @@ class CollectOk extends Base
                         }
                         if (!$info) {
                             # 全新
-                            $q_name = trim(str_replace('2020', '', $vod_name_ys));
-                            $q_name = trim(str_replace('2021', '', $q_name));
-                            $where['vod_name'] = $v['vod_name'] = $q_name;
+                            if ($get_type_pid_type_id != 3) {
+                                $q_name = trim(str_replace('2020', '', $vod_name_ys));
+                                $q_name = trim(str_replace('2021', '', $q_name));
+                                $where['vod_name'] = $v['vod_name'] = $q_name;
+                            }
                             $info = $this->getResInfoData($v, $filter_vod_actor, $filter_vod_director, $get_type_pid_type_id, $new_check_data, $param, $where, $blend);
                             if ($info == 'continue') {
                                 continue;
@@ -750,6 +752,11 @@ class CollectOk extends Base
                         if ($info == 'continue') {
                             continue;
                         }
+                    }
+                    if ($get_type_pid_type_id != 3) {
+
+                        $v['vod_name'] = trim(str_replace('2021', '', trim(str_replace('2020', '', $v['vod_name']))));
+                        $where['vod_name'] = $v['vod_name'];
                     }
 //                    p($info);
 
