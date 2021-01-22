@@ -441,6 +441,12 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+
+                $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
+                if ($get_type_pid_type_id != 3) {
+                    $v['vod_name'] = trim(str_replace('2021', '', trim(str_replace('2020', '', $v['vod_name']))));
+                }
+
                 if ($v['type_id'] == 30) {
                     $v['vod_name'] = $v['vod_name'] . '预告片';
                 }
@@ -724,9 +730,6 @@ class Collect extends Base
                     $filter_vod_actor = self::_arrayIntersectCount('未知,内详', $v['vod_actor']);
                     $filter_vod_director = self::_arrayIntersectCount('未知,内详', $v['vod_director']);
 
-                    // 如果是动漫或者综艺则不再校验导演和主演
-                    $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
-
 
                     # 原始数据
 
@@ -754,10 +757,7 @@ class Collect extends Base
                             continue;
                         }
                     }
-                    if ($get_type_pid_type_id != 3) {
-                        $v['vod_name'] = trim(str_replace('2021', '', trim(str_replace('2020', '', $v['vod_name']))));
-                        $where['vod_name'] = $v['vod_name'];
-                    }
+
 
                     if (!$info) {
                         if ($param['opt'] == 2) {
