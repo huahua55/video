@@ -10,7 +10,7 @@ chown -R www:www ../video
 ## 强制采集 #force=1
 time1=$(date "+%M")
 echo $time1
-if [ "$time1" = 30 ] || [ "$time1" = 00 ];then
+if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 30 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ];then
   ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
 fi
 sleep 1
