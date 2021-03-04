@@ -387,7 +387,7 @@ class Video extends Base
         $where = [];
         $where['id'] = $id;
         // 获取集
-        $video_collection_data = Db::table('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,bitrate,duration,size,resolution,is_selected')->where($where)->find();
+        $video_collection_data = Db::table('video_collection')->field('id,video_id,task_id,title,collection,vod_url,type,status,bitrate,duration,size,resolution,is_selected,down_url')->where($where)->find();
 
         $this->assign('info', $video_collection_data);
 

@@ -25,6 +25,15 @@
                             </select>
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否精品：</label>
+                        <div class="layui-input-inline w120">
+                            <select name="is_selected">
+                                <option value="0" {if condition="$info.is_selected eq '0'"}selected{/if}>否</option>
+                                <option value="1" {if condition="$info.is_selected neq '0'"}selected{/if}>是</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="layui-form-item ">
                         <label class="layui-form-label">标题：</label>
@@ -87,6 +96,12 @@
                         </div>
                         <div class="layui-form-mid layui-word-aux">
                            {if condition="$info.is_selected eq '1'"}已替换为精品视频地址{else /}未替换{/if}
+                        </div>
+                    </div>
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label">源视频地址：</label>
+                        <div class="layui-input-inline w500">
+                            <input type="text" class="layui-input" value="{$info.down_url}" placeholder="请输入视频地址" name="down_url" id="down_url">
                         </div>
                     </div>
                 </div>
