@@ -902,6 +902,17 @@ function mac_characters_format($vod_name)
     $vod_name = str_replace('）', '', $vod_name);
     $vod_name = str_replace('(', '', $vod_name);
     $vod_name = str_replace(')', '', $vod_name);
+    $vod_name = str_replace('，', '', $vod_name);
+    $vod_name = str_replace(',', '', $vod_name);
+    $vod_name = str_replace('。', '', $vod_name);
+    $vod_name = str_replace('.', '', $vod_name);
+    $vod_name = str_replace('?', '', $vod_name);
+    $vod_name = str_replace('？', '', $vod_name);
+    $vod_name = str_replace('！', '', $vod_name);
+    $vod_name = str_replace('!', '', $vod_name);
+    $vod_name = str_replace('：', '', $vod_name);
+    $vod_name = str_replace(':', '', $vod_name);
+    $vod_name = str_replace('、', '', $vod_name);
     preg_match_all('/[\x7f-\xff]+[ ]/', $vod_name, $matches);
     if (!empty($matches) && isset($matches[0])) {
         foreach ($matches[0] as $m_k => $m_v) {
