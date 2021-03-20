@@ -921,7 +921,7 @@ function mac_characters_format($vod_name)
             $vod_name = str_replace($m_v, str_replace(' ', '', $m_v), $vod_name);
         }
     }
-    return $vod_name;
+    return trim($vod_name);
 }
 
 function mac_vod_remarks_is_v($vod_remarks)

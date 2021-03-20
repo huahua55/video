@@ -31,18 +31,51 @@ class PushData extends Common
         $config['keyp'] = 'data';
         $this->vodModel = Db::name('vod');
         $this->zy_list = [3, 25, 26, 27, 28];
-        $this->guo_lv = [1,6,7,8,9,10,11,12];
+        $this->guo_lv = [1, 6, 7, 8, 9, 10, 11, 12];
         $this->videoVodModel = Db::name('video_vod');
         $this->setName('pushData')->addArgument('parameter')->setDescription("获取数据-插入任务表");//这里的setName和php文件名一致,setDescription随意
     }
 
+    public function trimVodName()
+    {
+        $where['vod_name'] = array(
+            array('like', '%、%'),
+            array('like', '%·%'),
+            array('like', '%[%'),
+            array('like', '%]%'),
+            array('like', '%【%'),
+            array('like', '%】%'),
+            array('like', '%（%'),
+            array('like', '%）%'),
+            array('like', '%(%'),
+            array('like', '%)%'),
+            array('like', '%，%'),
+            array('like', '%,%'),
+            array('like', '%。%'),
+            array('like', '%.%'),
+            array('like', '%?%'),
+            array('like', '%？%'),
+            array('like', '%！%'),
+            array('like', '%!%'),
+            array('like', '%：%'),
+            array('like', '%:%'),
+            array('like', '%`%'),
+            'or');
+        $data = $this->vodModel->where($where)->select();
+        foreach ($data as $k => $v) {
+            $vod_name = mac_characters_format($v['vod_name']);
+            if ($vod_name != $v['vod_name']) {
+                Db::table('vod')->where(['vod_id' => $v['vod_id']])->update(['vod_name' => $vod_name]);
+            }
+        }
+    }
 
     /*
      * 下载
      */
     protected function execute(Input $input, Output $output)
     {
-
+        $this->trimVodName();
         log::info('任务表脚本开始');
 
         set_time_limit(0);
@@ -86,7 +119,7 @@ class PushData extends Common
 
         if ($name == 'iAll') {
             $vod_where['a.vod_year'] = ['egt', 2000];//年代限制
-        }  elseif ($name == 'iAllDy'){
+        } elseif ($name == 'iAllDy') {
             $vod_where['a.type_id'] = ['in', '1,6,7,8,9,10,11,12'];
         } else {
             $s = strtotime(date("Y-m-d 00:00:00", time()));
@@ -113,7 +146,7 @@ class PushData extends Common
                 if (!empty($data)) {
                     foreach ($data as $key => $val) {
                         if (in_array($val['type_id'], $this->zy_list)) {
-                            if($val['vod_year'] < 2020){
+                            if ($val['vod_year'] < 2020) {
                                 continue;
                             }
                         }
@@ -163,8 +196,8 @@ class PushData extends Common
         } elseif ($name == 'upId') {
             $vod_where['a.vod_id'] = ['eq', $id];//
         } else {
-            $s = strtotime(date("Y-m-d H:00:00",time() - (60 * 60 *1) ));
-            $e = time() + (60*60*24);
+            $s = strtotime(date("Y-m-d H:00:00", time() - (60 * 60 * 1)));
+            $e = time() + (60 * 60 * 24);
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
@@ -184,10 +217,10 @@ class PushData extends Common
                     foreach ($data as $key => $val) {
                         $video_where = [];
                         $video_where['vod_id'] = $val['vod_id'];
-                        $video_where['vod_status'] = ['neq',1];
-                        $video_where['is_selected'] = ['eq',0];
+                        $video_where['vod_status'] = ['neq', 1];
+                        $video_where['is_selected'] = ['eq', 0];
                         $video_res = Db::table('video')->where($video_where)->find();
-                        if (!empty($video_res)){
+                        if (!empty($video_res)) {
                             log::write($val['vod_name'] . '-----过滤--下架了');
                             continue;
                         }
@@ -219,7 +252,7 @@ class PushData extends Common
         foreach ($arr as $k => $v) {
             if (in_array($v['type_id'], $this->zy_list)) {
                 $m3u8_url_key = explode('$', explode('#', $v['m3u8_url'])[0])[0];
-                $m3u8_url_key =$this->title_cl($m3u8_url_key);
+                $m3u8_url_key = $this->title_cl($m3u8_url_key);
             } else {
                 $m3u8_url_key = int_zhuanhuan($v['collection']);
             }
@@ -255,10 +288,10 @@ class PushData extends Common
                     unset($cj_note_arr[$kk]);
                     continue;
                 }
-                if ($v['vod_re_type']!=0){
-                    $get_m3u8_list = array_column(getM3u8($cj_from_arr[$kk],2),'key','id');
-                    if(isset($get_m3u8_list[$v['vod_re_type']])){
-                        if ($get_m3u8_list[$v['vod_re_type']] != $cj_from_arr[$kk]){ # 删除key
+                if ($v['vod_re_type'] != 0) {
+                    $get_m3u8_list = array_column(getM3u8($cj_from_arr[$kk], 2), 'key', 'id');
+                    if (isset($get_m3u8_list[$v['vod_re_type']])) {
+                        if ($get_m3u8_list[$v['vod_re_type']] != $cj_from_arr[$kk]) { # 删除key
                             unset($cj_from_arr[$kk]);
                             unset($cj_url_arr[$kk]);
                             unset($cj_server_arr[$kk]);
@@ -294,14 +327,14 @@ class PushData extends Common
                             if (substr_count($v_v, 'http') > 0) {
                                 if (in_array($v['type_id'], $this->zy_list)) {
                                     $v_v = '第' . ($new_v_k_) . '期$' . $v_v;
-                                }else{
+                                } else {
                                     $v_v = '第' . ($new_v_k_) . '集$' . $v_v;
                                 }
                             }
                         }
                         if (in_array($v['type_id'], $this->zy_list)) {
                             $m3u8_url_key = explode('$', explode('#', $v_v_m3u8_url)[0])[0];
-                            $m3u8_url_key =$this->title_cl($m3u8_url_key);
+                            $m3u8_url_key = $this->title_cl($m3u8_url_key);
                             if (!empty($m3u8_url_key)) {
                                 if (!isset($collect_filter[$vv][$m3u8_url_key])) {
                                     $collect_filter[$vv][$m3u8_url_key] = $this->get_tit_ca($v_v);;
@@ -324,37 +357,40 @@ class PushData extends Common
         return $collect_filter;
     }
 
-    public function title_cl($m3u8_url_key){
-        if (substr_count($m3u8_url_key, '-') >0 and substr_count($m3u8_url_key, 'http') == 0 ){
-            $m3u8_url_key = trim(str_replace('-','',$m3u8_url_key));
+    public function title_cl($m3u8_url_key)
+    {
+        if (substr_count($m3u8_url_key, '-') > 0 and substr_count($m3u8_url_key, 'http') == 0) {
+            $m3u8_url_key = trim(str_replace('-', '', $m3u8_url_key));
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0 ){
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0) {
             $m3u8_url_key = $m3u8_url_key . '期';
         }
-        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0 ){
-            $m3u8_url_key = str_replace('集','期',$m3u8_url_key);;
+        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0) {
+            $m3u8_url_key = str_replace('集', '期', $m3u8_url_key);;
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
-            $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0) {
+            $m3u8_url_key = str_replace('下', '期下', $m3u8_url_key);
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
-            $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0) {
+            $m3u8_url_key = str_replace('上', '期上', $m3u8_url_key);
         }
-        if (substr_count($m3u8_url_key, '下期') > 0){
-            $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '下期') > 0) {
+            $m3u8_url_key = str_replace('下期', '期下', $m3u8_url_key);
         }
-        if (substr_count($m3u8_url_key, '上期') > 0){
-            $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '上期') > 0) {
+            $m3u8_url_key = str_replace('上期', '期上', $m3u8_url_key);
         }
         return $m3u8_url_key;
     }
-    protected function get_tit_ca($v_v){
+
+    protected function get_tit_ca($v_v)
+    {
         $vData = explode('#', $v_v);
         foreach ($vData as $kk => $vv) {
             $v_list_key = explode('$', $vv);
-            if(substr_count($v_list_key[0], 'http')==0){
-                $m3u8_url_key =$this->title_cl($v_list_key[0]);
-                $vData[$kk] = $m3u8_url_key .'$'.$v_list_key[1];
+            if (substr_count($v_list_key[0], 'http') == 0) {
+                $m3u8_url_key = $this->title_cl($v_list_key[0]);
+                $vData[$kk] = $m3u8_url_key . '$' . $v_list_key[1];
             }
         }
         return implode('#', $vData);
@@ -389,7 +425,7 @@ class PushData extends Common
         $key_data_new = [];//挑选值比较大的key
         $isok = false;
         foreach ($key_data as $k_data => $v_data) {
-            if ($v_data == 'ckm3u8'){
+            if ($v_data == 'ckm3u8') {
                 $isok = true;
             }
             $key_data_new[$v_data] = count($collect_filter[$type][$v_data]);
@@ -473,17 +509,17 @@ class PushData extends Common
                     }
                 }
             }
-            if($v['type_id_1'] == '2' && $v['vod_isend'] == '0' && $v['vod_year'] > 2020){
+            if ($v['type_id_1'] == '2' && $v['vod_isend'] == '0' && $v['vod_year'] > 2020) {
                 $vod_lang1 = substr_count('汉语', $v['vod_lang']);
                 $vod_lang2 = substr_count('普通话', $v['vod_lang']);
                 $vod_lang3 = substr_count('国语', $v['vod_lang']);
                 if ($vod_lang1 > 0 || $vod_lang2 || $vod_lang3) {
-                    if ($new_url['weight'] > 99){
+                    if ($new_url['weight'] > 99) {
                         $new_url['weight'] = $new_url['weight'] + 0.5;
-                    }else{
+                    } else {
                         $new_url['weight'] = 99.1;
                     }
-                    if ($new_url['weight'] > 99.9){
+                    if ($new_url['weight'] > 99.9) {
                         $new_url['weight'] = 99.9;
                     }
                 }
@@ -566,17 +602,17 @@ class PushData extends Common
                                 $res = $this->videoVodModel->insert($n_url);
                                 $new_vod_log_where = [];
                                 $new_vod_log_where['vod_id'] = $v['vod_id'];
-                                $new_vod_log_where['date'] = date("Y-m-d",time());
-                                $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-                                if (!empty($new_vod_log_data)){
-                                    if(empty($new_vod_log_data['push_up_date'])){
-                                        Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
+                                $new_vod_log_where['date'] = date("Y-m-d", time());
+                                $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
+                                if (!empty($new_vod_log_data)) {
+                                    if (empty($new_vod_log_data['push_up_date'])) {
+                                        Db::table('vod_log')->where(['id' => $new_vod_log_data['id']])->update(['push_up_date' => time()]);
                                     }
                                 }
                                 if ($res) {
-                                    log::write('成功q3-' . $v['b_vod_id'].'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
+                                    log::write('成功q3-' . $v['b_vod_id'] . '-' . $v['vod_name'] . '-' . $n_url['m3u8_url']);
                                 } else {
-                                    log::write('失败q3-' . $v['b_vod_id'].'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
+                                    log::write('失败q3-' . $v['b_vod_id'] . '-' . $v['vod_name'] . '-' . $n_url['m3u8_url']);
                                 }
                             }
                         }
@@ -598,23 +634,23 @@ class PushData extends Common
                             $new_key = $title;
                         }
                         if (isset($n[$new_key])) {
-                            if ($n[$new_key]['is_sync'] != 1 and $n[$new_key]['is_sync'] !=2 ) {
+                            if ($n[$new_key]['is_sync'] != 1 and $n[$new_key]['is_sync'] != 2) {
                                 $up_data = $this->vodData($v, $title, $new_down_url, $k_p_play, $k_p_val, 'u');
                                 if ($up_data['m3u8_url'] != $v['b_m3u8_url']) {
                                     $res = $this->videoVodModel->where(['id' => $n[$new_key]['id']])->update($up_data);
                                     $new_vod_log_where = [];
                                     $new_vod_log_where['vod_id'] = $v['vod_id'];
-                                    $new_vod_log_where['date'] = date("Y-m-d",time());
-                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-                                    if (!empty($new_vod_log_data)){
-                                        if(empty($new_vod_log_data['push_up_date'])){
-                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
+                                    $new_vod_log_where['date'] = date("Y-m-d", time());
+                                    $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)) {
+                                        if (empty($new_vod_log_data['push_up_date'])) {
+                                            Db::table('vod_log')->where(['id' => $new_vod_log_data['id']])->update(['push_up_date' => time()]);
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q-' . $n[$title]['id'] .'-'. $v['vod_name'].'-'. $up_data['m3u8_url']);
+                                        log::write('成功q-' . $n[$title]['id'] . '-' . $v['vod_name'] . '-' . $up_data['m3u8_url']);
                                     } else {
-                                        log::write('失败q-' . $n[$title]['id'] .'-'. $v['vod_name'].'-'. $up_data['m3u8_url']);
+                                        log::write('失败q-' . $n[$title]['id'] . '-' . $v['vod_name'] . '-' . $up_data['m3u8_url']);
                                     }
                                 }
                             }
@@ -631,17 +667,17 @@ class PushData extends Common
 
                                     $new_vod_log_where = [];
                                     $new_vod_log_where['vod_id'] = $v['vod_id'];
-                                    $new_vod_log_where['date'] = date("Y-m-d",time());
-                                    $new_vod_log_data =  Db::table('vod_log')->where($new_vod_log_where)->find();
-                                    if (!empty($new_vod_log_data)){
-                                        if(empty($new_vod_log_data['push_up_date'])){
-                                            Db::table('vod_log')->where(['id'=>$new_vod_log_data['id']])->update(['push_up_date'=>time()]);
+                                    $new_vod_log_where['date'] = date("Y-m-d", time());
+                                    $new_vod_log_data = Db::table('vod_log')->where($new_vod_log_where)->find();
+                                    if (!empty($new_vod_log_data)) {
+                                        if (empty($new_vod_log_data['push_up_date'])) {
+                                            Db::table('vod_log')->where(['id' => $new_vod_log_data['id']])->update(['push_up_date' => time()]);
                                         }
                                     }
                                     if ($res) {
-                                        log::write('成功q1-' . $v['b_vod_id'] .'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
+                                        log::write('成功q1-' . $v['b_vod_id'] . '-' . $v['vod_name'] . '-' . $n_url['m3u8_url']);
                                     } else {
-                                        log::write('失败q2-' . $v['b_vod_id'] .'-'. $v['vod_name'].'-'. $n_url['m3u8_url']);
+                                        log::write('失败q2-' . $v['b_vod_id'] . '-' . $v['vod_name'] . '-' . $n_url['m3u8_url']);
                                     }
                                 }
                             }
