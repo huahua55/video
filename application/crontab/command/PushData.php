@@ -75,7 +75,7 @@ class PushData extends Common
      */
     protected function execute(Input $input, Output $output)
     {
-        $this->trimVodName();
+//        $this->trimVodName();
         log::info('任务表脚本开始');
 
         set_time_limit(0);
