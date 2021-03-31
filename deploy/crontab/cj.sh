@@ -15,7 +15,8 @@ if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 3
 fi
 sleep 1
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
-php think Cj name=xcjokzyxs
+php think Cj name=bdzyxs
+#php think Cj name=xcjokzyxs
 #php think Cj name=cjokzyxs
 ###卧龙采集
 #php think Cj name=wlzyxs

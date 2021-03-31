@@ -9,8 +9,8 @@ chown -R www:www ../video
 
 time1=$(date "+%M")
 echo $time1
-if [ "$time1" = 00 ] || [ "$time1" = 15 ] || [ "$time1" = 30 ] || [ "$time1" = 45 ] || [ "$time1" = 55 ];then
-  sleep 50
+if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 30 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ];then
+  sleep 30
   php think Cj name=mhysday
 fi
 #time1=$(date "+%M")

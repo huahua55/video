@@ -12,7 +12,6 @@ if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 3
   sleep 10
   php think Cj name=zuidacj
 fi
-
 #time1=$(date "+%M")
 #len_time=${#time1}
 #if ((len_time==2));then
