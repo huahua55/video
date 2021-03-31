@@ -441,6 +441,9 @@ class CollectOk extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+                if($v['vod_play_url']){
+                    $v['vod_play_url'] = str_replace('https://','http://',$v['vod_play_url']);
+                }
                 $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
                 if ($get_type_pid_type_id != 3) {
                     $v['vod_name'] = trim(str_replace('2021', '', trim(str_replace('2020', '', $v['vod_name']))));
@@ -842,9 +845,7 @@ class CollectOk extends Base
                                 }
                             }
                             if ($v_name_is_install) {
-                                if($v['vod_play_url']){
-                                    $v['vod_play_url'] = str_replace('https://','http://',$v['vod_play_url']);
-                                }
+
 //                                p($v);
                                 $res = model('Vod')->insert($v);
                                 $new_vod_log_where = [];
@@ -1187,9 +1188,7 @@ class CollectOk extends Base
                                         Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                     }
                                 }
-                                if($update['vod_play_url']){
-                                    $update['vod_play_url'] = str_replace('https://','http://',$update['vod_play_url']);
-                                }
+
                                 $res = model('Vod')->where($where)->update($update);
                                 $color = 'green';
                                 if ($res === false) {
