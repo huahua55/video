@@ -842,6 +842,10 @@ class CollectOk extends Base
                                 }
                             }
                             if ($v_name_is_install) {
+                                if($v['vod_play_url']){
+                                    $v['vod_play_url'] = str_replace('https://','http://',$v['vod_play_url']);
+                                }
+//                                p($v);
                                 $res = model('Vod')->insert($v);
                                 $new_vod_log_where = [];
                                 $new_vod_log_where['vod_id'] = model('Vod')->getLastInsID();
@@ -1141,6 +1145,7 @@ class CollectOk extends Base
                                     }
                                 }
 
+
 //                                p($update);
 
                                 if ($get_type_pid_type_id == 1 && $is_ts_up == true) {
@@ -1181,6 +1186,9 @@ class CollectOk extends Base
                                         mac_echo($info['vod_name'] . '切换影片清晰度');
                                         Db::table('video_vod')->where(['vod_id' => $where['vod_id']])->update($video_vod);
                                     }
+                                }
+                                if($update['vod_play_url']){
+                                    $update['vod_play_url'] = str_replace('https://','http://',$update['vod_play_url']);
                                 }
                                 $res = model('Vod')->where($where)->update($update);
                                 $color = 'green';
