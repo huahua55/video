@@ -1,0 +1,132 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    .layui-form-label {
+        width: 122px !important;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 122px !important;
+    }
+</style>
+<div class="page-container p10">
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input id="id" name="id" type="hidden" value="{$info.id}">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">相关视频ID：</label>
+            <div class="layui-input-inline w500">
+                <input type="text" class="layui-input" value="{$info.vod_id}" placeholder="请输入相关视频ID" id="vod_id" name="vod_id">
+            </div>
+            <div class="layui-input-inline ">
+                <a class="layui-btn j-iframe" data-href="{:url('vod/data')}?select=1&input=vod_id" href="javascript:;" title="查询数据">查询数据</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">url</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.url}" lay-verify="url"  id="url" name="url">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频类型：</label>
+            <div class="layui-input-inline">
+                <select class="w100" name="pid">
+                    <option value="">请选择视频类型</option>
+                    <option value="1" {if condition="$info['pid'] eq '1'"}selected {/if}>电影</option>
+                    <option value="2" {if condition="$info['pid'] eq '2'"}selected {/if}>电视剧</option>
+                    <option value="3" {if condition="$info['pid'] eq '3'"}selected {/if}>综艺</option>
+                    <option value="4" {if condition="$info['pid'] eq '4'"}selected {/if}>动漫</option>
+                </select>
+            </div>
+            <span style="color: red">重要</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频状态：</label>
+            <div class="layui-input-block">
+                <input name="state" type="radio" id="rad-0" value="0" title="更新中" {if condition="$info['state'] eq 0"}checked {/if}>
+                <input name="state" type="radio" id="rad-1" value="1" title="不更新" {if condition="$info['state'] eq 1"}checked {/if}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">连载状态：</label>
+            <div class="layui-input-block">
+                <input name="is_tr_up" type="radio" id="is_tr_up-0" value="1" title="连载中" {if condition="$info['is_tr_up'] eq 1"}checked {/if}>
+                <input name="is_tr_up" type="radio" id="is_tr_up-1" value="0" title="不连载" {if condition="$info['is_tr_up'] eq 0"}checked {/if}>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权重顺序：</label>
+            <div class="layui-input-inline w100">
+                <input type="text" class="layui-input" value="{$info.weight}" placeholder="请输入权重" id="sort" name="weight">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">扩展:跳过预告</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" value="{$info.type}" placeholder="" id="type" name="type">
+            </div>
+            <span style="color: red">预告多的时候有用</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新周期</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" value="{$info.up_time_sum}" placeholder="" id="up_time_sum" name="up_time_sum">
+            </div>
+            <span style="color: red">电影填写数字9</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">小时</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" value="{$info.hour}" placeholder="" id="hour" name="hour">
+            </div>
+            <span style="color: red">电影填写数字9</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" value="{$info.branch}" placeholder="" id="branch" name="branch">
+            </div>
+            <span style="color: red">电影填写数字9</span>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输入推荐标题";
+                }
+            },
+            rel_ids: function (value) {
+                if (value == "") {
+                    return "请输入相关ID列表";
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

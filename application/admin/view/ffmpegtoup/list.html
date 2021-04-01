@@ -1,0 +1,253 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container p10">
+
+    <div class="demoTable">
+        搜索：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="查询当前视频名称" name="id" id="demoReload" autocomplete="off">
+        </div>
+
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
+
+    <div class="examine">
+        <form class="layui-form" action="" lay-filter="example">
+            <div id="examineForm" style="padding: 20px;">
+            </div>
+        </form>
+    </div>
+    <input id="vod_id" name="vod_id" type="hidden" value="{$vod_id}">
+</div>
+
+
+{include file="../../../application/admin/view/public/foot" /}
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="list">编辑</a>
+    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <!--        <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>-->
+    </div>
+</script>
+<script type="text/html" id="switchTpl">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="is_down" value="{{d.is_down}}" lay-skin="switch" lay-text="成功|未下载" lay-filter="sexDemo" {{ d.is_down == 1 ? 'checked' : '' }}>
+</script>
+
+<script>
+
+</script>
+<!--<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>-->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $('.examine').css('display', 'none');
+
+    layui.use(['form', 'jquery', 'util', 'laydate', 'layer', 'table', 'laypage'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var aypage = layui.laypage //分页
+        var layer = layui.layer //弹层
+        var $ = layui.jquery
+        var laydate = layui.laydate
+        var util = layui.util; //注意这行，很重要
+
+        //日期范围
+        laydate.render({
+            elem: '#task_date',
+        });
+        var vod_id = $("#vod_id").val()
+
+        //方法级渲染
+        table.render({
+            elem: '#test',
+            url: '/admin/ffmpeg_to_up/index2?vod_id=' + vod_id,
+            id: 'testReload',
+            page: true
+            // , even: 10
+            ,
+            limit: 10,
+            toolbar: '#toolbarDemo'
+            // , height: 310
+            , parseData: function (res) { //res 即为原始返回的数据
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                } else {
+                    $("#task_date").val(res.data.param.task_date)
+                    // console.log()
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.count, //解析数据长度
+                        "data": res.data.data //解析数据列表
+                    };
+                }
+
+            },
+            cols: [
+                [{
+                    field: 'id',
+                    title: 'ID',
+                }, {
+                    field: 'type_id_1',
+                    title: '类型',
+                    templet: function (d) {
+                        if (d.type_id_1 == '1') {
+                            return '电影';
+                        }
+                        if (d.type_id_1 == '2') {
+                            return '电视剧';
+                        }
+                        if (d.type_id_1 == '3') {
+                            return '综艺';
+                        }
+                        if (d.type_id_1 == '4') {
+                            return '动漫';
+                        }
+
+                    }
+                }, {
+                    field: 'vod_id',
+                    title: 'vod表ID',
+                }, {
+                    field: 'vod_name',
+                    title: '视频名称',
+                }, {
+                    field: 'collection',
+                    title: '集',
+                }, {
+                    field: 'm3u8_url',
+                    title: 'url',
+                }, {field: 'is_down', title: '状态', width: 85, templet: '#switchTpl', unresize: true}
+                ]
+            ]
+
+        });
+        //监听排序事件
+        table.on('sort(test)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            // console.log(obj.field); //当前排序的字段名
+            // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            // console.log(this); //当前排序的 th 对象
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            table.reload('testReload', {
+                initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field, //排序字段
+                    order: obj.type //排序方式
+                }
+            });
+            // layer.msg('服务端排序。order by ' + obj.field + ' ' + obj.type);
+        });
+        // 监听radio
+
+        //
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data; //获取选中行数据
+                    layer.open({
+                        type: 2,
+                        skin: 'layui-layer-demo', //样式类名
+                        title: '编辑',
+                        closeBtn: 1, //不显示关闭按钮
+                        anim: 2,
+                        area: ['100%', '100%'],
+                        offset: ['0px', '0px'],
+                        shadeClose: true, //开启遮罩关闭
+                        content: '/admin/ffmpeg_to_up/info'
+                    });
+                    break;
+            }
+        });
+        //监听行工具事件
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                // console.log(data)
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-demo', //样式类名
+                    title: '编辑',
+                    closeBtn: 1, //不显示关闭按钮
+                    anim: 2,
+                    area: ['100%', '100%'],
+                    offset: ['0px', '0px'],
+                    shadeClose: true, //开启遮罩关闭
+                    content: '/admin/ffmpeg_to_up/info?id=' + data.id
+                });
+            } else if (obj.event === 'list') {
+                // console.log(data)
+                layer.open({
+                    type: 2,
+                    skin: 'layui-layer-demo', //样式类名
+                    title: '编辑',
+                    closeBtn: 1, //不显示关闭按钮
+                    anim: 2,
+                    area: ['100%', '100%'],
+                    offset: ['0px', '0px'],
+                    shadeClose: true, //开启遮罩关闭
+                    content: '/admin/ffmpeg_to_up/list?id=' + data.id
+                });
+            } else if (obj.event === 'edits') {
+                layer.prompt({
+                    formType: 2,
+                    value: data.email
+                }, function (value, index) {
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+
+        });
+        //监听性别操作
+        form.on('switch(sexDemo)', function(obj){
+            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+        });
+
+        var $ = layui.$,
+            active = {
+                reload: function () {
+                    var demoReload = $('#demoReload');
+                    var state = $("select[name='state']").val();
+                    var is_tr_up = $("select[name='is_tr_up']").val();
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        },
+                        where: {
+                            // key: {
+                            idName: demoReload.val(),
+                            state: state,
+                            is_tr_up: is_tr_up,
+                            // }
+                        }
+                    }, 'data');
+                }
+            };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>
