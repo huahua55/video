@@ -10,9 +10,13 @@ chown -R www:www ../video
 time1=$(date "+%M")
 echo $time1
 if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 30 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ];then
-  sleep 30
-  php think Cj name=mhysday
+  sleep 1
+#  php think Cj name=mhysday
 fi
+
+sleep 2
+php think Cj name=mhysday
+
 #time1=$(date "+%M")
 #len_time=${#time1}
 #if ((len_time==2));then
