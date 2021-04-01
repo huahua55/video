@@ -26,17 +26,17 @@
 {include file="../../../application/admin/view/public/foot" /}
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-xs" lay-event="list">编辑</a>
     <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <!--        <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>-->
-    </div>
+<!--    <div class="layui-btn-container">-->
+<!--                <button class="layui-btn layui-btn-danger" lay-event="getCheckData">添加</button>-->
+<!--    </div>-->
 </script>
 <script type="text/html" id="switchTpl">
     <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="is_down" value="{{d.is_down}}" lay-skin="switch" lay-text="成功|未下载" lay-filter="sexDemo" {{ d.is_down == 1 ? 'checked' : '' }}>
+    <input type="checkbox" name="is_down" value="{{d.is_down}}" lay-skin="switch" lay-text="成功|未下载" lay-filter="sexDemo"
+           {{ d.is_down== 1 ? 'checked' : '' }}>
 </script>
 
 <script>
@@ -123,7 +123,26 @@
                 }, {
                     field: 'm3u8_url',
                     title: 'url',
-                }, {field: 'is_down', title: '状态', width: 85, templet: '#switchTpl', unresize: true}
+
+                }, {
+                    field: 'is_down',
+                    title: '状态',
+                    width: 120,
+                    templet: function (d) {
+                        if (d.is_down == '1') {
+                            return '<span style="color: green">成功</span>';
+                        }else if (d.is_down == '0') {
+                            return '<span style="color: black">未下载</span>';
+                        }else{
+                            return '<span style="color: red">下载失败</span>';
+                        }
+                    }
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    width: 130,
+                    toolbar: '#barDemo'
+                }
                 ]
             ]
 
@@ -162,7 +181,7 @@
                         area: ['100%', '100%'],
                         offset: ['0px', '0px'],
                         shadeClose: true, //开启遮罩关闭
-                        content: '/admin/ffmpeg_to_up/info'
+                        content: '/admin/ffmpeg_to_up/tinfo'
                     });
                     break;
             }
@@ -188,7 +207,7 @@
                     area: ['100%', '100%'],
                     offset: ['0px', '0px'],
                     shadeClose: true, //开启遮罩关闭
-                    content: '/admin/ffmpeg_to_up/info?id=' + data.id
+                    content: '/admin/ffmpeg_to_up/tinfo?id=' + data.id
                 });
             } else if (obj.event === 'list') {
                 // console.log(data)
@@ -214,12 +233,12 @@
                     layer.close(index);
                 });
             }
-
         });
-        //监听性别操作
-        form.on('switch(sexDemo)', function(obj){
-            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
-        });
+        // //监听性别操作
+        // form.on('switch(sexDemo)', function(obj){
+        //
+        //     layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+        // });
 
         var $ = layui.$,
             active = {

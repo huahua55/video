@@ -60,6 +60,25 @@ class FfmpegTpUp extends Base {
      * @param  string $field [description]
      * @return [type]        [description]
      */
+    public function tinfoData($where,$field='*')
+    {
+        if(empty($where) || !is_array($where)){
+            return ['code'=>1001,'msg'=>'参数错误'];
+        }
+        $info = Db::name('video_selected_task')->field($field)->where($where)->find();
+
+        if(empty($info)){
+            return ['code'=>1002,'msg'=>'获取数据失败'];
+        }
+
+        return ['code'=>1,'msg'=>'获取成功','info'=>$info];
+    }
+    /**
+     * 视频详情
+     * @param  [type] $where [description]
+     * @param  string $field [description]
+     * @return [type]        [description]
+     */
     public function infoData($where,$field='*')
     {
         if(empty($where) || !is_array($where)){
@@ -73,6 +92,27 @@ class FfmpegTpUp extends Base {
         $info = $info->toArray();
 
         return ['code'=>1,'msg'=>'获取成功','info'=>$info];
+    }
+
+    /**
+     * 保存
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function tsaveData($data)
+    {
+
+        if(!empty($data['id'])){
+            $where=[];
+            $where['id'] = ['eq',$data['id']];
+            $res = Db::name('video_selected_task')->where($where)->update($data);
+        }else{
+            $res = Db::name('video_selected_task')->insert($data);
+        }
+        if(false === $res){
+            return ['code'=>1002,'msg'=>'保存失败：'.$this->getError() ];
+        }
+        return ['code'=>1,'msg'=>'保存成功'];
     }
 
     /**

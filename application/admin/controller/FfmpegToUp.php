@@ -96,6 +96,29 @@ class FfmpegToUp extends Base
         return $this->success('succ', null, $data);
     }
 
+    public function tinfo(){
+        if (Request()->isPost()) {
+            $param = input('post.');
+            $param['is_sync'] = $param['is_down'];
+            $save_video = model('FfmpegTpUp')->tsaveData($param);
+            if ($save_video['code'] > 1) {
+                return $this->error($save_video['msg']);
+            }
+            return $this->success($save_video['msg']);
+        }
+
+        $id = input('id');
+        $where = [];
+        $where['id'] = $id;
+
+        $res = model('FfmpegTpUp')->tinfoData($where);
+        $info = $res['info'];
+        $this->assign('info', $info);
+
+        $this->assign('title', '集视频信息');
+        return $this->fetch('admin@ffmpegtoup/tinfo');
+    }
+
     /**
      * 视频详情
      * @return [type] [description]

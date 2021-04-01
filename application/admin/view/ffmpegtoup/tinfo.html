@@ -1,0 +1,73 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    .layui-form-label {
+        width: 122px !important;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 122px !important;
+    }
+</style>
+<div class="page-container p10">
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input id="id" name="id" type="hidden" value="{$info.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">集</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.collection}" lay-verify="collection"  id="collection" name="collection">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">集状态：</label>
+            <div class="layui-input-block">
+                <input name="is_down" type="radio" id="is_down-0" value="0" title="未下载" {if condition="$info['is_down'] eq 0"}checked {/if}>
+                <input name="is_down" type="radio" id="is_down-1" value="1" title="成功" {if condition="$info['is_down'] eq 1"}checked {/if}>
+                <input name="is_down" type="radio" id="is_down-2" value="2" title="下载失败" {if condition="$info['is_down'] eq 2"}checked {/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">url</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.m3u8_url}" lay-verify="m3u8_url"  id="m3u8_url" name="m3u8_url">
+            </div>
+        </div>
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输入推荐标题";
+                }
+            },
+            rel_ids: function (value) {
+                if (value == "") {
+                    return "请输入相关ID列表";
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
