@@ -1,0 +1,125 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    .layui-form-label {
+        width: 122px !important;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 122px !important;
+    }
+</style>
+<div class="page-container p10">
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input id="id" name="id" type="hidden" value="{$info.id}">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">相关视频ID：</label>
+            <div class="layui-input-inline w500" >
+                <input type="text" class="layui-input" value="{$info.vod_id}" placeholder="请输入相关视频ID" id="vod_id" name="vod_id">
+            </div>
+            <div class="layui-input-inline ">
+                <a class="layui-btn j-iframe" data-href="{:url('vod/data')}?select=1&input=vod_id" href="javascript:;" title="查询数据">查询数据</a>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频类型：</label>
+            <div class="layui-input-inline">
+                <select class="w100" name="pid" lay-verify="required">
+                    <option value="">请选择视频类型</option>
+                    <option value="1" {if condition="$info['pid'] eq '1'"}selected {/if}>电影</option>
+                    <option value="2" {if condition="$info['pid'] eq '2'"}selected {/if}>电视剧</option>
+                    <option value="3" {if condition="$info['pid'] eq '3'"}selected {/if}>综艺</option>
+                    <option value="4" {if condition="$info['pid'] eq '4'"}selected {/if}>动漫</option>
+                </select>
+            </div>
+            <span style="color: red">重要</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">爬取类型：</label>
+            <div class="layui-input-inline">
+                <select class="w100" name="type" lay-verify="required">
+                    <option value="">请选择爬取类型</option>
+                    <option value="1" {if condition="$info['type'] eq '1'"}selected {/if}>思古-全部爬取</option>
+                    <option value="2" {if condition="$info['type'] eq '2'"}selected {/if}>思古-单集爬取</option>
+                    <option value="3" {if condition="$info['type'] eq '3'"}selected {/if}>船长-单集爬取</option>
+                </select>
+            </div>
+            <span style="color: red">重要</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">思古目标源：</label>
+            <div class="layui-input-block">
+                <input name="is_from"  type="radio" id="is_from-1" value="1" title="腾讯" {if condition="$info['is_from'] eq 1"}checked {/if}>
+                <input name="is_from"  type="radio" id="is_from-2" value="2" title="爱奇艺" {if condition="$info['is_from'] eq 2"}checked {/if}>
+                <input name="is_from"  type="radio" id="is_from-3" value="3" title="优酷" {if condition="$info['is_from'] eq 3"}checked {/if}>
+                <input name="is_from"   type="radio" id="is_from-4" value="4" title="bibi" {if condition="$info['is_from'] eq 4"}checked {/if}>
+                <input name="is_from"  type="radio" id="is_from-5" value="5" title="芒果" {if condition="$info['is_from'] eq 5"}checked {/if}>
+                <input name="is_from"   type="radio" id="is_from-6" value="6" title="思古1080P" {if condition="$info['is_from'] eq 6"}checked {/if}>
+                <input name="is_from"  type="radio" id="is_from-7" value="7" title="思古ts版" {if condition="$info['is_from'] eq 7"}checked {/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务状态：</label>
+            <div class="layui-input-block">
+                <input name="vod_status" lay-verify="required" type="radio" id="vod_status-1" value="1" title="正常" {if condition="$info['vod_status'] eq 1"}checked {/if}>
+                <input name="vod_status" lay-verify="required" type="radio" id="vod_status-2" value="2" title="暂停" {if condition="$info['vod_status'] eq 2"}checked {/if}>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权重顺序：</label>
+            <div class="layui-input-inline w100">
+                <input type="text" class="layui-input" lay-verify="required"  value="{$info.weight}" placeholder="请输入权重" id="sort" name="weight">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">目标url</label>
+            <div class="layui-input-block">
+                <textarea name="url" cols="" lay-verify="required" rows="3" class="layui-textarea"  placeholder="格式类似：第1集$https://www.siguyy.com/play/96976-2-1.html$未下载
+               第2集$https://www.siguyy.com/play/96976-2-1.html$下载中
+               第3集$https://www.siguyy.com/play/96976-2-1.html$下载成功" style="height:40px;">{$info.url}</textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输入推荐标题";
+                }
+            },
+            rel_ids: function (value) {
+                if (value == "") {
+                    return "请输入相关ID列表";
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

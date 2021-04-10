@@ -1,0 +1,158 @@
+{include file="../../../application/admin/view/public/head" /}
+<style type="text/css">
+    .layui-form-label {
+        width: 122px !important;
+    }
+
+    .layui-form-pane .layui-input-block {
+        margin-left: 122px !important;
+    }
+</style>
+<div class="page-container p10">
+    <form class="layui-form layui-form-pane" method="post" action="">
+        <input id="id" name="id" type="hidden" value="{$info.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">code机器</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.code}" lay-verify="code"  id="code" name="code">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">思古ID</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.sg_id}" lay-verify="sg_id"  id="sg_id" name="sg_id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">vodID</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.vod_id}" lay-verify="vod_id"  id="vod_id" name="vod_id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">videoID</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.video_id}" lay-verify="video_id"  id="video_id" name="video_id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">集表ID</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.vc_id}" lay-verify="vc_id"  id="vc_id" name="vc_id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">title</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.title}" lay-verify="title"  id="title" name="title">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">集</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.collection}" lay-verify="collection"  id="collection" name="collection">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">集状态：</label>
+            <div class="layui-input-block">
+                <input name="vod_status" type="radio" id="vod_status-1" value="1" title="正常" {if condition="$info['vod_status'] eq 1"}checked {/if}>
+                <input name="vod_status" type="radio" id="vod_status-2" value="2" title="下线" {if condition="$info['vod_status'] eq 2"}checked {/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">下载状态：</label>
+            <div class="layui-input-block">
+                <input name="succ_type" type="radio" id="succ_type-0" value="0" title="未下载" {if condition="$info['succ_type'] eq 0"}checked {/if}>
+                <input name="succ_type" type="radio" id="succ_type-1" value="1" title="成功" {if condition="$info['succ_type'] eq 1"}checked {/if}>
+                <input name="succ_type" type="radio" id="succ_type-2" value="2" title="下载中" {if condition="$info['succ_type'] eq 2"}checked {/if}>
+                <input name="succ_type" type="radio" id="succ_type-3" value="3" title="下载失败" {if condition="$info['succ_type'] eq 4"}checked {/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">下载次数</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.fail_count}" lay-verify="fail_count"  id="fail_count" name="fail_count">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权重</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.weight}" lay-verify="weight"  id="weight" name="weight">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">m3u8_url</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.m3u8_url}" lay-verify="m3u8_url"  id="m3u8_url" name="m3u8_url">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">思古地址</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.su_url}" lay-verify="su_url"  id="su_url" name="su_url">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">(船长|源)地址</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.other_url}" lay-verify="other_url"  id="other_url" name="other_url">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">下载地址</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.down_url}" lay-verify="down_url"  id="down_url" name="down_url">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value="{$info.reason}" lay-verify="reason"  id="reason" name="reason">
+            </div>
+        </div>
+
+
+
+
+        <div class="layui-form-item center">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" data-child="true">保 存</button>
+                <button class="layui-btn layui-btn-warm" type="reset">还 原</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{include file="../../../application/admin/view/public/foot" /}
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        // 验证
+        form.verify({
+            name: function (value) {
+                if (value == "") {
+                    return "请输入推荐标题";
+                }
+            },
+            rel_ids: function (value) {
+                if (value == "") {
+                    return "请输入相关ID列表";
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
