@@ -222,11 +222,14 @@ class PushData extends Common
                         $video_where['vod_status'] = ['neq', 1];
                         $video_where['is_selected'] = ['eq', 0];
                         $video_res = Db::table('video')->where($video_where)->find();
-                        if (!empty($video_res)) {
-                            var_dump($val['vod_name'] . '-----过滤--下架了');
-                            log::write($val['vod_name'] . '-----过滤--下架了');
-                            continue;
+                        if ($val['vod_name'] != '快乐大本营'){
+                            if (!empty($video_res)) {
+                                var_dump($val['vod_name'] . '-----过滤--下架了');
+                                log::write($val['vod_name'] . '-----过滤--下架了');
+                                continue;
+                            }
                         }
+
 //                        if (in_array($val['type_id'], $this->zy_list)) {
 //                            if($val['vod_year'] < 2020){
 //                                continue;
