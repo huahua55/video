@@ -576,7 +576,7 @@ class PushData extends Common
         $data_name_val = [];
         $data_name_key = 0;
         $data_key_title = '';
-        print_r($v['vod_name']);
+        var_dump($v['vod_name']);
         if ($v['vod_name'] == '快乐大本营') {
             print_r($v['vod_name']);
             $query_data = Db::name('vod')->where(['vod_id' => 478919])->find();
