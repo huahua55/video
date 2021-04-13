@@ -202,9 +202,11 @@ class PushData extends Common
         }
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
+
         $qii = 0;
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
+
             log::write('页码-' . $page . '-共-' . $pagecount);
 //            p($this->vodModel->getlastsql());
             log::info('页码-' . $page . '-共-更新sql语句：' . $this->vodModel->getlastsql());
@@ -570,6 +572,30 @@ class PushData extends Common
 
     public function getUrlLike($v, $type = '.m3u8', $i = 'install', $n = [])
     {
+
+        $data_name_val = [];
+        $data_name_key = 0;
+        $data_key_title = '';
+        if ($v['vod_name'] == '快乐大本营') {
+            $query_data = Db::name('vod')->where(['vod_id' => 478919])->find();
+            foreach (explode("$$$", $query_data['vod_play_url']) as $vod_key => $vod_val) {
+                if (substr_count($vod_val, '.m3u8')) {
+                    foreach (explode("#", $vod_val) as $new_vod_key => $new_vod_val) {
+                        $title = findTitle(['m3u8_url' => $new_vod_val], 0);
+                        if (!empty($title)) {
+                            $title = intval(findNumAll($title));
+                        }
+                        $data_name_val[$title] = $new_vod_val;
+                    }
+                    $data_name_key = $vod_key;
+                }
+            }
+            $array_keys_val = array_keys($data_name_val);
+            rsort($array_keys_val);
+            $data_key_title = $array_keys_val[0];
+        }
+
+
         //验证地址
         $collect_filter = $this->getAll($v, $type);
         $new_down_url = [];
@@ -632,6 +658,21 @@ class PushData extends Common
                             $new_key = $k_p_play;
                         } else {
                             $new_key = $title;
+                        }
+                        if ($v['vod_name'] == '快乐大本营') {
+                            if ($data_name_val && !empty($data_key_title)) {
+                                if ($data_key_title <= $new_key) {
+                                    $title = intval(findNumAll($new_key));
+                                    $data_name_val[$title] = $k_p_val['m3u8_url'];
+                                    $vod_play_url = explode("$$$", $query_data['vod_play_url']);
+                                    $vod_play_url[$data_name_key] = implode('#', $data_name_val);
+                                    $query_data['vod_play_url'] = implode('$$$', $vod_play_url);
+                                    $update_vod_play_url = [];
+                                    $update_vod_play_url['vod_play_url'] = $query_data['vod_play_url'];
+                                    $update_vod_play_url['vod_time'] = time();
+                                    $res = Db::name('vod')->where(['vod_id'=>$query_data['vod_id']])->update($update_vod_play_url);
+                                }
+                            }
                         }
                         if (isset($n[$new_key])) {
                             if ($n[$new_key]['is_sync'] != 1 and $n[$new_key]['is_sync'] != 2) {
