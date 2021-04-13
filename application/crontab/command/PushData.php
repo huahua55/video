@@ -224,7 +224,7 @@ class PushData extends Common
                         $video_res = Db::table('video')->where($video_where)->find();
                         if ($val['vod_name'] != '快乐大本营'){
                             if (!empty($video_res)) {
-                                var_dump($val['vod_name'] . '-----过滤--下架了');
+//                                var_dump($val['vod_name'] . '-----过滤--下架了');
                                 log::write($val['vod_name'] . '-----过滤--下架了');
                                 continue;
                             }
@@ -580,9 +580,9 @@ class PushData extends Common
         $data_name_val = [];
         $data_name_key = 0;
         $data_key_title = '';
-        var_dump($v['vod_name']);
+//        var_dump($v['vod_name']);
         if ($v['vod_name'] == '快乐大本营') {
-            print_r($v['vod_name']);
+//            var_dump($v['vod_name']);
             $query_data = Db::name('vod')->where(['vod_id' => 478919])->find();
             foreach (explode("$$$", $query_data['vod_play_url']) as $vod_key => $vod_val) {
                 if (substr_count($vod_val, '.m3u8')) {
