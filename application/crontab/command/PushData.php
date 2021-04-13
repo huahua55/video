@@ -223,6 +223,7 @@ class PushData extends Common
                         $video_where['is_selected'] = ['eq', 0];
                         $video_res = Db::table('video')->where($video_where)->find();
                         if (!empty($video_res)) {
+                            var_dump($val['vod_name'] . '-----过滤--下架了');
                             log::write($val['vod_name'] . '-----过滤--下架了');
                             continue;
                         }
