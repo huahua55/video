@@ -441,6 +441,7 @@ class Collect extends Base
 
 
             foreach ($data['data'] as $k => $v) {
+//                p($v);
 
                 $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
                 if ($get_type_pid_type_id != 3) {
@@ -667,7 +668,26 @@ class Collect extends Base
                             continue;
                         }
 
+
                         $cj_play_url_arr[$kk] = rtrim($cj_play_url_arr[$kk] ?? '', '#');
+                        $new_cj_play_url_arr  =explode('#',$cj_play_url_arr[$kk]);
+                        foreach ($new_cj_play_url_arr as $new_cj_play_url_key=>$new_cj_play_url_val){
+                            $count4 = substr_count( $new_cj_play_url_val,'$http');
+                            if (!$count4){
+                                $new_cj_play_url_val = str_replace('http','$http',$new_cj_play_url_val);
+                                $new_cj_play_url_val_arr = explode('$',$new_cj_play_url_val);
+                                if(count($new_cj_play_url_val_arr) > 2){
+                                    array_shift($new_cj_play_url_val_arr);
+                                }
+                                $new_cj_play_url_arr[$new_cj_play_url_key]  = implode('$',$new_cj_play_url_val_arr);
+                            }
+                            $count5 = substr_count( $new_cj_play_url_val,'$ttp');
+                            if ($count5){
+                                $new_cj_play_url_val = str_replace('$ttp','$http',$new_cj_play_url_val);
+                                $new_cj_play_url_arr[$new_cj_play_url_key]  = $new_cj_play_url_val;
+                            }
+                        }
+                        $cj_play_url_arr[$kk] = implode('#',$new_cj_play_url_arr);
                         $cj_play_server_arr[$kk] = $cj_play_server_arr[$kk] ?? '';
                         $cj_play_note_arr[$kk] = $cj_play_note_arr[$kk] ?? "";
 
