@@ -248,7 +248,12 @@ class CollectOk extends Base
 //            }
             $array_data[$key]['vod_time'] = (string)$video->last;
             $array_data[$key]['vod_total'] = 0;
-            $array_data[$key]['vod_isend'] = 1;
+            $array_data[$key]['vod_isend'] = 0;
+            if (!empty($array_data[$key]['vod_year'])){
+                if ($array_data[$key]['vod_year'] < 2021) {
+                    $array_data[$key]['vod_isend'] = 1;
+                }
+            }
             if ($array_data[$key]['vod_serial']) {
                 $array_data[$key]['vod_isend'] = 0;
             }

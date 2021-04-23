@@ -250,7 +250,14 @@ class Collect extends Base
 //            }
             $array_data[$key]['vod_time'] = (string)$video->last;
             $array_data[$key]['vod_total'] = 0;
-            $array_data[$key]['vod_isend'] = 1;
+
+            $array_data[$key]['vod_isend'] = 0;
+            if (!empty($array_data[$key]['vod_year'])){
+                if ($array_data[$key]['vod_year'] < 2021) {
+                    $array_data[$key]['vod_isend'] = 1;
+                }
+            }
+
             if ($array_data[$key]['vod_serial']) {
                 $array_data[$key]['vod_isend'] = 0;
             }
@@ -670,24 +677,24 @@ class Collect extends Base
 
 
                         $cj_play_url_arr[$kk] = rtrim($cj_play_url_arr[$kk] ?? '', '#');
-                        $new_cj_play_url_arr  =explode('#',$cj_play_url_arr[$kk]);
-                        foreach ($new_cj_play_url_arr as $new_cj_play_url_key=>$new_cj_play_url_val){
-                            $count4 = substr_count( $new_cj_play_url_val,'$http');
-                            if (!$count4){
-                                $new_cj_play_url_val = str_replace('http','$http',$new_cj_play_url_val);
-                                $new_cj_play_url_val_arr = explode('$',$new_cj_play_url_val);
-                                if(count($new_cj_play_url_val_arr) > 2){
+                        $new_cj_play_url_arr = explode('#', $cj_play_url_arr[$kk]);
+                        foreach ($new_cj_play_url_arr as $new_cj_play_url_key => $new_cj_play_url_val) {
+                            $count4 = substr_count($new_cj_play_url_val, '$http');
+                            if (!$count4) {
+                                $new_cj_play_url_val = str_replace('http', '$http', $new_cj_play_url_val);
+                                $new_cj_play_url_val_arr = explode('$', $new_cj_play_url_val);
+                                if (count($new_cj_play_url_val_arr) > 2) {
                                     array_shift($new_cj_play_url_val_arr);
                                 }
-                                $new_cj_play_url_arr[$new_cj_play_url_key]  = implode('$',$new_cj_play_url_val_arr);
+                                $new_cj_play_url_arr[$new_cj_play_url_key] = implode('$', $new_cj_play_url_val_arr);
                             }
-                            $count5 = substr_count( $new_cj_play_url_val,'$ttp');
-                            if ($count5){
-                                $new_cj_play_url_val = str_replace('$ttp','$http',$new_cj_play_url_val);
-                                $new_cj_play_url_arr[$new_cj_play_url_key]  = $new_cj_play_url_val;
+                            $count5 = substr_count($new_cj_play_url_val, '$ttp');
+                            if ($count5) {
+                                $new_cj_play_url_val = str_replace('$ttp', '$http', $new_cj_play_url_val);
+                                $new_cj_play_url_arr[$new_cj_play_url_key] = $new_cj_play_url_val;
                             }
                         }
-                        $cj_play_url_arr[$kk] = implode('#',$new_cj_play_url_arr);
+                        $cj_play_url_arr[$kk] = implode('#', $new_cj_play_url_arr);
                         $cj_play_server_arr[$kk] = $cj_play_server_arr[$kk] ?? '';
                         $cj_play_note_arr[$kk] = $cj_play_note_arr[$kk] ?? "";
 
