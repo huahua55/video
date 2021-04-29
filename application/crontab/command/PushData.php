@@ -661,7 +661,10 @@ class PushData extends Common
                         }
 
                         if (in_array($v['type_id'], $this->zy_list)) {
-                            $new_key = $k_p_play;
+//                            $new_key = $k_p_play;
+                            $new_key = $title;
+                            $title = str_replace('期', '', $title);
+                            $title = str_replace('第', '', $title);
                         } else {
                             $new_key = $title;
                         }
