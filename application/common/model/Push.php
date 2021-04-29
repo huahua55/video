@@ -456,7 +456,14 @@ class Push extends Base
                         }
 
                         if (in_array($v['type_id'], $this->zy_list)) {
-                            $new_key = $k_p_play;
+//                            $new_key = $k_p_play;
+                            $new_key = $title;
+                            $title = str_replace('期', '', $title);
+                            $title = str_replace('第', '', $title);
+                            $count31 = substr_count($k_p_play, '下');
+                            if ($count31 > 0) {
+                                $title = $title - 1;
+                            }
                         } else {
                             $new_key = $title;
                         }

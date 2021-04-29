@@ -665,6 +665,10 @@ class PushData extends Common
                             $new_key = $title;
                             $title = str_replace('期', '', $title);
                             $title = str_replace('第', '', $title);
+                            $count31 = substr_count($k_p_play, '下');
+                            if ($count31 > 0) {
+                                $title = $title - 1;
+                            }
                         } else {
                             $new_key = $title;
                         }
