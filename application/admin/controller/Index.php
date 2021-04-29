@@ -62,28 +62,28 @@ class Index extends Base
             }
         }
 
-        $quickmenu = mac_read_file( APP_PATH.'data/config/quickmenu.txt');
-        if(!empty($quickmenu)){
-            $menus[1]['sub'][13] = ['name'=>'↓↓↓自定义菜单区域↓↓↓', 'url'=>'javascript:void(0);return false;','controller'=>'', 'action'=>'' ];
-            $arr = explode(chr(13),$quickmenu);
-            foreach($arr as $k=>$v){
-                if(empty($v)){
-                    continue;
-                }
-                $one = explode(',',trim($v));
-                if(substr($one[1],0,4)=='http' || substr($one[1],0,2)=='//'){
-
-                }elseif(substr($one[1],0,1) =='/'){
-
-                }elseif(strpos($one[1],'###')!==false || strpos($one[1],'javascript:')!==false){
-
-                }
-                else{
-                    $one[1] = url($one[1]);
-                }
-                $menus[1]['sub'][14 + $k] = ['name'=>$one[0], 'url'=>$one[1],'controller'=>'', 'action'=>'' ];
-            }
-        }
+//        $quickmenu = mac_read_file( APP_PATH.'data/config/quickmenu.txt');
+//        if(!empty($quickmenu)){
+//            $menus[1]['sub'][13] = ['name'=>'↓↓↓自定义菜单区域↓↓↓', 'url'=>'javascript:void(0);return false;','controller'=>'', 'action'=>'' ];
+//            $arr = explode(chr(13),$quickmenu);
+//            foreach($arr as $k=>$v){
+//                if(empty($v)){
+//                    continue;
+//                }
+//                $one = explode(',',trim($v));
+//                if(substr($one[1],0,4)=='http' || substr($one[1],0,2)=='//'){
+//
+//                }elseif(substr($one[1],0,1) =='/'){
+//
+//                }elseif(strpos($one[1],'###')!==false || strpos($one[1],'javascript:')!==false){
+//
+//                }
+//                else{
+//                    $one[1] = url($one[1]);
+//                }
+//                $menus[1]['sub'][14 + $k] = ['name'=>$one[0], 'url'=>$one[1],'controller'=>'', 'action'=>'' ];
+//            }
+//        }
         $this->assign('menus',$menus);
 
         $this->assign('title','后台管理中心');
