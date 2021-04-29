@@ -3,7 +3,7 @@ return array(
 
 	'1' => array('name' => '首页', 'icon' => 'xe625', 'sub' => array(
 		'11' => array("show" => 1, "name" => '欢迎页面', 'controller' => 'index', 'action' => 'welcome'),
-		//'12' => array("show"=>1,"name" => '自定义菜单配置', 'controller' => 'index', 'action' => 'quickmenu'),
+		'12' => array("show"=>1,"name" => '自定义菜单配置', 'controller' => 'index', 'action' => 'quickmenu'),
 		'13' => array("show" => 1, "name" => '定时任务', 'controller' => 'FfmpegToUp', 'action' => 'index'),
 		'14' => array("show" => 1, "name" => '思古任务', 'controller' => 'SgVideo', 'action' => 'index'),
 		'15' => array("show" => 1, "name" => '思古下载任务', 'controller' => 'SgVideo', 'action' => 'list'),
@@ -360,10 +360,20 @@ return array(
 	)),
 
 	'11' => array('name' => '应用', 'icon' => 'xe621', 'sub' => array(
-		'112' => array("show" => 1, 'name' => 'URL推送', 'controller' => 'urlsend', 'action' => 'index', 'param' => ''),
-		'11200' => array("show" => 0, 'name' => '--推送入口', 'controller' => 'urlsend', 'action' => 'push'),
-		'11201' => array("show" => 0, 'name' => '--百度主动推送', 'controller' => 'urlsend', 'action' => 'baidu_push'),
-		'11202' => array("show" => 0, 'name' => '--百度熊掌推送', 'controller' => 'urlsend', 'action' => 'baidu_bear'),
+        '111' => array("show"=>1,'name' => '应用市场', 'controller' => 'addon',		'action' => 'index', 'param'=>''),
+
+        '112' => array("show"=>1,'name' => 'URL推送', 'controller' => 'urlsend',		'action' => 'index', 'param'=>''),
+        '11200' => array("show"=>0,'name' => '--推送入口', 'controller' => 'urlsend',		'action' => 'push'),
+        '11201' => array("show"=>0,'name' => '--百度主动推送', 'controller' => 'urlsend',		'action' => 'baidu_push'),
+        '11202' => array("show"=>0,'name' => '--百度熊掌推送', 'controller' => 'urlsend',		'action' => 'baidu_bear'),
+
+        '11100' => array("show"=>0,'name' => '--应用插件列表', 'controller' => 'addon',		'action' => 'downloaded'),
+        '11101' => array("show"=>0,'name' => '--应用插件安装', 'controller' => 'addon',		'action' => 'install'),
+        '11102' => array("show"=>0,'name' => '--应用插件卸载', 'controller' => 'addon',		'action' => 'uninstall'),
+        '11103' => array("show"=>0,'name' => '--应用插件配置', 'controller' => 'addon',		'action' => 'config'),
+        '11104' => array("show"=>0,'name' => '--应用插件状态', 'controller' => 'addon',		'action' => 'state'),
+        '11105' => array("show"=>0,'name' => '--应用插件上传', 'controller' => 'addon',		'action' => 'local'),
+        '11106' => array("show"=>0,'name' => '--应用插件升级', 'controller' => 'addon',		'action' => 'upgrade'),
 	)),
 
 );
