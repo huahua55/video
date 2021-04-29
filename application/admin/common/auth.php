@@ -314,12 +314,20 @@ return array(
 	)),
 
 	'9' => array('name' => '采集', 'icon' => 'xe727', 'sub' => array(
-		'91' => array("show" => 0, 'name' => '推荐资源', 'controller' => 'collect', 'action' => 'union'),
-		'9101' => array("show" => 0, 'name' => '--采集入口', 'controller' => 'collect', 'action' => 'api'),
-		'9102' => array("show" => 0, 'name' => '--断点采集', 'controller' => 'collect', 'action' => 'load'),
-		'9103' => array("show" => 0, 'name' => '--绑定分类', 'controller' => 'collect', 'action' => 'bind'),
-		'9104' => array("show" => 0, 'name' => '--采集视频', 'controller' => 'collect', 'action' => 'vod'),
-		'9105' => array("show" => 0, 'name' => '--采集文章', 'controller' => 'collect', 'action' => 'art'),
+//		'91' => array("show" => 0, 'name' => '推荐资源', 'controller' => 'collect', 'action' => 'union'),
+//		'9101' => array("show" => 0, 'name' => '--采集入口', 'controller' => 'collect', 'action' => 'api'),
+//		'9102' => array("show" => 0, 'name' => '--断点采集', 'controller' => 'collect', 'action' => 'load'),
+//		'9103' => array("show" => 0, 'name' => '--绑定分类', 'controller' => 'collect', 'action' => 'bind'),
+//		'9104' => array("show" => 0, 'name' => '--采集视频', 'controller' => 'collect', 'action' => 'vod'),
+//		'9105' => array("show" => 0, 'name' => '--采集文章', 'controller' => 'collect', 'action' => 'art'),
+
+        '91' => array("show"=>1,'name' => '6u', 'controller' => 'collect',		'action' => 'union'),
+        '9101' => array("show"=>0,'name' => '--采集入口', 'controller' => 'collect',		'action' => 'api'),
+        '9102' => array("show"=>0,'name' => '--断点采集', 'controller' => 'collect',		'action' => 'load'),
+        '9103' => array("show"=>0,'name' => '--绑定分类', 'controller' => 'collect',		'action' => 'bind'),
+        '9104' => array("show"=>0,'name' => '--采集视频', 'controller' => 'collect',		'action' => 'vod'),
+        '9105' => array("show"=>0,'name' => '--采集文章', 'controller' => 'collect',		'action' => 'art'),
+
 		'92' => array("show" => 0, 'name' => '定时挂机', 'controller' => 'collect', 'action' => 'timing'),
 
 		'93' => array("show" => 1, 'name' => '自定义资源', 'controller' => 'collect', 'action' => 'index'),
