@@ -87,27 +87,32 @@ class Push extends Base
         }
 
     }
-    public function title_cl($m3u8_url_key){
-        if (substr_count($m3u8_url_key, '-') >0 and substr_count($m3u8_url_key, 'http') == 0 ){
-            $m3u8_url_key = trim(str_replace('-','',$m3u8_url_key));
+
+    public function title_cl($m3u8_url_key)
+    {
+        if (substr_count($m3u8_url_key, '-') > 0 and substr_count($m3u8_url_key, 'http') == 0) {
+            $m3u8_url_key = trim(str_replace('-', '', $m3u8_url_key));
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0 ){
-            $m3u8_url_key = $m3u8_url_key . '期';
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0) {
+            $m3u8_url_key = '第' . $m3u8_url_key . '期';
         }
-        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0 ){
-            $m3u8_url_key = str_replace('集','期',$m3u8_url_key);;
+        if (substr_count($m3u8_url_key, '第') == 0 and substr_count($m3u8_url_key, '期') > 0) {
+            $m3u8_url_key = '第' . $m3u8_url_key;
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0){
-            $m3u8_url_key = str_replace('下','期下',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0) {
+            $m3u8_url_key = str_replace('集', '期', $m3u8_url_key);;
         }
-        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0){
-            $m3u8_url_key = str_replace('上','期上',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '下') > 0) {
+            $m3u8_url_key = str_replace('下', '期下', $m3u8_url_key);
         }
-        if (substr_count($m3u8_url_key, '下期') > 0){
-            $m3u8_url_key = str_replace('下期','期下',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '上') > 0) {
+            $m3u8_url_key = str_replace('上', '期上', $m3u8_url_key);
         }
-        if (substr_count($m3u8_url_key, '上期') > 0){
-            $m3u8_url_key = str_replace('上期','期上',$m3u8_url_key);
+        if (substr_count($m3u8_url_key, '下期') > 0) {
+            $m3u8_url_key = str_replace('下期', '期下', $m3u8_url_key);
+        }
+        if (substr_count($m3u8_url_key, '上期') > 0) {
+            $m3u8_url_key = str_replace('上期', '期上', $m3u8_url_key);
         }
         return $m3u8_url_key;
     }
@@ -393,6 +398,32 @@ class Push extends Base
 
     public function getUrlLike($v, $type = '.m3u8', $i = 'install', $n = [])
     {
+        $data_name_val = [];
+        $data_name_key = 0;
+        $data_key_title = '';
+        if ($v['vod_name'] == '快乐大本营') {
+//            var_dump($v['vod_name']);
+            $query_data = Db::name('vod')->where(['vod_id' => 478919])->find();
+            foreach (explode("$$$", $query_data['vod_play_url']) as $vod_key => $vod_val) {
+                if (substr_count($vod_val, '.m3u8')) {
+                    foreach (explode("#", $vod_val) as $new_vod_key => $new_vod_val) {
+                        $title = $this->title_cl(findTitle(['m3u8_url' => $new_vod_val], 0));
+                        if (!empty($title)) {
+                            $title1 = intval(findNumAll($title));
+                            $count31 = substr_count($title, '下');
+                            if ($count31 > 0) {
+                                $title1 = $title1 - 1;
+                            }
+                            $data_name_val[$title1] = $new_vod_val;
+                        }
+                    }
+                    $data_name_key = $vod_key;
+                }
+            }
+            $array_keys_val = array_keys($data_name_val);
+            rsort($array_keys_val);
+            $data_key_title = $array_keys_val[0];
+        }
         //验证地址
         $collect_filter = $this->getAll($v, $type);
         $new_down_url = [];
@@ -456,16 +487,35 @@ class Push extends Base
                         }
 
                         if (in_array($v['type_id'], $this->zy_list)) {
-//                            $new_key = $k_p_play;
-                            $new_key = $title;
-                            $title = str_replace('期', '', $title);
-                            $title = str_replace('第', '', $title);
-                            $count31 = substr_count($k_p_play, '下');
-                            if ($count31 > 0) {
-                                $title = $title - 1;
-                            }
+                            $new_key = $k_p_play;
+//                            $new_key = $title;
+//                            $title = str_replace('期', '', $title);
+//                            $title = str_replace('第', '', $title);
+//                            $count31 = substr_count($k_p_play, '下');
+//                            if ($count31 > 0) {
+//                                $title = $title - 1;
+//                            }
                         } else {
                             $new_key = $title;
+                        }
+                        if ($v['vod_name'] == '快乐大本营') {
+                            if ($data_name_val && !empty($data_key_title)) {
+                                $title = intval(findNumAll($new_key));
+                                $count31 = substr_count($new_key, '下');
+                                if ($count31 > 0) {
+                                    $title = $title - 1;
+                                }
+                                if ($data_key_title <= $title) {
+                                    $data_name_val[$title] = $k_p_val['m3u8_url'];
+                                    $vod_play_url = explode("$$$", $query_data['vod_play_url']);
+                                    $vod_play_url[$data_name_key] = implode('#', $data_name_val);
+                                    $query_data['vod_play_url'] = implode('$$$', $vod_play_url);
+                                    $update_vod_play_url = [];
+                                    $update_vod_play_url['vod_play_url'] = $query_data['vod_play_url'];
+                                    $update_vod_play_url['vod_time'] = time();
+                                    $res = Db::name('vod')->where(['vod_id'=>$query_data['vod_id']])->update($update_vod_play_url);
+                                }
+                            }
                         }
 
                         if (isset($n[$new_key])) {

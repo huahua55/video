@@ -91,7 +91,7 @@ class PushData extends Common
             $this->getWhile2($name, $id);
             //不存在添加
             $this->getWhile($name);
-        } else if ($name == 'up' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy') {
+        } else if ($name == 'up' || $name == 'upId' || $name == 'upAll' || $name == 'upSan' || $name == 'upDay' || $name == 'upZy') {
             //这里写业务逻辑
             $output->writeln('更新-获取数据开始:init');
             $this->getWhile2($name, $id);
@@ -200,13 +200,13 @@ class PushData extends Common
             $e = time() + (60 * 60 * 24);
             $vod_where['a.vod_time'] = ['between', [$s, $e]];
         }
+
         $vod_where['a.vod_play_url'] = array('like', '%.m3u8%');
         $pagecount = $this->getDataJoinT($vod_where, $order, $page, $limit, $start);
 
         $qii = 0;
         while ($is_true) {
             $data = $this->getDataJoin1($vod_where, $order, $page, $limit, $start);
-
             log::write('页码-' . $page . '-共-' . $pagecount);
 //            p($this->vodModel->getlastsql());
             log::info('页码-' . $page . '-共-更新sql语句：' . $this->vodModel->getlastsql());
@@ -222,6 +222,7 @@ class PushData extends Common
                         $video_where['vod_status'] = ['neq', 1];
                         $video_where['is_selected'] = ['eq', 0];
                         $video_res = Db::table('video')->where($video_where)->find();
+
                         if ($val['vod_name'] != '快乐大本营'){
                             if (!empty($video_res)) {
 //                                var_dump($val['vod_name'] . '-----过滤--下架了');
@@ -369,7 +370,10 @@ class PushData extends Common
             $m3u8_url_key = trim(str_replace('-', '', $m3u8_url_key));
         }
         if (substr_count($m3u8_url_key, '期') == 0 and substr_count($m3u8_url_key, '集') == 0) {
-            $m3u8_url_key = $m3u8_url_key . '期';
+            $m3u8_url_key = '第' . $m3u8_url_key . '期';
+        }
+        if (substr_count($m3u8_url_key, '第') == 0 and substr_count($m3u8_url_key, '期') > 0) {
+            $m3u8_url_key = '第' . $m3u8_url_key;
         }
         if (substr_count($m3u8_url_key, '第') > 0 and substr_count($m3u8_url_key, '集') > 0) {
             $m3u8_url_key = str_replace('集', '期', $m3u8_url_key);;
@@ -587,11 +591,15 @@ class PushData extends Common
             foreach (explode("$$$", $query_data['vod_play_url']) as $vod_key => $vod_val) {
                 if (substr_count($vod_val, '.m3u8')) {
                     foreach (explode("#", $vod_val) as $new_vod_key => $new_vod_val) {
-                        $title = findTitle(['m3u8_url' => $new_vod_val], 0);
+                        $title = $this->title_cl(findTitle(['m3u8_url' => $new_vod_val], 0));
                         if (!empty($title)) {
-                            $title = intval(findNumAll($title));
+                            $title1 = intval(findNumAll($title));
+                            $count31 = substr_count($title, '下');
+                            if ($count31 > 0) {
+                                $title1 = $title1 - 1;
+                            }
+                            $data_name_val[$title1] = $new_vod_val;
                         }
-                        $data_name_val[$title] = $new_vod_val;
                     }
                     $data_name_key = $vod_key;
                 }
@@ -661,21 +669,25 @@ class PushData extends Common
                         }
 
                         if (in_array($v['type_id'], $this->zy_list)) {
-//                            $new_key = $k_p_play;
-                            $new_key = $title;
-                            $title = str_replace('期', '', $title);
-                            $title = str_replace('第', '', $title);
-                            $count31 = substr_count($k_p_play, '下');
-                            if ($count31 > 0) {
-                                $title = $title - 1;
-                            }
+                            $new_key = $k_p_play;
+//                            $new_key = $title;
+//                            $title = str_replace('期', '', $title);
+//                            $title = str_replace('第', '', $title);
+//                            $count31 = substr_count($k_p_play, '下');
+//                            if ($count31 > 0) {
+//                                $title = $title - 1;
+//                            }
                         } else {
                             $new_key = $title;
                         }
                         if ($v['vod_name'] == '快乐大本营') {
                             if ($data_name_val && !empty($data_key_title)) {
-                                if ($data_key_title <= $new_key) {
-                                    $title = intval(findNumAll($new_key));
+                                $title = intval(findNumAll($new_key));
+                                $count31 = substr_count($new_key, '下');
+                                if ($count31 > 0) {
+                                    $title = $title - 1;
+                                }
+                                if ($data_key_title <= $title) {
                                     $data_name_val[$title] = $k_p_val['m3u8_url'];
                                     $vod_play_url = explode("$$$", $query_data['vod_play_url']);
                                     $vod_play_url[$data_name_key] = implode('#', $data_name_val);
