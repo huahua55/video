@@ -12,9 +12,8 @@ time1=$(date "+%M")
 echo $time1
 if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 30 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ];then
   ps -ef | grep Cj | grep -v grep | awk '{print $2}' | xargs kill -9
-  sleep 2
-sleep 1
-php think Cj name=bdzyxs
+  sleep 1
+  php think Cj name=bdzyxs
 fi
 #001 更新ok资源站 级别当天 默认后台设置请求时间 小时级别
 #php think Cj name=xcjokzyxs
