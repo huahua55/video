@@ -1817,6 +1817,11 @@ function getM3u8($m3u8,$type=1){
             'key'=>'dbm3u8',
             'name'=>'百度云'
         ],
+        'kbm3u8'=>[
+            'id'=>'11',
+            'key'=>'kbm3u8',
+            'name'=>'快播'
+        ],
     ];
     if ($type == 1){
         return isset($list[$m3u8])?$list[$m3u8]:[];
