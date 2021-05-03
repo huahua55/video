@@ -12,8 +12,8 @@ echo $time1
 if [ "$time1" = 00 ] || [ "$time1" = 10 ] || [ "$time1" = 20 ] || [ "$time1" = 30 ] || [ "$time1" = 40 ] || [ "$time1" = 50 ];then
   sleep 3
 #  php think Cj name=mhysday
-  php think Cj name=kbzyw
 fi
+php think Cj name=kbzyw
 sleep 2
 #php think Cj name=mhysday
 #php think Cj name=mhysday
