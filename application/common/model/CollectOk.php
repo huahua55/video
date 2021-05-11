@@ -1127,6 +1127,7 @@ class CollectOk extends Base
                             }
                             if (count($update) > 0) {
                                 $update['vod_time'] = time();
+                                $update['vod_douban_score'] = mac_random_float(7, 9);
                                 $where = [];
                                 $where['vod_id'] = $info['vod_id'];
                                 if ($info['vod_year'] == 0 || $info['vod_year'] == '') {
