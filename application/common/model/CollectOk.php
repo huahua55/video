@@ -249,7 +249,7 @@ class CollectOk extends Base
             $array_data[$key]['vod_time'] = (string)$video->last;
             $array_data[$key]['vod_total'] = 0;
             $array_data[$key]['vod_isend'] = 0;
-            if (!empty($array_data[$key]['vod_year'])){
+            if (!empty($array_data[$key]['vod_year'])) {
                 if ($array_data[$key]['vod_year'] < 2021) {
                     $array_data[$key]['vod_isend'] = 1;
                 }
@@ -446,8 +446,8 @@ class CollectOk extends Base
 
 
             foreach ($data['data'] as $k => $v) {
-                if($v['vod_play_url']){
-                    $v['vod_play_url'] = str_replace('https://','http://',$v['vod_play_url']);
+                if ($v['vod_play_url']) {
+                    $v['vod_play_url'] = str_replace('https://', 'http://', $v['vod_play_url']);
                 }
                 $get_type_pid_type_id = get_type_pid_type_id($v['type_id']);
                 if ($get_type_pid_type_id != 3) {
@@ -508,8 +508,11 @@ class CollectOk extends Base
                     $v['vod_up'] = intval($v['vod_up'] ?? '0');
                     $v['vod_down'] = intval($v['vod_down'] ?? '0');
 
-                    $v['vod_score'] = floatval($v['vod_score'] ?? '0');
-                    $v['vod_score_all'] = intval($v['vod_score_all'] ?? '0');
+//                    $v['vod_score'] = floatval($v['vod_score'] ?? '0');
+                    $v['vod_score'] = mac_random_float(7, 9);
+                    $v['vod_score_all'] = mac_random_float(7, 9);
+                    $v['vod_douban_score'] = mac_random_float(7, 9);
+//                    $v['vod_score_all'] = intval($v['vod_score_all'] ?? '0');
                     $v['vod_score_num'] = intval($v['vod_score_num'] ?? '0');
                     $v['vod_class'] = $v['vod_class'] ?? '';
                     $v['vod_class'] = mac_txt_merge($v['vod_class'], $v['type_name']);
@@ -548,8 +551,11 @@ class CollectOk extends Base
 
                     if ($config['score'] == 1) {
                         $v['vod_score_num'] = rand(1, 1000);
-                        $v['vod_score_all'] = $v['vod_score_num'] * rand(1, 10);
-                        $v['vod_score'] = round($v['vod_score_all'] / $v['vod_score_num'], 1);
+//                        $v['vod_score_all'] = $v['vod_score_num'] * rand(1, 10);
+//                        $v['vod_score'] = round($v['vod_score_all'] / $v['vod_score_num'], 1);
+                        $v['vod_score_all'] = mac_random_float(7, 9);
+                        $v['vod_douban_score'] = mac_random_float(7, 9);
+                        $v['vod_score'] = mac_random_float(7, 9);
                     }
 
                     if ($config['psename'] == 1) {
@@ -737,7 +743,6 @@ class CollectOk extends Base
                     $filter_vod_director = self::_arrayIntersectCount('未知,内详', $v['vod_director']);
 
                     // 如果是动漫或者综艺则不再校验导演和主演
-
 
 
                     # 原始数据

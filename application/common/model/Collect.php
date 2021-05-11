@@ -511,8 +511,11 @@ class Collect extends Base
                     $v['vod_up'] = intval($v['vod_up'] ?? '0');
                     $v['vod_down'] = intval($v['vod_down'] ?? '0');
 
-                    $v['vod_score'] = floatval($v['vod_score'] ?? '0');
-                    $v['vod_score_all'] = intval($v['vod_score_all'] ?? '0');
+//                    $v['vod_score'] = floatval($v['vod_score'] ?? '0');
+                    $v['vod_score'] = mac_random_float(7,9);
+                    $v['vod_douban_score'] = mac_random_float(7,9);
+                    $v['vod_score_all'] = mac_random_float(7,9);
+//                    $v['vod_score_all'] = intval($v['vod_score_all'] ?? '0');
                     $v['vod_score_num'] = intval($v['vod_score_num'] ?? '0');
                     $v['vod_class'] = $v['vod_class'] ?? '';
                     $v['vod_class'] = mac_txt_merge($v['vod_class'], $v['type_name']);
@@ -551,8 +554,11 @@ class Collect extends Base
 
                     if ($config['score'] == 1) {
                         $v['vod_score_num'] = rand(1, 1000);
-                        $v['vod_score_all'] = $v['vod_score_num'] * rand(1, 10);
-                        $v['vod_score'] = round($v['vod_score_all'] / $v['vod_score_num'], 1);
+//                        $v['vod_score_all'] = $v['vod_score_num'] * rand(1, 10);
+                        $v['vod_score_all'] = mac_random_float(7,9);
+                        $v['vod_douban_score'] = mac_random_float(7,9);
+//                        $v['vod_score'] = round($v['vod_score_all'] / $v['vod_score_num'], 1);
+                        $v['vod_score'] = mac_random_float(7,9);
                     }
 
                     if ($config['psename'] == 1) {

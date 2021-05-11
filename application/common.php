@@ -400,17 +400,20 @@ function switchChnNumber($time)
     }
 }
 
-function msectime() {
+function msectime()
+{
     list($t1, $t2) = explode(' ', microtime());
-    return (float)sprintf('%.3f',(floatval($t1)+floatval($t2)));
+    return (float)sprintf('%.3f', (floatval($t1) + floatval($t2)));
 }
 
 //截取指定两个字符之间的字符串
-function cut($begin,$end,$str){
-    $b = mb_strpos($str,$begin) + mb_strlen($begin);
-    $e = mb_strpos($str,$end) - $b;
-    return mb_substr($str,$b,$e);
+function cut($begin, $end, $str)
+{
+    $b = mb_strpos($str, $begin) + mb_strlen($begin);
+    $e = mb_strpos($str, $end) - $b;
+    return mb_substr($str, $b, $e);
 }
+
 function findTitle($k_p_val, $type = 0)
 {
     $array = explode('#', $k_p_val['m3u8_url']);
@@ -428,7 +431,7 @@ function findNumAll($str = '')
     $count = substr_count($str, '集');
     $count1 = substr_count($str, '第');
     if ($count > 0 && $count1 > 0) {
-        $str = cut('第','集',$str);
+        $str = cut('第', '集', $str);
 //        $count3 = substr_count($str, '-');
 //        if ($count3 > 0) {
 //            $str = explode('-',$str)[0]??$str;
@@ -1297,6 +1300,12 @@ function mac_rep_pse_rnd($psearr, $txt, $id = 0)
     return $res;
 }
 
+function mac_random_float($min = 0, $max = 1)
+{
+    $num = $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    return sprintf("%.2f", $num);  //控制小数后几位
+}
+
 function mac_txt_explain($txt)
 {
     $txtarr = explode('#', $txt);
@@ -1488,14 +1497,17 @@ function mac_filter_html($str)
 {
     return strip_tags($str);
 }
-function int_zhuanhuan($str){
-    $len = preg_replace('|[a-zA-Z/]+|','',$str);
-    if (strlen($len) >= 50){
+
+function int_zhuanhuan($str)
+{
+    $len = preg_replace('|[a-zA-Z/]+|', '', $str);
+    if (strlen($len) >= 50) {
         return 1;
-    }else{
+    } else {
         return $len;
     }
 }
+
 //推算主级id
 function getTypePid($id, $i = 1)
 {
@@ -1764,68 +1776,69 @@ function mac_str_is_html($str)
 //    }
 }
 
-function getM3u8($m3u8,$type=1){
+function getM3u8($m3u8, $type = 1)
+{
     $list = [
-        'ckm3u8'=>[
-            'id'=>'1',
-            'key'=>'ckm3u8',
-            'name'=>'ok'
+        'ckm3u8' => [
+            'id' => '1',
+            'key' => 'ckm3u8',
+            'name' => 'ok'
         ],
-        'zuidam3u8'=>[
-            'id'=>'2',
-            'key'=>'zuidam3u8',
-            'name'=>'最大'
+        'zuidam3u8' => [
+            'id' => '2',
+            'key' => 'zuidam3u8',
+            'name' => '最大'
         ],
-        'zkm3u8'=>[
-            'id'=>'3',
-            'key'=>'zkm3u8',
-            'name'=>'最快'
+        'zkm3u8' => [
+            'id' => '3',
+            'key' => 'zkm3u8',
+            'name' => '最快'
         ],
-        'xinm3u8'=>[
-            'id'=>'4',
-            'key'=>'xinm3u8',
-            'name'=>'最新'
+        'xinm3u8' => [
+            'id' => '4',
+            'key' => 'xinm3u8',
+            'name' => '最新'
         ],
-        'mahua'=>[
-            'id'=>'5',
-            'key'=>'mahua',
-            'name'=>'麻花'
+        'mahua' => [
+            'id' => '5',
+            'key' => 'mahua',
+            'name' => '麻花'
         ],
-        'kkm3u8'=>[
-            'id'=>'6',
-            'key'=>'kkm3u8',
-            'name'=>'酷云'
+        'kkm3u8' => [
+            'id' => '6',
+            'key' => 'kkm3u8',
+            'name' => '酷云'
         ],
 
-        'mbckm3u8'=>[
-            'id'=>'7',
-            'key'=>'mbckm3u8',
-            'name'=>'秒播'
+        'mbckm3u8' => [
+            'id' => '7',
+            'key' => 'mbckm3u8',
+            'name' => '秒播'
         ],
-        '135m3u8'=>[
-            'id'=>'8',
-            'key'=>'135m3u8',
-            'name'=>'135'
+        '135m3u8' => [
+            'id' => '8',
+            'key' => '135m3u8',
+            'name' => '135'
         ],
-        '123kum3u8'=>[
-            'id'=>'9',
-            'key'=>'123kum3u8',
-            'name'=>'123'
+        '123kum3u8' => [
+            'id' => '9',
+            'key' => '123kum3u8',
+            'name' => '123'
         ],
-        'dbm3u8'=>[
-            'id'=>'10',
-            'key'=>'dbm3u8',
-            'name'=>'百度云'
+        'dbm3u8' => [
+            'id' => '10',
+            'key' => 'dbm3u8',
+            'name' => '百度云'
         ],
-        'kbm3u8'=>[
-            'id'=>'11',
-            'key'=>'kbm3u8',
-            'name'=>'快播'
+        'kbm3u8' => [
+            'id' => '11',
+            'key' => 'kbm3u8',
+            'name' => '快播'
         ],
     ];
-    if ($type == 1){
-        return isset($list[$m3u8])?$list[$m3u8]:[];
-    }else{
+    if ($type == 1) {
+        return isset($list[$m3u8]) ? $list[$m3u8] : [];
+    } else {
         return $list;
     }
 }
@@ -1838,12 +1851,13 @@ function mac_str_is_htmls($str)
     $strip_str = htmlspecialchars_decode($str);
     $strip_str = mac_trim_all($strip_str);
     $strip_str = DeleteHtml($strip_str);
-    if($str1 != $strip_str){
+    if ($str1 != $strip_str) {
         return $strip_str;
-    }else{
+    } else {
         return false;
     }
 }
+
 function mac_play_list_one($url_one, $from_one, $server_one = '')
 {
 
@@ -3017,7 +3031,8 @@ function is_static_resource($url)
     return in_array($ext, $exts);
 }
 
-function charsetToGBK($str){
+function charsetToGBK($str)
+{
     return $str;
 }
 
@@ -3047,22 +3062,24 @@ function build_url_query($param, $static = false)
     }
     return $query;
 }
+
 /**
  * 当type_id_1=0 根据type_id获取对应的type_id_1
  * @param  [type] $type_id [description]
  * @return [type]          [description]
  */
-function get_type_pid_type_id( $type_id ){
+function get_type_pid_type_id($type_id)
+{
     $type_pid = 0;
-    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1 || $type_id == 30){
+    if (($type_id >= 6 && $type_id <= 12) || $type_id == 1 || $type_id == 30) {
         $type_pid = 1;
-    } else if (($type_id >= 13 &&  $type_id <= 16) || $type_id == 24 || $type_id == 2){
+    } else if (($type_id >= 13 && $type_id <= 16) || $type_id == 24 || $type_id == 2) {
         $type_pid = 2;
-    } else if ($type_id >= 19 && $type_id <= 22){
+    } else if ($type_id >= 19 && $type_id <= 22) {
         $type_pid = 4;
-    } else if (($type_id >= 25 && $type_id <= 28) || $type_id == 3){
+    } else if (($type_id >= 25 && $type_id <= 28) || $type_id == 3) {
         $type_pid = 3;
-    } else if ($type_id == 4){
+    } else if ($type_id == 4) {
         $type_pid = 4;
     }
     return $type_pid;
