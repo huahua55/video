@@ -4,7 +4,8 @@ return array(
 	'1' => array('name' => '首页', 'icon' => 'xe625', 'sub' => array(
 		'11' => array("show" => 1, "name" => '欢迎页面', 'controller' => 'index', 'action' => 'welcome'),
 		'12' => array("show"=>1,"name" => '自定义菜单配置', 'controller' => 'index', 'action' => 'quickmenu'),
-		'13' => array("show" => 1, "name" => '定时任务', 'controller' => 'FfmpegToUp', 'action' => 'index'),
+		'13' => array("show" => 1, "name" => '视频站定时任务', 'controller' => 'FfmpegToUp', 'action' => 'index'),
+		'22' => array("show" => 1, "name" => '视频站下载任务', 'controller' => 'FfmpegToUp', 'action' => 'list'),
 		'14' => array("show" => 1, "name" => '思古任务', 'controller' => 'SgVideo', 'action' => 'index'),
 		'15' => array("show" => 1, "name" => '思古下载任务', 'controller' => 'SgVideo', 'action' => 'list'),
 //		'13' => array("show" => 1, "name" => '推荐配置', 'controller' => 'vodRecommend', 'action' => 'index'),

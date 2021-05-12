@@ -37,8 +37,15 @@ class FfmpegToUp extends Base
         $where = [];
         $param['page'] = intval($param['page']) < 1 ? 1 : $param['page'];
         $param['limit'] = intval($param['limit']) < 1 ? $this->_pagesize : $param['limit'];
-
-        $where['vod_id'] = ['eq', $param['vod_id']];
+        if (!empty($param['vod_id'])) {
+            $where['vod_id'] = ['eq', $param['vod_id']];
+        }
+        if ($param['is_down'] != '') {
+            $where['is_down'] = ['eq', $param['is_down']];
+        }
+        if ($param['idName'] != '') {
+            $where['vod_name'] = ['like', '%' . $param['idName'] . '%'];
+        }
         $order = 'id desc';
         $res = model('FfmpegTpUp')->listData1(
             $where,
@@ -76,6 +83,9 @@ class FfmpegToUp extends Base
         if ($param['state'] != '') {
             $where['state'] = ['eq', $param['state']];
         }
+        if ($param['idName'] != '') {
+            $where['video_name'] = ['like', '%' . $param['idName'] . '%'];
+        }
         $order = 'id desc';
         $res = model('FfmpegTpUp')->listData(
             $where,
@@ -96,7 +106,8 @@ class FfmpegToUp extends Base
         return $this->success('succ', null, $data);
     }
 
-    public function tinfo(){
+    public function tinfo()
+    {
         if (Request()->isPost()) {
             $param = input('post.');
             $param['is_sync'] = $param['is_down'];

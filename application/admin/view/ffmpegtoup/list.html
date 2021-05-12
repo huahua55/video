@@ -6,6 +6,16 @@
         <div class="layui-inline">
             <input class="layui-input" placeholder="查询当前视频名称" name="id" id="demoReload" autocomplete="off">
         </div>
+        &nbsp; 下载状态：
+        <div class="layui-inline">
+            <select class="layui-select" name="is_down">
+                <option value="">全部</option>
+                <option value="0" {if condition="$param['is_down'] eq '0'" }selected {/if}> 未下载 </option>
+                <option value="1" {if condition="$param['is_down'] eq '1'" }selected {/if}> 下载成功 </option>
+                <option value="2" {if condition="$param['is_down'] eq '2'" }selected {/if}> 下载中 </option>
+                <option value="3" {if condition="$param['is_down'] eq '3'" }selected {/if}> 下载失败 </option>
+            </select>
+        </div>
 
         <button class="layui-btn" data-type="reload">搜索</button>
     </div>
@@ -123,7 +133,6 @@
                 }, {
                     field: 'm3u8_url',
                     title: 'url',
-
                 }, {
                     field: 'is_down',
                     title: '状态',
@@ -133,10 +142,16 @@
                             return '<span style="color: green">成功</span>';
                         }else if (d.is_down == '0') {
                             return '<span style="color: black">未下载</span>';
+                        }else if (d.is_down == '2') {
+                            return '<span style="color: gold">下载中</span>';
                         }else{
                             return '<span style="color: red">下载失败</span>';
                         }
                     }
+                }, {
+                    field: 'time_auto_up',
+                    title: '更新时间',
+
                 }, {
                     fixed: 'right',
                     title: '操作',
@@ -244,8 +259,7 @@
             active = {
                 reload: function () {
                     var demoReload = $('#demoReload');
-                    var state = $("select[name='state']").val();
-                    var is_tr_up = $("select[name='is_tr_up']").val();
+                    var is_down = $("select[name='is_down']").val();
                     //执行重载
                     table.reload('testReload', {
                         page: {
@@ -254,8 +268,7 @@
                         where: {
                             // key: {
                             idName: demoReload.val(),
-                            state: state,
-                            is_tr_up: is_tr_up,
+                            is_down: is_down,
                             // }
                         }
                     }, 'data');
