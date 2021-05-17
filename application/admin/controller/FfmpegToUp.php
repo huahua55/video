@@ -175,6 +175,7 @@ class FfmpegToUp extends Base
             $info['pid'] = '2';
             $info['weight'] = '99';
             $info['type'] = '0';
+            $info['collection'] = '0';
             $info['up_time_sum'] = '0';
             $info['hour'] = '0';
             $info['branch'] = '0';
