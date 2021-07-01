@@ -713,7 +713,8 @@
                         jsonp: "callback",
                         jsonpCallback:"douban",
                         timeout: 5000,
-                        url: 'https://cdn.feifeicms.co/server/v3/douban.php?key=&callback=douban&id=' + id,
+                        url: 'https://www.5mrk.com/douban.php?id=' + id,
+                        // url: 'https://cdn.feifeicms.co/server/v3/douban.php?key=&callback=douban&id=' + id,
                         // url: '//api.douban.com/v2/movie/subject/' + id,
                         error: function(){
                             alert('请求解析服务器失败');
@@ -760,8 +761,8 @@
                                 if(r.data.vod_type){
                                     $('#vod_type').val(r.data.vod_type);
                                 }
-                                if(r.data.vod_tag){
-                                    $('#vod_tag').val(r.data.vod_tag);
+                                if(r.data.vod_type){
+                                    $('#vod_tag').val(r.data.vod_type);
                                 }
                                 if(r.data.vod_actor){
                                     $('#vod_actor').val(r.data.vod_actor);
@@ -866,8 +867,8 @@
                                     if(r.data.vod_type){
                                         $('#vod_type').val(r.data.vod_type);
                                     }
-                                    if(r.data.vod_tag){
-                                        $('#vod_tag').val(r.data.vod_tag);
+                                    if(r.data.vod_type){
+                                        $('#vod_tag').val(r.data.vod_type);
                                     }
                                     if(r.data.vod_actor){
                                         $('#vod_actor').val(r.data.vod_actor);
