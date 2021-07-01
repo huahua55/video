@@ -761,7 +761,7 @@
                                 if(r.data.vod_type){
                                     $('#vod_type').val(r.data.vod_type);
                                 }
-                                if(r.data.vod_type){
+                                if(r.data.vod_tag){
                                     $('#vod_tag').val(r.data.vod_type);
                                 }
                                 if(r.data.vod_actor){
@@ -867,9 +867,9 @@
                                     if(r.data.vod_type){
                                         $('#vod_type').val(r.data.vod_type);
                                     }
-                                    if(r.data.vod_type){
-                                        $('#vod_tag').val(r.data.vod_type);
-                                    }
+                                    // if(r.data.vod_tag){
+                                    //
+                                    // }
                                     if(r.data.vod_actor){
                                         $('#vod_actor').val(r.data.vod_actor);
                                     }
@@ -902,6 +902,7 @@
                                     }
                                     if(r.data.vod_class){
                                         $('#vod_class').val(r.data.vod_class);
+                                        $('#vod_tag').val(r.data.vod_class);
                                     }
                                     if(r.data.vod_reurl) {
                                         $('#vod_reurl').val(r.data.vod_reurl);
@@ -945,11 +946,12 @@
                             $('#vod_state').val(r.data.vod_state);
                         }
                         if(r.data.vod_class){
-                            $('#vod_type').val(r.data.vod_class);
+                            $('#vod_class').val(r.data.vod_class);
+                            $('#vod_tag').val(r.data.vod_class);
                         }
-                        if(r.data.vod_tag){
-                            $('#vod_tag').val(r.data.vod_tag);
-                        }
+                        // if(r.data.vod_tag){
+                        //     $('#vod_tag').val(r.data.vod_tag);
+                        // }
                         if(r.data.vod_actor){
                             $('#vod_actor').val(r.data.vod_actor);
                         }
@@ -980,9 +982,9 @@
                         if(r.data.vod_content){
                             ue.setContent(r.data.vod_content);
                         }
-                        if(r.data.vod_class){
-                            $('#vod_class').val(r.data.vod_class);
-                        }
+                        // if(r.data.vod_class){
+                        //     $('#vod_class').val(r.data.vod_class);
+                        // }
                         if(r.data.vod_reurl) {
                             $('#vod_reurl').val(r.data.vod_reurl);
                         }
