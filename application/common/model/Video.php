@@ -98,6 +98,8 @@ class Video extends Base
                     'm_status' => $v['vod_status'],
                     'm_is_selected' => $v['is_selected'],
                     'pid' => 0,
+                    'size' => 0,
+                    'duration' => 0,
                     'type_pid' => $v['type_pid'],
                     'vod_pic' => ''
                 ];

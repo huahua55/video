@@ -360,6 +360,19 @@
                             width: 200,
                             templet: '#vod_statusTpl'
                         },  {
+                            field: 'duration',
+                            title: '时长',
+                            // templet: '#is_examineTpl',
+                            width: 60
+                        },  {
+                            field: 'size',
+                            title: '大小',
+                            // templet: '#is_examineTpl',
+                            width: 200,
+                            templet: function (d) {
+                                return (d.size/ (1024 *1024)).toFixed(2) + 'MB';
+                            }
+                        },  {
                             field: 'm_eid',
                             title: '审核状态',
                             templet: '#is_examineTpl',
