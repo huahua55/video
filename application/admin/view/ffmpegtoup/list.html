@@ -149,6 +149,13 @@
                         }
                     }
                 }, {
+                    field: 'size',
+                    title: '大小',
+                    width: 120,
+                    templet: function (d) {
+                        return (d.size/ (1024 *1024)).toFixed(2) + 'MB';
+                    }
+                }, {
                     field: 'time_auto_up',
                     title: '更新时间',
 
